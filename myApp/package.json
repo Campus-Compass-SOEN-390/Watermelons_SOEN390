@@ -46,6 +46,7 @@
     "expo-web-browser": "~14.0.2",
     "formdata-node": "^6.0.3",
     "install": "^0.13.0",
+    "is-directory": "^0.3.1",
     "leaflet": "^1.9.4",
     "myapp": "file:",
     "react": "18.3.1",
@@ -61,7 +62,8 @@
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.13",
     "react-native-web-maps": "^0.1.0",
-    "react-native-webview": "13.12.5"
+    "react-native-webview": "13.12.5",
+    "strip-eof": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
