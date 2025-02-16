@@ -7,7 +7,8 @@ const buildings = [
         longName: "Administration Building",
         openHours: "Monday - Friday: 9:00 AM - 5:00 PM",
         wheelchairAccessible: true,
-        departments: ["Faculty of Arts and Science"]
+        departments: ["Faculty of Arts and Science"],
+        
       },
       {
         id: "loy2",

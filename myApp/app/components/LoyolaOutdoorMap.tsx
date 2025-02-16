@@ -13,6 +13,8 @@ import { isPointInPolygon } from "geolib";
 import useLocation from "../hooks/useLocation";
 import styles from "../styles/OutdoorMapStyles"
 import { buildings, Campus } from "../utils/mapUtils";
+import BuildingPopup from "./BuildingPopUp";
+import { getAllBuildings, getBuildingById } from "../api/buildingData";
 
 const LoyolaOutdoorMap = () => {
   const { location, errorMsg, hasPermission } = useLocation();
@@ -20,6 +22,9 @@ const LoyolaOutdoorMap = () => {
   const [showLocating, setShowLocating] = useState(true);
   const [showPermissionPopup, setShowPermissionPopup] = useState(!hasPermission);
   const [highlightedBuilding, setHighlightedBuilding] = useState<string | null>(null);
+  const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
+  const [popupVisible, setPopupVisible] = useState(false);
+  //const buildings = getAllBuildings();
 
   // Default region for Loyola Campus
   const loyolaRegion = {
@@ -105,12 +110,18 @@ const LoyolaOutdoorMap = () => {
           .filter((building) => building.campus === Campus.LOY)
           .map((building) => (
             <Polygon
-              key={building.name}
-              coordinates={building.coordinates}
-              fillColor={highlightedBuilding === building.name ? "rgba(0, 0, 255, 0.4)" : "rgba(255, 0, 0, 0.4)"}
-              strokeColor={highlightedBuilding === building.name ? "blue" : "red"}
-              strokeWidth={2}
-            />
+  key={building.name}
+  coordinates={building.coordinates}
+  fillColor={highlightedBuilding === building.name ? "rgba(0, 0, 255, 0.4)" : "rgba(255, 0, 0, 0.4)"}
+  strokeColor={highlightedBuilding === building.name ? "blue" : "red"}
+  strokeWidth={2}
+  tappable
+  onPress={() => {
+    console.log("Clicked Building:", building);
+    setSelectedBuilding(building);
+    setPopupVisible(true);
+  }}
+/>
           ))}
       </MapView>
 
@@ -128,6 +139,16 @@ const LoyolaOutdoorMap = () => {
           <Text style={styles.debugText}>Loyola</Text>
         </TouchableOpacity>
       </View>
+
+            {/* Building Popup */}
+            <BuildingPopup
+        visible={popupVisible}
+        onClose={() => {
+          setPopupVisible(false);
+          setSelectedBuilding(null); // Clear selected building when closing
+        }}
+        building={selectedBuilding}
+      />
 
       {/* Popup Modal for Location Permission Denial */}
       <Modal visible={showPermissionPopup} transparent animationType="slide">
