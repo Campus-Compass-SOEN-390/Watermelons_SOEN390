@@ -68,6 +68,48 @@ export const buildings: Building[] = [
     ],
   },
   {
+    campus: Campus.SGW,
+    name: "LB Building",
+    coordinates: [
+      { latitude: 45.49730622534821, longitude: -73.57807280428914 },
+      { latitude: 45.496690697848365, longitude: -73.57864792247945 },
+      { latitude: 45.49626806063387, longitude: -73.57770485232867 },
+      { latitude: 45.49689659688067, longitude: -73.57717611463757 }
+    ],
+  },
+  {
+    campus: Campus.SGW,
+    name: "Grey Nuns Building",
+    coordinates: [
+      { latitude: 45.49444588559977, longitude: -73.57704684530952 },
+      { latitude: 45.49394352956143, longitude: -73.57761419053239 },
+      { latitude: 45.49379003098923, longitude: -73.57718619325901 },
+      { latitude: 45.49312370279178, longitude: -73.57780828231915 },
+      { latitude: 45.492475465970664, longitude: -73.57653820344966 },
+      { latitude: 45.493800943703896, longitude: -73.57548347923793 },
+    ],
+  },
+  {
+    campus: Campus.SGW,
+    name: "ER Building",
+    coordinates: [
+      { latitude: 45.4966874910767, longitude: -73.58014312979104 },
+      { latitude: 45.49629611013139, longitude: -73.58045288885724 },
+      { latitude: 45.49613291868629, longitude: -73.57997345285033 },
+      { latitude: 45.49653121561911, longitude: -73.57966172079647 }
+    ],
+  },
+  {
+    campus: Campus.SGW,
+    name: "L Building",
+    coordinates: [
+      { latitude: 45.497090344163816, longitude: -73.57991901007613 },
+      { latitude: 45.49687671299113, longitude: -73.58013715708758 },
+      { latitude: 45.49644575396693, longitude: -73.57923256445521 },
+      { latitude: 45.49664726157326, longitude: -73.57902320172452 }
+    ],
+  },
+  {
     campus: Campus.LOY,
     name: "Communications and Journalism Building",
     coordinates: [

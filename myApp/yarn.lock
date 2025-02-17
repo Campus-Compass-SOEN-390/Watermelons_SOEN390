@@ -2904,6 +2904,15 @@ available-typed-arrays@^1.0.7:
   dependencies:
     possible-typed-array-names "^1.0.0"
 
+axios@^1.7.9:
+  version "1.7.9"
+  resolved "https://registry.npmjs.org/axios/-/axios-1.7.9.tgz"
+  integrity sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==
+  dependencies:
+    follow-redirects "^1.15.6"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
+
 babel-core@^7.0.0-bridge.0:
   version "7.0.0-bridge.0"
   resolved "https://registry.npmjs.org/babel-core/-/babel-core-7.0.0-bridge.0.tgz"
@@ -4448,6 +4457,11 @@ flow-parser@0.*:
   resolved "https://registry.npmjs.org/flow-parser/-/flow-parser-0.259.1.tgz"
   integrity sha512-xiXLmMH2Z7OmdE9Q+MjljUMr/rbemFqZIRxaeZieVScG4HzQrKKhNcCYZbWTGpoN7ZPi7z8ClQbeVPq6t5AszQ==
 
+follow-redirects@^1.15.6:
+  version "1.15.9"
+  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.9.tgz"
+  integrity sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==
+
 fontfaceobserver@^2.1.0:
   version "2.3.0"
   resolved "https://registry.npmjs.org/fontfaceobserver/-/fontfaceobserver-2.3.0.tgz"
@@ -4573,6 +4587,11 @@ gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
   resolved "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
+
+geolib@^3.3.4:
+  version "3.3.4"
+  resolved "https://registry.npmjs.org/geolib/-/geolib-3.3.4.tgz"
+  integrity sha512-EicrlLLL3S42gE9/wde+11uiaYAaeSVDwCUIv2uMIoRBfNJCn8EsSI+6nS3r4TCKDO6+RQNM9ayLq2at+oZQWQ==
 
 get-caller-file@^2.0.5:
   version "2.0.5"
@@ -6357,9 +6376,9 @@ ms@2.0.0:
     "@react-native-community/geolocation" "^3.4.0"
     "@react-native-vector-icons/ionicons" "^7.4.0"
     "@react-navigation/bottom-tabs" "^7.2.0"
-    "@react-navigation/native" "^7.0.14"
     "@react-navigation/native-stack" "^7.2.0"
     "@teovilla/react-native-web-maps" "^0.9.5"
+    axios "^1.7.9"
     expo "^52.0.31"
     expo-blur "~14.0.3"
     expo-constants "~17.0.5"
@@ -6374,6 +6393,7 @@ ms@2.0.0:
     expo-system-ui "~4.0.7"
     expo-web-browser "~14.0.2"
     formdata-node "^6.0.3"
+    geolib "^3.3.4"
     install "^0.13.0"
     is-directory "^0.3.1"
     leaflet "^1.9.4"
@@ -6381,6 +6401,7 @@ ms@2.0.0:
     react "18.3.1"
     react-dom "18.3.1"
     react-native "0.76.6"
+    react-native-geolocation-service "^5.3.1"
     react-native-gesture-handler "~2.20.2"
     react-native-gradle-plugin "^0.71.19"
     react-native-maps "^1.20.1"
@@ -6926,6 +6947,11 @@ prop-types@15.5.8:
   dependencies:
     fbjs "^0.8.9"
 
+proxy-from-env@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz"
+  integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
+
 psl@^1.1.33:
   version "1.15.0"
   resolved "https://registry.npmjs.org/psl/-/psl-1.15.0.tgz"
@@ -7096,6 +7122,11 @@ react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+
+react-native-geolocation-service@^5.3.1:
+  version "5.3.1"
+  resolved "https://registry.npmjs.org/react-native-geolocation-service/-/react-native-geolocation-service-5.3.1.tgz"
+  integrity sha512-LTXPtPNmrdhx+yeWG47sAaCgQc3nG1z+HLLHlhK/5YfOgfLcAb9HAkhREPjQKPZOUx8pKZMIpdGFUGfJYtimXQ==
 
 react-native-gesture-handler@~2.20.2:
   version "2.20.2"

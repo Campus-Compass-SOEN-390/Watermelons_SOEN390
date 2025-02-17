@@ -18,7 +18,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ],
+, "app/(tabs)/interest-points.jsx"  ],
     "exclude": [
       "node_modules"
     ]
