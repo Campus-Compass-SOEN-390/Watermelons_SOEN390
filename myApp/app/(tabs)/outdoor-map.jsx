@@ -1,77 +1,187 @@
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import React from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import SGWOutdoorMap from "../components/SGWOutdoorMap";
-import LoyolaOutdoorMap from "../components/LoyolaOutdoorMap";
+import React, { useState, useRef, useEffect } from "react";
+import { View, TouchableOpacity, Text, Modal } from "react-native";
+import MapView, { Marker, Polygon } from "react-native-maps";
+import { MaterialIcons } from "@expo/vector-icons";
+import { isPointInPolygon } from "geolib";
+import useLocation from "../hooks/useLocation";
+import styles from "../styles/OutdoorMapStyles";
+import { buildings } from "../utils/mapUtils";
 
-export default function OutdoorMap() {
-  const router = useRouter();
-  const { type } = useLocalSearchParams();
-  const [isSGW, setIsSGW] = React.useState(type === "sgw");
-  
-  //setting default to SGW
-  React.useEffect(() => {
-    if (!type) {
-      router.replace("/(tabs)/outdoor-map?type=sgw"); 
-    }
-  }, [type]);
-
-   // Toggle between SGW and Loyola
-   const toggleCampus = () => {
-    const newType = isSGW ? "loyola" : "sgw";
-    setIsSGW(!isSGW);
-    router.replace(`/(tabs)/outdoor-map?type=${newType}`);
+const OutdoorMap = () => {
+  // Define the two campus regions.
+  const sgwRegion = {
+    latitude: 45.4951962,
+    longitude: -73.5792229,
+    latitudeDelta: 0.005,
+    longitudeDelta: 0.005,
   };
 
+  const loyolaRegion = {
+    latitude: 45.4581281,
+    longitude: -73.6417009,
+    latitudeDelta: 0.005,
+    longitudeDelta: 0.005,
+  };
 
-return(
+  // Track the currently active campus ("sgw" or "loyola").
+  const [activeCampus, setActiveCampus] = useState("sgw");
+  const mapRef = useRef(null);
 
+  // Get the user's location and permission status.
+  const { location, hasPermission } = useLocation();
+  const [showLocating, setShowLocating] = useState(true);
+  const [showPermissionPopup, setShowPermissionPopup] = useState(!hasPermission);
+  const [highlightedBuilding, setHighlightedBuilding] = useState(null);
 
-<View style={styles.container}>
+  // When the active campus changes, animate the map to the appropriate region.
+  useEffect(() => {
+    if (mapRef.current) {
+      const region = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
+      mapRef.current.animateToRegion(region, 1000);
+    }
+  }, [activeCampus]);
 
-<View style={styles.switchButtonContainer}>
+  // Update location-related states and check for building highlighting.
+  useEffect(() => {
+    if (location) {
+      setShowLocating(false);
+      let found = false;
+      for (const building of buildings) {
+        if (isPointInPolygon(location, building.coordinates)) {
+          setHighlightedBuilding(building.name);
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        setHighlightedBuilding(null);
+      }
+    }
+    if (!hasPermission) {
+      setShowPermissionPopup(true);
+    }
+  }, [location, hasPermission]);
+
+  // Function to center the map on the user's current location.
+  const centerMapOnUser = () => {
+    if (location && mapRef.current) {
+      mapRef.current.animateToRegion(
+        {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
+        },
+        1000
+      );
+    }
+  };
+
+  // Toggle the active campus.
+  const toggleCampus = () => {
+    setActiveCampus((prev) => (prev === "sgw" ? "loyola" : "sgw"));
+  };
+
+  return (
+    <View style={styles.container}>
+      <MapView
+        ref={mapRef}
+        style={styles.map}
+        // Use the active campus’ region as the initial region.
+        initialRegion={activeCampus === "sgw" ? sgwRegion : loyolaRegion}
+        showsUserLocation={true}
+      >
+        {/* Optional campus marker showing the active campus center */}
+        <Marker
+          coordinate={
+            activeCampus === "sgw"
+              ? { latitude: sgwRegion.latitude, longitude: sgwRegion.longitude }
+              : { latitude: loyolaRegion.latitude, longitude: loyolaRegion.longitude }
+          }
+          title={activeCampus === "sgw" ? "SGW Campus" : "Loyola Campus"}
+          description="Campus Center"
+        />
+
+        {/* Marker for the user's location */}
+        {location && (
+          <Marker
+            coordinate={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }}
+            title="You Are Here"
+            pinColor="blue"
+          />
+        )}
+
+        {/* Render all building polygons. If the user is inside one, highlight it. */}
+        {buildings.map((building) => (
+          <Polygon
+            key={building.name}
+            coordinates={building.coordinates}
+            fillColor={
+              highlightedBuilding === building.name
+                ? "rgba(0, 0, 255, 0.4)"
+                : "rgba(255, 0, 0, 0.4)"
+            }
+            strokeColor={highlightedBuilding === building.name ? "blue" : "red"}
+            strokeWidth={2}
+          />
+        ))}
+      </MapView>
+
+      {/* Floating Buttons */}
+      <View style={styles.buttonContainer}>
+        {/* Button to center on user location */}
+        <TouchableOpacity style={styles.button} onPress={centerMapOnUser}>
+          <MaterialIcons name="my-location" size={24} color="white" />
+          {showLocating && <Text style={styles.debugText}>Locating...</Text>}
+        </TouchableOpacity>
+
+        {/* Button to re-center on the active campus */}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            const region = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
+            if (mapRef.current) {
+              mapRef.current.animateToRegion(region, 1000);
+            }
+          }}
+        >
+          <MaterialIcons name="place" size={24} color="white" />
+          <Text style={styles.debugText}>
+            {activeCampus === "sgw" ? "SGW" : "Loyola"}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Switch Campus Button */}
+      <View style={styles.switchButtonContainer}>
         <TouchableOpacity style={styles.switchButton} onPress={toggleCampus}>
           <Text style={styles.switchButtonText}>Switch Campus</Text>
         </TouchableOpacity>
       </View>
-    {type === "sgw" && <SGWOutdoorMap />}
-    {type === "loyola" && <LoyolaOutdoorMap />}
-</View>
 
-
-
-
+      {/* Modal for Location Permission Denial */}
+      <Modal visible={showPermissionPopup} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Location Permission Denied</Text>
+            <Text style={styles.modalText}>
+              Location access is required to show your current location on the map.
+              Please enable location permissions in your settings.
+            </Text>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setShowPermissionPopup(false)}
+            >
+              <Text style={styles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-      flex: 1,
-      justifyContent: "top",
-      alignItems: "center",
-      padding: 20,
-      position: "relative", 
-  },
-  title: {
-      fontSize: 24,
-      fontWeight: "bold",
-      marginBottom: 20,
-  },
-  switchButtonContainer: {
-    position: "absolute", 
-    top: 50, 
-    left: 30,
-    alignSelf: "center", 
-    zIndex: 1, 
-  },
-  switchButton: {
-    backgroundColor: "#922338",
-    padding: 10,
-    borderRadius: 5,
-  },
-  switchButtonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-});
+export default OutdoorMap;

@@ -1,89 +1,112 @@
 import { StyleSheet, Dimensions } from "react-native";
 
-const OutdoorMapStyles = StyleSheet.create({
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
+
+export default StyleSheet.create({
+  // Entire screen container
   containerForMap: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+
+  // The actual map should fill the available space
+  container: {
+    flex: 1,
+    width: screenWidth,
+    height: screenHeight,
+  },
+  map: {
+    flex: 1,
+  },
+
+  // Floating buttons container: positioned near bottom-right
+  buttonContainer: {
+    position: "absolute",
+    right: 20,
+    bottom: 100, // Enough space above the tab bar
+    alignItems: "center",
+  },
+  // Redesigned modern floating button
+  button: {
+    backgroundColor: "#1E88E5", // Modern blue shade
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    elevation: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+  debugText: {
+    color: "white",
+    fontSize: 12,
+    marginTop: 2,
+  },
+
+  // Modal styles remain the same:
+  modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
     padding: 20,
+    borderRadius: 10,
+    width: "80%",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
   },
-  titleForMap: {
-      fontSize: 24,
-      fontWeight: "bold",
-      marginBottom: 20,
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
-    container: {
-      width: Dimensions.get("window").width - 40,
-      height: 700,
-      borderRadius: 10,
-      overflow: "hidden",
-    },
-    map: {
-      flex: 1,
-    },
-    buttonContainer: {
-      position: "absolute",
-      bottom: 20,
-      right: 20,
-    },
-    button: {
-      backgroundColor: "#008CBA",
-      padding: 12,
-      borderRadius: 50,
-      elevation: 5,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
-      shadowRadius: 3,
-      alignItems: "center",
-      marginBottom: 10,
-    },
-    debugText: {
-      color: "white",
-      fontSize: 12,
-      marginTop: 4,
-    },
-    modalContainer: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "rgba(0,0,0,0.5)",
-    },
-    modalContent: {
-      backgroundColor: "white",
-      padding: 20,
-      borderRadius: 10,
-      width: "80%",
-      alignItems: "center",
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
-      shadowRadius: 3,
-    },
-    modalTitle: {
-      fontSize: 18,
-      fontWeight: "bold",
-      marginBottom: 10,
-    },
-    modalText: {
-      fontSize: 14,
-      textAlign: "center",
-      marginBottom: 15,
-    },
-    closeButton: {
-      backgroundColor: "#ff5252",
-      padding: 8,
-      borderRadius: 20,
-      width: 30,
-      height: 30,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    closeButtonText: {
-      color: "white",
-      fontWeight: "bold",
-      fontSize: 16,
-    },  
+  modalText: {
+    fontSize: 14,
+    textAlign: "center",
+    marginBottom: 15,
+  },
+  closeButton: {
+    backgroundColor: "#ff5252",
+    padding: 8,
+    borderRadius: 20,
+    width: 30,
+    height: 30,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  closeButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  // Switch Button Container is now positioned on the left
+  switchButtonContainer: {
+    position: "absolute",
+    top: 50,
+    left: 20,
+    zIndex: 1,
+  },
+  switchButton: {
+    backgroundColor: "#922338",
+    padding: 10,
+    borderRadius: 5,
+    top : 50,
+  },
+  // Switch Button Text: white, bold, and easily readable
+  switchButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
 });
-
-export default OutdoorMapStyles;
