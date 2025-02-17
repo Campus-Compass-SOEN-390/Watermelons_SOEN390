@@ -13,7 +13,7 @@ import useLocation from "../hooks/useLocation";
 import styles from "../styles/InterestPointsStyles";
 
 // Hard-coded API key
-const GOOGLE_PLACES_API_KEY = "AIzaSyA-1hK-5QvW-HgnW1uN-nUJf9z1fCwulsQ";
+export const GOOGLE_PLACES_API_KEY = "AIzaSyA-1hK-5QvW-HgnW1uN-nUJf9z1fCwulsQ";
 
 // --- Custom Marker Components ---
 const CoffeeMarker = () => (
