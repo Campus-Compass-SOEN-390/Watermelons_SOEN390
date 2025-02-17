@@ -29,9 +29,7 @@ export default function HomePage() {
 
 
 
-  const redirectUri = makeRedirectUri({
-    useProxy: true,  // Ensures an HTTPS redirect URI
-  });
+  const redirectUri = "https://auth.expo.io/@oukhtys/myApp";
   console.log("Redirect URI:", redirectUri);
   
 
@@ -43,7 +41,7 @@ export default function HomePage() {
         ios: "321256625453-m2n0g36rfup9e216egimeor6hnq1c9b3.apps.googleusercontent.com",
         default: "321256625453-8bbjeu3icp553q13d5fr7dv9ssbue5a0.apps.googleusercontent.com", //also needs android
       }),
-      scopes: ["openid", "profile", "email", "https://www.googleapis.com/auth/calendar"],
+      scopes: [ "profile", "email", "https://www.googleapis.com/auth/calendar"],
       redirectUri: "https://auth.expo.io/@oukhtys/myApp",  // Ensure this matches Google Cloud Console
       usePKCE: true,
     },
