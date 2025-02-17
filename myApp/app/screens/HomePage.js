@@ -3,7 +3,6 @@ import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useRouter } from 'expo-router';
 import { homepageStyles as styles } from '../styles/HomePageStyles.js'
 
-
 export default function HomePage() {
    
     const router = useRouter();
