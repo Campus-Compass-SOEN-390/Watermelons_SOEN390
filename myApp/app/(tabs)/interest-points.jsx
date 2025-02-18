@@ -6,11 +6,13 @@ import {
   ActivityIndicator,
   ScrollView,
   Modal,
+  Switch
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import useLocation from "../hooks/useLocation";
 import styles from "../styles/InterestPointsStyles";
+import Slider from "@react-native-community/slider";
 
 // Hard-coded API key
 const GOOGLE_PLACES_API_KEY = "AIzaSyA-1hK-5QvW-HgnW1uN-nUJf9z1fCwulsQ";
@@ -49,6 +51,11 @@ const InterestPoints = () => {
   const [showUpdateButton, setShowUpdateButton] = useState(false);
   // Toggle between map view and list view
   const [isListView, setIsListView] = useState(false);
+
+  const [showCafes, setShowCafes] = useState(true);
+  const [showRestaurants, setShowRestaurants] = useState(true);
+  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
+  const [distance, setDistance] = useState(5); // Default distance in km
 
   // Helper function to calculate distance using the Haversine formula.
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -233,14 +240,80 @@ const InterestPoints = () => {
   }, [coffeeShops, restaurants, location]);
 
   return (
-    <View style={styles.container}>
+   <View style={styles.container}>
+    <View style={{ marginTop: 40, alignSelf: "flex-end", marginRight: 20 }}></View>
+    {isListView && (
+      
+      <>
+        {/* Filters Button */}
+        
+        <TouchableOpacity
+          style={styles.filterButton}
+          onPress={() => setIsFilterModalVisible(true)}
+        >
+          <Text style={styles.filterButtonText}>Filters</Text>
+        </TouchableOpacity>
+
+        {/* Modal for Filter Options */}
+        <Modal
+          visible={isFilterModalVisible}
+          transparent
+          animationType="slide"
+          onRequestClose={() => setIsFilterModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Filter Options</Text>
+
+          {/* Distance Slider */}
+          <Text style={{ marginTop: 20 }}>Max Distance: {distance} km</Text>
+          <Slider
+            style={{ width: 200, height: 40 }}
+            minimumValue={1}
+            maximumValue={20}
+            step={1}
+            value={distance}
+            onValueChange={(value) => setDistance(value)}
+            minimumTrackTintColor="#1E88E5"
+            maximumTrackTintColor="#000000"
+          />
+
+              <View style={styles.filterOption}>
+                <Text>Cafes</Text>
+                <Switch value={showCafes} onValueChange={setShowCafes} />
+              </View>
+
+              <View style={styles.filterOption}>
+                <Text>Restaurants</Text>
+                <Switch value={showRestaurants} onValueChange={setShowRestaurants} />
+              </View>
+
+
+
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setIsFilterModalVisible(false)}
+              >
+                <Text style={styles.closeButtonText}>Apply Filters</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </>
+    )}
+
       {isListView ? (
         // List View: Display the points sorted by distance.
         <ScrollView
           style={styles.listViewContainer}
           contentContainerStyle={styles.listContent}
         >
-          {sortedPoints.map((point) => {
+         {sortedPoints
+          .filter(
+            (point) =>
+              (showCafes && point.types?.includes("cafe")) ||
+              (showRestaurants && point.types?.includes("restaurant"))
+        ).map((point) => {
             const lat = point.geometry?.location?.lat;
             const lng = point.geometry?.location?.lng;
             const distance =
