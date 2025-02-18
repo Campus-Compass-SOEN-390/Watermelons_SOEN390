@@ -2,21 +2,19 @@ import React, { useRef, useState, useEffect } from "react";
 import { View, TouchableOpacity, Text, Modal } from "react-native";
 import MapView, { Marker, Polygon } from "react-native-maps";
 import { MaterialIcons } from "@expo/vector-icons";
-// import { isPointInPolygon } from "geolib";
-import isPointInPolygon from "geolib/es/isPointInPolygon";
+import { isPointInPolygon } from "geolib";
 import useLocation from "../hooks/useLocation";
 import styles from "../styles/OutdoorMapStyles";
-import { fetchBuildingById } from "../api/buildingService";
-import { buildings, Campus, Building } from "../api/buildingData";
-import BuildingPopup from "../components/BuildingPopUp";
+import { buildings, Campus, getBuildingById, Building } from "../api/buildingData";
+import { BuildingPopup } from "../components/BuildingPopUp";
 
 const SGWOutdoorMap = () => {
   const { location, hasPermission } = useLocation();
   const mapRef = useRef<MapView | null>(null);
   const [showLocating, setShowLocating] = useState(true);
   const [showPermissionPopup, setShowPermissionPopup] = useState(!hasPermission);
-  const [highlightedBuildings, setHighlightedBuildings] = useState<string[]>([]);
-  const [selectedBuildings, setSelectedBuildings] = useState<Building[]>([]);
+  const [highlightedBuilding, setHighlightedBuilding] = useState<string | null>(null);
+  const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
   const [popupVisible, setPopupVisible] = useState(false);
 
   // Default region for SGW Campus
@@ -27,62 +25,27 @@ const SGWOutdoorMap = () => {
     longitudeDelta: 0.005,
   };
 
-  // Effect to check if user is inside a building and update `highlightedBuildings`
-  // useEffect(() => {
-  //   console.log("User Location:", location); // Debugging
-  //   if (location) {
-  //     setShowLocating(false);
-
-  //     const foundBuildings: string[] = buildings
-  //       .filter((b) => b.campus === Campus.SGW)
-  //       .filter((b) => isPointInPolygon(location, b.coordinates))
-  //       .map((b) => b.id);
-
-  //     setHighlightedBuildings(foundBuildings);
-  //   }
-
-  //   if (!hasPermission) {
-  //     setShowPermissionPopup(true);
-  //   }
-  // }, [location, hasPermission]);
-
   useEffect(() => {
-    // Log the entire buildings array once when the component mounts
-    // console.log("Buildings Data:", buildings);
-  
     if (location) {
-      // console.log("Checking buildings for location:", location);
-  
-      buildings
-        .filter((b) => b.campus === Campus.SGW)
-        .forEach((building) => {
-          const inside = isPointInPolygon(location, building.coordinates);
-          // console.log(
-          //   `Building ${building.id}: Location: ${JSON.stringify(location)}, Polygon: ${JSON.stringify(building.coordinates)}, Inside? ${inside}`
-          // );
-        });
+      setShowLocating(false);
+      // Check if user is inside a building (only consider buildings with defined coordinates)
+      for (const building of buildings.filter(
+        (b) =>
+          b.campus === Campus.SGW &&
+          b.coordinates &&
+          b.coordinates.length > 0
+      )) {
+        if (isPointInPolygon(location, building.coordinates!)) {
+          setHighlightedBuilding(building.name);
+          return;
+        }
+      }
+      setHighlightedBuilding(null);
     }
-  }, [location]);
-  
-  
-
-  // Function to fetch and show building details
-  const handleBuildingPress = async (buildingId: string) => {
-    try {
-      const building = await fetchBuildingById(buildingId);
-
-      //Add to selectedBuildings **only if not already added**
-      setSelectedBuildings((prevBuildings) => {
-        return prevBuildings.some((b) => b.id === building.id)
-          ? prevBuildings
-          : [...prevBuildings, building];
-      });
-
-      setPopupVisible(true);
-    } catch (error) {
-      console.error("Error fetching building details:", error);
+    if (!hasPermission) {
+      setShowPermissionPopup(true);
     }
-  };
+  }, [location, hasPermission]);
 
   // Function to center map on user's location
   const centerMapOnUser = () => {
@@ -108,36 +71,65 @@ const SGWOutdoorMap = () => {
 
   return (
     <View style={styles.container}>
-      <MapView 
+      <MapView
         ref={(ref) => (mapRef.current = ref)}
         style={styles.map}
         initialRegion={campusRegion}
         showsUserLocation={true}
       >
-        {/* Markers for SGW Buildings */}
-        {buildings
-          .filter((b) => b.campus === Campus.SGW)
-          .map((building) => (
-            <Marker
-              key={`marker-${building.id}`}
-              coordinate={building.coordinates[0]}
-              title={building.longName}
-              onPress={() => handleBuildingPress(building.id)}
-            />
-          ))}
+        {/* Marker for SGW Campus */}
+        <Marker
+          coordinate={{
+            latitude: campusRegion.latitude,
+            longitude: campusRegion.longitude,
+          }}
+          title="SGW Campus"
+          description="Outdoor Map Location"
+        />
 
-        {/* Polygons for SGW Buildings */}
+        {/* Marker for User Location */}
+        {location && (
+          <Marker
+            coordinate={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }}
+            title="You Are Here"
+            pinColor="blue"
+          />
+        )}
+
+        {/* Render polygons for SGW buildings with an onPress event */}
         {buildings
-          .filter((b) => b.campus === Campus.SGW)
+          .filter(
+            (building) =>
+              building.campus === Campus.SGW &&
+              building.coordinates &&
+              building.coordinates.length > 0
+          )
           .map((building) => (
             <Polygon
-              key={`polygon-${building.id}`}
-              coordinates={building.coordinates}
-              fillColor={highlightedBuildings.includes(building.id) ? "rgba(0, 0, 255, 0.4)" : "rgba(255, 0, 0, 0.4)"}
-              strokeColor={highlightedBuildings.includes(building.id) ? "blue" : "red"}
+              key={building.name}
+              coordinates={building.coordinates!}
+              fillColor={
+                highlightedBuilding === building.name
+                  ? "rgba(0, 0, 255, 0.4)"
+                  : "rgba(255, 0, 0, 0.4)"
+              }
+              strokeColor={
+                highlightedBuilding === building.name ? "blue" : "red"
+              }
               strokeWidth={2}
               tappable
-              onPress={() => handleBuildingPress(building.id)}
+              onPress={() => {
+                const fullBuilding = getBuildingById(building.id);
+                if (fullBuilding) {
+                  setSelectedBuilding(fullBuilding);
+                  setPopupVisible(true);
+                } else {
+                  console.error("Building data is incomplete!", building);
+                }
+              }}
             />
           ))}
       </MapView>
@@ -155,30 +147,34 @@ const SGWOutdoorMap = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Building Information Pop-Up */}
-      {popupVisible && selectedBuildings.length > 0 && (
-        <BuildingPopup
-          visible={popupVisible}
-          onClose={() => setPopupVisible(false)}
-          buildings={selectedBuildings}
-        />
-      )}
-
       {/* Popup Modal for Location Permission Denial */}
       <Modal visible={showPermissionPopup} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Location Permission Denied</Text>
             <Text style={styles.modalText}>
-              Location access is required to show your current location on the map. 
+              Location access is required to show your current location on the map.
               Please enable location permissions in your settings.
             </Text>
-            <TouchableOpacity style={styles.closeButton} onPress={() => setShowPermissionPopup(false)}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setShowPermissionPopup(false)}
+            >
               <Text style={styles.closeButtonText}>X</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
+
+      {/* Building Popup */}
+      <BuildingPopup
+        visible={popupVisible}
+        onClose={() => {
+          setPopupVisible(false);
+          setSelectedBuilding(null);
+        }}
+        building={selectedBuilding}
+      />
     </View>
   );
 };

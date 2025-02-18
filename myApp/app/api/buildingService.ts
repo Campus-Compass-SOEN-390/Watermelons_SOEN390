@@ -1,10 +1,14 @@
 import { getAllBuildings, getBuildingById } from "./buildingData";
+import { Building } from "./buildingData";
 
-// Fetch all buildings 
-export const fetchAllBuildings = () => getAllBuildings();
+// Get all building information
+export const fetchAllBuildings = async (): Promise<Building[]> => {
+  return getAllBuildings();
+};
 
-// Fetch a single building by ID
-export const fetchBuildingById = (id: string) => {
+// Get details of a specific building by ID
+export const fetchBuildingById = async (id: string): Promise<Building> => {
+  // Validate the building ID
   if (!id || typeof id !== "string" || id.trim() === "") {
     throw new Error("❌ Invalid building ID. Please provide a valid ID.");
   }
@@ -17,5 +21,8 @@ export const fetchBuildingById = (id: string) => {
   return building;
 };
 
-//Fix: Add default export
-export default { fetchAllBuildings, fetchBuildingById };
+//Fix Import Issue: Add Default Export
+export default {
+  fetchAllBuildings,
+  fetchBuildingById,
+};

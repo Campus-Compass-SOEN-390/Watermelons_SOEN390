@@ -1,22 +1,29 @@
 import React, { useRef, useState, useEffect } from "react";
-import { View, TouchableOpacity, Text, Modal } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  TouchableOpacity,
+  Text,
+  Modal,
+} from "react-native";
 import MapView, { Marker, Polygon } from "react-native-maps";
 import { MaterialIcons } from "@expo/vector-icons"; // For button icons
-// import { isPointInPolygon } from "geolib";
-import isPointInPolygon from "geolib/es/isPointInPolygon";
+import { isPointInPolygon } from "geolib";
 import useLocation from "../hooks/useLocation";
 import styles from "../styles/OutdoorMapStyles";
-import { buildings, Campus, Building } from "../api/buildingData"; // Ensure correct imports
-import { fetchBuildingById } from "../api/buildingService";
-import BuildingPopup from "../components/BuildingPopUp"; 
+import { buildings, Campus } from "../api/buildingData";
+import BuildingPopup from "./BuildingPopUp";
+import { getAllBuildings, getBuildingById } from "../api/buildingData";
+import { Building } from "../api/buildingData";
 
 const LoyolaOutdoorMap = () => {
-  const { location, hasPermission } = useLocation();
+  const { location, errorMsg, hasPermission } = useLocation();
   const mapRef = useRef<MapView | null>(null);
   const [showLocating, setShowLocating] = useState(true);
   const [showPermissionPopup, setShowPermissionPopup] = useState(!hasPermission);
-  const [highlightedBuildings, setHighlightedBuildings] = useState<string[]>([]); // Array to track multiple highlighted buildings
-  const [selectedBuildings, setSelectedBuildings] = useState<Building[]>([]); // Array for selected buildings
+  const [highlightedBuilding, setHighlightedBuilding] = useState<string | null>(null);
+  const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
   const [popupVisible, setPopupVisible] = useState(false);
 
   // Default region for Loyola Campus
@@ -27,41 +34,29 @@ const LoyolaOutdoorMap = () => {
     longitudeDelta: 0.005,
   };
 
-  // Effect to check if user is inside any building
+  // Effect to update the locating state
   useEffect(() => {
     if (location) {
       setShowLocating(false);
-      const insideBuildings = buildings
-        .filter((b) => b.campus === Campus.LOY)
-        .filter((building) => isPointInPolygon(location, building.coordinates))
-        .map((building) => building.id); //Collect all buildings user is inside
 
-      setHighlightedBuildings(insideBuildings);
+      // Check if user is inside a building (only consider buildings with valid coordinates)
+      for (const building of buildings.filter(
+        (b) =>
+          b.campus === Campus.LOY &&
+          b.coordinates &&
+          b.coordinates.length > 0
+      )) {
+        if (isPointInPolygon(location, building.coordinates!)) {
+          setHighlightedBuilding(building.name);
+          return;
+        }
+      }
+      setHighlightedBuilding(null);
     }
-
     if (!hasPermission) {
       setShowPermissionPopup(true);
     }
   }, [location, hasPermission]);
-
-  // Function to fetch and show multiple buildings
-  const handleBuildingPress = async (buildingId: string) => {
-    try {
-      const building = await fetchBuildingById(buildingId);
-
-      setSelectedBuildings((prevBuildings) => {
-        // Avoid duplicates
-        if (!prevBuildings.some((b) => b.id === building.id)) {
-          return [...prevBuildings, building];
-        }
-        return prevBuildings;
-      });
-
-      setPopupVisible(true);
-    } catch (error) {
-      console.error("Error fetching building details:", error);
-    }
-  };
 
   // Function to center map on user's location
   const centerMapOnUser = () => {
@@ -87,64 +82,94 @@ const LoyolaOutdoorMap = () => {
 
   return (
     <View style={styles.container}>
-      <MapView 
+      <MapView
         ref={(ref) => (mapRef.current = ref)}
         style={styles.map}
         initialRegion={loyolaRegion}
         showsUserLocation={true}
       >
-        {/* Markers for Loyola Buildings */}
-        {buildings
-          .filter((building) => building.campus === Campus.LOY)
-          .map((building) => (
-            <Marker
-              key={building.id}
-              coordinate={building.coordinates[0]} // Assuming first coordinate is marker position
-              title={building.longName}
-              onPress={() => handleBuildingPress(building.id)}
-            />
-          ))}
+        {/* Marker for Loyola Campus */}
+        <Marker
+          coordinate={{
+            latitude: 45.4581281,
+            longitude: -73.6417009,
+          }}
+          title="Loyola Campus"
+          description="Outdoor Map Location"
+        />
 
-        {/* Polygons for Loyola Buildings */}
+        {/* Marker for User Location */}
+        {location && (
+          <Marker
+            coordinate={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }}
+            title="You Are Here"
+            pinColor="blue"
+          />
+        )}
+
+        {/* Render polygons for LOY buildings (only those with defined coordinates) */}
         {buildings
-          .filter((building) => building.campus === Campus.LOY)
+          .filter(
+            (building) =>
+              building.campus === Campus.LOY &&
+              building.coordinates &&
+              building.coordinates.length > 0
+          )
           .map((building) => (
             <Polygon
-              key={building.id}
-              coordinates={building.coordinates}
-              fillColor={highlightedBuildings.includes(building.id) ? "rgba(0, 0, 255, 0.4)" : "rgba(255, 0, 0, 0.4)"}
-              strokeColor={highlightedBuildings.includes(building.id) ? "blue" : "red"}
+              key={building.name}
+              coordinates={building.coordinates!}
+              fillColor={
+                highlightedBuilding === building.name
+                  ? "rgba(0, 0, 255, 0.4)"
+                  : "rgba(255, 0, 0, 0.4)"
+              }
+              strokeColor={
+                highlightedBuilding === building.name ? "blue" : "red"
+              }
               strokeWidth={2}
               tappable
-              onPress={() => handleBuildingPress(building.id)}
+              onPress={() => {
+                console.log("Clicked Building:", building);
+                const fullBuilding = getBuildingById(building.id);
+                if (fullBuilding) {
+                  setSelectedBuilding(fullBuilding);
+                  setPopupVisible(true);
+                } else {
+                  console.error("Building data is incomplete!", building);
+                }
+              }}
             />
           ))}
       </MapView>
 
       {/* Floating Buttons */}
       <View style={styles.buttonContainer}>
+        {/* Button to center on user location */}
         <TouchableOpacity style={styles.button} onPress={centerMapOnUser}>
           <MaterialIcons name="my-location" size={24} color="white" />
           {showLocating && <Text style={styles.debugText}>Locating...</Text>}
         </TouchableOpacity>
 
+        {/* Button to center on Loyola Campus */}
         <TouchableOpacity style={styles.button} onPress={centerMapOnLoyola}>
           <MaterialIcons name="place" size={24} color="white" />
           <Text style={styles.debugText}>Loyola</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Building Information Pop-Up */}
-      {popupVisible && selectedBuildings.length > 0 && (
-        <BuildingPopup
-          visible={popupVisible}
-          onClose={() => {
-            setPopupVisible(false);
-            setSelectedBuildings([]); //Clear selected buildings when closing
-          }}
-          buildings={selectedBuildings} // Correctly passing multiple buildings
-        />
-      )}
+      {/* Building Popup */}
+      <BuildingPopup
+        visible={popupVisible}
+        onClose={() => {
+          setPopupVisible(false);
+          setSelectedBuilding(null); // Clear selected building when closing
+        }}
+        building={selectedBuilding}
+      />
 
       {/* Popup Modal for Location Permission Denial */}
       <Modal visible={showPermissionPopup} transparent animationType="slide">
@@ -152,10 +177,13 @@ const LoyolaOutdoorMap = () => {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Location Permission Denied</Text>
             <Text style={styles.modalText}>
-              Location access is required to show your current location on the map. 
-              Please enable location permissions in your settings.
+              Location access is required to show your current location on the
+              map. Please enable location permissions in your settings.
             </Text>
-            <TouchableOpacity style={styles.closeButton} onPress={() => setShowPermissionPopup(false)}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setShowPermissionPopup(false)}
+            >
               <Text style={styles.closeButtonText}>X</Text>
             </TouchableOpacity>
           </View>
