@@ -6,6 +6,7 @@ import { isPointInPolygon } from "geolib";
 import useLocation from "../hooks/useLocation";
 import styles from "../styles/OutdoorMapStyles";
 import { buildings } from "../utils/mapUtils";
+import StartAndDestinationPoints from '../components/StartAndDestinationPoints';
 
 const OutdoorMap = () => {
   // Define the two campus regions.
@@ -32,6 +33,17 @@ const OutdoorMap = () => {
   const [showLocating, setShowLocating] = useState(true);
   const [showPermissionPopup, setShowPermissionPopup] = useState(!hasPermission);
   const [highlightedBuilding, setHighlightedBuilding] = useState(null);
+  const [originLocation, setOriginLocation] = useState(null);
+  const [destinationLocation, setDestinationLocation] = useState(null);
+
+  const coordinatesMap = {
+    "My Position": location && location.latitude ? { latitude: location.latitude, longitude: location.longitude } : undefined,
+    "Hall Building": { latitude: 45.4961, longitude: -73.5772 },
+    "EV Building": { latitude: 45.4957, longitude: -73.5773 },
+    "SGW Campus": { latitude: 45.4962, longitude: -73.5780 },
+    "Loyola Campus": { latitude: 45.4582, longitude: -73.6405 },
+    "Montreal Downtown": { latitude: 45.5017, longitude: -73.5673 },
+};
 
   // When the active campus changes, animate the map to the appropriate region.
   useEffect(() => {
@@ -84,6 +96,8 @@ const OutdoorMap = () => {
 
   return (
     <View style={styles.container}>
+      < StartAndDestinationPoints setOriginLocation={setOriginLocation} 
+                                  setDestinationLocation={setDestinationLocation}/>
       <MapView
         ref={mapRef}
         style={styles.map}
@@ -91,6 +105,26 @@ const OutdoorMap = () => {
         initialRegion={activeCampus === "sgw" ? sgwRegion : loyolaRegion}
         showsUserLocation={true}
       >
+
+        {/* Add start marker when location is selected */}
+
+        {originLocation && coordinatesMap[originLocation] && coordinatesMap[originLocation].latitude !== undefined &&(
+          <Marker 
+            coordinate={coordinatesMap[originLocation]}
+            title="Origin"
+            pinColor="green"
+          />
+        )}
+
+        {/* Add start marker when location is selected */}
+
+        {destinationLocation && coordinatesMap[destinationLocation] && coordinatesMap[destinationLocation].latitude !== undefined &&(
+          <Marker 
+            coordinate={coordinatesMap[destinationLocation]}
+            title="Destination"
+            pinColor="red"
+          />
+        )}
         {/* Optional campus marker showing the active campus center */}
         <Marker
           coordinate={
@@ -161,7 +195,7 @@ const OutdoorMap = () => {
           <Text style={styles.switchButtonText}>Switch Campus</Text>
         </TouchableOpacity>
       </View>
-
+    
       {/* Modal for Location Permission Denial */}
       <Modal visible={showPermissionPopup} transparent animationType="slide">
         <View style={styles.modalContainer}>
