@@ -1,7 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import GOOGLE_PLACES_API_KEY from '../(tabs)/interest-points';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
+import Constants from 'expo-constants';
+
+
 
 
 interface Props {
@@ -9,7 +13,14 @@ interface Props {
     setDestinationLocation: (location: { latitude: number; longitude: number }) => void;
 }
 
+const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
+
 const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDestinationLocation }) => {
+
+    const getCurrentLocation = () => {
+        
+    }
+
     return (
         
         <View style={styles.container}>
@@ -20,7 +31,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                     <GooglePlacesAutocomplete
                         placeholder="Type or select location"
                         fetchDetails={true}
-                        minLength={2}
+                        minLength={0}
                         enablePoweredByContainer={false}
                         query={{
                             key: GOOGLE_PLACES_API_KEY,
@@ -63,7 +74,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                     <GooglePlacesAutocomplete
                         placeholder="Type or select location"
                         fetchDetails={true}
-                        minLength={2}
+                        minLength={0}
                         enablePoweredByContainer={false}
                         query={{
                             key: GOOGLE_PLACES_API_KEY,
