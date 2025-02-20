@@ -2,9 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import 'react-native-get-random-values';
-import { v4 as uuidv4 } from 'uuid';
 import Constants from 'expo-constants';
-import useLocation from "../hooks/useLocation";
 import styles from "../styles/StartAndDestinationPointsStyles";
 
 
@@ -16,10 +14,10 @@ interface Props {
 }
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
-// console.log(GOOGLE_PLACES_API_KEY);
-const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDestinationLocation }) => {
 
-    const { location } = useLocation(); 
+/* To verify that API key is properly fetched */
+console.log(GOOGLE_PLACES_API_KEY);
+const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDestinationLocation }) => {
     
     return (
         

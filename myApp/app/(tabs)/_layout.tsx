@@ -1,5 +1,5 @@
 import { Tabs, useRouter } from 'expo-router';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import styles from "../styles/LayoutStyles";
 
@@ -42,7 +42,7 @@ export default function TabLayout() {
                   name={iconName as keyof typeof Ionicons.glyphMap}
                   size={focused ? 21 : 24}
                   color={focused ? 'white' : 'grey'}
-                  style={{ marginLeft: focused ? 0 : 0, marginTop: focused ? -14 : 0 }}
+                  style={{ marginLeft: 0, marginTop: focused ? -14 : 0 }}
                 />
               </View>
             );

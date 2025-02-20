@@ -44,7 +44,7 @@ const InterestPoints = () => {
   const [region, setRegion] = useState(defaultRegion);
   const [lastFetchedRegion, setLastFetchedRegion] = useState(defaultRegion);
   const [loading, setLoading] = useState(false);
-  const [showLocating, setShowLocating] = useState(true);
+  const [setShowLocating] = useState(true);
   const [showPermissionPopup, setShowPermissionPopup] = useState(!hasPermission);
   const [coffeeShops, setCoffeeShops] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
