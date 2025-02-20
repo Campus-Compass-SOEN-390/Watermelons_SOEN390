@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
-
+// console.log(GOOGLE_PLACES_API_KEY);
 const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDestinationLocation }) => {
 
     const { location } = useLocation(); 
@@ -68,6 +68,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                         query={{
                             key: GOOGLE_PLACES_API_KEY,
                             language: "en",
+                            components: "country:ca", // restrict data within Canada
                         }}
                         onPress={(data, details = null) => {
                             if (details) {

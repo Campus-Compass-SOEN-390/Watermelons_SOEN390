@@ -44,7 +44,7 @@ export default StyleSheet.create({
         position: 'absolute',
         top: 40,
         width: '125.8%',
-        left: '-65',
+        left: -65,
         backgroundColor: 'white',
         borderRadius: 28,
         elevation: 5,

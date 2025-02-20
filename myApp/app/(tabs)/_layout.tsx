@@ -39,7 +39,7 @@ export default function TabLayout() {
             return (
               <View style={[styles.tabItem, focused && styles.activeTabBackground]}>
                 <Ionicons
-                  name={iconName}
+                  name={iconName as keyof typeof Ionicons.glyphMap}
                   size={focused ? 21 : 24}
                   color={focused ? 'white' : 'grey'}
                   style={{ marginLeft: focused ? 0 : 0, marginTop: focused ? -14 : 0 }}

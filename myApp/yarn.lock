@@ -6394,6 +6394,7 @@ ms@2.0.0:
     react "18.3.1"
     react-dom "18.3.1"
     react-native "0.76.6"
+    react-native-config "^1.5.5"
     react-native-dotenv "^3.4.11"
     react-native-geolocation-service "^5.3.1"
     react-native-gesture-handler "~2.20.2"
@@ -7099,6 +7100,11 @@ react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+
+react-native-config@^1.5.5:
+  version "1.5.5"
+  resolved "https://registry.npmjs.org/react-native-config/-/react-native-config-1.5.5.tgz"
+  integrity sha512-dGdLnBU0cd5xL5bF0ROTmHYbsstZnQKOEPfglvZi1vStvAjpld14X25K6mY3KGPTMWAzx6TbjKeq5dR+ILuMMA==
 
 react-native-dotenv@^3.4.11:
   version "3.4.11"
