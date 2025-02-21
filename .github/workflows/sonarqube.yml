@@ -14,18 +14,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-
-      - name: Run SonarQube Scan
-        uses: SonarSource/sonarcloud-github-action@v1.5
+      - name: Run SonarQube Scan via Docker
         env:
           SONAR_TOKEN: "sqa_0cf40b5569721717150fe19a8195bdfc360b6107"
-        with:
-          args: >
-            -Dsonar.projectKey=Watermelons_SOEN390
+          SONAR_HOST_URL: "http://34.72.82.154:9000"
+          SONAR_PROJECT_KEY: "Watermelons_SOEN390"
+        run: |
+          docker run --rm \
+            -e SONAR_HOST_URL=${SONAR_HOST_URL} \
+            -e SONAR_LOGIN=${SONAR_TOKEN} \
+            -v "${GITHUB_WORKSPACE}:/usr/src" \
+            sonarsource/sonar-scanner-cli \
+            -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
             -Dsonar.sources=.
-            -Dsonar.host.url=http://34.72.82.154:9000
