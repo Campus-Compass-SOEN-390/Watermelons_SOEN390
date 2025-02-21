@@ -3,13 +3,19 @@ import { Stack } from 'expo-router';
 
 export default function RootLayout() {
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        // Hide the header for ALL screens in this stack
+        headerShown: false,
+      }}
+    >
       <Stack.Screen 
-      name="index" 
-      options={{ 
-        headerLeft: () => <></>
-       }} />
-       
+        name="index" 
+      />
+      {/* If your TabLayout is at (tabs), add it here too */}
+      <Stack.Screen 
+        name="(tabs)" 
+      />
     </Stack>
   );
 }

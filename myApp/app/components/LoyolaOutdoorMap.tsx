@@ -194,3 +194,4 @@ const LoyolaOutdoorMap = () => {
 };
 
 export default LoyolaOutdoorMap;
+

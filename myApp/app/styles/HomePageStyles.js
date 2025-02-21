@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 export const homepageStyles = StyleSheet.create({
     container: {
@@ -11,7 +11,8 @@ export const homepageStyles = StyleSheet.create({
         width: 150, 
         height: 150 , 
         alignSelf: 'center',
-        marginBottom: 20
+        marginBottom: 20,
+        marginTop: Platform.OS === 'android' ? 0 : 70,
     },
     button: {
         backgroundColor: '#FFFFFF',
