@@ -1,44 +1,26 @@
 name: SonarQube Analysis
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push, pull_request]
 
 jobs:
-  sonarQubeScan:
-    name: Run SonarQube Scanner
+  sonarqube:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Disable shallow clones to ensure full Git history is available
 
-      - name: Set up JDK 11
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: '17'
 
-      - name: Install SonarScanner CLI
-        run: |
-          # Download the SonarScanner CLI (version 4.8.0.2856 used as an example)
-          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
-          unzip sonar-scanner-cli-4.8.0.2856-linux.zip
-          # Add sonar-scanner to PATH for the current run
-          echo "$PWD/sonar-scanner-4.8.0.2856-linux/bin" >> $GITHUB_PATH
-          sonar-scanner --version
-
-      - name: Run SonarQube Scan
+      - name: SonarQube Scan
         env:
-          SONAR_TOKEN: "sqa_0cf40b5569721717150fe19a8195bdfc360b6107"  # Inline token (project or global as needed)
-          SONAR_HOST_URL: "http://34.72.82.154:9000"                    # Your SonarQube Server URL
+          SONAR_TOKEN: "sqa_0cf40b5569721717150fe19a8195bdfc360b6107"
         run: |
           sonar-scanner \
             -Dsonar.projectKey=Watermelons_SOEN390 \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=${SONAR_HOST_URL} \
-            -Dsonar.login=${SONAR_TOKEN} \
-            -Dsonar.qualitygate.wait=true
+            -Dsonar.host.url=http://34.72.82.154:9000 \
+            -Dsonar.login="sqa_0cf40b5569721717150fe19a8195bdfc360b6107\
+            -Dsonar.ws.timeout=60
