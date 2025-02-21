@@ -7,23 +7,38 @@ on:
     branches: [ main ]
 
 jobs:
-  sonarQube:
+  sonarQubeScan:
     name: Run SonarQube Scanner
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Disable shallow clones to ensure full Git history is available
 
-      - name: Run SonarQube Scan via Docker
-        env:
-          SONAR_TOKEN: "sqa_0cf40b5569721717150fe19a8195bdfc360b6107"
-          SONAR_HOST_URL: "http://34.72.82.154:9000"
-          SONAR_PROJECT_KEY: "Watermelons_SOEN390"
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: Install SonarScanner CLI
         run: |
-          docker run --rm \
-            -e SONAR_HOST_URL=${SONAR_HOST_URL} \
-            -e SONAR_LOGIN=${SONAR_TOKEN} \
-            -v "${GITHUB_WORKSPACE}:/usr/src" \
-            sonarsource/sonar-scanner-cli \
-            -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-            -Dsonar.sources=.
+          # Download the SonarScanner CLI (version 4.8.0.2856 used as an example)
+          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+          unzip sonar-scanner-cli-4.8.0.2856-linux.zip
+          # Add sonar-scanner to PATH for the current run
+          echo "$PWD/sonar-scanner-4.8.0.2856-linux/bin" >> $GITHUB_PATH
+          sonar-scanner --version
+
+      - name: Run SonarQube Scan
+        env:
+          SONAR_TOKEN: "sqa_0cf40b5569721717150fe19a8195bdfc360b6107"  # Inline token (project or global as needed)
+          SONAR_HOST_URL: "http://34.72.82.154:9000"                    # Your SonarQube Server URL
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey=Watermelons_SOEN390 \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=${SONAR_HOST_URL} \
+            -Dsonar.login=${SONAR_TOKEN} \
+            -Dsonar.qualitygate.wait=true
