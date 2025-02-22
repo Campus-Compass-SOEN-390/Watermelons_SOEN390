@@ -5,10 +5,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { isPointInPolygon } from "geolib";
 import useLocation from "../hooks/useLocation";
 import styles from "../styles/OutdoorMapStyles";
-import { buildings } from "../utils/mapUtils";
+import { buildings, Campus } from "../api/buildingData";
 
 const OutdoorMap = () => {
-  // Define the two campus regions.
+  // Define campus regions.
   const sgwRegion = {
     latitude: 45.4951962,
     longitude: -73.5792229,
@@ -46,7 +46,10 @@ const OutdoorMap = () => {
     if (location) {
       setShowLocating(false);
       let found = false;
-      for (const building of buildings) {
+      // Only iterate over buildings that have defined, non-empty coordinates.
+      for (const building of buildings.filter(
+        (b) => b.coordinates && b.coordinates.length > 0
+      )) {
         if (isPointInPolygon(location, building.coordinates)) {
           setHighlightedBuilding(building.name);
           found = true;
@@ -91,7 +94,7 @@ const OutdoorMap = () => {
         initialRegion={activeCampus === "sgw" ? sgwRegion : loyolaRegion}
         showsUserLocation={true}
       >
-        {/* Optional campus marker showing the active campus center */}
+        {/* Marker for campus center */}
         <Marker
           coordinate={
             activeCampus === "sgw"
@@ -114,20 +117,27 @@ const OutdoorMap = () => {
           />
         )}
 
-        {/* Render all building polygons. If the user is inside one, highlight it. */}
-        {buildings.map((building) => (
-          <Polygon
-            key={building.name}
-            coordinates={building.coordinates}
-            fillColor={
-              highlightedBuilding === building.name
-                ? "rgba(0, 0, 255, 0.4)"
-                : "rgba(255, 0, 0, 0.4)"
-            }
-            strokeColor={highlightedBuilding === building.name ? "blue" : "red"}
-            strokeWidth={2}
-          />
-        ))}
+        {/* Render polygons for buildings that have valid coordinates */}
+        {buildings
+          .filter(
+            (building) =>
+              building.coordinates && building.coordinates.length > 0
+          )
+          .map((building) => (
+            <Polygon
+              key={building.name}
+              coordinates={building.coordinates}
+              fillColor={
+                highlightedBuilding === building.name
+                  ? "rgba(0, 0, 255, 0.4)"
+                  : "rgba(255, 0, 0, 0.4)"
+              }
+              strokeColor={
+                highlightedBuilding === building.name ? "blue" : "red"
+              }
+              strokeWidth={2}
+            />
+          ))}
       </MapView>
 
       {/* Floating Buttons */}

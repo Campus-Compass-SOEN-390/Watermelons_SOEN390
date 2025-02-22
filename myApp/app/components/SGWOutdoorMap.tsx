@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, Fragment } from "react";
 import { View, TouchableOpacity, Text, Modal } from "react-native";
 import MapView, { Marker, Polygon } from "react-native-maps";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -28,26 +28,30 @@ const SGWOutdoorMap = () => {
   useEffect(() => {
     if (location) {
       setShowLocating(false);
-      // Check if user is inside a building (only consider buildings with defined coordinates)
-      for (const building of buildings.filter(
+      // Filter only SGW buildings that have coordinates
+      const sgwBuildings = buildings.filter(
         (b) =>
           b.campus === Campus.SGW &&
           b.coordinates &&
           b.coordinates.length > 0
-      )) {
+      );
+      let found = false;
+      sgwBuildings.forEach((building) => {
         if (isPointInPolygon(location, building.coordinates!)) {
+          console.log("User is inside building:", building.name);
           setHighlightedBuilding(building.name);
-          return;
+          found = true;
         }
+      });
+      if (!found) {
+        setHighlightedBuilding(null);
       }
-      setHighlightedBuilding(null);
     }
     if (!hasPermission) {
       setShowPermissionPopup(true);
     }
   }, [location, hasPermission]);
 
-  // Function to center map on user's location
   const centerMapOnUser = () => {
     if (location && mapRef.current) {
       mapRef.current.animateToRegion(
@@ -62,10 +66,21 @@ const SGWOutdoorMap = () => {
     }
   };
 
-  // Function to center map on SGW Campus
   const centerMapOnCampus = () => {
     if (mapRef.current) {
       mapRef.current.animateToRegion(campusRegion, 1000);
+    }
+  };
+
+  const handleBuildingPress = (building: Building) => {
+    console.log("Polygon pressed for building:", building.name);
+    const fullBuilding = getBuildingById(building.id);
+    if (fullBuilding) {
+      console.log("Setting popup for building:", fullBuilding.name);
+      setSelectedBuilding(fullBuilding);
+      setPopupVisible(true);
+    } else {
+      console.error("Building data is incomplete!", building);
     }
   };
 
@@ -77,7 +92,7 @@ const SGWOutdoorMap = () => {
         initialRegion={campusRegion}
         showsUserLocation={true}
       >
-        {/* Marker for SGW Campus */}
+        {/* SGW Campus Marker */}
         <Marker
           coordinate={{
             latitude: campusRegion.latitude,
@@ -87,7 +102,7 @@ const SGWOutdoorMap = () => {
           description="Outdoor Map Location"
         />
 
-        {/* Marker for User Location */}
+        {/* User Location Marker */}
         {location && (
           <Marker
             coordinate={{
@@ -99,7 +114,7 @@ const SGWOutdoorMap = () => {
           />
         )}
 
-        {/* Render polygons for SGW buildings with an onPress event */}
+        {/* Render SGW building polygons with fallback invisible markers */}
         {buildings
           .filter(
             (building) =>
@@ -107,31 +122,34 @@ const SGWOutdoorMap = () => {
               building.coordinates &&
               building.coordinates.length > 0
           )
-          .map((building) => (
-            <Polygon
-              key={building.name}
-              coordinates={building.coordinates!}
-              fillColor={
-                highlightedBuilding === building.name
-                  ? "rgba(0, 0, 255, 0.4)"
-                  : "rgba(255, 0, 0, 0.4)"
-              }
-              strokeColor={
-                highlightedBuilding === building.name ? "blue" : "red"
-              }
-              strokeWidth={2}
-              tappable
-              onPress={() => {
-                const fullBuilding = getBuildingById(building.id);
-                if (fullBuilding) {
-                  setSelectedBuilding(fullBuilding);
-                  setPopupVisible(true);
-                } else {
-                  console.error("Building data is incomplete!", building);
-                }
-              }}
-            />
-          ))}
+          .map((building) => {
+            // Use the first coordinate as a fallback "center"
+            const center = building.coordinates![0];
+            return (
+              <Fragment key={building.id}>
+                <Polygon
+                  coordinates={building.coordinates!}
+                  fillColor={
+                    highlightedBuilding === building.name
+                      ? "rgba(0, 0, 255, 0.4)"
+                      : "rgba(255, 0, 0, 0.4)"
+                  }
+                  strokeColor={
+                    highlightedBuilding === building.name ? "blue" : "red"
+                  }
+                  strokeWidth={5} // increased for better tap area
+                  tappable
+                  onPress={() => handleBuildingPress(building)}
+                />
+                {/* Invisible marker fallback */}
+                <Marker
+                  coordinate={center}
+                  opacity={0}
+                  onPress={() => handleBuildingPress(building)}
+                />
+              </Fragment>
+            );
+          })}
       </MapView>
 
       {/* Floating Buttons */}
@@ -140,14 +158,13 @@ const SGWOutdoorMap = () => {
           <MaterialIcons name="my-location" size={24} color="white" />
           {showLocating && <Text style={styles.debugText}>Locating...</Text>}
         </TouchableOpacity>
-
         <TouchableOpacity style={styles.button} onPress={centerMapOnCampus}>
           <MaterialIcons name="place" size={24} color="white" />
           <Text style={styles.debugText}>SGW</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Popup Modal for Location Permission Denial */}
+      {/* Modal for Location Permission Denial */}
       <Modal visible={showPermissionPopup} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -180,4 +197,3 @@ const SGWOutdoorMap = () => {
 };
 
 export default SGWOutdoorMap;
-
