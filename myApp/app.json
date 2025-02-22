@@ -2,7 +2,7 @@
   "expo": {
     "entryPoint": "./myApp/app/index.js",
     "name": "myApp",
-    "slug": "myApp",
+    "slug": "myapp",
     "version": "1.0.0",
     "sdkVersion": "52.0.0",
     "orientation": "portrait",
@@ -50,6 +50,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "410261d6-3323-415e-b8a2-d189a7ed7098"
+      }
     }
   }
 }
