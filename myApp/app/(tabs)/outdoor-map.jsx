@@ -1,12 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, TouchableOpacity, Text, Modal } from "react-native";
-import MapView, { Marker, Polygon } from "react-native-maps";
+import MapView, { Marker, Polygon} from "react-native-maps";
+import MapViewDirections from "react-native-maps-directions";
 import { MaterialIcons } from "@expo/vector-icons";
 import { isPointInPolygon } from "geolib";
 import useLocation from "../hooks/useLocation";
 import styles from "../styles/OutdoorMapStyles";
 import { buildings } from "../utils/mapUtils";
 import StartAndDestinationPoints from '../components/StartAndDestinationPoints';
+import Constants from 'expo-constants';
+
+const GOOGLE_MAPS_API_KEY = Constants.expoConfig?.extra?.apiKey;
+
+// Accessing the API key from the Expo configuration
 
 const OutdoorMap = () => {
   // Define the two campus regions.
@@ -35,6 +41,7 @@ const OutdoorMap = () => {
   const [highlightedBuilding, setHighlightedBuilding] = useState(null);
   const [originLocation, setOriginLocation] = useState(null);
   const [destinationLocation, setDestinationLocation] = useState(null);
+  const [routeVisible, setRouteVisible] = useState(false);
 
   const coordinatesMap = {
     "My Position": location && location.latitude ? { latitude: location.latitude, longitude: location.longitude } : undefined,
@@ -89,6 +96,20 @@ const OutdoorMap = () => {
     }
   };
 
+  //Function to center the directions on the map
+  const edgePaddingValue = 10;
+  const edgePadding = {
+    top: edgePaddingValue,
+    right: edgePaddingValue,
+    bottom: edgePaddingValue,
+    left: edgePaddingValue
+  }
+  const centerRoute = () => {
+    if (routeVisible && originLocation && destinationLocation){
+      mapRef.current.fitToCoordinates([originLocation, destinationLocation], {edgePadding})
+    }
+  }
+
   // Toggle the active campus.
   const toggleCampus = () => {
     setActiveCampus((prev) => (prev === "sgw" ? "loyola" : "sgw"));
@@ -105,7 +126,12 @@ const OutdoorMap = () => {
         initialRegion={activeCampus === "sgw" ? sgwRegion : loyolaRegion}
         showsUserLocation={true}
       >
-
+        { originLocation && destinationLocation && <MapViewDirections
+          origin={originLocation}
+          destination={destinationLocation}
+          apikey={GOOGLE_MAPS_API_KEY}
+          strokeWidth={4}
+        />}
         {/* Add start marker when location is selected */}
 
         {originLocation && coordinatesMap[originLocation] && coordinatesMap[originLocation].latitude !== undefined &&(
