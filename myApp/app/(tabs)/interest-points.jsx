@@ -11,9 +11,11 @@ import MapView, { Marker } from "react-native-maps";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import useLocation from "../hooks/useLocation";
 import styles from "../styles/InterestPointsStyles";
+import Constants from 'expo-constants';
 
-// Hard-coded API key
-const GOOGLE_PLACES_API_KEY = "AIzaSyA-1hK-5QvW-HgnW1uN-nUJf9z1fCwulsQ";
+
+// API key moved to json file
+const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
 // --- Custom Marker Components ---
 const CoffeeMarker = () => (

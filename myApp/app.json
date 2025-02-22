@@ -3,6 +3,9 @@
     "entryPoint": "./myApp/app/index.js",
     "name": "myApp",
     "slug": "myApp",
+    "extra": {
+      "apiKey": "AIzaSyA-1hK-5QvW-HgnW1uN-nUJf9z1fCwulsQ"
+    },
     "version": "1.0.0",
     "sdkVersion": "52.0.0",
     "orientation": "portrait",
