@@ -1,21 +1,22 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, Fragment } from "react";
 import { View, TouchableOpacity, Text, Modal } from "react-native";
 import MapView, { Marker, Polygon } from "react-native-maps";
 import { MaterialIcons } from "@expo/vector-icons";
 import { isPointInPolygon } from "geolib";
 import useLocation from "../hooks/useLocation";
 import styles from "../styles/OutdoorMapStyles";
-import { buildings, Campus } from "../api/buildingData";
+import { buildings, Campus, getBuildingById } from "../api/buildingData";
+import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
+import { BuildingPopup } from "../components/BuildingPopUp";
 
 const OutdoorMap = () => {
-  // Define campus regions.
+  // Campus regions
   const sgwRegion = {
     latitude: 45.4951962,
     longitude: -73.5792229,
     latitudeDelta: 0.005,
     longitudeDelta: 0.005,
   };
-
   const loyolaRegion = {
     latitude: 45.4581281,
     longitude: -73.6417009,
@@ -23,17 +24,39 @@ const OutdoorMap = () => {
     longitudeDelta: 0.005,
   };
 
-  // Track the currently active campus ("sgw" or "loyola").
+  // Campus switching
   const [activeCampus, setActiveCampus] = useState("sgw");
   const mapRef = useRef(null);
 
-  // Get the user's location and permission status.
+  // Location & permissions
   const { location, hasPermission } = useLocation();
   const [showLocating, setShowLocating] = useState(true);
   const [showPermissionPopup, setShowPermissionPopup] = useState(!hasPermission);
+
+  // Start & destination markers
+  const [originLocation, setOriginLocation] = useState(null);
+  const [destinationLocation, setDestinationLocation] = useState(null);
+
+  // Building popup
+  const [selectedBuilding, setSelectedBuilding] = useState(null);
+  const [popupVisible, setPopupVisible] = useState(false);
+
+  // The missing piece: track the building user is inside
   const [highlightedBuilding, setHighlightedBuilding] = useState(null);
 
-  // When the active campus changes, animate the map to the appropriate region.
+  // Mapping for StartAndDestinationPoints
+  const coordinatesMap = {
+    "My Position": location?.latitude
+      ? { latitude: location.latitude, longitude: location.longitude }
+      : undefined,
+    "Hall Building": { latitude: 45.4961, longitude: -73.5772 },
+    "EV Building": { latitude: 45.4957, longitude: -73.5773 },
+    "SGW Campus": { latitude: 45.4962, longitude: -73.5780 },
+    "Loyola Campus": { latitude: 45.4582, longitude: -73.6405 },
+    "Montreal Downtown": { latitude: 45.5017, longitude: -73.5673 },
+  };
+
+  // Animate map to correct campus
   useEffect(() => {
     if (mapRef.current) {
       const region = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
@@ -41,12 +64,11 @@ const OutdoorMap = () => {
     }
   }, [activeCampus]);
 
-  // Update location-related states and check for building highlighting.
+  // Check location & highlight building
   useEffect(() => {
     if (location) {
       setShowLocating(false);
       let found = false;
-      // Only iterate over buildings that have defined, non-empty coordinates.
       for (const building of buildings.filter(
         (b) => b.coordinates && b.coordinates.length > 0
       )) {
@@ -56,16 +78,14 @@ const OutdoorMap = () => {
           break;
         }
       }
-      if (!found) {
-        setHighlightedBuilding(null);
-      }
+      if (!found) setHighlightedBuilding(null);
     }
     if (!hasPermission) {
       setShowPermissionPopup(true);
     }
   }, [location, hasPermission]);
 
-  // Function to center the map on the user's current location.
+  // Center on user
   const centerMapOnUser = () => {
     if (location && mapRef.current) {
       mapRef.current.animateToRegion(
@@ -80,21 +100,65 @@ const OutdoorMap = () => {
     }
   };
 
-  // Toggle the active campus.
+  // Center on campus
+  const centerMapOnCampus = () => {
+    if (mapRef.current) {
+      const region = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
+      mapRef.current.animateToRegion(region, 1000);
+    }
+  };
+
+  // Switch campus
   const toggleCampus = () => {
     setActiveCampus((prev) => (prev === "sgw" ? "loyola" : "sgw"));
   };
 
+  // Handle building tap
+  const handleBuildingPress = (building) => {
+    console.log("Polygon pressed for building:", building.name);
+    const fullBuilding = getBuildingById(building.id);
+    if (fullBuilding) {
+      console.log("Setting popup for building:", fullBuilding.name);
+      setSelectedBuilding(fullBuilding);
+      setPopupVisible(true);
+    } else {
+      console.error("Building data is incomplete!", building);
+    }
+  };
+
   return (
     <View style={styles.container}>
+      <StartAndDestinationPoints
+        setOriginLocation={setOriginLocation}
+        setDestinationLocation={setDestinationLocation}
+      />
       <MapView
         ref={mapRef}
         style={styles.map}
-        // Use the active campus’ region as the initial region.
         initialRegion={activeCampus === "sgw" ? sgwRegion : loyolaRegion}
         showsUserLocation={true}
       >
-        {/* Marker for campus center */}
+        {/* Start Marker */}
+        {originLocation &&
+          coordinatesMap[originLocation]?.latitude !== undefined && (
+            <Marker
+              coordinate={coordinatesMap[originLocation]}
+              title="Origin"
+              pinColor="green"
+            />
+          )}
+
+        {/* Destination Marker */}
+        {destinationLocation &&
+          coordinatesMap[destinationLocation]?.latitude !== undefined && (
+            <Marker
+              coordinate={coordinatesMap[destinationLocation]}
+              title="Destination"
+              pinColor="red"
+            />
+          )}
+
+        {/* Campus center marker */}
         <Marker
           coordinate={
             activeCampus === "sgw"
@@ -105,7 +169,7 @@ const OutdoorMap = () => {
           description="Campus Center"
         />
 
-        {/* Marker for the user's location */}
+        {/* User location marker */}
         {location && (
           <Marker
             coordinate={{
@@ -117,47 +181,50 @@ const OutdoorMap = () => {
           />
         )}
 
-        {/* Render polygons for buildings that have valid coordinates */}
+        {/* Render building polygons for active campus */}
         {buildings
           .filter(
-            (building) =>
-              building.coordinates && building.coordinates.length > 0
+            (b) =>
+              b.campus === (activeCampus === "sgw" ? Campus.SGW : Campus.LOY) &&
+              b.coordinates &&
+              b.coordinates.length > 0
           )
-          .map((building) => (
-            <Polygon
-              key={building.name}
-              coordinates={building.coordinates}
-              fillColor={
-                highlightedBuilding === building.name
-                  ? "rgba(0, 0, 255, 0.4)"
-                  : "rgba(255, 0, 0, 0.4)"
-              }
-              strokeColor={
-                highlightedBuilding === building.name ? "blue" : "red"
-              }
-              strokeWidth={2}
-            />
-          ))}
+          .map((building) => {
+            const center = building.coordinates[0];
+            return (
+              <Fragment key={building.id}>
+                <Polygon
+                  coordinates={building.coordinates}
+                  fillColor={
+                    highlightedBuilding === building.name
+                      ? "rgba(0, 0, 255, 0.4)"
+                      : "rgba(255, 0, 0, 0.4)"
+                  }
+                  strokeColor={
+                    highlightedBuilding === building.name ? "blue" : "red"
+                  }
+                  strokeWidth={5}
+                  tappable
+                  onPress={() => handleBuildingPress(building)}
+                />
+                {/* Invisible Marker fallback */}
+                <Marker
+                  coordinate={center}
+                  opacity={0}
+                  onPress={() => handleBuildingPress(building)}
+                />
+              </Fragment>
+            );
+          })}
       </MapView>
 
       {/* Floating Buttons */}
       <View style={styles.buttonContainer}>
-        {/* Button to center on user location */}
         <TouchableOpacity style={styles.button} onPress={centerMapOnUser}>
           <MaterialIcons name="my-location" size={24} color="white" />
           {showLocating && <Text style={styles.debugText}>Locating...</Text>}
         </TouchableOpacity>
-
-        {/* Button to re-center on the active campus */}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            const region = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
-            if (mapRef.current) {
-              mapRef.current.animateToRegion(region, 1000);
-            }
-          }}
-        >
+        <TouchableOpacity style={styles.button} onPress={centerMapOnCampus}>
           <MaterialIcons name="place" size={24} color="white" />
           <Text style={styles.debugText}>
             {activeCampus === "sgw" ? "SGW" : "Loyola"}
@@ -172,7 +239,7 @@ const OutdoorMap = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Modal for Location Permission Denial */}
+      {/* Location Permission Denial */}
       <Modal visible={showPermissionPopup} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -190,6 +257,16 @@ const OutdoorMap = () => {
           </View>
         </View>
       </Modal>
+
+      {/* Building Popup */}
+      <BuildingPopup
+        visible={popupVisible}
+        onClose={() => {
+          setPopupVisible(false);
+          setSelectedBuilding(null);
+        }}
+        building={selectedBuilding}
+      />
     </View>
   );
 };
