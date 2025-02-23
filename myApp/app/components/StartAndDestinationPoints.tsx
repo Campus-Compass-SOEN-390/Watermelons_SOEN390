@@ -9,12 +9,13 @@ import styles from "../styles/StartAndDestinationPointsStyles";
 interface Props {
     setOriginLocation: (location: { latitude: number; longitude: number }) => void;
     setDestinationLocation: (location: { latitude: number; longitude: number }) => void;
+    setTravelMode: (mode: 'DRIVING' | 'BICYCLING' | 'WALKING' | 'TRANSIT') => void;
 }
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 console.log(GOOGLE_PLACES_API_KEY);
 
-const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDestinationLocation }) => {
+const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDestinationLocation, setTravelMode }) => {
     const [origin, setOrigin] = useState<{ latitude: number; longitude: number } | null>(null);
     const [destination, setDestination] = useState<{ latitude: number; longitude: number } | null>(null);
     const [showTransportation, setShowTransportation] = useState(false);
@@ -101,16 +102,44 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                     </TouchableOpacity>
                 ) : (
                     <View style={styles.buttonContainer}>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            if (origin && destination) {
+                                setShowTransportation(true);
+                                setTravelMode('DRIVING');
+                            }
+                        }}
+                    >
                         <MaterialIcons name="directions-car" size={24} color="black" />
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            if (origin && destination) {
+                                setShowTransportation(true);
+                                setTravelMode('TRANSIT');
+                            }
+                        }}
+                    >
                         <MaterialIcons name="directions-bus" size={24} color="black" />
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            if (origin && destination) {
+                                setShowTransportation(true);
+                                setTravelMode('WALKING');
+                            }
+                        }}
+                    >
                         <MaterialIcons name="directions-walk" size={24} color="black" />
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            if (origin && destination) {
+                                setShowTransportation(true);
+                                setTravelMode('BICYCLING');
+                            }
+                        }}
+                    >
                         <MaterialIcons name="directions-bike" size={24} color="black" />
                     </TouchableOpacity>
                     </View>

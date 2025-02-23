@@ -9,6 +9,7 @@ import styles from "../styles/OutdoorMapStyles";
 import { buildings } from "../utils/mapUtils";
 import StartAndDestinationPoints from '../components/StartAndDestinationPoints';
 import Constants from 'expo-constants';
+import MapDirections from '../components/MapDirections';
 
 const GOOGLE_MAPS_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
@@ -42,6 +43,7 @@ const OutdoorMap = () => {
   const [originLocation, setOriginLocation] = useState(null);
   const [destinationLocation, setDestinationLocation] = useState(null);
   const [routeVisible, setRouteVisible] = useState(false);
+  const [travelMode, setTravelMode] = useState('TRANSIT');
 
   const coordinatesMap = {
     "My Position": location && location.latitude ? { latitude: location.latitude, longitude: location.longitude } : undefined,
@@ -118,7 +120,8 @@ const OutdoorMap = () => {
   return (
     <View style={styles.container}>
       < StartAndDestinationPoints setOriginLocation={setOriginLocation} 
-                                  setDestinationLocation={setDestinationLocation}/>
+                                  setDestinationLocation={setDestinationLocation}
+                                  setTravelMode={setTravelMode}/>
       <MapView
         ref={mapRef}
         style={styles.map}
@@ -126,11 +129,11 @@ const OutdoorMap = () => {
         initialRegion={activeCampus === "sgw" ? sgwRegion : loyolaRegion}
         showsUserLocation={true}
       >
-        { originLocation && destinationLocation && <MapViewDirections
+        { originLocation && destinationLocation && <MapDirections
           origin={originLocation}
           destination={destinationLocation}
-          apikey={GOOGLE_MAPS_API_KEY}
-          strokeWidth={4}
+          mapRef={mapRef}
+          travelMode={travelMode}
         />}
         {/* Add start marker when location is selected */}
 
