@@ -113,3 +113,5 @@ export const homepageStyles = StyleSheet.create({
         height: 30, 
     }
 });
+
+export default homepageStyles;
