@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
     container: {
         position: 'absolute',
-        top: 140,
+        top: 100,
         left: 20,
         right: 20,
         alignItems: 'center',
@@ -72,6 +72,11 @@ export default StyleSheet.create({
     buttonText: {
         fontSize: 14,
         color: 'black',
-        
+    },
+    buttonContainer: {
+        flexDirection: 'row',       
+        justifyContent: 'space-between',
+        paddingHorizontal: 10,          
+        marginTop: 10,                 
     }
 });
