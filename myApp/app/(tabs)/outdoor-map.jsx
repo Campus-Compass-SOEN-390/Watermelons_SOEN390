@@ -9,6 +9,7 @@ import styles from "../styles/OutdoorMapStyles";
 import { buildings, Campus, getBuildingById } from "../api/buildingData";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
 import { BuildingPopup } from "../components/BuildingPopUp";
+import MapDirections from "../components/MapDirections";
 
 const OutdoorMap = () => {
   // Campus regions
@@ -37,6 +38,7 @@ const OutdoorMap = () => {
   // Start & destination markers
   const [originLocation, setOriginLocation] = useState(null);
   const [destinationLocation, setDestinationLocation] = useState(null);
+  const [travelMode, setTravelMode] = useState('TRANSIT');
 
   // Building popup
   const [selectedBuilding, setSelectedBuilding] = useState(null);
@@ -132,6 +134,7 @@ const OutdoorMap = () => {
       <StartAndDestinationPoints
         setOriginLocation={setOriginLocation}
         setDestinationLocation={setDestinationLocation}
+        setTravelMode={setTravelMode}
       />
       <MapView
         ref={mapRef}
@@ -139,6 +142,12 @@ const OutdoorMap = () => {
         initialRegion={activeCampus === "sgw" ? sgwRegion : loyolaRegion}
         showsUserLocation={true}
       >
+        { originLocation && destinationLocation && <MapDirections
+          origin={originLocation}
+          destination={destinationLocation}
+          mapRef={mapRef}
+          travelMode={travelMode}
+        />}
         {/* Start Marker */}
         {originLocation &&
           coordinatesMap[originLocation]?.latitude !== undefined && (
