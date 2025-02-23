@@ -43,6 +43,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                                 };
                                 setOrigin(location);
                                 setOriginLocation(location);
+                                setShowTransportation(false);
                             }
                         }}
                         styles={{
@@ -74,6 +75,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                                 };
                                 setDestination(location);
                                 setDestinationLocation(location);
+                                setShowTransportation(false);
                             }
                         }}
                         styles={{
