@@ -17,19 +17,15 @@ interface Props {
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
-const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDestinationLocation }) => {
+const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDestinationLocation, setTravelMode }) => {
+    const [origin, setOrigin] = useState<{ latitude: number; longitude: number } | null>(null);
+    const [destination, setDestination] = useState<{ latitude: number; longitude: number } | null>(null);
+    const [showTransportation, setShowTransportation] = useState(false);
     const { location } = useLocation();
     const [originText, setOriginText] = useState(""); 
     const originRef = useRef<any>(null);
     const [isOriginSet, setIsOriginSet] = useState(false);
     const [isInputFocused, setIsInputFocused] = useState(false); 
-
-console.log(GOOGLE_PLACES_API_KEY);
-
-const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDestinationLocation, setTravelMode }) => {
-    const [origin, setOrigin] = useState<{ latitude: number; longitude: number } | null>(null);
-    const [destination, setDestination] = useState<{ latitude: number; longitude: number } | null>(null);
-    const [showTransportation, setShowTransportation] = useState(false);
 
     return (
         <View style={styles.container}>
