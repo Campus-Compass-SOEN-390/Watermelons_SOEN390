@@ -10,6 +10,7 @@ import { buildings, Campus, getBuildingById } from "../api/buildingData";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
 import { BuildingPopup } from "../components/BuildingPopUp";
 import MapDirections from "../components/MapDirections";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const OutdoorMap = () => {
   // Campus regions
@@ -51,6 +52,9 @@ const OutdoorMap = () => {
   //Show footer for Go and Steps
   const [showFooter, setShowFooter] = useState(false);
   const [showSteps, setShowSteps] = useState(false);
+
+  const navigation = useNavigation();
+
 
   // Mapping for StartAndDestinationPoints
   const coordinatesMap = {
@@ -94,10 +98,26 @@ const OutdoorMap = () => {
   }, [location, hasPermission]);
 
   useEffect(() => {
+    // Hide the tab bar if both locations are provided
     if (originLocation && destinationLocation) {
       setShowFooter(true);
+      navigation.setOptions({
+        tabBarStyle: { display: 'none' },  // Hide the tab bar when locations are set
+      });
+    } else {
+      // Reset tab bar to visible when either location is not set
+      setShowFooter(false);
+      navigation.setOptions({
+        tabBarStyle: { display: 'flex' },  // Show the tab bar when locations are not set
+      });
     }
-  }, [originLocation, destinationLocation]);
+    return () => {
+      navigation.setOptions({
+        tabBarStyle: { display: 'flex' },  // Ensure the tab bar is visible when the component is unmounted
+      });
+    };
+  }, [originLocation, destinationLocation, navigation]);  // Dependencies include locations and navigation
+
   // Handle GO button logic 
   const handleGoClick = () => {
     alert("Journey started!");
@@ -300,7 +320,7 @@ const OutdoorMap = () => {
       </Modal>
       {/* Footer */
           showFooter && (
-            <View style={styles.footer}>
+            <View style={styles.footerContainer}>
               <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
                 <Text style={styles.footerButtonText}>GO</Text>
               </TouchableOpacity>
