@@ -117,4 +117,45 @@ export default StyleSheet.create({
     textAlign: "center",
     color: "#333",
   },
+  footerContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 4,
+    paddingBottom: 80,
+
+  },
+  
+  footerButton: {
+    color: 'green',
+    backgroundColor: '#ffff',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  
+  footerButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  modeButton: {
+    backgroundColor: "#007bff",
+    padding: 15,
+    marginVertical: 5,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modeButtonText: {
+    color: "white",
+    fontSize: 18,
+  },
+  
 });
