@@ -29,6 +29,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
     const [isOriginSet, setIsOriginSet] = useState(false);
     const [isInputFocused, setIsInputFocused] = useState(false); 
     const defaultTravel = 'TRANSIT';
+    const [selectedMode, setSelectedMode] = useState<'DRIVING' | 'BICYCLING' | 'WALKING' | 'TRANSIT'>(defaultTravel);
 
     return (
         <View style={styles.container}>
@@ -160,51 +161,34 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                     </TouchableOpacity>
                 ) : (
                     <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (origin && destination) {
-                                setShowTransportation(true);
-                                setRenderMap(true);
-                                setTravelMode('TRANSIT');
-                            }
-                        }}
-                    >
-                        <MaterialIcons name="directions-car" size={24} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (origin && destination) {
-                                setShowTransportation(true);
-                                setRenderMap(true);
-                                setTravelMode('TRANSIT');
-                            }
-                        }}
-                    >
-                        <MaterialIcons name="directions-bus" size={24} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (origin && destination) {
-                                setShowTransportation(true);
-                                setRenderMap(true);
-                                setTravelMode('WALKING');
-                            }
-                        }}
-                    >
-                        <MaterialIcons name="directions-walk" size={24} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (origin && destination) {
-                                setShowTransportation(true);
-                                setRenderMap(true);
-                                setTravelMode('BICYCLING');
-                            }
-                        }}
-                    >
-                        <MaterialIcons name="directions-bike" size={24} color="black" />
-                    </TouchableOpacity>
-                    </View>
+                    {[
+                        { mode: 'DRIVING' as const, icon: 'directions-car' as const },
+                        { mode: 'TRANSIT' as const, icon: 'directions-bus' as const},
+                        { mode: 'WALKING' as const, icon: 'directions-walk' as const},
+                        { mode: 'BICYCLING' as const, icon: 'directions-bike' as const},
+                    ].map(({ mode, icon }) => (
+                        <TouchableOpacity
+                            key={mode}
+                            onPress={() => {
+                                if (origin && destination) {
+                                    setRenderMap(true);
+                                    setTravelMode(mode);
+                                    setSelectedMode(mode);
+                                }
+                            }}
+                            style={[
+                                styles.transportButton,
+                                selectedMode === mode && styles.selectedButton,
+                            ]}
+                        >
+                            <MaterialIcons
+                                name={icon}
+                                size={24}
+                                color={selectedMode === mode ? "white" : "black"}
+                            />
+                        </TouchableOpacity>
+                    ))}
+                </View>
                 )}
                 
             </View>
