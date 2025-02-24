@@ -3,6 +3,9 @@
     "entryPoint": "./myApp/app/index.js",
     "name": "myApp",
     "slug": "myApp",
+    "extra": {
+      "apiKey": ""
+    },
     "version": "1.0.0",
     "sdkVersion": "52.0.0",
     "orientation": "portrait",
@@ -12,7 +15,10 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.myApp"
+      "bundleIdentifier": "com.anonymous.myApp",
+      "config": {
+        "googleMapsApiKey": ""
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -29,7 +35,7 @@
         {
           "tag": "script",
           "attrs": {
-            "src": "https://maps.googleapis.com/maps/api/js?key=AIzaSyBdODoY5Fr_jtGEJ2P-y3ZqxbZA9QMUoT0&libraries=places",
+            "src": "",
             "async": true,
             "defer": true
           }

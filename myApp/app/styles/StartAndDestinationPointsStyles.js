@@ -1,0 +1,103 @@
+import { StyleSheet } from "react-native";
+
+export default StyleSheet.create({
+    container: {
+        position: 'absolute',
+        top: 100,
+        left: 20,
+        right: 20,
+        alignItems: 'center',
+        zIndex: 3,
+    },
+    card: {
+        backgroundColor: 'white',
+        padding: 15,
+        borderRadius: 28,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 5,
+        width: '100%',
+    },
+    inputRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        width: 50,
+        textAlign: 'right',
+        position: "relative",
+        right: 10,
+        
+    },
+    input: {
+        flex: 1,
+        backgroundColor: '#eee',
+        borderRadius: 7,
+        paddingHorizontal: 10,
+        height: 40,
+        position: "relative",
+    },
+    dropdownFrom: {
+        position: 'absolute',
+        top: 93,
+        width: '125.8%',
+        left: -65,
+        backgroundColor: 'white',
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 28,
+        borderBottomLeftRadius: 28,
+        elevation: 5,
+        maxHeight: 150,
+        zIndex: 10,
+    },
+
+    dropdownTo: {
+        position: 'absolute',
+        top: 40,
+        width: '125.8%',
+        left: -65,
+        backgroundColor: 'white',
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 28,
+        borderBottomLeftRadius: 28,
+        elevation: 5,
+        maxHeight: 150,
+        zIndex: 11,
+    },
+    
+    dropdownItem: {
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
+    },
+    button: {
+        backgroundColor: '#eee',
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 7,
+        alignSelf: 'flex-start',
+        marginTop: 5,
+        position: "absolute",
+        top: 120,
+        left: 10,
+        elevation: 40,
+        shadowColor: "black",
+    },
+    buttonText: {
+        fontSize: 14,
+        color: 'black',
+    },
+    buttonContainer: {
+        flexDirection: 'row',       
+        justifyContent: 'space-between',
+        paddingHorizontal: 10,          
+        marginTop: 10,                 
+    }
+});

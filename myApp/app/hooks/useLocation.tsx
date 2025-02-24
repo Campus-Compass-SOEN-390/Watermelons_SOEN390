@@ -22,11 +22,22 @@ const useLocation = () => {
 
       setHasPermission(true);
 
-      let currentLocation = await Location.getCurrentPositionAsync({});
-      setLocation({
-        latitude: currentLocation.coords.latitude,
-        longitude: currentLocation.coords.longitude,
-      });
+      // Track location continuously
+      const subscription = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 5000, // Update every 5 seconds
+          distanceInterval: 5, // Update every 5 meters
+        },
+        (currentLocation) => {
+          setLocation({
+            latitude: currentLocation.coords.latitude,
+            longitude: currentLocation.coords.longitude,
+          });
+        }
+      );
+
+      return () => subscription.remove(); // Cleanup
     })();
   }, []);
 

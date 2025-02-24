@@ -93,20 +93,28 @@ export default StyleSheet.create({
   // Switch Button Container is now positioned on the left
   switchButtonContainer: {
     position: "absolute",
-    top: 50,
+    bottom: 65,
     left: 20,
-    zIndex: 1,
+    zIndex: 2,
+    
   },
   switchButton: {
     backgroundColor: "#922338",
     padding: 10,
-    borderRadius: 5,
-    top : 50,
+    borderRadius: 20,
+    bottom: 50,
   },
   // Switch Button Text: white, bold, and easily readable
   switchButtonText: {
     color: "#fff",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 13,
+  },
+  titleForMap: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    textAlign: "center",
+    color: "#333",
   },
 });

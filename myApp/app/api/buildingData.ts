@@ -1,15 +1,49 @@
-import React from "react";
-const buildings = [
+// Campus enum for consistent campus identifiers
+export enum Campus {
+  SGW = "SGW",
+  LOY = "LOY",
+}
 
+// Type for coordinates
+export interface Coordinates {
+  latitude: number;
+  longitude: number;
+}
+
+// Updated Building interface now includes campus (typed using Campus)
+// and an optional coordinates field.
+export interface Building {
+  id: string;
+  name: string;
+  longName: string;
+  openHours: string;
+  wheelchairAccessible: boolean;
+  departments: string[];
+  services?: string[];
+  coordinates?: Coordinates[];
+  campus: Campus;
+}
+
+/*
+  The merged buildings array uses the original building data from buildingData.ts,
+  and for those buildings that have matching coordinate data from mapUtils.tsx the
+  coordinates property is added. Additionally, some building longNames (and even
+  abbreviations) have been updated to resolve naming inconsistencies. For example:
+  • The building with id "sgw21" now uses name "JMSB" and longName "John Molson School of Business"
+  • “Administration Building” becomes “Loyola Administration Building”
+  • The three “Hingston Hall” entries are renamed to include A, B, and C.
+*/
+
+export const buildings: Building[] = [
+  // LOY Campus Buildings
   {
     id: "loy1",
     name: "AD",
-    longName: "Administration Building",
+    longName: "Loyola Administration Building",
     openHours: "Monday - Friday: 9:00 AM - 5:00 PM",
     wheelchairAccessible: true,
     departments: ["Faculty of Arts and Science"],
-    latitude: 45.457984,
-    longitude: -73.639834
+    campus: Campus.LOY,
   },
   {
     id: "loy2",
@@ -18,8 +52,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:30 AM - 4:30 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.459793,
-    longitude: -73.639174
+    campus: Campus.LOY,
   },
   {
     id: "loy3",
@@ -28,8 +61,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:30 AM - 4:30 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.459819,
-    longitude: -73.639152
+    campus: Campus.LOY,
   },
   {
     id: "loy4",
@@ -38,18 +70,28 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: true,
     departments: ["Not Available"],
-    latitude: 45.458204,
-    longitude: -73.6403
+    campus: Campus.LOY,
+    coordinates: [
+      { latitude: 45.45879783164691, longitude: -73.64116974399921 },
+      { latitude: 45.45839267330936, longitude: -73.64143115333147 },
+      { latitude: 45.45781370224986, longitude: -73.63984341091212 },
+      { latitude: 45.458255329639066, longitude: -73.63945350094436 },
+    ],
   },
   {
     id: "loy5",
     name: "CJ",
-    longName: "Communication Studies and Journalism Building",
+    longName: "Communications and Journalism Building",
     openHours: "Monday - Friday: 8:00 AM - 6:00 PM",
     wheelchairAccessible: true,
     departments: ["Communication Studies", "Journalism"],
-    latitude: 45.457478,
-    longitude: -73.640354
+    campus: Campus.LOY,
+    coordinates: [
+      { latitude: 45.457284244031285, longitude: -73.63763317156965 },
+      { latitude: 45.45701819500725, longitude: -73.63783558975122 },
+      { latitude: 45.45668459808416, longitude: -73.63699447342395 },
+      { latitude: 45.45695340567661, longitude: -73.636780263892 },
+    ],
   },
   {
     id: "loy6",
@@ -58,9 +100,7 @@ const buildings = [
     openHours: "Monday - Sunday: 9:00 AM - 10:00 PM",
     wheelchairAccessible: false,
     departments: ["Stingers.ca"],
-    latitude: 45.457878561554764,
-    longitude: -73.63612164574411
-   
+    campus: Campus.LOY,
   },
   {
     id: "loy7",
@@ -69,78 +109,112 @@ const buildings = [
     openHours: "Not Available",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.458493,
-    longitude: -73.639287
+    campus: Campus.LOY,
   },
   {
     id: "loy8",
     name: "GE",
-    longName: "Centre for Structural and Functional Genomics",
+    longName: "Centre for Structural and Functional Genomics Building",
     openHours: "Monday - Friday: 8:00 AM - 5:00 PM",
     wheelchairAccessible: true,
     departments: ["Not Available"],
-    latitude: 45.457017,
-    longitude: -73.640432
+    campus: Campus.LOY,
+    coordinates: [
+      { latitude: 45.457171556137446, longitude: -73.64057071367107 },
+      { latitude: 45.456952508899235, longitude: -73.64074464211575 },
+      { latitude: 45.45680693906143, longitude: -73.64034342081722 },
+      { latitude: 45.4570440097478, longitude: -73.64017344529175 },
+    ],
   },
   {
     id: "loy9",
     name: "HA",
-    longName: "Hingston Hall, wing HA",
+    longName: "Hingston Hall A Building",
     openHours: "Monday - Friday: 9:00 AM - 6:00 PM",
     wheelchairAccessible: true,
     departments: ["Not Available"],
-    latitude: 45.459356,
-    longitude: -73.64127
+    campus: Campus.LOY,
+    coordinates: [
+      { latitude: 45.45969784997463, longitude: -73.64136123390169 },
+      { latitude: 45.45942894983393, longitude: -73.64155628153311 },
+      { latitude: 45.45925345641895, longitude: -73.641076060813 },
+      { latitude: 45.45950631772512, longitude: -73.64087697771338 },
+    ],
   },
   {
     id: "loy10",
     name: "HB",
-    longName: "Hingston Hall, wing HB",
+    longName: "Hingston Hall B Building",
     openHours: "Monday - Friday: 9:00 AM - 6:00 PM",
     wheelchairAccessible: true,
     departments: ["Not Available"],
-    latitude: 45.459308,
-    longitude: -73.641849
+    campus: Campus.LOY,
+    coordinates: [
+      { latitude: 45.45955663320831, longitude: -73.64198943146944 },
+      { latitude: 45.459140240357215, longitude: -73.64233198897811 },
+      { latitude: 45.4589276398003, longitude: -73.64182981043137 },
+      { latitude: 45.45936919390666, longitude: -73.64150698136561 },
+    ],
   },
   {
     id: "loy11",
     name: "HC",
-    longName: "Hingston Hall, wing HC",
+    longName: "Hingston Hall C Building",
     openHours: "Monday - Friday: 9:00 AM - 6:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.459663,
-    longitude: -73.64208
+    campus: Campus.LOY,
+    coordinates: [
+      { latitude: 45.459906138169075, longitude: -73.64203607306884 },
+      { latitude: 45.45963415262996, longitude: -73.64225135213151 },
+      { latitude: 45.45954317786371, longitude: -73.64201735315037 },
+      { latitude: 45.459828294166044, longitude: -73.64181544545804 },
+    ],
   },
   {
     id: "loy12",
     name: "HU",
-    longName: "Applied Science Hub",
+    longName: "Applied Science Hub Building",
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: true,
     departments: ["Not Available"],
-    latitude: 45.458513,
-    longitude: -73.641921
+    campus: Campus.LOY,
+    coordinates: [
+      { latitude: 45.458446186335834, longitude: -73.64211713925434 },
+      { latitude: 45.458294086004564, longitude: -73.64171981633193 },
+      { latitude: 45.458577502440896, longitude: -73.64150701286837 },
+      { latitude: 45.458729602007686, longitude: -73.64190568264816 },
+    ],
   },
   {
     id: "loy13",
     name: "JR",
-    longName: "Jesuit Residence",
+    longName: "Jesuit Residence Building",
     openHours: "Monday - Sunday: 12:00 AM - 12:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.458432,
-    longitude: -73.643235
+    campus: Campus.LOY,
+    coordinates: [
+      { latitude: 45.45847571531779, longitude: -73.64341800596794 },
+      { latitude: 45.45838340608896, longitude: -73.64317511614011 },
+      { latitude: 45.45855005821098, longitude: -73.64304174754373 },
+      { latitude: 45.45864732334826, longitude: -73.64330583502928 },
+    ],
   },
   {
     id: "loy14",
     name: "PC",
-    longName: "PERFORM Centre",
+    longName: "Perform Centre Building",
     openHours: "Monday - Friday: 6:30 AM - 10:00 PM, Saturday - Sunday: 8:00 AM - 6:00 PM",
     wheelchairAccessible: true,
     departments: ["Not Available"],
-    latitude: 45.457088,
-    longitude: -73.637683
+    campus: Campus.LOY,
+    coordinates: [
+      { latitude: 45.457284244031285, longitude: -73.63763317156965 },
+      { latitude: 45.45701819500725, longitude: -73.63783558975122 },
+      { latitude: 45.45668459808416, longitude: -73.63699447342395 },
+      { latitude: 45.45695340567661, longitude: -73.636780263892 },
+    ],
   },
   {
     id: "loy15",
@@ -149,8 +223,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 4:00 PM",
     wheelchairAccessible: true,
     departments: ["Not Available"],
-    latitude: 45.459636,
-    longitude: -73.639758
+    campus: Campus.LOY,
   },
   {
     id: "loy16",
@@ -159,8 +232,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: true,
     departments: ["Oscar Peterson Concert Hall"],
-    latitude: 45.459308,
-    longitude: -73.638941
+    campus: Campus.LOY,
   },
   {
     id: "loy17",
@@ -169,8 +241,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Centre for clinical research in health (CCRH)", "Psychology"],
-    latitude: 45.458938,
-    longitude: -73.640467
+    campus: Campus.LOY,
   },
   {
     id: "loy18",
@@ -179,8 +250,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: true,
     departments: ["Not Available"],
-    latitude: 45.459207978892366,
-    longitude: -73.6386558034162
+    campus: Campus.LOY,
   },
   {
     id: "loy19",
@@ -189,18 +259,22 @@ const buildings = [
     openHours: "Monday - Friday: 9:00 AM - 9:00 PM, Saturday - Sunday: 10:00 AM - 9:00 PM",
     wheelchairAccessible: true,
     departments: ["Not Available"],
-    latitude: 45.456774,
-    longitude: -73.63761
+    campus: Campus.LOY,
   },
   {
     id: "loy20",
     name: "RF",
-    longName: "Loyola Jesuit Hall and Conference Centre",
+    longName: "Loyola Jesuit Hall and Conference Centre Building",
     openHours: "Monday - Friday: 9:00 AM - 5:00 PM",
     wheelchairAccessible: true,
     departments: ["Not Available"],
-    latitude: 45.458489,
-    longitude: -73.641028
+    campus: Campus.LOY,
+    coordinates: [
+      { latitude: 45.45862022823182, longitude: -73.64002729351685 },
+      { latitude: 45.45851645293705, longitude: -73.64011576618299 },
+      { latitude: 45.45839267330936, longitude: -73.63974897325465 },
+      { latitude: 45.45861884326248, longitude: -73.63954989015503 },
+    ],
   },
   {
     id: "loy21",
@@ -209,8 +283,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: true,
     departments: ["Not Available"],
-    latitude: 45.459131,
-    longitude: -73.639251
+    campus: Campus.LOY,
   },
   {
     id: "loy22",
@@ -219,8 +292,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.459298,
-    longitude: -73.642478
+    campus: Campus.LOY,
   },
   {
     id: "loy23",
@@ -229,18 +301,53 @@ const buildings = [
     openHours: "Saturday: 4:30 PM (Traditional music, organ, and choir), Sunday: 10:00 AM (Contemporary band), 5:00 PM. Weekdays: Monday & Wednesday-Thursday: 9:00 AM, Tuesday: 6:30 PM. Confession: Saturday 3:45 PM - 4:15 PM.",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.4582459932296,
-    longitude: -73.64267020368143
+    campus: Campus.LOY,
+    coordinates: [
+      { latitude: 45.45763825199133, longitude: -73.64257106756277 },
+      { latitude: 45.4575696249186, longitude: -73.6423945340532 },
+      { latitude: 45.45771090577136, longitude: -73.64214275474285 },
+      { latitude: 45.45792619309263, longitude: -73.64194166629126 },
+      { latitude: 45.45816557532826, longitude: -73.64252279985682 },
+      { latitude: 45.457964251173095, longitude: -73.6426822757242 },
+      { latitude: 45.457889971914376, longitude: -73.64250464294128 },
+      { latitude: 45.45764197432576, longitude: -73.64256954722735 },
+    ],
   },
   {
     id: "loy24",
     name: "SP",
-    longName: "Richard J. Renaud Science Complex",
+    longName: "Richard J. Renaud Science Complex Building",
     openHours: "Monday - Friday: 9:00 AM - 6:00 PM",
     wheelchairAccessible: true,
-    departments: ["Biology", "Centre for Biological Applications of Mass Spectrometry", "Centre for NanoScience Research", "Centre for Research in Molecular Modeling", "Centre for Studies in Behavioral Neurobiology", "Chemistry and Biochemistry", "Health, Kinesiology & Applied Physiology", "Physics", "Psychology"],
-    latitude: 45.457881,
-    longitude: -73.641565
+    departments: [
+      "Biology",
+      "Centre for Biological Applications of Mass Spectrometry",
+      "Centre for NanoScience Research",
+      "Centre for Research in Molecular Modeling",
+      "Centre for Studies in Behavioral Neurobiology",
+      "Chemistry and Biochemistry",
+      "Health, Kinesiology & Applied Physiology",
+      "Physics",
+      "Psychology"
+    ],
+    campus: Campus.LOY,
+    coordinates: [
+      { latitude: 45.45832821103611, longitude: -73.64141343267241 },
+      { latitude: 45.45827742437653, longitude: -73.64128710966807 },
+      { latitude: 45.458215831983296, longitude: -73.64133486592581 },
+      { latitude: 45.45818557604618, longitude: -73.64126400180143 },
+      { latitude: 45.45825797415436, longitude: -73.64120084029926 },
+      { latitude: 45.458193140032016, longitude: -73.64103908523273 },
+      { latitude: 45.458340097268966, longitude: -73.6409235458995 },
+      { latitude: 45.45831524423375, longitude: -73.64086500597067 },
+      { latitude: 45.45752534422485, longitude: -73.64146889156062 },
+      { latitude: 45.45720981336176, longitude: -73.64065395413022 },
+      { latitude: 45.45698829235157, longitude: -73.64082957391673 },
+      { latitude: 45.45744213934359, longitude: -73.64200037251645 },
+      { latitude: 45.45764312756321, longitude: -73.64184786058948 },
+      { latitude: 45.457677706108356, longitude: -73.6419233462872 },
+      { latitude: 45.45832604990376, longitude: -73.64141343269652 },
+    ],
   },
   {
     id: "loy25",
@@ -249,8 +356,13 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Centre for the Arts in Human Development (CAHD)"],
-    latitude: 45.459992,
-    longitude: -73.640897
+    campus: Campus.LOY,
+    coordinates: [
+      { latitude: 45.45968821064703, longitude: -73.64035807183336 },
+      { latitude: 45.459292890682676, longitude: -73.63945965226893 },
+      { latitude: 45.45962819525333, longitude: -73.63918250006375 },
+      { latitude: 45.460011770799426, longitude: -73.64017764388771 },
+    ],
   },
   {
     id: "loy26",
@@ -259,20 +371,38 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 4:00 PM",
     wheelchairAccessible: true,
     departments: ["Applied Human Sciences"],
-    latitude: 45.459026,
-    longitude: -73.638606
+    campus: Campus.LOY,
   },
   {
     id: "loy27",
     name: "VL",
-    longName: "Vanier Library Building",
+    longName: "Vanier Library",
     openHours: "Monday - Friday: 12:00 AM - 12:00 PM",
     wheelchairAccessible: true,
     departments: ["Not Available"],
-    latitude: 45.459026,
-    longitude: -73.638606
+    campus: Campus.LOY,
+    coordinates: [
+      { latitude: 45.459485372131994, longitude: -73.63913679975713 },
+      { latitude: 45.45935160556695, longitude: -73.63923974928578 },
+      { latitude: 45.45932201115127, longitude: -73.63918067988408 },
+      { latitude: 45.45926755738584, longitude: -73.63921949691948 },
+      { latitude: 45.45930425449441, longitude: -73.63932413414534 },
+      { latitude: 45.45921783868454, longitude: -73.6393308849341 },
+      { latitude: 45.45921783868454, longitude: -73.63933594802567 },
+      { latitude: 45.459112482243995, longitude: -73.63941864518803 },
+      { latitude: 45.45899292020223, longitude: -73.63912667357397 },
+      { latitude: 45.45908170392085, longitude: -73.63900515937621 },
+      { latitude: 45.45903672018755, longitude: -73.63887858208687 },
+      { latitude: 45.45884257945327, longitude: -73.6390254117425 },
+      { latitude: 45.45861884326248, longitude: -73.63841615304815 },
+      { latitude: 45.4588567848922, longitude: -73.63820012780769 },
+      { latitude: 45.458812984767114, longitude: -73.63807017512399 },
+      { latitude: 45.45910301198917, longitude: -73.63784908679193 },
+      { latitude: 45.459213103564494, longitude: -73.63813261992004 },
+      { latitude: 45.459134974081564, longitude: -73.6382018155049 },
+    ],
   },
-
+  // SGW Campus Buildings
   {
     id: "sgw1",
     name: "B",
@@ -280,8 +410,7 @@ const buildings = [
     openHours: "Monday - Friday: 9:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.497856,
-    longitude: -73.579588
+    campus: Campus.SGW,
   },
   {
     id: "sgw2",
@@ -290,8 +419,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["School of Community and Public Affairs"],
-    latitude: 45.497467,
-    longitude: -73.579925
+    campus: Campus.SGW,
   },
   {
     id: "sgw3",
@@ -300,8 +428,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: true,
     departments: ["Not Available"],
-    latitude: 45.494259,
-    longitude: -73.579007
+    campus: Campus.SGW,
   },
   {
     id: "sgw4",
@@ -310,8 +437,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Theological Studies"],
-    latitude: 45.497827,
-    longitude: -73.579409
+    campus: Campus.SGW,
   },
   {
     id: "sgw5",
@@ -320,8 +446,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.496944,
-    longitude: -73.579555
+    campus: Campus.SGW,
   },
   {
     id: "sgw6",
@@ -329,19 +454,48 @@ const buildings = [
     longName: "ER Building",
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: true,
-    departments: ["Computer Scence and Software Engineering", "Department of Creative Arts Therapies", "engAGE: Centre for Research on Aging", "Next-Generation Cities Institue", "Simone de Beauvoir Institue", "Sustainability in the Digital Age", "Urban Studies"],
-    latitude: 45.496428,
-    longitude: -73.57999
+    departments: [
+      "Computer Scence and Software Engineering",
+      "Department of Creative Arts Therapies",
+      "engAGE: Centre for Research on Aging",
+      "Next-Generation Cities Institue",
+      "Simone de Beauvoir Institue",
+      "Sustainability in the Digital Age",
+      "Urban Studies"
+    ],
+    campus: Campus.SGW,
+    coordinates: [
+      { latitude: 45.4966874910767, longitude: -73.58014312979104 },
+      { latitude: 45.49629611013139, longitude: -73.58045288885724 },
+      { latitude: 45.49613291868629, longitude: -73.57997345285033 },
+      { latitude: 45.49653121561911, longitude: -73.57966172079647 },
+    ],
   },
   {
     id: "sgw7",
     name: "EV",
-    longName: "Engineering, Computer Science and Visual Arts Integrated Complex",
+    longName: "Pavillon EV Building",
     openHours: "Monday - Sunday: 7:00 AM - 11:00 PM",
     wheelchairAccessible: true,
-    departments: ["Art Education", "Art History","Building, Civil and Environmental Engineering", "Centre for Composites (CONCOM)","Centre for Pattern Recognition and Machine Intelligence (CENPARMI)", "Chemical and Materials Engineering", "Contemporary Dance", "Design and Computation Arts"],
-    latitude: 45.495376,
-    longitude: -73.577997
+    departments: [
+      "Art Education",
+      "Art History",
+      "Building, Civil and Environmental Engineering",
+      "Centre for Composites (CONCOM)",
+      "Centre for Pattern Recognition and Machine Intelligence (CENPARMI)",
+      "Chemical and Materials Engineering",
+      "Contemporary Dance",
+      "Design and Computation Arts"
+    ],
+    campus: Campus.SGW,
+    coordinates: [
+      { latitude: 45.49567383989148, longitude: -73.57807898778127 },
+      { latitude: 45.49586446758388, longitude: -73.57849838295294 },
+      { latitude: 45.49561182833434, longitude: -73.57876050493525 },
+      { latitude: 45.49524664777955, longitude: -73.57790860849278 },
+      { latitude: 45.495832313560506, longitude: -73.57726313311137 },
+      { latitude: 45.49604131438413, longitude: -73.57771529353083 },
+    ],
   },
   {
     id: "sgw8",
@@ -350,8 +504,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Department of Religions and Cultures"],
-    latitude: 45.496874,
-    longitude: -73.579468
+    campus: Campus.SGW,
   },
   {
     id: "sgw9",
@@ -359,9 +512,13 @@ const buildings = [
     longName: "Faubourg Building",
     openHours: "Monday - Sunday: 7:00 AM - 11:00 PM",
     wheelchairAccessible: true,
-    departments: ["Classics, Modern Languages & Linguistics", "Concordia Continuing Education","District 3 Innovation Centre", "Mel Hoppenheim School of Cinema"],
-    latitude: 45.494666,
-    longitude: -73.577603
+    departments: [
+      "Classics, Modern Languages & Linguistics",
+      "Concordia Continuing Education",
+      "District 3 Innovation Centre",
+      "Mel Hoppenheim School of Cinema"
+    ],
+    campus: Campus.SGW,
   },
   {
     id: "sgw10",
@@ -370,8 +527,13 @@ const buildings = [
     openHours: "Monday - Friday: 8:00 AM - 7:00 PM, Saturday: 9:00 AM - 7:00 PM",
     wheelchairAccessible: true,
     departments: ["Education"],
-    latitude: 45.494381,
-    longitude: -73.578425
+    campus: Campus.SGW,
+    coordinates: [
+      { latitude: 45.494697617359805, longitude: -73.57803821546234 },
+      { latitude: 45.493842086826234, longitude: -73.57907383173514 },
+      { latitude: 45.493637259181746, longitude: -73.57873392697057 },
+      { latitude: 45.49445099181303, longitude: -73.57761880079917 },
+    ],
   },
   {
     id: "sgw11",
@@ -380,8 +542,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Department of Education"],
-    latitude: 45.494123,
-    longitude: -73.57787
+    campus: Campus.SGW,
   },
   {
     id: "sgw12",
@@ -390,8 +551,7 @@ const buildings = [
     openHours: "Monday - Friday: 9:00 AM - 5:00 PM",
     wheelchairAccessible: true,
     departments: ["Contemporary Dance", "Music", "Theatre"],
-    latitude: 45.495983,
-    longitude: -73.578824
+    campus: Campus.SGW,
   },
   {
     id: "sgw13",
@@ -400,18 +560,24 @@ const buildings = [
     openHours: "Monday - Friday: 7:30 AM - 9:30 PM, Saturday - Sunday: 8:00 AM - 9:30 PM",
     wheelchairAccessible: false,
     departments: ["Department of Philosophy (temporary)"],
-    latitude: 45.493622,
-    longitude: -73.577003
+    campus: Campus.SGW,
+    coordinates: [
+      { latitude: 45.49444588559977, longitude: -73.57704684530952 },
+      { latitude: 45.49394352956143, longitude: -73.57761419053239 },
+      { latitude: 45.49379003098923, longitude: -73.57718619325901 },
+      { latitude: 45.49312370279178, longitude: -73.57780828231915 },
+      { latitude: 45.492475465970664, longitude: -73.57653820344966 },
+      { latitude: 45.493800943703896, longitude: -73.57548347923793 },
+    ],
   },
   {
     id: "sgw14",
     name: "GS",
-    longName: "Guy-Sherbrooke Building",
+    longName: "GS Building",
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.496673,
-    longitude: -73.581409
+    campus: Campus.SGW,
   },
   {
     id: "sgw15",
@@ -419,9 +585,12 @@ const buildings = [
     longName: "Henry F. Hall Building",
     openHours: "Monday - Sunday: 7:00 AM - 11:00 PM",
     wheelchairAccessible: true,
-    departments: ["Geography, Planning and Environment", "Political Science, Sociology and Anthropology, Economics", "School of Irish Studies"],
-    latitude: 45.497092,
-    longitude: -73.5788
+    departments: [
+      "Geography, Planning and Environment",
+      "Political Science, Sociology and Anthropology, Economics",
+      "School of Irish Studies"
+    ],
+    campus: Campus.SGW,
   },
   {
     id: "sgw16",
@@ -430,18 +599,30 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.497777,
-    longitude: -73.579531
+    campus: Campus.SGW,
   },
   {
     id: "sgw17",
     name: "LB",
-    longName: "J.W. McConnell Building",
+    longName: "LB Building",
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: true,
-    departments: ["Centre for Interdisciplinary Studies in Society and Culture (CISSC)", "Centre for the Study of learning and Performance", "Education","English","Études françaises", "History","Mathematics and Statistics"],
-    latitude: 45.49705,
-    longitude: -73.578009
+    departments: [
+      "Centre for Interdisciplinary Studies in Society and Culture (CISSC)",
+      "Centre for the Study of learning and Performance",
+      "Education",
+      "English",
+      "Études françaises",
+      "History",
+      "Mathematics and Statistics"
+    ],
+    campus: Campus.SGW,
+    coordinates: [
+      { latitude: 45.49730622534821, longitude: -73.57807280428914 },
+      { latitude: 45.496690697848365, longitude: -73.57864792247945 },
+      { latitude: 45.49626806063387, longitude: -73.57770485232867 },
+      { latitude: 45.49689659688067, longitude: -73.57717611463757 },
+    ],
   },
   {
     id: "sgw18",
@@ -450,18 +631,24 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.496697,
-    longitude: -73.577312
+    campus: Campus.SGW,
   },
   {
     id: "sgw19",
     name: "LS",
-    longName: "Learning Square (LS Building)",
+    longName: "Learning Square Building",
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.496682816489766,
-    longitude: -73.57951421587161
+    campus: Campus.SGW,
+    coordinates: [
+      { latitude: 45.49653594280453, longitude: -73.57957024371711 },
+      { latitude: 45.49642006398626, longitude: -73.57968408412736 },
+      { latitude: 45.49637079806912, longitude: -73.57958608238289 },
+      { latitude: 45.49627087833015, longitude: -73.57967517487786 },
+      { latitude: 45.496166101191235, longitude: -73.57944749405738 },
+      { latitude: 45.49638328802403, longitude: -73.57923664181928 },
+    ],
   },
   {
     id: "sgw20",
@@ -470,18 +657,32 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.497368,
-    longitude: -73.579777
+    campus: Campus.SGW,
   },
   {
     id: "sgw21",
-    name: "MB",
-    longName: "John Molson Building",
+    name: "JMSB",
+    longName: "John Molson School of Business",
     openHours: "Monday - Sunday: 7:00 AM - 11:00 PM",
     wheelchairAccessible: true,
-    departments: ["Accountancy, Contemporary Dance", "Executive MBA Program", "Finance", "Goodman Institue of Investment Management", "Management", "Marketing", "Music","Supply Chain & Business Technology Management"," Theatre" ],
-    latitude: 45.495304,
-    longitude: -73.579044
+    departments: [
+      "Accountancy, Contemporary Dance",
+      "Executive MBA Program",
+      "Finance",
+      "Goodman Institue of Investment Management",
+      "Management",
+      "Marketing",
+      "Music",
+      "Supply Chain & Business Technology Management",
+      "Theatre"
+    ],
+    campus: Campus.SGW,
+    coordinates: [
+      { latitude: 45.49551994498565, longitude: -73.57920062907395 },
+      { latitude: 45.49535857941148, longitude: -73.5793643521431 },
+      { latitude: 45.49501011165603, longitude: -73.5787600651902 },
+      { latitude: 45.495193735650766, longitude: -73.57853184516286 },
+    ],
   },
   {
     id: "sgw22",
@@ -490,8 +691,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.497807,
-    longitude: -73.579261
+    campus: Campus.SGW,
   },
   {
     id: "sgw23",
@@ -500,8 +700,7 @@ const buildings = [
     openHours: "Monday - Friday: 9:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.497963,
-    longitude: -73.579506
+    campus: Campus.SGW,
   },
   {
     id: "sgw24",
@@ -510,8 +709,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.496745,
-    longitude: -73.579113
+    campus: Campus.SGW,
   },
   {
     id: "sgw25",
@@ -520,8 +718,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.497066,
-    longitude: -73.57979
+    campus: Campus.SGW,
   },
   {
     id: "sgw26",
@@ -530,8 +727,7 @@ const buildings = [
     openHours: "Not Available",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.496648,
-    longitude: -73.579094
+    campus: Campus.SGW,
   },
   {
     id: "sgw27",
@@ -540,8 +736,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Religions and Cultures"],
-    latitude: 45.496826,
-    longitude: -73.579389
+    campus: Campus.SGW,
   },
   {
     id: "sgw28",
@@ -550,17 +745,16 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Liberal Arts College"],
-    latitude: 45.496796,
-    longitude: -73.579259
+    campus: Campus.SGW,
   },
   {
     id: "sgw29",
     name: "S",
     longName: "S Annex",
     openHours: "Monday - Friday: 9:00 AM - 5:00 PM",
+    wheelchairAccessible: false,
     departments: ["Department of Philosophy"],
-    latitude: 45.497423,
-    longitude: -73.579851
+    campus: Campus.SGW,
   },
   {
     id: "sgw30",
@@ -569,8 +763,7 @@ const buildings = [
     openHours: "Monday - Sunday: 12:00 AM - 12:00 PM",
     wheelchairAccessible: true,
     departments: ["Not Available"],
-    latitude: 45.4966,
-    longitude: -73.58609
+    campus: Campus.SGW,
   },
   {
     id: "sgw31",
@@ -579,8 +772,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.49671,
-    longitude: -73.57927
+    campus: Campus.SGW,
   },
   {
     id: "sgw32",
@@ -589,8 +781,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.495103,
-    longitude: -73.578375
+    campus: Campus.SGW,
   },
   {
     id: "sgw33",
@@ -598,9 +789,9 @@ const buildings = [
     longName: "V Annex",
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: true,
-    departments: ["Not Available"],
-    latitude: 45.497101,
-    longitude: -73.579907
+    departments: [],
+    services: [],
+    campus: Campus.SGW,
   },
   {
     id: "sgw34",
@@ -609,8 +800,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: true,
     departments: ["Art Education", "Art History", "Creative Arts Therapies", "Studio Arts"],
-    latitude: 45.495543,
-    longitude: -73.573795
+    campus: Campus.SGW,
   },
   {
     id: "sgw35",
@@ -619,8 +809,7 @@ const buildings = [
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: false,
     departments: ["Not Available"],
-    latitude: 45.49694,
-    longitude: -73.579593
+    campus: Campus.SGW,
   },
   {
     id: "sgw36",
@@ -629,16 +818,17 @@ const buildings = [
     openHours: "Not Available",
     wheelchairAccessible: false,
     departments: ["Not available"],
-    latitude: 45.496981,
-    longitude: -73.579705
-  }
-    
-  ];
-  
-  export const getAllBuildings = () => buildings;
-  
-  export const getBuildingById = (id: string) => {
-    return buildings.find((building) => building.id === id);
-  };
+    campus: Campus.SGW,
+  },
+];
 
-  
+export const getAllBuildings = (): Building[] => buildings;
+
+export const getBuildingById = (id: string): Building | undefined =>
+  buildings.find((building) => building.id === id);
+
+export default {
+  buildings,
+  getAllBuildings,
+  getBuildingById,
+};
