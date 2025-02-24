@@ -32,6 +32,7 @@ export default StyleSheet.create({
         textAlign: 'right',
         position: "relative",
         right: 10,
+        
     },
     input: {
         flex: 1,
@@ -39,18 +40,38 @@ export default StyleSheet.create({
         borderRadius: 7,
         paddingHorizontal: 10,
         height: 40,
+        position: "relative",
     },
-    dropdown: {
+    dropdownFrom: {
+        position: 'absolute',
+        top: 93,
+        width: '125.8%',
+        left: -65,
+        backgroundColor: 'white',
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 28,
+        borderBottomLeftRadius: 28,
+        elevation: 5,
+        maxHeight: 150,
+        zIndex: 10,
+    },
+
+    dropdownTo: {
         position: 'absolute',
         top: 40,
         width: '125.8%',
         left: -65,
         backgroundColor: 'white',
-        borderRadius: 28,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 28,
+        borderBottomLeftRadius: 28,
         elevation: 5,
         maxHeight: 150,
-        zIndex: 10,
+        zIndex: 11,
     },
+    
     dropdownItem: {
         padding: 10,
         borderBottomWidth: 1,

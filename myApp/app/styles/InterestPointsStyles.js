@@ -181,4 +181,56 @@ export default StyleSheet.create({
     fontSize: 14,
     color: "#666",
   },
+
+  filterButton: {
+    backgroundColor: "#007AFF",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginVertical: 15, // Increased margin to push it down
+    marginHorizontal: 20, // Added some spacing from edges
+    alignSelf: "center", // Centering the button
+    width: "50%",
+  },
+  filterButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    width: "80%",
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  filterOption: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    alignItems: "center",
+    marginVertical: 5,
+  },
+  closeButton: {
+    marginTop: 15,
+    backgroundColor: "#007AFF",
+    padding: 10,
+    borderRadius: 5,
+    width: "100%",
+    alignItems: "center",
+  },
+  closeButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
 });
