@@ -118,44 +118,48 @@ export default StyleSheet.create({
     color: "#333",
   },
   footerContainer: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 4,
-    paddingBottom: 80,
-
+    position: "absolute",
+    bottom: 15,
+    left: 15,
+    right: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "white",
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    alignItems: "center",
   },
   
   footerButton: {
-    color: 'green',
-    backgroundColor: '#ffff',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+    flex: 1,
+    marginHorizontal: 5,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  
+  goButton: {
+    backgroundColor: "#0FA958", // Green button for "GO"
+  },
+  
+  stepsButton: {
+    backgroundColor: "#e0e0e0", // Light gray for routes
+  },
+  
+  favoriteButton: {
+    backgroundColor: "#e0e0e0", // Light gray for favorite
   },
   
   footerButtonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-  modeButton: {
-    backgroundColor: "#007bff",
-    padding: 15,
-    marginVertical: 5,
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  modeButtonText: {
     color: "white",
-    fontSize: 18,
+    fontSize: 16,
+    fontWeight: "bold",
   },
   
 });

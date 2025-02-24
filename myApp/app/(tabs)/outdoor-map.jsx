@@ -100,11 +100,17 @@ const OutdoorMap = () => {
   }, [originLocation, destinationLocation]);
   // Handle GO button logic 
   const handleGoClick = () => {
-    setShowModePopup(true);
+    alert("Journey started!");
+
   };
   const hanndleStepsClick = () => {
     // Show Steps animate map to destination
     setShowSteps(true);
+  };
+  const handleAddFavorite = () => {
+    // Add favorite logic
+
+    
   };
   //Close Steps Modal
   const handleCloseSteps = () => {
@@ -295,11 +301,14 @@ const OutdoorMap = () => {
       {/* Footer */
           showFooter && (
             <View style={styles.footer}>
-              <TouchableOpacity style={styles.footerButton} onPress={handleGoClick}>
+              <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
                 <Text style={styles.footerButtonText}>GO</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.footerButton} onPress={hanndleStepsClick}>
+              <TouchableOpacity style={styles.stepsButton} onPress={hanndleStepsClick}>
                 <Text style={styles.footerButtonText}>Steps</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.favoriteButton} onPress={handleAddFavorite}>
+                <Text style={styles.footerButtonText}>Add favorite</Text>
               </TouchableOpacity>
             </View>
           )}
