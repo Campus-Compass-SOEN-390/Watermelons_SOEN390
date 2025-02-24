@@ -93,7 +93,7 @@ export default StyleSheet.create({
   // Switch Button Container is now positioned on the left
   switchButtonContainer: {
     position: "absolute",
-    top: 50,
+    bottom: 65,
     left: 20,
     zIndex: 2,
     
@@ -102,7 +102,7 @@ export default StyleSheet.create({
     backgroundColor: "#922338",
     padding: 10,
     borderRadius: 20,
-    top : 50,
+    bottom: 50,
   },
   // Switch Button Text: white, bold, and easily readable
   switchButtonText: {

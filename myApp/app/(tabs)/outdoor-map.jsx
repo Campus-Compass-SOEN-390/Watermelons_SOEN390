@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, Fragment } from "react";
 import { View, TouchableOpacity, Text, Modal } from "react-native";
-import MapView, { Marker, Polygon } from "react-native-maps";
+import MapView, { Marker, Polygon} from "react-native-maps";
+import MapViewDirections from "react-native-maps-directions";
 import { MaterialIcons } from "@expo/vector-icons";
 import { isPointInPolygon } from "geolib";
 import useLocation from "../hooks/useLocation";
@@ -8,6 +9,7 @@ import styles from "../styles/OutdoorMapStyles";
 import { buildings, Campus, getBuildingById } from "../api/buildingData";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
 import { BuildingPopup } from "../components/BuildingPopUp";
+import MapDirections from "../components/MapDirections";
 
 const OutdoorMap = () => {
   // Campus regions
@@ -36,6 +38,8 @@ const OutdoorMap = () => {
   // Start & destination markers
   const [originLocation, setOriginLocation] = useState(null);
   const [destinationLocation, setDestinationLocation] = useState(null);
+  const [travelMode, setTravelMode] = useState('TRANSIT');
+  const [renderMap, setRenderMap] = useState(false);
 
   // Building popup
   const [selectedBuilding, setSelectedBuilding] = useState(null);
@@ -159,6 +163,9 @@ const OutdoorMap = () => {
       <StartAndDestinationPoints
         setOriginLocation={setOriginLocation}
         setDestinationLocation={setDestinationLocation}
+        setTravelMode={setTravelMode}
+        renderMap={renderMap}
+        setRenderMap={setRenderMap}
       />
       <MapView
         ref={mapRef}
@@ -166,6 +173,12 @@ const OutdoorMap = () => {
         initialRegion={activeCampus === "sgw" ? sgwRegion : loyolaRegion}
         showsUserLocation={true}
       >
+        { originLocation && destinationLocation && renderMap && <MapDirections
+          origin={originLocation}
+          destination={destinationLocation}
+          mapRef={mapRef}
+          travelMode={travelMode}
+        />}
         {/* Start Marker */}
         {originLocation &&
           coordinatesMap[originLocation]?.latitude !== undefined && (
