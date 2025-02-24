@@ -370,18 +370,36 @@ const InterestPoints = () => {
                   ? calculateDistance(location.latitude, location.longitude, lat, lng)
                   : null;
               return (
-                <View style={styles.listItem} key={point.place_id}>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    {renderIconForPoint(point)}
-                    <Text style={[styles.listItemText, { marginLeft: 10 }]}>
-                      {point.name}
-                    </Text>
+                <View
+                  key={point.place_id}
+                  style={[
+                    styles.listItem,
+                    { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+                  ]}
+                >
+                  <View style={{ flex: 1 }}>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                      {renderIconForPoint(point)}
+                      <Text style={[styles.listItemText, { marginLeft: 10 }]}>
+                        {point.name}
+                      </Text>
+                    </View>
+                    {d !== null && (
+                      <Text style={styles.listItemDistance}>
+                        {formatDistance(d)}
+                      </Text>
+                    )}
                   </View>
-                  {d !== null && (
-                    <Text style={styles.listItemDistance}>
-                      {formatDistance(d)}
-                    </Text>
-                  )}
+                  <TouchableOpacity
+                    onPress={() => {}}
+                    style={{
+                      backgroundColor: "#922338",
+                      padding: 8,
+                      borderRadius: 4,
+                    }}
+                  >
+                    <Text style={{ color: "#fff", fontSize: 12 }}>Get Directions</Text>
+                  </TouchableOpacity>
                 </View>
               );
             })
@@ -390,6 +408,10 @@ const InterestPoints = () => {
               No points match the selected filters.
             </Text>
           )}
+
+
+
+
         </ScrollView>
       ) : (
         // Map View: Display the map with all markers.
