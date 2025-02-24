@@ -39,6 +39,7 @@ const OutdoorMap = () => {
   const [originLocation, setOriginLocation] = useState(null);
   const [destinationLocation, setDestinationLocation] = useState(null);
   const [travelMode, setTravelMode] = useState('TRANSIT');
+  const [renderMap, setRenderMap] = useState(false);
 
   // Building popup
   const [selectedBuilding, setSelectedBuilding] = useState(null);
@@ -135,6 +136,8 @@ const OutdoorMap = () => {
         setOriginLocation={setOriginLocation}
         setDestinationLocation={setDestinationLocation}
         setTravelMode={setTravelMode}
+        renderMap={renderMap}
+        setRenderMap={setRenderMap}
       />
       <MapView
         ref={mapRef}
@@ -142,7 +145,7 @@ const OutdoorMap = () => {
         initialRegion={activeCampus === "sgw" ? sgwRegion : loyolaRegion}
         showsUserLocation={true}
       >
-        { originLocation && destinationLocation && <MapDirections
+        { originLocation && destinationLocation && renderMap && <MapDirections
           origin={originLocation}
           destination={destinationLocation}
           mapRef={mapRef}

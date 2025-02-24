@@ -13,11 +13,13 @@ interface Props {
     setOriginLocation: (location: { latitude: number; longitude: number }) => void;
     setDestinationLocation: (location: { latitude: number; longitude: number }) => void;
     setTravelMode: (mode: 'DRIVING' | 'BICYCLING' | 'WALKING' | 'TRANSIT') => void;
+    renderMap: boolean; 
+    setRenderMap: (show: boolean) => void; 
 }
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
-const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDestinationLocation, setTravelMode }) => {
+const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDestinationLocation, setTravelMode, renderMap, setRenderMap }) => {
     const [origin, setOrigin] = useState<{ latitude: number; longitude: number } | null>(null);
     const [destination, setDestination] = useState<{ latitude: number; longitude: number } | null>(null);
     const [showTransportation, setShowTransportation] = useState(false);
@@ -26,6 +28,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
     const originRef = useRef<any>(null);
     const [isOriginSet, setIsOriginSet] = useState(false);
     const [isInputFocused, setIsInputFocused] = useState(false); 
+    const defaultTravel = 'TRANSIT';
 
     return (
         <View style={styles.container}>
@@ -75,10 +78,14 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                         <TouchableOpacity
                             onPress={() => {
                                 if (location) {
-                                    setOriginLocation({
+                                    const myLocation = {
                                         latitude: location.latitude,
                                         longitude: location.longitude,
-                                    });
+                                    }
+                                    setOrigin(myLocation);
+                                    setOriginLocation(myLocation);
+                                    setIsOriginSet(true);
+                                    setShowTransportation(false);
 
                                 // Verify current location properly fetched (tested on expo app -> successful!)
                                 const coords = ({
@@ -143,8 +150,11 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                         onPress={() => {
                             if (origin && destination) {
                                 setShowTransportation(true);
+                                setRenderMap(true);
+                                setTravelMode(defaultTravel);
                             }
                         }}
+                        
                     >
                         <Text style={styles.buttonText}>Get Directions</Text>
                     </TouchableOpacity>
@@ -154,7 +164,8 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                         onPress={() => {
                             if (origin && destination) {
                                 setShowTransportation(true);
-                                setTravelMode('DRIVING');
+                                setRenderMap(true);
+                                setTravelMode('TRANSIT');
                             }
                         }}
                     >
@@ -164,6 +175,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                         onPress={() => {
                             if (origin && destination) {
                                 setShowTransportation(true);
+                                setRenderMap(true);
                                 setTravelMode('TRANSIT');
                             }
                         }}
@@ -174,6 +186,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                         onPress={() => {
                             if (origin && destination) {
                                 setShowTransportation(true);
+                                setRenderMap(true);
                                 setTravelMode('WALKING');
                             }
                         }}
@@ -184,6 +197,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                         onPress={() => {
                             if (origin && destination) {
                                 setShowTransportation(true);
+                                setRenderMap(true);
                                 setTravelMode('BICYCLING');
                             }
                         }}
