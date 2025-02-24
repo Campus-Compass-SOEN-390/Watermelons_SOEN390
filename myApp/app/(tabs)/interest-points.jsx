@@ -20,16 +20,17 @@ const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
 // --- Custom Marker Components ---
 const CoffeeMarker = () => (
-  <View style={styles.coffeeMarker}>
-    <MaterialCommunityIcons name="coffee" size={20} color="#fff" />
+  <View style={[styles.coffeeMarker, { backgroundColor: 'white', padding: 5, borderRadius: 5 }]}>
+    <MaterialCommunityIcons name="coffee" size={24} color="black" />
   </View>
 );
 
 const RestaurantMarker = () => (
-  <View style={styles.restaurantMarker}>
-    <MaterialCommunityIcons name="silverware-fork-knife" size={20} color="#fff" />
+  <View style={[styles.restaurantMarker, { backgroundColor: 'white', padding: 5, borderRadius: 5 }]}>
+    <MaterialCommunityIcons name="silverware-fork-knife" size={24} color="orange" />
   </View>
 );
+
 
 const ActivityMarker = () => (
   <View style={styles.activityMarker}>
@@ -92,16 +93,12 @@ const InterestPoints = () => {
   // Helper: Render an icon based on the point's type.
   const renderIconForPoint = (point) => {
     const types = point.types || [];
-    if (types.includes("restaurant")) {
-      return (
-        <MaterialCommunityIcons
-          name="silverware-fork-knife"
-          size={24}
-          color="orange"
-        />
-      );
-    } else if (types.includes("cafe") || point.name.toLowerCase().includes("coffee")) {
-      return <MaterialCommunityIcons name="coffee" size={24} color="black" />;
+    
+    // Check for cafes (or coffee) first.
+    if (types.includes("cafe") || point.name.toLowerCase().includes("coffee")) {
+      return <CoffeeMarker />;
+    } else if (types.includes("restaurant")) {
+      return <RestaurantMarker />;
     } else if (
       point.name.toLowerCase().includes("tourist") ||
       point.name.toLowerCase().includes("bowling") ||
@@ -109,10 +106,11 @@ const InterestPoints = () => {
       point.name.toLowerCase().includes("theater") ||
       point.name.toLowerCase().includes("gold")
     ) {
-      return <MaterialCommunityIcons name="run" size={24} color="green" />;
+      return <ActivityMarker />;
     }
     return null;
   };
+  
 
   // When user location becomes available, update region and fetch places.
   useEffect(() => {
@@ -370,18 +368,39 @@ const InterestPoints = () => {
                   ? calculateDistance(location.latitude, location.longitude, lat, lng)
                   : null;
               return (
-                <View style={styles.listItem} key={point.place_id}>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    {renderIconForPoint(point)}
-                    <Text style={[styles.listItemText, { marginLeft: 10 }]}>
-                      {point.name}
-                    </Text>
+                <View
+                  key={point.place_id}
+                  style={[
+                    styles.listItem,
+                    { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+                  ]}
+                >
+                  <View style={{ flex: 1, width: "100%" }}>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                      {renderIconForPoint(point)}
+                      <Text style={[styles.listItemText, { marginLeft: 10, marginRight: 40 }]}>
+
+                        {point.name}
+                      </Text>
+                    </View>
+                    {d !== null && (
+                      <Text style={styles.listItemDistance}>
+                        {formatDistance(d)}
+                      </Text>
+                    )}
                   </View>
-                  {d !== null && (
-                    <Text style={styles.listItemDistance}>
-                      {formatDistance(d)}
-                    </Text>
-                  )}
+                  <TouchableOpacity
+                    onPress={() => {}}
+                    style={{
+                      backgroundColor: "#922338",
+                      padding: 8,
+                      borderRadius: 4,
+                      
+                   
+                    }}
+                  >
+                    <Text style={{ color: "#fff", fontSize: 12 }}>Get Directions</Text>
+                  </TouchableOpacity>
                 </View>
               );
             })
@@ -390,6 +409,10 @@ const InterestPoints = () => {
               No points match the selected filters.
             </Text>
           )}
+
+
+
+
         </ScrollView>
       ) : (
         // Map View: Display the map with all markers.
