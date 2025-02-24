@@ -6,13 +6,14 @@ import {
   ActivityIndicator,
   ScrollView,
   Modal,
+  Switch
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import useLocation from "../hooks/useLocation";
 import styles from "../styles/InterestPointsStyles";
-import Constants from 'expo-constants';
-
+import Slider from "@react-native-community/slider";
+import Constants from "expo-constants";
 
 // API key moved to json file
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
@@ -27,6 +28,12 @@ const CoffeeMarker = () => (
 const RestaurantMarker = () => (
   <View style={styles.restaurantMarker}>
     <MaterialCommunityIcons name="silverware-fork-knife" size={20} color="#fff" />
+  </View>
+);
+
+const ActivityMarker = () => (
+  <View style={styles.activityMarker}>
+    <MaterialCommunityIcons name="run" size={20} color="#fff" />
   </View>
 );
 
@@ -48,11 +55,19 @@ const InterestPoints = () => {
   const [showPermissionPopup, setShowPermissionPopup] = useState(!hasPermission);
   const [coffeeShops, setCoffeeShops] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
+  const [activities, setActivities] = useState([]);
   const [showUpdateButton, setShowUpdateButton] = useState(false);
   // Toggle between map view and list view
   const [isListView, setIsListView] = useState(false);
 
-  // Helper function to calculate distance using the Haversine formula.
+  // Filter states
+  const [showCafes, setShowCafes] = useState(true);
+  const [showRestaurants, setShowRestaurants] = useState(true);
+  const [showActivities, setShowActivities] = useState(true);
+  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
+  const [distance, setDistance] = useState(10); // Maximum distance in km
+
+  // Helper: Calculate distance (in meters) using the Haversine formula.
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const toRad = (value) => (value * Math.PI) / 180;
     const R = 6371000; // Earth's radius in meters.
@@ -67,14 +82,14 @@ const InterestPoints = () => {
     return R * c;
   };
 
-  const formatDistance = (distance) => {
-    if (distance > 1000) {
-      return (distance / 1000).toFixed(2) + " km";
+  const formatDistance = (d) => {
+    if (d > 1000) {
+      return (d / 1000).toFixed(2) + " km";
     }
-    return Math.round(distance) + " m";
+    return Math.round(d) + " m";
   };
 
-  // Helper function to render an icon based on the point's type.
+  // Helper: Render an icon based on the point's type.
   const renderIconForPoint = (point) => {
     const types = point.types || [];
     if (types.includes("restaurant")) {
@@ -86,14 +101,20 @@ const InterestPoints = () => {
         />
       );
     } else if (types.includes("cafe") || point.name.toLowerCase().includes("coffee")) {
-      return (
-        <MaterialCommunityIcons name="coffee" size={24} color="black" />
-      );
+      return <MaterialCommunityIcons name="coffee" size={24} color="black" />;
+    } else if (
+      point.name.toLowerCase().includes("tourist") ||
+      point.name.toLowerCase().includes("bowling") ||
+      point.name.toLowerCase().includes("cinema") ||
+      point.name.toLowerCase().includes("theater") ||
+      point.name.toLowerCase().includes("gold")
+    ) {
+      return <MaterialCommunityIcons name="run" size={24} color="green" />;
     }
     return null;
   };
 
-  // When user location becomes available, update region and fetch places immediately.
+  // When user location becomes available, update region and fetch places.
   useEffect(() => {
     if (location) {
       console.debug("User location obtained:", location);
@@ -127,46 +148,56 @@ const InterestPoints = () => {
   }, [region, lastFetchedRegion]);
 
   /**
-   * Fetch places (coffee shops & restaurants) for the specified region.
-   * Accepts an optional parameter so that we can pass the updated region when needed.
+   * Fetch places (coffee shops, restaurants, and activities) for the specified region.
+   * Uses pagination with next_page_token to fetch additional results.
    */
   const fetchPlacesForRegion = async (currentRegion = region) => {
     setLoading(true);
     try {
-      const { latitude, longitude } = currentRegion;
-      const radius = 2000; // meters
-      const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radius}&keyword=coffee|restaurant&key=${GOOGLE_PLACES_API_KEY}`;
-      console.debug("Fetching places for region:", currentRegion, "URL:", url);
-      const response = await fetch(url);
-      const data = await response.json();
-
-      if (data.results && Array.isArray(data.results)) {
-        const coffee = [];
-        const resto = [];
-
-        data.results.forEach((place) => {
-          const types = place.types || [];
-          if (types.includes("restaurant")) {
-            resto.push(place);
-          } else if (
-            types.includes("cafe") ||
-            place.name.toLowerCase().includes("coffee")
-          ) {
-            coffee.push(place);
-          }
-        });
-
-        setCoffeeShops(coffee);
-        setRestaurants(resto);
-        console.debug(
-          `Found ${coffee.length} coffee shops, ${resto.length} restaurants.`
-        );
+      let allResults = [];
+      // Updated keyword: using our activity keywords "tourist", "bowling", "cinema", "theater", "gold"
+      let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentRegion.latitude},${currentRegion.longitude}&radius=2000&keyword=coffee|restaurant|tourist|bowling|cinema|theater|gold&key=${GOOGLE_PLACES_API_KEY}`;
+      let response = await fetch(url);
+      let data = await response.json();
+      allResults = data.results;
+      
+      // Pagination: fetch additional results if next_page_token is provided.
+      while (data.next_page_token) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=${data.next_page_token}&key=${GOOGLE_PLACES_API_KEY}`;
+        response = await fetch(url);
+        data = await response.json();
+        allResults = allResults.concat(data.results);
       }
+      
+      // Process results: split into categories.
+      const coffee = [];
+      const resto = [];
+      const act = [];
+      allResults.forEach(place => {
+        const name = place.name.toLowerCase();
+        const types = place.types || [];
+        if (types.includes("restaurant")) {
+          resto.push(place);
+        } else if (types.includes("cafe") || name.includes("coffee")) {
+          coffee.push(place);
+        } else if (
+          name.includes("tourist") ||
+          name.includes("bowling") ||
+          name.includes("cinema") ||
+          name.includes("theater") ||
+          name.includes("gold")
+        ) {
+          act.push(place);
+        }
+      });
+      setCoffeeShops(coffee);
+      setRestaurants(resto);
+      setActivities(act);
+      console.debug(`Found ${coffee.length} coffee shops, ${resto.length} restaurants, and ${act.length} activities.`);
     } catch (error) {
       console.error("Error fetching places:", error);
     }
-    // Add a slight delay for consistency.
-    await new Promise((resolve) => setTimeout(resolve, 1000));
     setLoading(false);
     setLastFetchedRegion(currentRegion);
     setShowUpdateButton(false);
@@ -211,9 +242,9 @@ const InterestPoints = () => {
     }));
   };
 
-  // Memoize sorted points to avoid recalculating on every render.
+  // Merge and sort all points (coffee shops, restaurants, and activities) by distance.
   const sortedPoints = useMemo(() => {
-    const allPoints = [...coffeeShops, ...restaurants];
+    const allPoints = [...coffeeShops, ...restaurants, ...activities];
     if (location) {
       return allPoints.sort((a, b) => {
         const aLat = a.geometry?.location?.lat;
@@ -232,47 +263,136 @@ const InterestPoints = () => {
       });
     }
     return allPoints;
-  }, [coffeeShops, restaurants, location]);
+  }, [coffeeShops, restaurants, activities, location]);
+
+  // Filter points based on selected maximum distance (in km) and type.
+  const filteredPoints = useMemo(() => {
+    if (!location) return [];
+    return sortedPoints.filter((point) => {
+      const lat = point.geometry?.location?.lat;
+      const lng = point.geometry?.location?.lng;
+      if (!lat || !lng) return false;
+      // Calculate distance (in meters) from user location.
+      const d = calculateDistance(location.latitude, location.longitude, lat, lng);
+      if (d > distance * 1000) return false;
+      // Determine if the point matches the selected type filters.
+      const isCafe = showCafes && point.types?.includes("cafe");
+      const isRestaurant = showRestaurants && point.types?.includes("restaurant");
+      const isActivity =
+        showActivities &&
+        (
+          point.name.toLowerCase().includes("tourist") ||
+          point.name.toLowerCase().includes("bowling") ||
+          point.name.toLowerCase().includes("cinema") ||
+          point.name.toLowerCase().includes("theater") ||
+          point.name.toLowerCase().includes("gold")
+        );
+      return isCafe || isRestaurant || isActivity;
+    });
+  }, [sortedPoints, location, distance, showCafes, showRestaurants, showActivities]);
 
   return (
     <View style={styles.container}>
+      <View style={{ marginTop: 40, alignSelf: "flex-end", marginRight: 20 }} />
+      {isListView && (
+        <>
+          {/* Filters Button */}
+          <TouchableOpacity
+            style={styles.filterButton}
+            onPress={() => setIsFilterModalVisible(true)}
+          >
+            <Text style={styles.filterButtonText}>Filters</Text>
+          </TouchableOpacity>
+
+          {/* Modal for Filter Options */}
+          <Modal
+            visible={isFilterModalVisible}
+            transparent
+            animationType="slide"
+            onRequestClose={() => setIsFilterModalVisible(false)}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Filter Options</Text>
+
+                {/* Distance Slider */}
+                <Text style={{ marginTop: 20 }}>Max Distance: {distance} km</Text>
+                <Slider
+                  style={{ width: 200, height: 40 }}
+                  minimumValue={0.5}
+                  maximumValue={10}
+                  step={0.5}
+                  value={distance}
+                  onValueChange={(value) => setDistance(value)}
+                  minimumTrackTintColor="#1E88E5"
+                  maximumTrackTintColor="#000000"
+                />
+
+                <View style={styles.filterOption}>
+                  <Text>Cafes</Text>
+                  <Switch value={showCafes} onValueChange={setShowCafes} />
+                </View>
+
+                <View style={styles.filterOption}>
+                  <Text>Restaurants</Text>
+                  <Switch value={showRestaurants} onValueChange={setShowRestaurants} />
+                </View>
+
+                <View style={styles.filterOption}>
+                  <Text>Activities</Text>
+                  <Switch value={showActivities} onValueChange={setShowActivities} />
+                </View>
+
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setIsFilterModalVisible(false)}
+                >
+                  <Text style={styles.closeButtonText}>Apply Filters</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </>
+      )}
+
       {isListView ? (
-        // List View: Display the points sorted by distance.
+        // List View: Display points filtered by distance and type.
         <ScrollView
           style={styles.listViewContainer}
           contentContainerStyle={styles.listContent}
         >
-          {sortedPoints.map((point) => {
-            const lat = point.geometry?.location?.lat;
-            const lng = point.geometry?.location?.lng;
-            const distance =
-              lat && lng && location
-                ? calculateDistance(
-                    location.latitude,
-                    location.longitude,
-                    lat,
-                    lng
-                  )
-                : null;
-            return (
-              <View style={styles.listItem} key={point.place_id}>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  {renderIconForPoint(point)}
-                  <Text style={[styles.listItemText, { marginLeft: 10 }]}>
-                    {point.name}
-                  </Text>
+          {filteredPoints.length > 0 ? (
+            filteredPoints.map((point) => {
+              const lat = point.geometry?.location?.lat;
+              const lng = point.geometry?.location?.lng;
+              const d =
+                lat && lng && location
+                  ? calculateDistance(location.latitude, location.longitude, lat, lng)
+                  : null;
+              return (
+                <View style={styles.listItem} key={point.place_id}>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    {renderIconForPoint(point)}
+                    <Text style={[styles.listItemText, { marginLeft: 10 }]}>
+                      {point.name}
+                    </Text>
+                  </View>
+                  {d !== null && (
+                    <Text style={styles.listItemDistance}>
+                      {formatDistance(d)}
+                    </Text>
+                  )}
                 </View>
-                {distance !== null && (
-                  <Text style={styles.listItemDistance}>
-                    {formatDistance(distance)}
-                  </Text>
-                )}
-              </View>
-            );
-          })}
+              );
+            })
+          ) : (
+            <Text style={{ textAlign: "center", marginTop: 20 }}>
+              No points match the selected filters.
+            </Text>
+          )}
         </ScrollView>
       ) : (
-        // Map View: Display the map with markers.
+        // Map View: Display the map with all markers.
         <MapView
           ref={mapRef}
           style={styles.map}
@@ -312,6 +432,21 @@ const InterestPoints = () => {
                 title={restaurant.name}
               >
                 <RestaurantMarker />
+              </Marker>
+            );
+          })}
+          {/* Activity markers */}
+          {activities.map((act) => {
+            const lat = act.geometry?.location?.lat;
+            const lng = act.geometry?.location?.lng;
+            if (!lat || !lng) return null;
+            return (
+              <Marker
+                key={act.place_id}
+                coordinate={{ latitude: lat, longitude: lng }}
+                title={act.name}
+              >
+                <ActivityMarker />
               </Marker>
             );
           })}
