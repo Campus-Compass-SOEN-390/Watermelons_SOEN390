@@ -44,6 +44,10 @@ const OutdoorMap = () => {
   // The missing piece: track the building user is inside
   const [highlightedBuilding, setHighlightedBuilding] = useState(null);
 
+  //Show footer for Go and Steps
+  const [showFooter, setShowFooter] = useState(false);
+  const [showSteps, setShowSteps] = useState(false);
+
   // Mapping for StartAndDestinationPoints
   const coordinatesMap = {
     "My Position": location?.latitude
@@ -84,6 +88,24 @@ const OutdoorMap = () => {
       setShowPermissionPopup(true);
     }
   }, [location, hasPermission]);
+
+  useEffect(() => {
+    if (originLocation && destinationLocation) {
+      setShowFooter(true);
+    }
+  }, [originLocation, destinationLocation]);
+  // Handle GO button logic 
+  const handleGoClick = () => {
+    setShowModePopup(true);
+  };
+  const hanndleStepsClick = () => {
+    // Show Steps animate map to destination
+    setShowSteps(true);
+  };
+  //Close Steps Modal
+  const handleCloseSteps = () => {
+    setShowSteps(false);
+  };
 
   // Center on user
   const centerMapOnUser = () => {
@@ -257,6 +279,34 @@ const OutdoorMap = () => {
           </View>
         </View>
       </Modal>
+      {/* Footer */
+          showFooter && (
+            <View style={styles.footer}>
+              <TouchableOpacity style={styles.footerButton} onPress={handleGoClick}>
+                <Text style={styles.footerButtonText}>GO</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.footerButton} onPress={hanndleStepsClick}>
+                <Text style={styles.footerButtonText}>Steps</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {/* Steps Modal */
+          showSteps && (
+            <Modal visible={showSteps} transparent animationType="slide">
+              <View style={styles.modalContainer}>
+                <View style={styles.modalContent}>
+                  <Text style={styles.modalTitle}>Directions</Text>
+                  <Text style={styles.modalText}>1. Start from {originLocation?.latitude}, {originLocation?.longitude}</Text>
+                  <Text style={styles.modalText}>2. Head towards {destinationLocation?.latitude}, {destinationLocation?.longitude}</Text>
+                    {/* More steps would be added here depending on the route logic */}
+                  <TouchableOpacity style={styles.closeButton} onPress={handleCloseSteps}>
+                    <Text style={styles.closeButtonText}>Close</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+          )}
+
 
       {/* Building Popup */}
       <BuildingPopup
