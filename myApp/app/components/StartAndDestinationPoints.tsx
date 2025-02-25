@@ -109,16 +109,13 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                                 }
                             }}
                             style={myLocationStyles.myLocationButton}
-                            
                         >
                             <Icon name="target-two" size={20} color="black" />
                             <Text style={myLocationStyles.myLocationText}>  My Location</Text>
                         </TouchableOpacity>
                     )}
 
-                    
                 </View>
-
                 {/* To Input with Google Places Autocomplete */}
                 <View style={styles.inputRow}>
                     <Text style={styles.label}>To</Text>
@@ -152,7 +149,6 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                         }}
                     />
                 </View>
-
                 {/* Conditional Rendering */}
                 {!showTransportation ? (
                     /* Get Directions Button */
@@ -164,8 +160,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                                 setRenderMap(true);
                                 setTravelMode(defaultTravel);
                             }
-                        }}
-                        
+                        }}   
                     >
                         <Text style={styles.buttonText}>Get Directions</Text>
                     </TouchableOpacity>
@@ -217,7 +212,6 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                     </TouchableOpacity>
                     </View>
                 )}
-                
             </View>
 
         </View>
