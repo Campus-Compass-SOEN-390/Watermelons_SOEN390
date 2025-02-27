@@ -1,4 +1,3 @@
-import React from "react";
 import { getAllShuttleSchedules, getShuttleScheduleByDay } from "./shuttleScheduleData.js";
 import { getRealTimeShuttleData } from "./shuttleLiveData.js";
 
@@ -11,3 +10,9 @@ export const fetchShuttleScheduleByDay = async (day) => getShuttleScheduleByDay(
 // Fetch live shuttle data
 export const fetchLiveShuttleData = async () => getRealTimeShuttleData();
 
+// Default export
+export default {
+  fetchAllShuttleSchedules,
+  fetchShuttleScheduleByDay,
+  fetchLiveShuttleData
+};
