@@ -47,4 +47,36 @@ export const getRealTimeShuttleData = async () => {
 
     throw error; // Re-throw the empty response error
   }
+
+  
 };
+
+// Step 3: Extract relevant shuttle data
+export const extractShuttleInfo = async () => {
+  try {
+    // Fetch the raw shuttle data first
+    const rawData = await getRealTimeShuttleData();
+
+    // Check if the expected structure is present
+    if (!rawData || !rawData.d || !Array.isArray(rawData.d.Points)) {
+      throw new Error("Invalid data format received.");
+    }
+
+    // Extract the shuttle information
+    return rawData.d.Points
+      .filter(point => point.ID && point.ID.startsWith("BUS")) // Ensure ID exists before filtering
+      .map(bus => ({
+        id: bus.ID,
+        latitude: bus.Latitude || 0, // Default to 0 if undefined
+        longitude: bus.Longitude || 0, // Default to 0 if undefined
+        timestamp: new Date().toISOString(), // Add timestamp
+      }));
+     
+
+  } catch (error) {
+    throw new Error("Error processing shuttle data.");
+  }
+};
+
+export default { getRealTimeShuttleData, extractShuttleInfo };
+
