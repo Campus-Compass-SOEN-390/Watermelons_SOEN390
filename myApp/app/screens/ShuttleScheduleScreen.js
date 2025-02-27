@@ -14,31 +14,35 @@ export default function ShuttleScheduleScreen() {
 
   useEffect(() => {
     const loadSchedule = async () => {
-      try {
-        const today = moment().format('dddd'); // Get current day (e.g., Monday)
-        const data = await fetchShuttleScheduleByDay(today);
-        
-        setSchedule(data);
-
-        // Find the next available bus for the selected campus
-        const currentTime = moment();
-        let nextAvailableBus = null;
-
-        for (const time of data[campus]) {
-          if (moment(time, 'HH:mm').isAfter(currentTime)) {
-            nextAvailableBus = time;
-            break;
-          }
+        try {
+            const today = moment().format('dddd');
+            const data = await fetchShuttleScheduleByDay(today);
+            setSchedule(data); // Store both SGW and LOY data
+        } catch (err) {
+            setError(err.message);
         }
-
-        setNextBus(nextAvailableBus);
-      } catch (err) {
-        setError(err.message);
-      }
     };
 
     loadSchedule();
-  }, [campus]);
+}, []); // Fetches **only once** when component mounts
+
+// Compute next available bus based on selected campus without re-fetching
+useEffect(() => {
+    if (!schedule) return;
+
+    const currentTime = moment();
+    let nextAvailableBus = null;
+
+    for (const time of schedule[campus]) {
+        if (moment(time, 'HH:mm').isAfter(currentTime)) {
+            nextAvailableBus = time;
+            break;
+        }
+    }
+
+    setNextBus(nextAvailableBus);
+}, [schedule, campus]); // Runs when schedule is loaded OR campus changes
+
 
   // Function to handle warning button click
   const handleWarningPress = () => {
@@ -53,11 +57,16 @@ export default function ShuttleScheduleScreen() {
 
   if (error) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.error}>Error: {error}</Text>
-      </View>
+        <View style={styles.container}>
+            <Text style={styles.error}>
+                {error.includes("Network") 
+                    ? "🚫 No internet connection. Please check your network and try again." 
+                    : "❌ Unable to load shuttle schedule. Please try again later."}
+            </Text>
+        </View>
     );
-  }
+}
+
 
   if (!schedule) {
     return (
