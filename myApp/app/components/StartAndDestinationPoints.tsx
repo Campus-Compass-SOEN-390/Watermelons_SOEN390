@@ -40,10 +40,14 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
         setOrigin(originLocation);
         setDestination(destinationLocation);
         setOriginText(buildingTextOrigin);
-        setDestinationText(buildingTextDestination);
+        if (buildingTextDestination) {
+            setDestinationText(buildingTextDestination); // Update if valid
+            setOriginText(buildingTextOrigin);
+          }
         console.log("originText:", originText, "buildingTextOrigin:", buildingTextOrigin, "destinationText:", destinationText, "buildingTextDestination:", buildingTextDestination)
         setShowTransportation(false)
-    }, [origin, location, setDestination, setOrigin, originLocation, destinationLocation])
+    }, [origin, location, setDestination, setOrigin, originLocation, destinationLocation, destinationText])
+
 
     return (
         <View style={styles.container}>
@@ -158,7 +162,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                         }}
                         textInputProps={{
                             value: destinationText,
-                            onChangeText: setDestinationText,
+                            onchangeText:destinationText,
                             style: styles.input,
                         }}
                         styles={{
