@@ -34,7 +34,7 @@ const RestaurantMarker = () => (
 
 const ActivityMarker = () => (
   <View style={styles.activityMarker}>
-    <MaterialCommunityIcons name="run" size={20} color="#fff" />
+    <MaterialCommunityIcons name="run" size={20} color="green" />
   </View>
 );
 
