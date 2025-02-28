@@ -38,8 +38,11 @@ const OutdoorMap = () => {
   // Start & destination markers
   const [originLocation, setOriginLocation] = useState(null);
   const [destinationLocation, setDestinationLocation] = useState(null);
+  const [originText, setOriginText] = useState("");
+  const [destinationText, setDestinationText] = useState("");
   const [travelMode, setTravelMode] = useState('TRANSIT');
   const [renderMap, setRenderMap] = useState(false);
+  const [showTransportaion, setShowTransportaton] = useState(false);
 
   // Building popup
   const [selectedBuilding, setSelectedBuilding] = useState(null);
@@ -58,6 +61,9 @@ const OutdoorMap = () => {
     "SGW Campus": { latitude: 45.4962, longitude: -73.5780 },
     "Loyola Campus": { latitude: 45.4582, longitude: -73.6405 },
     "Montreal Downtown": { latitude: 45.5017, longitude: -73.5673 },
+    "CC, Central Building": { latitude: 45.458204, longitude: -73.640300},
+    "CJ, Communications and Journalism Building": { latitude: 45.457478, longitude:-73.640354},
+    "GE, Centre for Structural and Functional Genomics Building": { latitude: 45.457017, longitude:-73.640432}
   };
 
   // Animate map to correct campus
@@ -130,14 +136,29 @@ const OutdoorMap = () => {
     }
   };
 
+  const handleBuildingGetDirections = (building) => {
+    setOriginLocation(coordinatesMap["My Position"]);
+    setOriginText("My Position");
+    const buildingFullName = building.name + ", " + building.longName
+    console.log(buildingFullName);
+    setDestinationLocation(coordinatesMap[buildingFullName]);
+    setDestinationText(buildingFullName);
+    setShowTransportaton(true);
+  }
+
   return (
     <View style={styles.container}>
       <StartAndDestinationPoints
+        buildingTextOrigin= {originText}
+        buildingTextDestination= {destinationText}
+        originLocation = {originLocation}
+        destinationLocation = {destinationLocation}
         setOriginLocation={setOriginLocation}
         setDestinationLocation={setDestinationLocation}
         setTravelMode={setTravelMode}
         renderMap={renderMap}
         setRenderMap={setRenderMap}
+        setShowTransportaton={setShowTransportaton}
       />
       <MapView
         ref={mapRef}
@@ -279,6 +300,7 @@ const OutdoorMap = () => {
           setSelectedBuilding(null);
         }}
         building={selectedBuilding}
+        onGetDirections={handleBuildingGetDirections}
       />
     </View>
   );

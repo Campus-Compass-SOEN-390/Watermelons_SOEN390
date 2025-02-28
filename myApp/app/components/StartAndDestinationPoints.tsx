@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Keyboard } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import 'react-native-get-random-values';
@@ -9,26 +9,41 @@ import useLocation from "../hooks/useLocation";
 import Icon from 'react-native-vector-icons/Foundation'; 
 
 interface Props {
+    buildingTextOrigin: string;
+    buildingTextDestination: string;
+    originLocation: {latitude: number; longitude: number}
+    destinationLocation: {latitude: number; longitude: number}
     setOriginLocation: (location: { latitude: number; longitude: number }) => void;
     setDestinationLocation: (location: { latitude: number; longitude: number }) => void;
     setTravelMode: (mode: 'DRIVING' | 'BICYCLING' | 'WALKING' | 'TRANSIT') => void;
     renderMap: boolean; 
-    setRenderMap: (show: boolean) => void; 
+    setRenderMap: (show: boolean) => void;
 }
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
-const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDestinationLocation, setTravelMode, renderMap, setRenderMap }) => {
+
+const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, buildingTextOrigin, originLocation, destinationLocation, setOriginLocation, setDestinationLocation, setTravelMode, renderMap, setRenderMap}) => {
     const [origin, setOrigin] = useState<{ latitude: number; longitude: number } | null>(null);
     const [destination, setDestination] = useState<{ latitude: number; longitude: number } | null>(null);
     const [showTransportation, setShowTransportation] = useState(false);
     const { location } = useLocation();
     const [originText, setOriginText] = useState(""); 
+    const [destinationText, setDestinationText] = useState("");
     const originRef = useRef<any>(null);
     const [isOriginSet, setIsOriginSet] = useState(false);
     const [isInputFocused, setIsInputFocused] = useState(false); 
     const defaultTravel = 'TRANSIT';
     const [showMyLocButton, setShowMyLocButton] = useState(true);
+
+    useEffect(() => {
+        setOrigin(originLocation);
+        setDestination(destinationLocation);
+        setOriginText(buildingTextOrigin);
+        setDestinationText(buildingTextDestination);
+        console.log("originText:", originText, "buildingTextOrigin:", buildingTextOrigin, "destinationText:", destinationText, "buildingTextDestination:", buildingTextDestination)
+        setShowTransportation(false)
+    }, [origin, location, setDestination, setOrigin, originLocation, destinationLocation])
 
     return (
         <View style={styles.container}>
@@ -47,7 +62,6 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                             language: "en",
                             components: "country:ca", // restrict data within Canada
                         }}
-                        
                         onPress={(data, details = null) => {
                             if (details) {
                                 const location = {
@@ -57,6 +71,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                                 setOrigin(location);
                                 setOriginLocation(location);
                                 setIsOriginSet(true);
+                                setOriginText(data.description)
                                 setOriginText(data.description); // Set the input text to the selected place
                                 originRef.current?.setAddressText(data.description); // Allows persistance of the selected origin location 
                                 setShowTransportation(false);
@@ -138,9 +153,12 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                                 setDestination(location);
                                 setDestinationLocation(location);
                                 setShowTransportation(false);
+                                setDestinationText(data.description);
                             }
                         }}
                         textInputProps={{
+                            value: destinationText,
+                            onChangeText: setDestinationText,
                             style: styles.input,
                         }}
                         styles={{
@@ -155,6 +173,10 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                     <TouchableOpacity 
                         style={styles.button}
                         onPress={() => {
+                            console.log("Get Directions Pressed", origin, destination);
+                            console.log("Text origin: ", originText)
+                            console.log("building text origin:", buildingTextOrigin)
+                            console.log("Destination: " ,destinationText)
                             if (origin && destination) {
                                 setShowTransportation(true);
                                 setRenderMap(true);
