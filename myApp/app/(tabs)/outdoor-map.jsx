@@ -160,7 +160,6 @@ const OutdoorMap = () => {
         setRenderMap={setRenderMap}
         setShowTransportaton={setShowTransportaton}
         setDestinationText = {setDestinationText}
-        setOriginText = {setOriginText}
       />
       <MapView
         ref={mapRef}

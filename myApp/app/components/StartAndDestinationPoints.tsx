@@ -37,17 +37,25 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
     const [showMyLocButton, setShowMyLocButton] = useState(true);
 
     useEffect(() => {
+        console.log("originText updated to: xxx ", originText, "building info: xxx", buildingTextOrigin);
+        console.log("destinationText updated to: xxx ", destinationText);
+    }, [originText, destinationText]);
+
+    useEffect(() => {
         setOrigin(originLocation);
         setDestination(destinationLocation);
         setOriginText(buildingTextOrigin);
         if (buildingTextDestination) {
-            setDestinationText(buildingTextDestination); // Update if valid
-            setOriginText(buildingTextOrigin);
-          }
-        console.log("originText:", originText, "buildingTextOrigin:", buildingTextOrigin, "destinationText:", destinationText, "buildingTextDestination:", buildingTextDestination)
-        setShowTransportation(false)
-    }, [origin, location, setDestination, setOrigin, originLocation, destinationLocation, destinationText])
+            setDestinationText(buildingTextDestination);
+        }
+    }, [buildingTextOrigin, buildingTextDestination, showTransportation]);
 
+    useEffect(()=>{
+        if(buildingTextDestination && buildingTextOrigin) {
+            setOriginText(buildingTextOrigin);
+            setDestinationText(buildingTextDestination);
+        }
+    }, [origin, destination])
 
     return (
         <View style={styles.container}>
@@ -76,7 +84,6 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                 setOriginLocation(location);
                                 setIsOriginSet(true);
                                 setOriginText(data.description)
-                                setOriginText(data.description); // Set the input text to the selected place
                                 originRef.current?.setAddressText(data.description); // Allows persistance of the selected origin location 
                                 setShowTransportation(false);
                                 
@@ -84,12 +91,10 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                         }}
                         textInputProps={{
                             value: originText, // This will show "My Location" or the selected place
-                            onChangeText: setOriginText,
+                            onChangeText:setOriginText,
                             onFocus: () => {setIsInputFocused(true); setShowMyLocButton(true);},
                             onBlur: () => setIsInputFocused(false),
-                            style: styles.input,
-                            
-                            
+                            style: styles.input,   
                         }}
                         styles={{
                             listView: styles.dropdownFrom,
@@ -110,6 +115,8 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                     setOriginLocation(myLocation);
                                     setIsOriginSet(true);
                                     setShowTransportation(false);
+                                    setOriginText("My Location");
+
                                
                                 // Verify current location properly fetched (tested on expo app -> successful!)
                                 const coords = ({
@@ -127,10 +134,11 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                     console.log("User location not available.");
                                 }
                             }}
+                            
                             style={myLocationStyles.myLocationButton}
                         >
                             <Icon name="target-two" size={20} color="black" />
-                            <Text style={myLocationStyles.myLocationText}>  My Location</Text>
+                            <Text style={myLocationStyles.myLocationText}>My Location</Text>
                         </TouchableOpacity>
                     )}
 
@@ -162,7 +170,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                         }}
                         textInputProps={{
                             value: destinationText,
-                            onchangeText:destinationText,
+                            onChangeText:setDestinationText,
                             style: styles.input,
                         }}
                         styles={{
@@ -178,9 +186,9 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                         style={styles.button}
                         onPress={() => {
                             console.log("Get Directions Pressed", origin, destination);
-                            console.log("Text origin: ", originText)
+                            console.log("Text origin: yyy ", originText)
                             console.log("building text origin:", buildingTextOrigin)
-                            console.log("Destination: " ,destinationText)
+                            console.log("Destination: yyy " ,destinationText)
                             if (origin && destination) {
                                 setShowTransportation(true);
                                 setRenderMap(true);
