@@ -35,20 +35,36 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
     const [isInputFocused, setIsInputFocused] = useState(false); 
     const defaultTravel = 'TRANSIT';
     const [showMyLocButton, setShowMyLocButton] = useState(true);
+    const [showTravelMode, setShowTravelMode] = useState("");
+    const [useBuildingText, setUseBuildingText] = useState("")
 
     useEffect(() => {
         console.log("originText updated to: xxx ", originText, "building info: xxx", buildingTextOrigin);
-        console.log("destinationText updated to: xxx ", destinationText);
+        console.log("destinationText updated to: xxx ", destinationText, "building info:", buildingTextDestination);
     }, [originText, destinationText]);
+
+    useEffect(() => {
+        setUseBuildingText(buildingTextDestination)
+        setOrigin(originLocation);
+        setDestination(destinationLocation);
+        if(buildingTextDestination) {
+            setDestinationText(buildingTextDestination);
+        }
+        if(buildingTextOrigin) {
+            setOriginText(buildingTextOrigin);
+        }
+    }, [buildingTextOrigin, buildingTextDestination]);
 
     useEffect(() => {
         setOrigin(originLocation);
         setDestination(destinationLocation);
-        setOriginText(buildingTextOrigin);
-        if (buildingTextDestination) {
+        if(useBuildingText) {
             setDestinationText(buildingTextDestination);
         }
-    }, [buildingTextOrigin, buildingTextDestination, showTransportation]);
+        if(useBuildingText) {
+            setOriginText(buildingTextOrigin);
+        }
+    }, [showTransportation, showTravelMode])
 
     useEffect(()=>{
         if(buildingTextDestination && buildingTextOrigin) {
@@ -83,9 +99,11 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                 setOrigin(location);
                                 setOriginLocation(location);
                                 setIsOriginSet(true);
-                                setOriginText(data.description)
+                                setUseBuildingText("")
+                                setOriginText(data.description);
                                 originRef.current?.setAddressText(data.description); // Allows persistance of the selected origin location 
                                 setShowTransportation(false);
+                                setDestinationText("");
                                 
                             }
                         }}
@@ -111,6 +129,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                         latitude: location.latitude,
                                         longitude: location.longitude,
                                     }
+                                    setUseBuildingText("");
                                     setOrigin(myLocation);
                                     setOriginLocation(myLocation);
                                     setIsOriginSet(true);
@@ -165,7 +184,9 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                 setDestination(location);
                                 setDestinationLocation(location);
                                 setShowTransportation(false);
+                                setUseBuildingText("");
                                 setDestinationText(data.description);
+                                
                             }
                         }}
                         textInputProps={{
@@ -193,6 +214,13 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                 setShowTransportation(true);
                                 setRenderMap(true);
                                 setTravelMode(defaultTravel);
+                                setShowTravelMode(defaultTravel);
+                            }
+                            if(buildingTextDestination) {
+                                setDestinationText(buildingTextDestination);
+                            }
+                            if(buildingTextOrigin) {
+                                setOriginText(buildingTextOrigin);
                             }
                         }}   
                     >
@@ -205,7 +233,14 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                             if (origin && destination) {
                                 setShowTransportation(true);
                                 setRenderMap(true);
-                                setTravelMode('TRANSIT');
+                                setTravelMode('DRIVING');
+                                setShowTravelMode('DRIVING');
+                            }
+                            if(buildingTextDestination) {
+                                setDestinationText(buildingTextDestination);
+                            }
+                            if(buildingTextOrigin) {
+                                setOriginText(buildingTextOrigin);
                             }
                         }}
                     >
@@ -217,6 +252,13 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                 setShowTransportation(true);
                                 setRenderMap(true);
                                 setTravelMode('TRANSIT');
+                                setShowTravelMode('TRANSIT');
+                            }
+                            if(buildingTextDestination) {
+                                setDestinationText(buildingTextDestination);
+                            }
+                            if(buildingTextOrigin) {
+                                setOriginText(buildingTextOrigin);
                             }
                         }}
                     >
@@ -228,6 +270,13 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                 setShowTransportation(true);
                                 setRenderMap(true);
                                 setTravelMode('WALKING');
+                                setShowTravelMode('WALKING');
+                            }
+                            if(buildingTextDestination) {
+                                setDestinationText(buildingTextDestination);
+                            }
+                            if(buildingTextOrigin) {
+                                setOriginText(buildingTextOrigin);
                             }
                         }}
                     >
@@ -239,6 +288,13 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                 setShowTransportation(true);
                                 setRenderMap(true);
                                 setTravelMode('BICYCLING');
+                                setShowTravelMode('BICYCLING');
+                            }
+                            if(buildingTextDestination) {
+                                setDestinationText(buildingTextDestination);
+                            }
+                            if(buildingTextOrigin) {
+                                setOriginText(buildingTextOrigin);
                             }
                         }}
                     >
