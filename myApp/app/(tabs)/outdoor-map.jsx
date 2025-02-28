@@ -136,7 +136,6 @@ const OutdoorMap = () => {
     }
   };
 
-  /*
   const handleBuildingGetDirections = (building) => {
     setOriginLocation(coordinatesMap["My Position"]);
     setOriginText("My Position");
@@ -145,27 +144,6 @@ const OutdoorMap = () => {
     setDestinationLocation(coordinatesMap[buildingFullName]);
     setDestinationText(buildingFullName);
     setShowTransportaton(true);
-  }*/
-
-  const handleBuildingGetDirections = (building) => {
-    // Make sure to set the correct coordinates
-    setOriginLocation(coordinatesMap["My Position"]);
-    setOriginText("My Position");
-    
-    // Create a proper building identifier
-    const buildingFullName = building.name;
-    
-    // Set the destination based on the building's actual coordinates
-    const buildingCoords = { 
-      latitude: building.coordinates[0].latitude, 
-      longitude: building.coordinates[0].longitude 
-    };
-    setDestinationLocation(buildingCoords);
-    setDestinationText(buildingFullName);
-    
-    // Make sure this is properly passed down
-    setShowTransportaton(true);
-    setRenderMap(true); // Make sure to show the map with the directions
   }
 
   return (

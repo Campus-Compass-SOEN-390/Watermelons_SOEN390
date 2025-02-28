@@ -19,24 +19,25 @@ describe('Home page', () => {
     });
 
     it('should load homepage and buttons on startup', () => {
-        const page = render(<HomePage/>);
+        const page = render(<HomePage />);
         const logo = page.getByTestId('logo');
         const googleIcon = page.getByTestId('googleIcon');
         const sgwButton = page.getByTestId('sgwButton');
         const loyolaButton = page.getByTestId('loyolaButton');
-        const browseButton = page.getByTestId('browseButton');
+        const shuttleScheduleButton = page.getByTestId('shuttleScheduleButton');
         const interestButton = page.getByTestId('interestButton');
         const directionButton = page.getByTestId('directionButton');
         const googleButton = page.getByTestId('googleButton');
+
         expect(logo).toBeTruthy();
         expect(googleIcon).toBeTruthy();
         expect(sgwButton).toBeTruthy();
         expect(loyolaButton).toBeTruthy();
-        expect(browseButton).toBeTruthy();
+        expect(shuttleScheduleButton).toBeTruthy();
         expect(interestButton).toBeTruthy();
         expect(directionButton).toBeTruthy();
         expect(googleButton).toBeTruthy();
-    })
+    });
 
     it('should go to sgw campus when sgw campus button is pressed', () => {
         const page = render(<HomePage />);
@@ -46,9 +47,16 @@ describe('Home page', () => {
     });
 
     it('should go to loyola campus when loyola campus button is pressed', () => {
-        const page = render(<HomePage/>);
+        const page = render(<HomePage />);
         const loyolaButton = page.getByTestId('loyolaButton');
         fireEvent.press(loyolaButton);
         expect(mockPush).toHaveBeenCalledWith('/(tabs)/outdoor-map?type=loyola');
-    })
+    });
+
+    it('should navigate to Shuttle Bus Schedule when shuttle schedule button is pressed', () => {
+        const page = render(<HomePage />);
+        const shuttleScheduleButton = page.getByTestId('shuttleScheduleButton');
+        fireEvent.press(shuttleScheduleButton);
+        expect(mockPush).toHaveBeenCalledWith('/screens/ShuttleScheduleScreen');
+    });
 });

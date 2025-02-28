@@ -36,7 +36,9 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
     const defaultTravel = 'TRANSIT';
     const [showMyLocButton, setShowMyLocButton] = useState(true);
     const [showTravelMode, setShowTravelMode] = useState("");
-    const [useBuildingText, setUseBuildingText] = useState("")
+    const [selectedMode, setSelectedMode] = useState<'DRIVING' | 'BICYCLING' | 'WALKING' | 'TRANSIT'>(defaultTravel);
+    const [useBuildingTextOrigin, setUseBuildingTextOrigin] = useState("");
+    const [useBuildingTextDestination, setUseBuildingTextDestination] = useState("")
 
     useEffect(() => {
         console.log("originText updated to: xxx ", originText, "building info: xxx", buildingTextOrigin);
@@ -44,34 +46,36 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
     }, [originText, destinationText]);
 
     useEffect(() => {
-        setUseBuildingText(buildingTextDestination)
-        setOrigin(originLocation);
-        setDestination(destinationLocation);
-        if(buildingTextDestination) {
-            setDestinationText(buildingTextDestination);
-        }
-        if(buildingTextOrigin) {
+        setUseBuildingTextOrigin(buildingTextOrigin);
+        setUseBuildingTextDestination(buildingTextDestination);
+        if(useBuildingTextOrigin){
+            setOrigin(originLocation);
             setOriginText(buildingTextOrigin);
+        }
+        if(useBuildingTextDestination) {
+            setDestination(destinationLocation);
+            setDestinationText(buildingTextDestination);
         }
     }, [buildingTextOrigin, buildingTextDestination]);
 
     useEffect(() => {
-        setOrigin(originLocation);
-        setDestination(destinationLocation);
-        if(useBuildingText) {
+        if(useBuildingTextDestination) {
             setDestinationText(buildingTextDestination);
+            setDestination(destinationLocation);
         }
-        if(useBuildingText) {
+        if(useBuildingTextOrigin) {
             setOriginText(buildingTextOrigin);
+            setOrigin(originLocation);
         }
-    }, [showTransportation, showTravelMode])
+    }, [showTransportation, showTravelMode, useBuildingTextDestination])
 
     useEffect(()=>{
-        if(buildingTextDestination && buildingTextOrigin) {
+        if(useBuildingTextOrigin && useBuildingTextDestination) {
             setOriginText(buildingTextOrigin);
             setDestinationText(buildingTextDestination);
         }
     }, [origin, destination])
+    
 
     return (
         <View style={styles.container}>
@@ -99,11 +103,11 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                 setOrigin(location);
                                 setOriginLocation(location);
                                 setIsOriginSet(true);
-                                setUseBuildingText("")
+                                setUseBuildingTextOrigin("");
+                                setDestinationText("");
                                 setOriginText(data.description);
                                 originRef.current?.setAddressText(data.description); // Allows persistance of the selected origin location 
                                 setShowTransportation(false);
-                                setDestinationText("");
                                 
                             }
                         }}
@@ -129,7 +133,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                         latitude: location.latitude,
                                         longitude: location.longitude,
                                     }
-                                    setUseBuildingText("");
+                                    setUseBuildingTextOrigin("");
                                     setOrigin(myLocation);
                                     setOriginLocation(myLocation);
                                     setIsOriginSet(true);
@@ -144,6 +148,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                 });
                                 console.log("Selected My Location:", coords);
 
+                                    setUseBuildingTextOrigin("");
                                     setOriginText("My Location"); // Set the input text to "My Location"
                                     originRef.current?.setAddressText("My Location");
                                     setShowMyLocButton(false);
@@ -184,7 +189,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                 setDestination(location);
                                 setDestinationLocation(location);
                                 setShowTransportation(false);
-                                setUseBuildingText("");
+                                setUseBuildingTextDestination("");
                                 setDestinationText(data.description);
                                 
                             }
@@ -203,7 +208,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                 {/* Conditional Rendering */}
                 {!showTransportation ? (
                     /* Get Directions Button */
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         style={styles.button}
                         onPress={() => {
                             console.log("Get Directions Pressed", origin, destination);
@@ -215,6 +220,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                 setRenderMap(true);
                                 setTravelMode(defaultTravel);
                                 setShowTravelMode(defaultTravel);
+                                setShowTransportation(true);
                             }
                             if(buildingTextDestination) {
                                 setDestinationText(buildingTextDestination);
@@ -228,79 +234,36 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                     </TouchableOpacity>
                 ) : (
                     <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (origin && destination) {
-                                setShowTransportation(true);
-                                setRenderMap(true);
-                                setTravelMode('DRIVING');
-                                setShowTravelMode('DRIVING');
-                            }
-                            if(buildingTextDestination) {
-                                setDestinationText(buildingTextDestination);
-                            }
-                            if(buildingTextOrigin) {
-                                setOriginText(buildingTextOrigin);
-                            }
-                        }}
-                    >
-                        <MaterialIcons name="directions-car" size={24} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (origin && destination) {
-                                setShowTransportation(true);
-                                setRenderMap(true);
-                                setTravelMode('TRANSIT');
-                                setShowTravelMode('TRANSIT');
-                            }
-                            if(buildingTextDestination) {
-                                setDestinationText(buildingTextDestination);
-                            }
-                            if(buildingTextOrigin) {
-                                setOriginText(buildingTextOrigin);
-                            }
-                        }}
-                    >
-                        <MaterialIcons name="directions-bus" size={24} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (origin && destination) {
-                                setShowTransportation(true);
-                                setRenderMap(true);
-                                setTravelMode('WALKING');
-                                setShowTravelMode('WALKING');
-                            }
-                            if(buildingTextDestination) {
-                                setDestinationText(buildingTextDestination);
-                            }
-                            if(buildingTextOrigin) {
-                                setOriginText(buildingTextOrigin);
-                            }
-                        }}
-                    >
-                        <MaterialIcons name="directions-walk" size={24} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (origin && destination) {
-                                setShowTransportation(true);
-                                setRenderMap(true);
-                                setTravelMode('BICYCLING');
-                                setShowTravelMode('BICYCLING');
-                            }
-                            if(buildingTextDestination) {
-                                setDestinationText(buildingTextDestination);
-                            }
-                            if(buildingTextOrigin) {
-                                setOriginText(buildingTextOrigin);
-                            }
-                        }}
-                    >
-                        <MaterialIcons name="directions-bike" size={24} color="black" />
-                    </TouchableOpacity>
-                    </View>
+                    {[
+                        { mode: 'DRIVING' as const, icon: 'directions-car' as const },
+                        { mode: 'TRANSIT' as const, icon: 'directions-bus' as const},
+                        { mode: 'WALKING' as const, icon: 'directions-walk' as const},
+                        { mode: 'BICYCLING' as const, icon: 'directions-bike' as const},
+                    ].map(({ mode, icon }) => (
+                        <TouchableOpacity
+                            key={mode}
+                            onPress={() => {
+                                if (origin && destination) {
+                                    setRenderMap(true);
+                                    setTravelMode(mode);
+                                    setSelectedMode(mode);
+                                    setShowTravelMode(mode);
+                                    setShowTransportation(true);
+                                }
+                            }}
+                            style={[
+                                styles.transportButton,
+                                selectedMode === mode && styles.selectedButton,
+                            ]}
+                        >
+                            <MaterialIcons
+                                name={icon}
+                                size={24}
+                                color={selectedMode === mode ? "white" : "black"}
+                            />
+                        </TouchableOpacity>
+                    ))}
+                </View>
                 )}
             </View>
 

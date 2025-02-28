@@ -48,3 +48,4 @@ export const getRealTimeShuttleData = async () => {
     throw error; // Re-throw the empty response error
   }
 };
+export default getRealTimeShuttleData;
