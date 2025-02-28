@@ -29,7 +29,7 @@ export default function HomePage() {
 
 
 
-  const redirectUri = "https://auth.expo.io/@oukhtys/myapp";
+  const redirectUri = "https://auth.expo.io/@oukhtys/myApp";
   console.log("Redirect URI:", redirectUri)
 
   const [request, response, promptAsync] = useAuthRequest(
@@ -40,7 +40,7 @@ export default function HomePage() {
         default: "321256625453-8bbjeu3icp553q13d5fr7dv9ssbue5a0.apps.googleusercontent.com", //also needs android
       }),
       scopes: ["profile", "email", "https://www.googleapis.com/auth/calendar"],
-      redirectUri: "https://auth.expo.io/@oukhtys/myapp",  // Ensure this matches Google Cloud Console
+      redirectUri: "https://auth.expo.io/@oukhtys/myApp",  // Ensure this matches Google Cloud Console
       usePKCE: true,
     },
     discovery

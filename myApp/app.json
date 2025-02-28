@@ -42,6 +42,10 @@
     "plugins": [
       "expo-router",
       [
+        "expo-calendar",
+        {
+          "calendarPermission": "The app needs to access your calendar."
+        },
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
