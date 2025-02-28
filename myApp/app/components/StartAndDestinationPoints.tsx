@@ -153,7 +153,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                 {/* Conditional Rendering */}
                 {!showTransportation ? (
                     /* Get Directions Button */
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         style={styles.button}
                         onPress={() => {
                             if (origin && destination) {
