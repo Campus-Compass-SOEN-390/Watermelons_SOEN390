@@ -28,32 +28,27 @@ export const shuttleSchedule = {
   };
 
   // Fetch all schedule
-  export const getAllShuttleSchedules = () => {
-    if (!shuttleSchedule || Object.keys(shuttleSchedule).length === 0) {
-      throw new Error("Shuttle schedule data is empty.");
-    }
-   
-    return shuttleSchedule; 
-  };
-  
-  
-  // Fetch a specific day's schedule
-  export const getShuttleScheduleByDay = (day) => {
-    if (!day || typeof day !== "string" || day.trim() === "") {
-        throw new Error("Invalid day. Please provide a valid day.");
-    }
-
-    // Normalize input so all have the same form
-    const normalizedDay = day.trim().charAt(0).toUpperCase() + day.trim().slice(1).toLowerCase();
-
-    // Verify if it'a valid day
-    if (!(normalizedDay in shuttleSchedule)) {
-      throw new Error(`Invalid day: ${day}. Please provide Monday, Tuesday, Wednesday, Thursday, or Friday.`);
-    }
-
-    return shuttleSchedule[normalizedDay];
+export const getAllShuttleSchedules = () => {
+  if (!shuttleSchedule || Object.keys(shuttleSchedule).length === 0) {
+    throw new Error("Shuttle schedule data is empty.");
+  }
+  return shuttleSchedule; 
 };
 
-  
-  
-  
+// Fetch a specific day's schedule
+export const getShuttleScheduleByDay = (day) => {
+  if (!day || typeof day !== "string" || day.trim() === "") {
+    throw new Error("Invalid day. Please provide a valid day.");
+  }
+
+  const normalizedDay = day.trim().charAt(0).toUpperCase() + day.trim().slice(1).toLowerCase();
+
+  if (!(normalizedDay in shuttleSchedule)) {
+    throw new Error(`Invalid day: ${day}. Please provide Monday, Tuesday, Wednesday, Thursday, or Friday.`);
+  }
+
+  return shuttleSchedule[normalizedDay];
+};
+
+// Default export
+export default shuttleSchedule;
