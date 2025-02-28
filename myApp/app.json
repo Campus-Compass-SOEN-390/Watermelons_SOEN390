@@ -52,6 +52,14 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ], 
+      [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMaps": {
+            "accessToken": "YOUR_MAPBOX_ACCESS_TOKEN"
+          }
+        }
       ]
     ],
     "experiments": {
