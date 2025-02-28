@@ -99,5 +99,118 @@ export default StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 10,          
         marginTop: 10,                 
-    }
+    },
+    footerContainer: {
+        position: "absolute",
+        
+        bottom: -575, 
+        left: -12,   
+        right: 0,   
+        height: 80,
+        marginHorizontal: "auto",  
+        width: 375, 
+        backgroundColor: "#ffffff",
+        borderRadius: 20, 
+        shadowColor: "#000",
+        flexDirection: "row",  
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1, 
+        shadowRadius: 10,
+        paddingVertical: 12, 
+        paddingHorizontal: 18,
+        justifyContent: "space-between", 
+        alignItems: "center",
+        elevation: 5, 
+      },
+        
+        footerButton: {
+          flex: 1,
+          marginHorizontal: 10,  
+          paddingVertical: 15,
+          borderRadius: 10,
+          alignItems: "center",
+          justifyContent: "center",
+          elevation: 2, 
+          shadowColor: "#000",
+          shadowOpacity: 0.1,
+          shadowRadius: 5,
+          shadowOffset: { width: 0, height: 2 },
+          transition: "background-color 0.3s ease", 
+        },
+        
+        goButton: {
+          fontSize: 8,
+          backgroundColor: "#0FA958",  
+          padding:10,
+          paddingHorizontal: 20, 
+          borderRadius: 10, 
+      
+        },
+    
+        
+        stepsButton: {
+          backgroundColor: "#393a41", 
+          padding:10,
+          paddingHorizontal: 20, 
+          borderRadius: 10, 
+      
+      
+        },
+        
+        favoriteButton: {
+          backgroundColor: "#393a41", 
+          padding:10,
+          paddingHorizontal: 20, 
+          borderRadius: 10,  
+      
+      
+        },
+        
+        footerButtonText: {
+          color: "white",
+          fontSize: 13,
+          fontWeight: "bold",
+        },
+          // Modal styles remain the same:
+        modalContainer: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0,0,0,0.5)",
+        },
+        modalContent: {
+            backgroundColor: "white",
+            padding: 20,
+            borderRadius: 10,
+            width: "80%",
+            alignItems: "center",
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.3,
+            shadowRadius: 3,
+        },
+        modalTitle: {
+            fontSize: 18,
+            fontWeight: "bold",
+            marginBottom: 10,
+        },
+        modalText: {
+            fontSize: 14,
+            textAlign: "center",
+            marginBottom: 15,
+        },
+        closeButton: {
+            backgroundColor: "#ff5252",
+            padding: 8,
+            borderRadius: 20,
+            width: 30,
+            height: 30,
+            alignItems: "center",
+            justifyContent: "center",
+          },
+          closeButtonText: {
+            color: "white",
+            fontWeight: "bold",
+            fontSize: 16,
+          },
 });

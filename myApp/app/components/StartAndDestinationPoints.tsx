@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import 'react-native-get-random-values';
 import Constants from 'expo-constants';
@@ -8,6 +8,7 @@ import styles from "../styles/StartAndDestinationPointsStyles";
 import useLocation from "../hooks/useLocation";
 import 'react-native-get-random-values';
 import Icon from 'react-native-vector-icons/Foundation'; 
+import { useNavigation } from "@react-navigation/native";
 
 interface Props {
     setOriginLocation: (location: { latitude: number; longitude: number }) => void;
@@ -29,6 +30,31 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
     const [isOriginSet, setIsOriginSet] = useState(false);
     const [isInputFocused, setIsInputFocused] = useState(false); 
     const defaultTravel = 'TRANSIT';
+
+    const [showFooter, setShowFooter] = useState(false);
+    const [showSteps, setShowSteps] = useState(false);
+
+    const navigation = useNavigation();
+    // Handle "GO" button click
+    const handleGoClick = () => {
+        console.log("Navigating...");
+    };
+
+    // Handle "Steps" button click (show modal)
+    const handleStepsClick = () => {
+        setShowSteps(true);
+    };
+
+    // Close steps modal
+    const handleCloseSteps = () => {
+        setShowSteps(false);
+    };
+
+    // Handle "Add Favorite" button click
+    const handleAddFavorite = () => {
+        console.log("Adding to Favorites...");
+    };
+    
 
     return (
         <View style={styles.container}>
@@ -163,9 +189,13 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                     <TouchableOpacity
                         onPress={() => {
                             if (origin && destination) {
+                                setShowFooter(true);
                                 setShowTransportation(true);
                                 setRenderMap(true);
                                 setTravelMode('TRANSIT');
+                                     navigation.setOptions({
+                                    tabBarStyle: { display: 'none' },  
+                                });
                             }
                         }}
                     >
@@ -174,9 +204,13 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                     <TouchableOpacity
                         onPress={() => {
                             if (origin && destination) {
+                                setShowFooter(true);
                                 setShowTransportation(true);
                                 setRenderMap(true);
                                 setTravelMode('TRANSIT');
+                                navigation.setOptions({
+                                    tabBarStyle: { display: 'none' },  
+                                });
                             }
                         }}
                     >
@@ -185,9 +219,14 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                     <TouchableOpacity
                         onPress={() => {
                             if (origin && destination) {
+                                setShowFooter(true);
                                 setShowTransportation(true);
                                 setRenderMap(true);
                                 setTravelMode('WALKING');
+                                navigation.setOptions({
+                                    tabBarStyle: { display: 'none' },  
+                                });
+
                             }
                         }}
                     >
@@ -196,9 +235,13 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                     <TouchableOpacity
                         onPress={() => {
                             if (origin && destination) {
+                                setShowFooter(true);
                                 setShowTransportation(true);
                                 setRenderMap(true);
                                 setTravelMode('BICYCLING');
+                                navigation.setOptions({
+                                    tabBarStyle: { display: 'none' },  
+                                });
                             }
                         }}
                     >
@@ -208,6 +251,37 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                 )}
                 
             </View>
+                {/* Footer */}
+                {showFooter && (
+                <View style={styles.footerContainer}>
+                    <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
+                        <Text style={styles.footerButtonText}>GO</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.stepsButton} onPress={handleStepsClick}>
+                        <Text style={styles.footerButtonText}>Steps</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.favoriteButton} onPress={handleAddFavorite}>
+                        <Text style={styles.footerButtonText}>Add favorite</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
+
+            {/* Steps Modal */}
+            {showSteps && (
+                <Modal visible={showSteps} transparent animationType="slide">
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalTitle}>Directions</Text>
+                            <Text style={styles.modalText}>1. Start from {origin?.latitude}, {origin?.longitude}</Text>
+                            <Text style={styles.modalText}>2. Head towards {destination?.latitude}, {destination?.longitude}</Text>
+                            {/* More steps can be added based on the route */}
+                            <TouchableOpacity style={styles.closeButton} onPress={handleCloseSteps}>
+                                <Text style={styles.closeButtonText}>Close</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+            )}
 
         </View>
     );
@@ -241,4 +315,5 @@ const myLocationStyles = StyleSheet.create({
         color: "black", // Change to white for better visibility
         fontWeight: "bold",
     },
+    
 });

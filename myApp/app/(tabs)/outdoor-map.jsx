@@ -49,12 +49,6 @@ const OutdoorMap = () => {
   // The missing piece: track the building user is inside
   const [highlightedBuilding, setHighlightedBuilding] = useState(null);
 
-  //Show footer for Go and Steps
-  const [showFooter, setShowFooter] = useState(false);
-  const [showSteps, setShowSteps] = useState(false);
-
-  const navigation = useNavigation();
-
 
   // Mapping for StartAndDestinationPoints
   const coordinatesMap = {
@@ -96,27 +90,6 @@ const OutdoorMap = () => {
       setShowPermissionPopup(true);
     }
   }, [location, hasPermission]);
-
-  useEffect(() => {
-    // Hide the tab bar if both locations are provided
-    if (originLocation && destinationLocation) {
-      setShowFooter(true);
-      navigation.setOptions({
-        tabBarStyle: { display: 'none' },  // Hide the tab bar when locations are set
-      });
-    } else {
-      // Reset tab bar to visible when either location is not set
-      setShowFooter(false);
-      navigation.setOptions({
-        tabBarStyle: { display: 'flex' },  // Show the tab bar when locations are not set
-      });
-    }
-    return () => {
-      navigation.setOptions({
-        tabBarStyle: { display: 'flex' },  // Ensure the tab bar is visible when the component is unmounted
-      });
-    };
-  }, [originLocation, destinationLocation, navigation]);  // Dependencies include locations and navigation
 
   // Handle GO button logic 
   const handleGoClick = () => {
@@ -318,36 +291,7 @@ const OutdoorMap = () => {
           </View>
         </View>
       </Modal>
-      {/* Footer */
-          showFooter && (
-            <View style={styles.footerContainer}>
-              <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
-                <Text style={styles.footerButtonText}>GO</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.stepsButton} onPress={hanndleStepsClick}>
-                <Text style={styles.footerButtonText}>Steps</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.favoriteButton} onPress={handleAddFavorite}>
-                <Text style={styles.footerButtonText}>Add favorite</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          {/* Steps Modal */
-          showSteps && (
-            <Modal visible={showSteps} transparent animationType="slide">
-              <View style={styles.modalContainer}>
-                <View style={styles.modalContent}>
-                  <Text style={styles.modalTitle}>Directions</Text>
-                  <Text style={styles.modalText}>1. Start from {originLocation?.latitude}, {originLocation?.longitude}</Text>
-                  <Text style={styles.modalText}>2. Head towards {destinationLocation?.latitude}, {destinationLocation?.longitude}</Text>
-                    {/* More steps would be added here depending on the route logic */}
-                  <TouchableOpacity style={styles.closeButton} onPress={handleCloseSteps}>
-                    <Text style={styles.closeButtonText}>Close</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </Modal>
-          )}
+    
 
 
       {/* Building Popup */}
