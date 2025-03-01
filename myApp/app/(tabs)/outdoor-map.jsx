@@ -42,7 +42,7 @@ const OutdoorMap = () => {
   const [destinationText, setDestinationText] = useState("");
   const [travelMode, setTravelMode] = useState('TRANSIT');
   const [renderMap, setRenderMap] = useState(false);
-  const [showTransportaion, setShowTransportaton] = useState(false);
+  const [updateText, setUpdateText] = useState(0);
 
   // Building popup
   const [selectedBuilding, setSelectedBuilding] = useState(null);
@@ -138,17 +138,18 @@ const OutdoorMap = () => {
 
   const handleBuildingGetDirections = (building) => {
     setOriginLocation(coordinatesMap["My Position"]);
-    setOriginText("My Position");
+    setOriginText("My Location");
     const buildingFullName = building.name + ", " + building.longName
     console.log(buildingFullName);
-    setDestinationLocation(coordinatesMap[buildingFullName]);
+    setDestinationLocation(building.entranceCoordinates);
     setDestinationText(buildingFullName);
-    setShowTransportaton(true);
+    setUpdateText(updateText + 1);
   }
 
   return (
     <View style={styles.container}>
       <StartAndDestinationPoints
+        updateText = {updateText}
         buildingTextOrigin= {originText}
         buildingTextDestination= {destinationText}
         originLocation = {originLocation}
@@ -158,8 +159,6 @@ const OutdoorMap = () => {
         setTravelMode={setTravelMode}
         renderMap={renderMap}
         setRenderMap={setRenderMap}
-        setShowTransportaton={setShowTransportaton}
-        setDestinationText = {setDestinationText}
       />
       <MapView
         ref={mapRef}

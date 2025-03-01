@@ -9,6 +9,7 @@ import useLocation from "../hooks/useLocation";
 import Icon from 'react-native-vector-icons/Foundation'; 
 
 interface Props {
+    updateText: number;
     buildingTextOrigin: string;
     buildingTextDestination: string;
     originLocation: {latitude: number; longitude: number}
@@ -23,7 +24,7 @@ interface Props {
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
 
-const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, buildingTextOrigin, originLocation, destinationLocation, setOriginLocation, setDestinationLocation, setTravelMode, renderMap, setRenderMap}) => {
+const StartAndDestinationPoints: React.FC<Props> = ({ updateText, buildingTextDestination, buildingTextOrigin, originLocation, destinationLocation, setOriginLocation, setDestinationLocation, setTravelMode, renderMap, setRenderMap}) => {
     const [origin, setOrigin] = useState<{ latitude: number; longitude: number } | null>(null);
     const [destination, setDestination] = useState<{ latitude: number; longitude: number } | null>(null);
     const [showTransportation, setShowTransportation] = useState(false);
@@ -37,44 +38,36 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
     const [showMyLocButton, setShowMyLocButton] = useState(true);
     const [showTravelMode, setShowTravelMode] = useState("");
     const [selectedMode, setSelectedMode] = useState<'DRIVING' | 'BICYCLING' | 'WALKING' | 'TRANSIT'>(defaultTravel);
-    const [useBuildingTextOrigin, setUseBuildingTextOrigin] = useState("");
-    const [useBuildingTextDestination, setUseBuildingTextDestination] = useState("")
+    const [localUpdateText, setLocalUpdateText] = useState(0);
+    const [locationSet, setLocationSet] = useState(0);
 
+    //This useEffect only executes when updatedText changes, aka directions come from a building Popup
     useEffect(() => {
-        console.log("originText updated to: xxx ", originText, "building info: xxx", buildingTextOrigin);
-        console.log("destinationText updated to: xxx ", destinationText, "building info:", buildingTextDestination);
-    }, [originText, destinationText]);
-
-    useEffect(() => {
-        setUseBuildingTextOrigin(buildingTextOrigin);
-        setUseBuildingTextDestination(buildingTextDestination);
-        if(useBuildingTextOrigin){
+        setLocalUpdateText(updateText);
+        setShowTransportation(false); //Hide the transportation methods until Get Directions is pressed again
+        if(buildingTextOrigin){
             setOrigin(originLocation);
             setOriginText(buildingTextOrigin);
         }
-        if(useBuildingTextDestination) {
+        if(buildingTextDestination) {
             setDestination(destinationLocation);
             setDestinationText(buildingTextDestination);
         }
-    }, [buildingTextOrigin, buildingTextDestination]);
+    }, [updateText]);
 
-    useEffect(() => {
-        if(useBuildingTextDestination) {
-            setDestinationText(buildingTextDestination);
-            setDestination(destinationLocation);
-        }
-        if(useBuildingTextOrigin) {
-            setOriginText(buildingTextOrigin);
-            setOrigin(originLocation);
-        }
-    }, [showTransportation, showTravelMode, useBuildingTextDestination])
-
+    //This use effect only executes if user hasn't changed origin and destination from when they were set by the building popup
     useEffect(()=>{
-        if(useBuildingTextOrigin && useBuildingTextDestination) {
+        if(buildingTextDestination && buildingTextOrigin && localUpdateText==updateText) {
             setOriginText(buildingTextOrigin);
             setDestinationText(buildingTextDestination);
         }
-    }, [origin, destination])
+    }, [origin, destination, showTransportation, showTravelMode])
+
+    //Sets destination text to "" and destination to null anytime location changes
+    useEffect(() => {
+        setDestinationText("");
+        setDestination(null)
+    }, [locationSet])
     
 
     return (
@@ -103,11 +96,13 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                 setOrigin(location);
                                 setOriginLocation(location);
                                 setIsOriginSet(true);
-                                setUseBuildingTextOrigin("");
                                 setDestinationText("");
+                                setDestination(null);
+                                setLocalUpdateText(0);
                                 setOriginText(data.description);
                                 originRef.current?.setAddressText(data.description); // Allows persistance of the selected origin location 
                                 setShowTransportation(false);
+                                setLocationSet(locationSet + 1);
                                 
                             }
                         }}
@@ -133,12 +128,15 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                         latitude: location.latitude,
                                         longitude: location.longitude,
                                     }
-                                    setUseBuildingTextOrigin("");
                                     setOrigin(myLocation);
                                     setOriginLocation(myLocation);
                                     setIsOriginSet(true);
                                     setShowTransportation(false);
                                     setOriginText("My Location");
+                                    setDestinationText("");
+                                    setDestination(null);
+                                    setLocalUpdateText(0);
+                                    setLocationSet(locationSet + 1);
 
                                
                                 // Verify current location properly fetched (tested on expo app -> successful!)
@@ -148,11 +146,14 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                 });
                                 console.log("Selected My Location:", coords);
 
-                                    setUseBuildingTextOrigin("");
                                     setOriginText("My Location"); // Set the input text to "My Location"
+                                    setDestinationText("");
+                                    setDestination(null);
                                     originRef.current?.setAddressText("My Location");
                                     setShowMyLocButton(false);
                                     setIsInputFocused(false);
+                                    setLocalUpdateText(0);
+                                    setLocationSet(locationSet + 1);
                                     
                                 } else {
                                     console.log("User location not available.");
@@ -189,8 +190,8 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                 setDestination(location);
                                 setDestinationLocation(location);
                                 setShowTransportation(false);
-                                setUseBuildingTextDestination("");
                                 setDestinationText(data.description);
+                                setLocalUpdateText(0);
                                 
                             }
                         }}
@@ -222,12 +223,6 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                                 setShowTravelMode(defaultTravel);
                                 setShowTransportation(true);
                             }
-                            if(buildingTextDestination) {
-                                setDestinationText(buildingTextDestination);
-                            }
-                            if(buildingTextOrigin) {
-                                setOriginText(buildingTextOrigin);
-                            }
                         }}   
                     >
                         <Text style={styles.buttonText}>Get Directions</Text>
@@ -244,6 +239,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({ buildingTextDestination, b
                             key={mode}
                             onPress={() => {
                                 if (origin && destination) {
+                                    console.log("Get Directions Pressed");
                                     setRenderMap(true);
                                     setTravelMode(mode);
                                     setSelectedMode(mode);
