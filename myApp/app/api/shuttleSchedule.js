@@ -5,16 +5,16 @@ import { getRealTimeShuttleData } from "./shuttleLiveData.js";
 export const fetchAllShuttleSchedules = async () => getAllShuttleSchedules();
 
 // Fetch a specific day's schedule
-// export const fetchShuttleScheduleByDay = async (day) => getShuttleScheduleByDay(day);
 export const fetchShuttleScheduleByDay = async (day) => {
   try {
       console.log(`Fetching shuttle schedule for: ${day}`);
-      return getShuttleScheduleByDay(day);
+      return getShuttleScheduleByDay(day); // Now this throws an error for invalid days
   } catch (error) {
       console.error("Error fetching schedule:", error.message);
-      return null; // Instead of throwing an error, return null to avoid app crashes.
+      throw error; // 🚨 Re-throw the error so tests correctly catch it
   }
 };
+
 
 // Fetch live shuttle data
 export const fetchLiveShuttleData = async () => getRealTimeShuttleData();
