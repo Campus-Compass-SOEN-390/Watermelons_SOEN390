@@ -1,4 +1,3 @@
-import React from "react";
 import { getAllShuttleSchedules, getShuttleScheduleByDay } from "./shuttleScheduleData.js";
 import { getRealTimeShuttleData, extractShuttleInfo } from "./shuttleLiveData.js";
 
@@ -24,4 +23,5 @@ export default {
   fetchShuttleScheduleByDay,
   fetchLiveShuttleData,
   fetchShuttleInfo,
+
 };

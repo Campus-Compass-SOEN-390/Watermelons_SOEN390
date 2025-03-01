@@ -34,12 +34,14 @@ export default function HomePage() {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity 
+                <TouchableOpacity 
                     style={styles.button}
-                    testID="browseButton"
+                    testID="shuttleScheduleButton"
+                    onPress={() => router.push('/screens/ShuttleScheduleScreen')}
                     >
-                        <Text style={styles.buttonText}>Browse</Text>
+                    <Text style={styles.buttonText}>Shuttle Bus Schedule</Text>
                     </TouchableOpacity>
+
                     <TouchableOpacity style={styles.button}
                     onPress={() => router.push('(tabs)/interest-points')}
                     testID="interestButton"

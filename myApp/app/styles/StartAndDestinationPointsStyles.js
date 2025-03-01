@@ -99,5 +99,13 @@ export default StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 10,          
         marginTop: 10,                 
+    },
+    transportButton: {
+        padding: 10,
+        borderRadius: 8,
+        backgroundColor: "#eee", 
+    },
+    selectedButton: {
+        backgroundColor: "#922338", 
     }
 });

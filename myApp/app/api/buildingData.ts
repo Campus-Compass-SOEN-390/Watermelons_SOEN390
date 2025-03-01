@@ -20,6 +20,7 @@ export interface Building {
   wheelchairAccessible: boolean;
   departments: string[];
   services?: string[];
+  entranceCoordinates?: Coordinates;
   coordinates?: Coordinates[];
   campus: Campus;
 }
@@ -71,6 +72,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: true,
     departments: ["Not Available"],
     campus: Campus.LOY,
+    entranceCoordinates: { latitude: 45.458204, longitude: -73.640300},
     coordinates: [
       { latitude: 45.45879783164691, longitude: -73.64116974399921 },
       { latitude: 45.45839267330936, longitude: -73.64143115333147 },
@@ -86,6 +88,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: true,
     departments: ["Communication Studies", "Journalism"],
     campus: Campus.LOY,
+    entranceCoordinates: { latitude: 45.457478, longitude: -73.640354},
     coordinates: [
       { latitude: 45.457284244031285, longitude: -73.63763317156965 },
       { latitude: 45.45701819500725, longitude: -73.63783558975122 },
@@ -119,6 +122,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: true,
     departments: ["Not Available"],
     campus: Campus.LOY,
+    entranceCoordinates: { latitude: 45.457017, longitude: -73.640432},
     coordinates: [
       { latitude: 45.457171556137446, longitude: -73.64057071367107 },
       { latitude: 45.456952508899235, longitude: -73.64074464211575 },
@@ -134,6 +138,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: true,
     departments: ["Not Available"],
     campus: Campus.LOY,
+    entranceCoordinates: { latitude: 45.459356, longitude: -73.641270},
     coordinates: [
       { latitude: 45.45969784997463, longitude: -73.64136123390169 },
       { latitude: 45.45942894983393, longitude: -73.64155628153311 },
@@ -149,6 +154,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: true,
     departments: ["Not Available"],
     campus: Campus.LOY,
+    entranceCoordinates: { latitude: 45.459308, longitude: -73.641849},
     coordinates: [
       { latitude: 45.45955663320831, longitude: -73.64198943146944 },
       { latitude: 45.459140240357215, longitude: -73.64233198897811 },
@@ -164,6 +170,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: false,
     departments: ["Not Available"],
     campus: Campus.LOY,
+    entranceCoordinates: { latitude: 45.459663,longitude: -73.642080},
     coordinates: [
       { latitude: 45.459906138169075, longitude: -73.64203607306884 },
       { latitude: 45.45963415262996, longitude: -73.64225135213151 },
@@ -179,6 +186,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: true,
     departments: ["Not Available"],
     campus: Campus.LOY,
+    entranceCoordinates: { latitude: 45.458513, longitude: -73.641921},
     coordinates: [
       { latitude: 45.458446186335834, longitude: -73.64211713925434 },
       { latitude: 45.458294086004564, longitude: -73.64171981633193 },
@@ -194,6 +202,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: false,
     departments: ["Not Available"],
     campus: Campus.LOY,
+    entranceCoordinates: {latitude: 45.458432, longitude: -73.643235},
     coordinates: [
       { latitude: 45.45847571531779, longitude: -73.64341800596794 },
       { latitude: 45.45838340608896, longitude: -73.64317511614011 },
@@ -209,6 +218,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: true,
     departments: ["Not Available"],
     campus: Campus.LOY,
+    entranceCoordinates: {latitude: 45.457088, longitude: -73.637683},
     coordinates: [
       { latitude: 45.457284244031285, longitude: -73.63763317156965 },
       { latitude: 45.45701819500725, longitude: -73.63783558975122 },
@@ -269,6 +279,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: true,
     departments: ["Not Available"],
     campus: Campus.LOY,
+    entranceCoordinates: { latitude: 45.458489, longitude: -73.641028},
     coordinates: [
       { latitude: 45.45862022823182, longitude: -73.64002729351685 },
       { latitude: 45.45851645293705, longitude: -73.64011576618299 },
@@ -302,6 +313,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: false,
     departments: ["Not Available"],
     campus: Campus.LOY,
+    entranceCoordinates: { latitude: 45.458, longitude: 73.639},
     coordinates: [
       { latitude: 45.45763825199133, longitude: -73.64257106756277 },
       { latitude: 45.4575696249186, longitude: -73.6423945340532 },
@@ -331,6 +343,7 @@ export const buildings: Building[] = [
       "Psychology"
     ],
     campus: Campus.LOY,
+    entranceCoordinates: { latitude: 45.457881, longitude: -73.641565},
     coordinates: [
       { latitude: 45.45832821103611, longitude: -73.64141343267241 },
       { latitude: 45.45827742437653, longitude: -73.64128710966807 },
@@ -357,6 +370,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: false,
     departments: ["Centre for the Arts in Human Development (CAHD)"],
     campus: Campus.LOY,
+    entranceCoordinates: { latitude: 45.459992, longitude: -73.640897},
     coordinates: [
       { latitude: 45.45968821064703, longitude: -73.64035807183336 },
       { latitude: 45.459292890682676, longitude: -73.63945965226893 },
@@ -381,6 +395,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: true,
     departments: ["Not Available"],
     campus: Campus.LOY,
+    entranceCoordinates: { latitude: 45.459026, longitude: -73.638606},
     coordinates: [
       { latitude: 45.459485372131994, longitude: -73.63913679975713 },
       { latitude: 45.45935160556695, longitude: -73.63923974928578 },
@@ -464,6 +479,7 @@ export const buildings: Building[] = [
       "Urban Studies"
     ],
     campus: Campus.SGW,
+    entranceCoordinates: { latitude: 45.496428, longitude: -73.579990},
     coordinates: [
       { latitude: 45.4966874910767, longitude: -73.58014312979104 },
       { latitude: 45.49629611013139, longitude: -73.58045288885724 },
@@ -488,6 +504,7 @@ export const buildings: Building[] = [
       "Design and Computation Arts"
     ],
     campus: Campus.SGW,
+    entranceCoordinates: { latitude: 45.495376, longitude: -73.577997},
     coordinates: [
       { latitude: 45.49567383989148, longitude: -73.57807898778127 },
       { latitude: 45.49586446758388, longitude: -73.57849838295294 },
@@ -528,6 +545,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: true,
     departments: ["Education"],
     campus: Campus.SGW,
+    entranceCoordinates: { latitude: 45.494381, longitude: -73.578425},
     coordinates: [
       { latitude: 45.494697617359805, longitude: -73.57803821546234 },
       { latitude: 45.493842086826234, longitude: -73.57907383173514 },
@@ -561,6 +579,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: false,
     departments: ["Department of Philosophy (temporary)"],
     campus: Campus.SGW,
+    entranceCoordinates: { latitude: 45.493622, longitude: -73.577003},
     coordinates: [
       { latitude: 45.49444588559977, longitude: -73.57704684530952 },
       { latitude: 45.49394352956143, longitude: -73.57761419053239 },
@@ -617,6 +636,7 @@ export const buildings: Building[] = [
       "Mathematics and Statistics"
     ],
     campus: Campus.SGW,
+    entranceCoordinates: { latitude: 45.497050, longitude: -73.578009},
     coordinates: [
       { latitude: 45.49730622534821, longitude: -73.57807280428914 },
       { latitude: 45.496690697848365, longitude: -73.57864792247945 },
@@ -641,6 +661,7 @@ export const buildings: Building[] = [
     wheelchairAccessible: false,
     departments: ["Not Available"],
     campus: Campus.SGW,
+    entranceCoordinates: { latitude: 45.496192, longitude: -73.579490},
     coordinates: [
       { latitude: 45.49653594280453, longitude: -73.57957024371711 },
       { latitude: 45.49642006398626, longitude: -73.57968408412736 },
@@ -677,6 +698,7 @@ export const buildings: Building[] = [
       "Theatre"
     ],
     campus: Campus.SGW,
+    entranceCoordinates: { latitude: 45.495304, longitude: -73.579044},
     coordinates: [
       { latitude: 45.49551994498565, longitude: -73.57920062907395 },
       { latitude: 45.49535857941148, longitude: -73.5793643521431 },

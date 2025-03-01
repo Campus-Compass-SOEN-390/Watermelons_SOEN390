@@ -77,6 +77,7 @@ export const extractShuttleInfo = async () => {
     throw new Error("Error processing shuttle data.");
   }
 };
+export default getRealTimeShuttleData;
 
 export default { getRealTimeShuttleData, extractShuttleInfo };
 
