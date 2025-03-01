@@ -2,21 +2,30 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
 import IndoorMap from '../(tabs)/indoor-map';
 
-// Mock `expo-router`
+// Create a mock for the push function
+const mockPush = jest.fn();
+
+// Mocking useRouter from expo-router to return the mock push function
 jest.mock('expo-router', () => ({
-  useRouter: jest.fn(() => ({
-    push: jest.fn(),
-  })),
+    useRouter: () => ({
+        push: mockPush,
+    }),
 }));
 
-describe('IndoorMap', () => {
-  it('should load indoor navigation buttons on startup', async () => {
-    const { getByTestId } = render(<IndoorMap />);
-
-    await waitFor(() => {
-      expect(getByTestId('floor-up')).toBeTruthy();
-      expect(getByTestId('floor-down')).toBeTruthy();
-      expect(getByTestId('buildings-button')).toBeTruthy();
+describe('Indoor map', () => {
+    beforeEach(() => {
+        // Clear mock history before each test
+        mockPush.mockClear();
     });
-  });
+
+    it('should load indoor map and buttons on startup', () => {
+        const page = render(<IndoorMap />);
+        const floorUpButton = page.getByTestId('floor-up');
+        const floorDownButton = page.getByTestId('floor-down');
+        const buildingsButton = page.getByTestId('buildings-button');
+
+        expect(floorUpButton).toBeTruthy();
+        expect(floorDownButton).toBeTruthy();
+        expect(buildingsButton).toBeTruthy();
+    });
 });
