@@ -10,6 +10,7 @@ import { buildings, Campus, getBuildingById } from "../api/buildingData";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
 import { BuildingPopup } from "../components/BuildingPopUp";
 import MapDirections from "../components/MapDirections";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const OutdoorMap = () => {
   // Campus regions
@@ -47,6 +48,7 @@ const OutdoorMap = () => {
 
   // The missing piece: track the building user is inside
   const [highlightedBuilding, setHighlightedBuilding] = useState(null);
+
 
   // Mapping for StartAndDestinationPoints
   const coordinatesMap = {
@@ -88,6 +90,25 @@ const OutdoorMap = () => {
       setShowPermissionPopup(true);
     }
   }, [location, hasPermission]);
+
+  // Handle GO button logic 
+  const handleGoClick = () => {
+    alert("Journey started!");
+
+  };
+  const hanndleStepsClick = () => {
+    // Show Steps animate map to destination
+    setShowSteps(true);
+  };
+  const handleAddFavorite = () => {
+    // Add favorite logic
+
+    
+  };
+  //Close Steps Modal
+  const handleCloseSteps = () => {
+    setShowSteps(false);
+  };
 
   // Center on user
   const centerMapOnUser = () => {
@@ -270,6 +291,8 @@ const OutdoorMap = () => {
           </View>
         </View>
       </Modal>
+    
+
 
       {/* Building Popup */}
       <BuildingPopup

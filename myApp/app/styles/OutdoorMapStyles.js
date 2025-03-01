@@ -117,4 +117,6 @@ export default StyleSheet.create({
     textAlign: "center",
     color: "#333",
   },
+
+  
 });
