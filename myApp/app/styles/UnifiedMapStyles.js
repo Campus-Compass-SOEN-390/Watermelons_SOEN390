@@ -216,6 +216,7 @@ const styles = StyleSheet.create({
   listViewContainer: {
     flex: 1,
     marginTop: 100,
+    marginBottom: SAFE_AREA_BOTTOM + 30,
   },
   listContent: {
     padding: 10,

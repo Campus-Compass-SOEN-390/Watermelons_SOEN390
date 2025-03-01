@@ -1,65 +1,156 @@
-import { Tabs, useRouter } from 'expo-router';
-import { View, TouchableOpacity } from 'react-native';
+import { Tabs, useRouter, usePathname, useLocalSearchParams } from 'expo-router';
+import { View, TouchableOpacity, Text } from 'react-native'; // <-- added Text
 import Ionicons from '@expo/vector-icons/Ionicons';
 import styles from "../styles/LayoutStyles";
+import React from 'react';
 
 export default function TabLayout() {
   const router = useRouter();
+  const pathname = usePathname();
+  const params = useLocalSearchParams();
+  const currentMode = params.mode;
+  const [activeTab, setActiveTab] = React.useState(currentMode === 'campus' ? 'outdoor-map' : 'interest-points');
+
+  // Create custom tab navigation
+  const navigateToTab = (tabName) => {
+    setActiveTab(tabName);
+    console.log("prams", params);  
+    
+    if (tabName === 'outdoor-map') {
+      // Navigate to interest-points but with outdoor map context
+      router.push({
+        pathname: './interest-points',
+        params: { mode: 'campus' }
+      });
+    } else if (tabName === 'interest-points' && currentMode === 'campus') {
+      // When clicking interest-points tab while in campus mode, reset to POI mode
+      router.push({
+        pathname: './interest-points',
+        params: { mode: 'poi' }
+      });
+    } else {
+      router.push(tabName);
+    }
+  };
 
   return (
     <View style={{ flex: 1 }}>
       <Tabs
         screenOptions={({ route }) => ({
-          headerShown: false, // Remove the top header bar
+          headerShown: false,
           tabBarStyle: styles.tabBarStyle,
           tabBarItemStyle: styles.tabBarItemStyle,
-          tabBarActiveTintColor: 'white',
-          tabBarInactiveTintColor: 'grey',
-          tabBarIcon: ({ focused }) => {
+          // Add a dynamic tabBarLabel which depends on activeTab
+          tabBarLabel: ({ focused, color }) => {
+            const isActiveTab = activeTab === route.name;
+            return (
+              <Text style={{ 
+                fontSize: 10, 
+                marginTop: 2, 
+                color: isActiveTab ? 'white' : 'grey'
+              }}>
+                {route.name}
+              </Text>
+            );
+          },
+          tabBarIcon: () => {
             let iconName;
+            
+            // Determine active tab based on state
+            const isActiveTab = activeTab === route.name;
+            const activeColor = 'grey';
+            
             switch (route.name) {
               case 'interest-points':
-                iconName = focused ? 'pin' : 'pin-outline';
-                break;
-              case 'indoor-map':
-                iconName = focused ? 'map' : 'map-outline';
+                iconName = isActiveTab ? 'pin' : 'pin-outline';
                 break;
               case 'outdoor-map':
-                iconName = focused ? 'map' : 'map-outline';
+                iconName = isActiveTab ? 'map' : 'map-outline';
+                break;
+              case 'indoor-map':
+                iconName = isActiveTab ? 'map' : 'map-outline';
                 break;
               case 'favorites':
-                iconName = focused ? 'star' : 'star-outline';
+                iconName = isActiveTab ? 'star' : 'star-outline';
                 break;
               case 'index':
-                iconName = focused ? 'home' : 'home-outline';
+                iconName = isActiveTab ? 'home' : 'home-outline';
                 break;
               default:
                 iconName = 'circle';
             }
             return (
-              <View style={[styles.tabItem, focused && styles.activeTabBackground]}>
+              <View style={[
+                styles.tabItem, 
+                isActiveTab && {
+                  ...styles.activeTabBackground,
+                  backgroundColor: activeColor
+                }
+              ]}>
                 <Ionicons
-                  name={iconName as keyof typeof Ionicons.glyphMap}
-                  size={focused ? 21 : 24}
-                  color={focused ? 'white' : 'grey'}
-                  style={{ marginLeft: 0, marginTop: focused ? -14 : 0 }}
+                  name={iconName}
+                  size={isActiveTab ? 21 : 24}
+                  color={isActiveTab ? 'white' : 'grey'}
+                  style={{ marginLeft: 0, marginTop: isActiveTab ? -14 : 0 }}
                 />
               </View>
             );
           },
         })}
       >
-        <Tabs.Screen name="interest-points" />
-        <Tabs.Screen name="indoor-map" />
-        <Tabs.Screen name="outdoor-map" />
-        <Tabs.Screen name="favorites" />
-        <Tabs.Screen name="index" />
+        <Tabs.Screen 
+          name="interest-points" 
+          listeners={{
+            tabPress: (e) => {
+              e.preventDefault();
+              navigateToTab('interest-points');
+            }
+          }}
+          options={{
+            tabBarActiveTintColor: activeTab === 'outdoor-map' ? 'grey' : 'white'
+          }}
+        />
+        <Tabs.Screen 
+          name="indoor-map" 
+          listeners={{
+            tabPress: (e) => {
+              e.preventDefault();
+              navigateToTab('indoor-map');
+            }
+          }}
+          options={{ 
+          }}
+        />
+        <Tabs.Screen 
+          name="outdoor-map" 
+          listeners={{
+            tabPress: (e) => {
+              e.preventDefault();
+              navigateToTab('outdoor-map');
+            }
+          }}
+          options={{ }}
+        />
+        <Tabs.Screen 
+          name="favorites" 
+          listeners={{
+            tabPress: (e) => {
+              e.preventDefault();
+              navigateToTab('favorites');
+            }
+          }}
+          options={{
+            tabBarActiveTintColor: "white"
+          }}
+        />
       </Tabs>
 
-      {/* Custom Home Button overlay */}
       <TouchableOpacity
-        style={styles.homeButton}
-        onPress={() => router.push('/')}
+        style={[styles.homeButton]}
+        onPress={() => {
+          setActiveTab('index');
+          router.push('/');
+        }}
       >
         <Ionicons name="home" size={24} color="white" />
       </TouchableOpacity>

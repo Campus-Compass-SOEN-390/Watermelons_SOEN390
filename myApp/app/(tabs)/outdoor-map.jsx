@@ -1,20 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View } from 'react-native';
-import { MapProvider } from '../contexts/MapContext';
-import SharedMap from '../components/SharedMap';
-import OutdoorMapUI from '../components/OutdoorMapUI';
-import StartAndDestinationPoints from '../components/StartAndDestinationPoints';
-import styles from '../styles/OutdoorMapStyles';
+import { useRouter } from 'expo-router';
 
 const OutdoorMap = () => {
+  const router = useRouter();
+  
+  useEffect(() => {
+    // Redirect to interest points screen
+    router.replace('/interest-points');
+  }, []);
+
   return (
-    <MapProvider>
-      <View style={styles.container}>
-        <StartAndDestinationPoints />
-        <SharedMap />
-        <OutdoorMapUI />
-      </View>
-    </MapProvider>
+    <View>
+      {/* This view will only be displayed briefly before redirection */}
+    </View>
   );
 };
 
