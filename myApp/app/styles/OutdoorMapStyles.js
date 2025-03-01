@@ -96,7 +96,6 @@ export default StyleSheet.create({
     bottom: 65,
     left: 20,
     zIndex: 2,
-    
   },
   switchButton: {
     backgroundColor: "#922338",
