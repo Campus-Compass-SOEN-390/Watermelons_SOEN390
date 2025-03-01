@@ -1,10 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  Modal,
   Keyboard,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
@@ -30,11 +29,21 @@ interface Props {
   ) => void;
   renderMap: boolean;
   setRenderMap: (show: boolean) => void;
+  updateText: number;
+  buildingTextOrigin: string;
+  buildingTextDestination: string;
+  originLocation: { latitude: number; longitude: number };
+  destinationLocation: { latitude: number; longitude: number };
 }
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
 const StartAndDestinationPoints: React.FC<Props> = ({
+  updateText,
+  buildingTextDestination,
+  buildingTextOrigin,
+  originLocation,
+  destinationLocation,
   setOriginLocation,
   setDestinationLocation,
   setTravelMode,
@@ -52,10 +61,18 @@ const StartAndDestinationPoints: React.FC<Props> = ({
   const [showTransportation, setShowTransportation] = useState(false);
   const { location } = useLocation();
   const [originText, setOriginText] = useState("");
+  const [destinationText, setDestinationText] = useState("");
   const originRef = useRef<any>(null);
   const [isOriginSet, setIsOriginSet] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const defaultTravel = "TRANSIT";
+  const [showMyLocButton, setShowMyLocButton] = useState(true);
+  const [showTravelMode, setShowTravelMode] = useState("");
+  const [selectedMode, setSelectedMode] = useState<
+    "DRIVING" | "BICYCLING" | "WALKING" | "TRANSIT"
+  >(defaultTravel);
+  const [localUpdateText, setLocalUpdateText] = useState(0);
+  const [locationSet, setLocationSet] = useState(0);
 
   const [showFooter, setShowFooter] = useState(false);
   const [showSteps, setShowSteps] = useState(false);
@@ -81,7 +98,37 @@ const StartAndDestinationPoints: React.FC<Props> = ({
     console.log("Adding to Favorites...");
   };
 
-  const [showMyLocButton, setShowMyLocButton] = useState(true);
+  //This useEffect only executes when updatedText changes, aka directions come from a building Popup
+  useEffect(() => {
+    setLocalUpdateText(updateText);
+    setShowTransportation(false); //Hide the transportation methods until Get Directions is pressed again
+    if (buildingTextOrigin) {
+      setOrigin(originLocation);
+      setOriginText(buildingTextOrigin);
+    }
+    if (buildingTextDestination) {
+      setDestination(destinationLocation);
+      setDestinationText(buildingTextDestination);
+    }
+  }, [updateText]);
+
+  //This use effect only executes if user hasn't changed origin and destination from when they were set by the building popup
+  useEffect(() => {
+    if (
+      buildingTextDestination &&
+      buildingTextOrigin &&
+      localUpdateText == updateText
+    ) {
+      setOriginText(buildingTextOrigin);
+      setDestinationText(buildingTextDestination);
+    }
+  }, [origin, destination, showTransportation, showTravelMode]);
+
+  //Sets destination text to "" and destination to null anytime location changes
+  useEffect(() => {
+    setDestinationText("");
+    setDestination(null);
+  }, [locationSet]);
 
   return (
     <View style={styles.container}>
@@ -109,9 +156,13 @@ const StartAndDestinationPoints: React.FC<Props> = ({
                 setOrigin(location);
                 setOriginLocation(location);
                 setIsOriginSet(true);
-                setOriginText(data.description); // Set the input text to the selected place
+                setDestinationText("");
+                setDestination(null);
+                setLocalUpdateText(0);
+                setOriginText(data.description);
                 originRef.current?.setAddressText(data.description); // Allows persistance of the selected origin location
                 setShowTransportation(false);
+                setLocationSet(locationSet + 1);
               }
             }}
             textInputProps={{
@@ -143,6 +194,11 @@ const StartAndDestinationPoints: React.FC<Props> = ({
                   setOriginLocation(myLocation);
                   setIsOriginSet(true);
                   setShowTransportation(false);
+                  setOriginText("My Location");
+                  setDestinationText("");
+                  setDestination(null);
+                  setLocalUpdateText(0);
+                  setLocationSet(locationSet + 1);
 
                   // Verify current location properly fetched (tested on expo app -> successful!)
                   const coords = {
@@ -152,9 +208,13 @@ const StartAndDestinationPoints: React.FC<Props> = ({
                   console.log("Selected My Location:", coords);
 
                   setOriginText("My Location"); // Set the input text to "My Location"
+                  setDestinationText("");
+                  setDestination(null);
                   originRef.current?.setAddressText("My Location");
                   setShowMyLocButton(false);
                   setIsInputFocused(false);
+                  setLocalUpdateText(0);
+                  setLocationSet(locationSet + 1);
                 } else {
                   console.log("User location not available.");
                 }
@@ -162,7 +222,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({
               style={myLocationStyles.myLocationButton}
             >
               <Icon name="target-two" size={20} color="black" />
-              <Text style={myLocationStyles.myLocationText}> My Location</Text>
+              <Text style={myLocationStyles.myLocationText}>My Location</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -188,9 +248,13 @@ const StartAndDestinationPoints: React.FC<Props> = ({
                 setDestination(location);
                 setDestinationLocation(location);
                 setShowTransportation(false);
+                setDestinationText(data.description);
+                setLocalUpdateText(0);
               }
             }}
             textInputProps={{
+              value: destinationText,
+              onChangeText: setDestinationText,
               style: styles.input,
             }}
             styles={{
@@ -205,10 +269,16 @@ const StartAndDestinationPoints: React.FC<Props> = ({
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
+              console.log("Get Directions Pressed", origin, destination);
+              console.log("Text origin: yyy ", originText);
+              console.log("building text origin:", buildingTextOrigin);
+              console.log("Destination: yyy ", destinationText);
               if (origin && destination) {
                 setShowTransportation(true);
                 setRenderMap(true);
                 setTravelMode(defaultTravel);
+                setShowTravelMode(defaultTravel);
+                setShowTransportation(true);
               }
             }}
           >
@@ -216,114 +286,43 @@ const StartAndDestinationPoints: React.FC<Props> = ({
           </TouchableOpacity>
         ) : (
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                if (origin && destination) {
-                  setShowFooter(true);
-                  setShowTransportation(true);
-                  setRenderMap(true);
-                  setTravelMode("TRANSIT");
-                  navigation.setOptions({
-                    tabBarStyle: { display: "none" },
-                  });
-                }
-              }}
-            >
-              <MaterialIcons name="directions-car" size={24} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                if (origin && destination) {
-                  setShowFooter(true);
-                  setShowTransportation(true);
-                  setRenderMap(true);
-                  setTravelMode("TRANSIT");
-                  navigation.setOptions({
-                    tabBarStyle: { display: "none" },
-                  });
-                }
-              }}
-            >
-              <MaterialIcons name="directions-bus" size={24} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                if (origin && destination) {
-                  setShowFooter(true);
-                  setShowTransportation(true);
-                  setRenderMap(true);
-                  setTravelMode("WALKING");
-                  navigation.setOptions({
-                    tabBarStyle: { display: "none" },
-                  });
-                }
-              }}
-            >
-              <MaterialIcons name="directions-walk" size={24} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                if (origin && destination) {
-                  setShowFooter(true);
-                  setShowTransportation(true);
-                  setRenderMap(true);
-                  setTravelMode("BICYCLING");
-                  navigation.setOptions({
-                    tabBarStyle: { display: "none" },
-                  });
-                }
-              }}
-            >
-              <MaterialIcons name="directions-bike" size={24} color="black" />
-            </TouchableOpacity>
+            {[
+              { mode: "DRIVING" as const, icon: "directions-car" as const },
+              { mode: "TRANSIT" as const, icon: "directions-bus" as const },
+              { mode: "WALKING" as const, icon: "directions-walk" as const },
+              { mode: "BICYCLING" as const, icon: "directions-bike" as const },
+            ].map(({ mode, icon }) => (
+              <TouchableOpacity
+                key={mode}
+                onPress={() => {
+                  if (origin && destination) {
+                    console.log("Get Directions Pressed");
+                    setShowFooter(true);
+                    setRenderMap(true);
+                    setTravelMode(mode);
+                    setSelectedMode(mode);
+                    setShowTravelMode(mode);
+                    setShowTransportation(true);
+                    navigation.setOptions({
+                      tabBarStyle: { display: "none" },
+                    });
+                  }
+                }}
+                style={[
+                  styles.transportButton,
+                  selectedMode === mode && styles.selectedButton,
+                ]}
+              >
+                <MaterialIcons
+                  name={icon}
+                  size={24}
+                  color={selectedMode === mode ? "white" : "black"}
+                />
+              </TouchableOpacity>
+            ))}
           </View>
         )}
       </View>
-      {/* Footer */}
-      {showFooter && (
-        <View style={styles.footerContainer}>
-          <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
-            <Text style={styles.footerButtonText}>GO</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.stepsButton}
-            onPress={handleStepsClick}
-          >
-            <Text style={styles.footerButtonText}>Steps</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.favoriteButton}
-            onPress={handleAddFavorite}
-          >
-            <Text style={styles.footerButtonText}>Add favorite</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {/* Steps Modal */}
-      {showSteps && (
-        <Modal visible={showSteps} transparent animationType="slide">
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Directions</Text>
-              <Text style={styles.modalText}>
-                1. Start from {origin?.latitude}, {origin?.longitude}
-              </Text>
-              <Text style={styles.modalText}>
-                2. Head towards {destination?.latitude},{" "}
-                {destination?.longitude}
-              </Text>
-              {/* More steps can be added based on the route */}
-              <TouchableOpacity
-                style={styles.closeButton}
-                onPress={handleCloseSteps}
-              >
-                <Text style={styles.closeButtonText}>Close</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-      )}
     </View>
   );
 };

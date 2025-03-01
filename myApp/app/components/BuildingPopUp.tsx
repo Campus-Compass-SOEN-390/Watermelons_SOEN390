@@ -7,9 +7,10 @@ export interface BuildingPopupProps {
   visible: boolean;
   onClose: () => void;
   building: any | null; // Replace "any" with your Building type if available
+  onGetDirections(building: any): void
 }
 
-export const BuildingPopup: React.FC<BuildingPopupProps> = ({ visible, onClose, building }) => {
+export const BuildingPopup: React.FC<BuildingPopupProps> = ({ visible, onClose, building, onGetDirections }) => {
   if (!building) return null; // Don't render if no building is selected
 
   return (
@@ -40,7 +41,12 @@ export const BuildingPopup: React.FC<BuildingPopupProps> = ({ visible, onClose, 
           </ScrollView>
           {/* Buttons */}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={() => alert("Feature coming soon!")}>
+            <TouchableOpacity style={styles.button} 
+            onPress={() => {
+            onGetDirections(building);
+            onClose();
+            }
+            }>
               <MaterialIcons name="directions" size={20} color="white" />
               <Text style={styles.buttonText}>Get Directions</Text>
             </TouchableOpacity>
