@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Modal, Keyboard } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import 'react-native-get-random-values';
 import Constants from 'expo-constants';
@@ -112,18 +112,14 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                                     const myLocation = {
                                         latitude: location.latitude,
                                         longitude: location.longitude,
-                                    }
+                                    };
                                     setOrigin(myLocation);
                                     setOriginLocation(myLocation);
                                     setIsOriginSet(true);
                                     setShowTransportation(false);
                                
-                                // Verify current location properly fetched (tested on expo app -> successful!)
-                                const coords = ({
-                                    latitude: location.latitude,
-                                    longitude: location.longitude,
-                                });
-                                console.log("Selected My Location:", coords);
+                                    // Verify current location properly fetched (tested on expo app -> successful!)
+                                    console.log("Selected My Location:", myLocation);
 
                                     setOriginText("My Location"); // Set the input text to "My Location"
                                     originRef.current?.setAddressText("My Location");
@@ -312,13 +308,12 @@ const myLocationStyles = StyleSheet.create({
         borderBottomColor: '#ccc',
         borderBottomWidth: 1,
 
-        // to accomodate for the icon position
+        // to accommodate for the icon position
         flexDirection: 'row',
     },
     myLocationText: {
         fontSize: 16,
-        color: "black", // Change to white for better visibility
+        color: "black",
         fontWeight: "bold",
     },
-    
 });
