@@ -2,6 +2,22 @@ import { StyleSheet, Dimensions } from "react-native";
 const { width, height } = Dimensions.get("window");
 
 export default StyleSheet.create({
+  tabBarStyle: {
+    height: 80,
+    backgroundColor: "#ffffff",
+    borderRadius: 30,
+    borderTopWidth: 0,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    elevation: 5,
+    position: "absolute",
+    bottom: 20,
+    left: 10,
+    right: 10,
+    marginHorizontal: 15,
+  },
   container: {
     position: "absolute",
     top: 100,

@@ -103,6 +103,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({
   useEffect(() => {
     setLocalUpdateText(updateText);
     setShowTransportation(false); //Hide the transportation methods until Get Directions is pressed again
+    setShowFooter(false);
     if (buildingTextOrigin) {
       setOrigin(originLocation);
       setOriginText(buildingTextOrigin);
@@ -162,8 +163,12 @@ const StartAndDestinationPoints: React.FC<Props> = ({
                 setLocalUpdateText(0);
                 setOriginText(data.description);
                 originRef.current?.setAddressText(data.description); // Allows persistance of the selected origin location
+                setShowFooter(false);
                 setShowTransportation(false);
                 setLocationSet(locationSet + 1);
+                navigation.setOptions({
+                  tabBarStyle: styles.tabBarStyle,
+                });
               }
             }}
             textInputProps={{
@@ -194,12 +199,17 @@ const StartAndDestinationPoints: React.FC<Props> = ({
                   setOrigin(myLocation);
                   setOriginLocation(myLocation);
                   setIsOriginSet(true);
+                  setShowFooter(false);
                   setShowTransportation(false);
                   setOriginText("My Location");
                   setDestinationText("");
                   setDestination(null);
                   setLocalUpdateText(0);
                   setLocationSet(locationSet + 1);
+
+                  navigation.setOptions({
+                    tabBarStyle: styles.tabBarStyle,
+                  });
 
                   // Verify current location properly fetched (tested on expo app -> successful!)
                   const coords = {
@@ -248,9 +258,13 @@ const StartAndDestinationPoints: React.FC<Props> = ({
                 };
                 setDestination(location);
                 setDestinationLocation(location);
+                setShowFooter(false);
                 setShowTransportation(false);
                 setDestinationText(data.description);
                 setLocalUpdateText(0);
+                navigation.setOptions({
+                  tabBarStyle: styles.tabBarStyle,
+                });
               }
             }}
             textInputProps={{
@@ -279,7 +293,6 @@ const StartAndDestinationPoints: React.FC<Props> = ({
                 setRenderMap(true);
                 setTravelMode(defaultTravel);
                 setShowTravelMode(defaultTravel);
-                setShowTransportation(true);
               }
             }}
           >
