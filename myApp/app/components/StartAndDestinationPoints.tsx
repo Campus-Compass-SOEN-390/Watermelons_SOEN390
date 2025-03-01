@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Keyboard } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import 'react-native-get-random-values';
@@ -9,26 +9,66 @@ import useLocation from "../hooks/useLocation";
 import Icon from 'react-native-vector-icons/Foundation'; 
 
 interface Props {
+    updateText: number;
+    buildingTextOrigin: string;
+    buildingTextDestination: string;
+    originLocation: {latitude: number; longitude: number}
+    destinationLocation: {latitude: number; longitude: number}
     setOriginLocation: (location: { latitude: number; longitude: number }) => void;
     setDestinationLocation: (location: { latitude: number; longitude: number }) => void;
     setTravelMode: (mode: 'DRIVING' | 'BICYCLING' | 'WALKING' | 'TRANSIT') => void;
     renderMap: boolean; 
-    setRenderMap: (show: boolean) => void; 
+    setRenderMap: (show: boolean) => void;
 }
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
-const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDestinationLocation, setTravelMode, renderMap, setRenderMap }) => {
+
+const StartAndDestinationPoints: React.FC<Props> = ({ updateText, buildingTextDestination, buildingTextOrigin, originLocation, destinationLocation, setOriginLocation, setDestinationLocation, setTravelMode, renderMap, setRenderMap}) => {
     const [origin, setOrigin] = useState<{ latitude: number; longitude: number } | null>(null);
     const [destination, setDestination] = useState<{ latitude: number; longitude: number } | null>(null);
     const [showTransportation, setShowTransportation] = useState(false);
     const { location } = useLocation();
     const [originText, setOriginText] = useState(""); 
+    const [destinationText, setDestinationText] = useState("");
     const originRef = useRef<any>(null);
     const [isOriginSet, setIsOriginSet] = useState(false);
     const [isInputFocused, setIsInputFocused] = useState(false); 
     const defaultTravel = 'TRANSIT';
     const [showMyLocButton, setShowMyLocButton] = useState(true);
+    const [showTravelMode, setShowTravelMode] = useState("");
+    const [selectedMode, setSelectedMode] = useState<'DRIVING' | 'BICYCLING' | 'WALKING' | 'TRANSIT'>(defaultTravel);
+    const [localUpdateText, setLocalUpdateText] = useState(0);
+    const [locationSet, setLocationSet] = useState(0);
+
+    //This useEffect only executes when updatedText changes, aka directions come from a building Popup
+    useEffect(() => {
+        setLocalUpdateText(updateText);
+        setShowTransportation(false); //Hide the transportation methods until Get Directions is pressed again
+        if(buildingTextOrigin){
+            setOrigin(originLocation);
+            setOriginText(buildingTextOrigin);
+        }
+        if(buildingTextDestination) {
+            setDestination(destinationLocation);
+            setDestinationText(buildingTextDestination);
+        }
+    }, [updateText]);
+
+    //This use effect only executes if user hasn't changed origin and destination from when they were set by the building popup
+    useEffect(()=>{
+        if(buildingTextDestination && buildingTextOrigin && localUpdateText==updateText) {
+            setOriginText(buildingTextOrigin);
+            setDestinationText(buildingTextDestination);
+        }
+    }, [origin, destination, showTransportation, showTravelMode])
+
+    //Sets destination text to "" and destination to null anytime location changes
+    useEffect(() => {
+        setDestinationText("");
+        setDestination(null)
+    }, [locationSet])
+    
 
     return (
         <View style={styles.container}>
@@ -47,7 +87,6 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                             language: "en",
                             components: "country:ca", // restrict data within Canada
                         }}
-                        
                         onPress={(data, details = null) => {
                             if (details) {
                                 const location = {
@@ -57,20 +96,22 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                                 setOrigin(location);
                                 setOriginLocation(location);
                                 setIsOriginSet(true);
-                                setOriginText(data.description); // Set the input text to the selected place
+                                setDestinationText("");
+                                setDestination(null);
+                                setLocalUpdateText(0);
+                                setOriginText(data.description);
                                 originRef.current?.setAddressText(data.description); // Allows persistance of the selected origin location 
                                 setShowTransportation(false);
+                                setLocationSet(locationSet + 1);
                                 
                             }
                         }}
                         textInputProps={{
                             value: originText, // This will show "My Location" or the selected place
-                            onChangeText: setOriginText,
+                            onChangeText:setOriginText,
                             onFocus: () => {setIsInputFocused(true); setShowMyLocButton(true);},
                             onBlur: () => setIsInputFocused(false),
-                            style: styles.input,
-                            
-                            
+                            style: styles.input,   
                         }}
                         styles={{
                             listView: styles.dropdownFrom,
@@ -91,6 +132,12 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                                     setOriginLocation(myLocation);
                                     setIsOriginSet(true);
                                     setShowTransportation(false);
+                                    setOriginText("My Location");
+                                    setDestinationText("");
+                                    setDestination(null);
+                                    setLocalUpdateText(0);
+                                    setLocationSet(locationSet + 1);
+
                                
                                 // Verify current location properly fetched (tested on expo app -> successful!)
                                 const coords = ({
@@ -100,18 +147,23 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                                 console.log("Selected My Location:", coords);
 
                                     setOriginText("My Location"); // Set the input text to "My Location"
+                                    setDestinationText("");
+                                    setDestination(null);
                                     originRef.current?.setAddressText("My Location");
                                     setShowMyLocButton(false);
                                     setIsInputFocused(false);
+                                    setLocalUpdateText(0);
+                                    setLocationSet(locationSet + 1);
                                     
                                 } else {
                                     console.log("User location not available.");
                                 }
                             }}
+                            
                             style={myLocationStyles.myLocationButton}
                         >
                             <Icon name="target-two" size={20} color="black" />
-                            <Text style={myLocationStyles.myLocationText}>  My Location</Text>
+                            <Text style={myLocationStyles.myLocationText}>My Location</Text>
                         </TouchableOpacity>
                     )}
 
@@ -138,9 +190,14 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                                 setDestination(location);
                                 setDestinationLocation(location);
                                 setShowTransportation(false);
+                                setDestinationText(data.description);
+                                setLocalUpdateText(0);
+                                
                             }
                         }}
                         textInputProps={{
+                            value: destinationText,
+                            onChangeText:setDestinationText,
                             style: styles.input,
                         }}
                         styles={{
@@ -152,13 +209,19 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                 {/* Conditional Rendering */}
                 {!showTransportation ? (
                     /* Get Directions Button */
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         style={styles.button}
                         onPress={() => {
+                            console.log("Get Directions Pressed", origin, destination);
+                            console.log("Text origin: yyy ", originText)
+                            console.log("building text origin:", buildingTextOrigin)
+                            console.log("Destination: yyy " ,destinationText)
                             if (origin && destination) {
                                 setShowTransportation(true);
                                 setRenderMap(true);
                                 setTravelMode(defaultTravel);
+                                setShowTravelMode(defaultTravel);
+                                setShowTransportation(true);
                             }
                         }}   
                     >
@@ -166,51 +229,37 @@ const StartAndDestinationPoints: React.FC<Props> = ({ setOriginLocation, setDest
                     </TouchableOpacity>
                 ) : (
                     <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (origin && destination) {
-                                setShowTransportation(true);
-                                setRenderMap(true);
-                                setTravelMode('TRANSIT');
-                            }
-                        }}
-                    >
-                        <MaterialIcons name="directions-car" size={24} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (origin && destination) {
-                                setShowTransportation(true);
-                                setRenderMap(true);
-                                setTravelMode('TRANSIT');
-                            }
-                        }}
-                    >
-                        <MaterialIcons name="directions-bus" size={24} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (origin && destination) {
-                                setShowTransportation(true);
-                                setRenderMap(true);
-                                setTravelMode('WALKING');
-                            }
-                        }}
-                    >
-                        <MaterialIcons name="directions-walk" size={24} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (origin && destination) {
-                                setShowTransportation(true);
-                                setRenderMap(true);
-                                setTravelMode('BICYCLING');
-                            }
-                        }}
-                    >
-                        <MaterialIcons name="directions-bike" size={24} color="black" />
-                    </TouchableOpacity>
-                    </View>
+                    {[
+                        { mode: 'DRIVING' as const, icon: 'directions-car' as const },
+                        { mode: 'TRANSIT' as const, icon: 'directions-bus' as const},
+                        { mode: 'WALKING' as const, icon: 'directions-walk' as const},
+                        { mode: 'BICYCLING' as const, icon: 'directions-bike' as const},
+                    ].map(({ mode, icon }) => (
+                        <TouchableOpacity
+                            key={mode}
+                            onPress={() => {
+                                if (origin && destination) {
+                                    console.log("Get Directions Pressed");
+                                    setRenderMap(true);
+                                    setTravelMode(mode);
+                                    setSelectedMode(mode);
+                                    setShowTravelMode(mode);
+                                    setShowTransportation(true);
+                                }
+                            }}
+                            style={[
+                                styles.transportButton,
+                                selectedMode === mode && styles.selectedButton,
+                            ]}
+                        >
+                            <MaterialIcons
+                                name={icon}
+                                size={24}
+                                color={selectedMode === mode ? "white" : "black"}
+                            />
+                        </TouchableOpacity>
+                    ))}
+                </View>
                 )}
             </View>
 
