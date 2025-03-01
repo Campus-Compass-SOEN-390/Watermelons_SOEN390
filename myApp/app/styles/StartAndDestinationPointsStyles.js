@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 export default StyleSheet.create({
   container: {
@@ -102,14 +102,14 @@ export default StyleSheet.create({
   },
   footerContainer: {
     position: "absolute",
-    bottom: Dimensions.get("window").height > 955 ? -670 : -560,
-    left: Dimensions.get("window").height > 955 ? -20 : -20,
+    bottom:
+      Dimensions.get("window").height > 955 ? -700 : height > 900 ? -680 : -600,
+    left: -30,
     right: 0,
-    height: 80,
-    width: width * 0.95,
+    height: 120,
+    width: width * 1,
     marginHorizontal: "2.5%",
     backgroundColor: "#ffffff",
-    borderRadius: 20,
     shadowColor: "#000",
     flexDirection: "row",
     shadowOffset: { width: 0, height: 4 },
@@ -147,6 +147,7 @@ export default StyleSheet.create({
     padding: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
+    marginHorizontal: 10,
   },
 
   stepsButton: {
