@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Keyboard,
+  Modal,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import "react-native-get-random-values";
@@ -323,6 +324,50 @@ const StartAndDestinationPoints: React.FC<Props> = ({
           </View>
         )}
       </View>
+      {/* Footer */}
+      {showFooter && (
+        <View style={styles.footerContainer}>
+          <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
+            <Text style={styles.footerButtonText}>GO</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.stepsButton}
+            onPress={handleStepsClick}
+          >
+            <Text style={styles.footerButtonText}>Steps</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.favoriteButton}
+            onPress={handleAddFavorite}
+          >
+            <Text style={styles.footerButtonText}>Add favorite</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      {/* Steps Modal */}
+      {showSteps && (
+        <Modal visible={showSteps} transparent animationType="slide">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Directions</Text>
+              <Text style={styles.modalText}>
+                1. Start from {origin?.latitude}, {origin?.longitude}
+              </Text>
+              <Text style={styles.modalText}>
+                2. Head towards {destination?.latitude},{" "}
+                {destination?.longitude}
+              </Text>
+              {/* More steps can be added based on the route */}
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={handleCloseSteps}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      )}
     </View>
   );
 };

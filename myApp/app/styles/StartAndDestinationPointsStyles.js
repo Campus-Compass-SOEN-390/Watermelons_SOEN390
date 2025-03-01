@@ -103,7 +103,7 @@ export default StyleSheet.create({
   footerContainer: {
     position: "absolute",
     bottom:
-      Dimensions.get("window").height > 955 ? -700 : height > 900 ? -680 : -600,
+      Dimensions.get("window").height > 955 ? -740 : height > 900 ? -715 : -635,
     left: -30,
     right: 0,
     height: 120,
@@ -204,5 +204,13 @@ export default StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  transportButton: {
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: "#eee",
+  },
+  selectedButton: {
+    backgroundColor: "#922338",
   },
 });
