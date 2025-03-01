@@ -14,17 +14,34 @@ export default function ShuttleScheduleScreen() {
 
   useEffect(() => {
     const loadSchedule = async () => {
+        const today = moment().format('dddd');
+        console.log(`Fetching schedule for ${today}...`);
+
+        // 🚨 Prevent fetching for weekends
+        if (today === "Saturday" || today === "Sunday") {
+            console.warn("No schedule available on weekends.");
+            setError("❌ No shuttle service on weekends.");
+            return;
+        }
+
         try {
-            const today = moment().format('dddd');
             const data = await fetchShuttleScheduleByDay(today);
-            setSchedule(data); // Store both SGW and LOY data
+            if (!data) {
+                throw new Error("No schedule data available.");
+            }
+
+            console.log("Schedule data loaded:", data);
+            setSchedule(data);
         } catch (err) {
-            setError(err.message);
+            console.error("API Fetch Error:", err.message);
+            setError("❌ Unable to load shuttle schedule. Please try again later.");
         }
     };
 
     loadSchedule();
-}, []); // Fetches **only once** when component mounts
+}, []);
+
+
 
 // Compute next available bus based on selected campus without re-fetching
 useEffect(() => {
@@ -58,23 +75,35 @@ useEffect(() => {
   if (error) {
     return (
         <View style={styles.container}>
+            {/* 🔹 Keep Header with Back Button */}
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                    <Text style={styles.backText}>✖</Text>
+                </TouchableOpacity>
+                
+                <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
+            </View>
+
+            {/* 🔹 Display Weekend or Error Message */}
             <Text style={styles.error}>
-                {error.includes("Network") 
-                    ? "🚫 No internet connection. Please check your network and try again." 
-                    : "❌ Unable to load shuttle schedule. Please try again later."}
+                {error.includes("weekends") 
+                    ? "🚍 No shuttle service on weekends. See you Monday!" 
+                    : error}
             </Text>
         </View>
     );
 }
 
 
-  if (!schedule) {
-    return (
+
+// 🔹 Check if schedule is null (LOADING STATE)
+if (!schedule) {
+  return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+          <Text>Loading...</Text>
       </View>
-    );
-  }
+  );
+}
 
   return (
     <View style={styles.container}>

@@ -1,0 +1,12 @@
+# maestro.yaml is a configuration file that Maestro uses to run tests.
+#It is a YAML file that contains the test scenarios and steps to execute them. 
+
+app: "C:/Users/hakee/Watermelons_SOEN390/myApp/app.apk"
+
+tests:
+  - name: "Launch and Login"
+    steps:
+      - launchApp: { package: "com.example.myapp" }
+      - tap: { id: "loginButton" }
+      - wait: 2
+      - tap: { id: "submitButton" }

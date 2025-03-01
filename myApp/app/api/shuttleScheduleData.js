@@ -38,13 +38,15 @@ export const getAllShuttleSchedules = () => {
 // Fetch a specific day's schedule
 export const getShuttleScheduleByDay = (day) => {
   if (!day || typeof day !== "string" || day.trim() === "") {
-    throw new Error("Invalid day. Please provide a valid day.");
+      console.error("Invalid day format received:", day);
+      return null;
   }
 
   const normalizedDay = day.trim().charAt(0).toUpperCase() + day.trim().slice(1).toLowerCase();
-
-  if (!(normalizedDay in shuttleSchedule)) {
-    throw new Error(`Invalid day: ${day}. Please provide Monday, Tuesday, Wednesday, Thursday, or Friday.`);
+  
+  if (!shuttleSchedule[normalizedDay]) {
+      console.error(`No schedule available for: ${day}`);
+      return null; // Prevent crashing if the day is not found.
   }
 
   return shuttleSchedule[normalizedDay];
