@@ -4,8 +4,14 @@
     "name": "myApp",
     "slug": "myApp",
     "extra": {
-      "apiKey": "",
-      "mapboxAccessToken": "pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw"
+      "apiKey": "AIzaSyBdODoY5Fr_jtGEJ2P-y3ZqxbZA9QMUoT0",
+      "mapboxAccessToken": "pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw",
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "2cae16b8-394d-4bd2-aad3-030ba714ddff"
+      }
     },
     "version": "1.0.0",
     "sdkVersion": "52.0.0",
@@ -53,13 +59,11 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ], 
+      ],
       [
         "@rnmapbox/maps",
         {
-          "RNMapboxMaps": {
-            "accessToken": "YOUR_MAPBOX_ACCESS_TOKEN"
-          }
+          "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw"
         }
       ]
     ],

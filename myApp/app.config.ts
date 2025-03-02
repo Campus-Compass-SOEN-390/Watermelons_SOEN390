@@ -5,9 +5,7 @@ export default () => ({
     entryPoint: "./myApp/app/index.js",
     name: "myApp",
     slug: "myApp",
-    extra: {
-      apiKey: process.env.GOOGLE_MAPS_API_KEY
-    },
+    owner: "bxnjiho",
     version: "1.0.0",
     sdkVersion: "52.0.0",
     orientation: "portrait",
@@ -41,6 +39,12 @@ export default () => ({
         }
       ]
     },
+    extra: {
+      apiKey: process.env.GOOGLE_MAPS_API_KEY,
+      eas: {
+        projectId: "2cae16b8-394d-4bd2-aad3-030ba714ddff"
+      }
+    },
     plugins: [
       "expo-router",
       [
@@ -50,6 +54,12 @@ export default () => ({
           imageWidth: 200,
           resizeMode: "contain",
           backgroundColor: "#ffffff"
+        }
+      ],
+      [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw"
         }
       ]
     ],
