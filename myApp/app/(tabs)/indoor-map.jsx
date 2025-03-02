@@ -1,123 +1,175 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet, Image, Alert, TouchableOpacity } from "react-native";
-import Svg, { Circle, Text as SvgText, Line } from "react-native-svg";
+import { View, Text, Alert, TouchableWithoutFeedback } from "react-native";
+import Svg, { Rect, Circle, Line, Text as SvgText } from "react-native-svg";
+
+// Define obstacles (buildings) on a grid
+const gridSize = 20; // Defines how small each grid cell is
+const gridWidth = 25; // 500px / 20px grid
+const gridHeight = 25; // 500px / 20px grid
+
+// Buildings (Marked as obstacles)
+const obstacles = new Set([
+  ...generateObstacle(0, 0, 10, 7), // Room 1
+  ...generateObstacle(11, 0, 20, 7), // Room 2
+  ...generateObstacle(0, 12, 10, 7), // Room 3
+]);
 
 export default function IndoorMap() {
-  const [location, setLocation] = useState(null);  // Store the location coordinates
-  const [destination, setDestination] = useState(null);  // Store the destination coordinates
-  const [isLocationSelected, setIsLocationSelected] = useState(false);  // Flag to track if location has been selected
-  const [isDestinationSelected, setIsDestinationSelected] = useState(false);  // Flag to track if destination has been selected
-  const [path, setPath] = useState(null);  // Store the calculated path (line coordinates)
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [destination, setDestination] = useState(null);
+  const [path, setPath] = useState([]);
+  const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
 
-  // Function to handle the user selecting their location
-  const handleLocationSelect = (event) => {
-    const { locationX, locationY } = event.nativeEvent;  // Get coordinates of the touch
-    setLocation({ x: locationX, y: locationY });  // Store the location
-    setIsLocationSelected(true);  // Set flag to true
-    Alert.alert("Location Selected", "Now, click anywhere on the image to select your destination.");
-  };
+  const handleMapPress = (event) => {
+    const { locationX, locationY } = event.nativeEvent;
 
-  // Function to handle the user selecting their destination
-  const handleDestinationSelect = (event) => {
-    const { locationX, locationY } = event.nativeEvent;  // Get coordinates of the touch
-    setDestination({ x: locationX, y: locationY });  // Store the destination
-    setIsDestinationSelected(true);  // Set flag to true
-    calculateShortestPath(location, { x: locationX, y: locationY });  // Calculate the path
-    Alert.alert("Destination Selected", "Your destination has been marked!");
-  };
+    // Calculate grid coordinates based on the SVG dimensions
+    const gridX = Math.floor(locationX / gridSize);
+    const gridY = Math.floor(locationY / gridSize);
 
-  // Function to calculate the shortest path (Manhattan distance for simplicity)
-  const calculateShortestPath = (start, end) => {
-    if (start && end) {
-      // Calculate Manhattan distance (for grid-based pathfinding)
-      const path = {
-        x1: start.x,
-        y1: start.y,
-        x2: end.x,
-        y2: end.y,
-      };
-      setPath(path);  // Store the calculated path
+    if (!currentLocation) {
+      // First tap sets the start location
+      setCurrentLocation([gridX, gridY]);
+      Alert.alert("Location Selected", "Now, tap again to set the destination.");
+    } else {
+      // Every subsequent tap updates the destination and recalculates the path
+      setDestination([gridX, gridY]);
+      calculatePath(currentLocation, [gridX, gridY]);
+      Alert.alert("Destination Updated", "Your new destination has been marked!");
     }
+
+    console.log("Tapped at:", locationX, locationY, "Mapped to grid:", gridX, gridY);
   };
 
-  // Initial prompt for location
-  if (!isLocationSelected && !isDestinationSelected) {
-    Alert.alert("Select Your Location", "Click anywhere on the image to select your location.");
+  // A* Pathfinding Algorithm
+  function calculatePath(start, end) {
+    const openSet = [start];
+    const cameFrom = {};
+    const gScore = { [`${start}`]: 0 };
+    const fScore = { [`${start}`]: heuristic(start, end) };
+
+    while (openSet.length > 0) {
+      // Sort by fScore to get the lowest
+      openSet.sort((a, b) => fScore[`${a}`] - fScore[`${b}`]);
+      const current = openSet.shift();
+
+      if (current[0] === end[0] && current[1] === end[1]) {
+        reconstructPath(cameFrom, current);
+        return;
+      }
+
+      for (const neighbor of getNeighbors(current)) {
+        if (obstacles.has(`${neighbor[0]},${neighbor[1]}`)) continue; // Skip obstacles
+
+        const tentativeGScore = gScore[`${current}`] + 1;
+        if (tentativeGScore < (gScore[`${neighbor}`] || Infinity)) {
+          cameFrom[`${neighbor}`] = current;
+          gScore[`${neighbor}`] = tentativeGScore;
+          fScore[`${neighbor}`] = gScore[`${neighbor}`] + heuristic(neighbor, end);
+          if (!openSet.some((n) => n[0] === neighbor[0] && n[1] === neighbor[1])) {
+            openSet.push(neighbor);
+          }
+        }
+      }
+    }
+    setPath([]); // No valid path found
+  }
+
+  function reconstructPath(cameFrom, current) {
+    let path = [current];
+    while (cameFrom[current]) {
+      current = cameFrom[current];
+      path.push(current);
+    }
+    setPath(path.reverse());
+  }
+
+  function getNeighbors([x, y]) {
+    const moves = [
+      [x + 1, y],
+      [x - 1, y],
+      [x, y + 1],
+      [x, y - 1],
+    ];
+    return moves.filter(([nx, ny]) => nx >= 0 && ny >= 0 && nx < gridWidth && ny < gridHeight);
+  }
+
+  function heuristic([x1, y1], [x2, y2]) {
+    return Math.abs(x1 - x2) + Math.abs(y1 - y2);
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <Text style={{ textAlign: "center", marginTop: 20 }}>
-        This is the Indoor Map Page
-      </Text>
-
-      {/* Container for the floor plan */}
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        {/* Image of the floor plan with 50% opacity (half transparent) */}
-        <Image
-          source={require("../ScreenshotH8.png")} // Use your local image path
-          style={[styles.floorPlanImage, { opacity: 0.5 }]} // Add opacity here
-          resizeMode="contain" // Ensures the image scales down to fit within the available space without stretching
-        />
-
-        {/* Render SVG elements (interactive layers) over the image */}
-        <TouchableOpacity 
-          style={{ flex: 1, width: "100%" }}
-          onPress={isLocationSelected ? handleDestinationSelect : handleLocationSelect}  // Different handlers for location and destination
+    <TouchableWithoutFeedback onPress={handleMapPress}>
+      <View style={{ flex: 1 }}>
+        <Text style={{ textAlign: "center", marginTop: 20 }}>Tap on the map to set locations</Text>
+        <Svg
+          width="100%"
+          height="80%"
+          viewBox="0 0 500 500"
+          onLayout={(event) => {
+            const { width, height } = event.nativeEvent.layout;
+            setSvgDimensions({ width, height });
+          }}
         >
-          {/* SVG markers and path */}
-          <Svg
-            width="100%"
-            height="100%"
-            style={{ position: "absolute", top: 0, left: 0 }}
-          >
-            {/* Green marker for location */}
-            {location && (
-              <>
-                <Circle cx={location.x} cy={location.y} r="10" fill="green" />
-                <SvgText x={location.x + 10} y={location.y - 10} fontSize="15" fill="black">
-                  Location
-                </SvgText>
-              </>
-            )}
+          {/* Room 1 */}
+          <Rect x="10" y="10" width="200" height="150" fill="lightblue" stroke="black" strokeWidth="3" />
+          <SvgText x="60" y="80" fontSize="20" fill="black">Room 1</SvgText>
 
-            {/* Yellow marker for destination */}
-            {destination && (
-              <>
-                <Circle cx={destination.x} cy={destination.y} r="10" fill="yellow" />
-                <SvgText x={destination.x + 10} y={destination.y - 10} fontSize="15" fill="black">
-                  Destination
-                </SvgText>
-              </>
-            )}
+          {/* Room 2 */}
+          <Rect x="220" y="10" width="200" height="150" fill="lightgreen" stroke="black" strokeWidth="3" />
+          <SvgText x="270" y="80" fontSize="20" fill="black">Room 2</SvgText>
 
-            {/* Path (Line) between location and destination */}
-            {path && (
+          {/* Room 3 */}
+          <Rect x="10" y="230" width="200" height="150" fill="lightyellow" stroke="black" strokeWidth="3" />
+          <SvgText x="60" y="300" fontSize="20" fill="black">Room 3</SvgText>
+
+          {/* Start Marker */}
+          {currentLocation && (
+            <Circle
+              cx={currentLocation[0] * gridSize + gridSize / 2} // Center the dot in the grid cell
+              cy={currentLocation[1] * gridSize + gridSize / 2} // Center the dot in the grid cell
+              r="8"
+              fill="green"
+            />
+          )}
+
+          {/* Destination Marker */}
+          {destination && (
+            <Circle
+              cx={destination[0] * gridSize + gridSize / 2} // Center the dot in the grid cell
+              cy={destination[1] * gridSize + gridSize / 2} // Center the dot in the grid cell
+              r="8"
+              fill="yellow"
+            />
+          )}
+
+          {/* Path Lines */}
+          {path.map((point, index) => (
+            index > 0 && (
               <Line
-                x1={path.x1}
-                y1={path.y1}
-                x2={path.x2}
-                y2={path.y2}
-                stroke="blue"
+                key={index}
+                x1={path[index - 1][0] * gridSize + gridSize / 2} // Center the line
+                y1={path[index - 1][1] * gridSize + gridSize / 2} // Center the line
+                x2={point[0] * gridSize + gridSize / 2} // Center the line
+                y2={point[1] * gridSize + gridSize / 2} // Center the line
+                stroke="red"
                 strokeWidth="3"
-                strokeDasharray="5,5"  // Dashed line for visual effect
               />
-            )}
-          </Svg>
-        </TouchableOpacity>
+            )
+          ))}
+        </Svg>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
-// Styles for the floor plan image
-const styles = StyleSheet.create({
-  floorPlanImage: {
-    width: "100%",         // Make sure the image width doesn't exceed the container
-    height: undefined,     // Let the height adjust based on the aspect ratio
-    aspectRatio: 1,        // Keep the aspect ratio of the image (you can adjust this based on your image)
-    position: "absolute",  // Ensure the image is on top and aligned correctly
-    top: 0,
-    left: 0,
-  },
-});
+// Helper function to generate obstacle coordinates
+function generateObstacle(x, y, width, height) {
+  const coords = [];
+  for (let i = x; i < x + width; i++) {
+    for (let j = y; j < y + height; j++) {
+      coords.push(`${i},${j}`);
+    }
+  }
+  return coords;
+}
