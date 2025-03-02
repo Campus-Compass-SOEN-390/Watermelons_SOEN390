@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Keyboard,
   Modal,
+  ScrollView,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import "react-native-get-random-values";
@@ -35,6 +36,12 @@ interface Props {
   buildingTextDestination: string;
   originLocation: { latitude: number; longitude: number };
   destinationLocation: { latitude: number; longitude: number };
+}
+
+interface Step {
+  id: number;
+  distance: string;
+  instruction: string;
 }
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
@@ -77,6 +84,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({
 
   const [showFooter, setShowFooter] = useState(false);
   const [showSteps, setShowSteps] = useState(false);
+  const [routeSteps, setRouteSteps] = useState<Step[]>([]);
 
   const navigation = useNavigation();
   // Handle "GO" button click
@@ -85,8 +93,33 @@ const StartAndDestinationPoints: React.FC<Props> = ({
   };
 
   // Handle "Steps" button click (show modal)
-  const handleStepsClick = () => {
-    setShowSteps(true);
+  const handleStepsClick = async () => {
+    if (!origin || !destination) return;
+
+    const originStr = `${origin.latitude},${origin.longitude}`;
+    const destinationStr = `${destination.latitude},${destination.longitude}`;
+
+    const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${originStr}&destination=${destinationStr}&mode=${showTravelMode.toLowerCase()}&key=${GOOGLE_PLACES_API_KEY}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.routes.length > 0) {
+        const stepsArray = data.routes[0].legs[0].steps.map(
+          (step: any, index: number) => ({
+            id: index,
+            instruction: step.html_instructions.replace(/<[^>]+>/g, ""), // Remove HTML tags
+            distance: step.distance.text,
+          })
+        );
+
+        setRouteSteps(stepsArray);
+        setShowSteps(true);
+      }
+    } catch (error) {
+      console.error("Error fetching directions:", error);
+    }
   };
 
   // Close steps modal
@@ -362,20 +395,20 @@ const StartAndDestinationPoints: React.FC<Props> = ({
         <Modal visible={showSteps} transparent animationType="slide">
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Directions</Text>
-              <Text style={styles.modalText}>
-                1. Start from {origin?.latitude}, {origin?.longitude}
-              </Text>
-              <Text style={styles.modalText}>
-                2. Head towards {destination?.latitude},{" "}
-                {destination?.longitude}
-              </Text>
-              {/* More steps can be added based on the route */}
+              <Text style={styles.modalTitle}>Step-by-Step Directions</Text>
+              <ScrollView style={styles.stepsList}>
+                {routeSteps.map((step) => (
+                  <View key={step.id} style={styles.stepItem}>
+                    <Text style={styles.stepText}>{step.instruction}</Text>
+                    <Text style={styles.stepDistance}>{step.distance}</Text>
+                  </View>
+                ))}
+              </ScrollView>
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={handleCloseSteps}
               >
-                <Text style={styles.closeButtonText}>Close</Text>
+                <Text style={styles.closeButtonText}>X</Text>
               </TouchableOpacity>
             </View>
           </View>

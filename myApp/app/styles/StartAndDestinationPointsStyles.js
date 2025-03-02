@@ -229,4 +229,21 @@ export default StyleSheet.create({
   selectedButton: {
     backgroundColor: "#922338",
   },
+  stepsList: {
+    maxHeight: 300,
+    padding: 10,
+  },
+  stepItem: {
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  stepText: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  stepDistance: {
+    fontSize: 14,
+    color: "gray",
+  },
 });
