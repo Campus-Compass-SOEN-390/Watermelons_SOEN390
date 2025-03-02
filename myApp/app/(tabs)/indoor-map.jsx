@@ -11,12 +11,19 @@ const IndoorMap = () => {
 
   useEffect(() => {
     fetch(
-      "https://api.mapbox.com/datasets/v1/7anine/7anine.cm7qjtnoy2d3o1qmmngcrv0jl-1v0jt/features?access_token=pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw"
+      `https://api.mapbox.com/datasets/v1/7anine/cm7qjtnoy2d3o1qmmngcrv0jl/features?access_token=pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw`
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log("Fetched GeoJSON Data:", JSON.stringify(data, null, 2)); // Debugging
-        setGeoJsonData({ type: "FeatureCollection", features: data.features });
+        console.log("Fetched GeoJSON Data:", JSON.stringify(data, null, 2));
+        if (data.features) {
+          setGeoJsonData({
+            type: "FeatureCollection",
+            features: data.features,
+          });
+        } else {
+          console.error("Invalid GeoJSON format:", data);
+        }
       })
       .catch((error) => console.error("Error fetching GeoJSON:", error));
   }, []);
@@ -24,52 +31,49 @@ const IndoorMap = () => {
   return (
     <View style={styles.container}>
       <Mapbox.MapView style={styles.map} styleURL={Mapbox.StyleURL.Light}>
-        <Mapbox.Camera centerCoordinate={[-73.578, 45.495]} zoomLevel={12} />
-        <Mapbox.RasterSource
-          id="floor-map"
-          tileUrlTemplates={[
-            `https://api.mapbox.com/v4/7anine.cm7qjtnoy2d3o1qmmngcrv0jl-1v0jt/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw`,
-          ]}
-          tileSize={256}
-        >
-          <Mapbox.RasterLayer id="floor-layer" />
-        </Mapbox.RasterSource>
+        <Mapbox.Camera centerCoordinate={[-73.578, 45.495]} zoomLevel={18} />
 
-        {geoJsonData?.type === "FeatureCollection" &&
-          Array.isArray(geoJsonData.features) && (
-            <Mapbox.ShapeSource id="indoor-geojson" shape={geoJsonData}>
-              <Mapbox.FillLayer
-                id="walls"
-                style={{ fillColor: "red", fillOpacity: 0.5 }}
-                filter={["==", "type", "bloc"]}
-              />
-              <Mapbox.FillLayer
-                id="paths"
-                style={{ fillColor: "green", fillOpacity: 0.3 }}
-                filter={["!=", "type", "bloc"]}
-              />
-              <Mapbox.SymbolLayer
-                id="tags"
-                style={{ iconImage: "marker-15", iconSize: 1 }}
-                filter={["==", "type", "tag"]}
-              />
-            </Mapbox.ShapeSource>
-          )}
+        {/* Render dataset (vector data) */}
+        {geoJsonData?.type === "FeatureCollection" && (
+          <Mapbox.ShapeSource id="indoor-geojson" shape={geoJsonData}>
+            {/* Render Walls (Polygons) */}
+            <Mapbox.FillLayer
+              id="walls"
+              style={{ fillColor: "gray", fillOpacity: 0.7 }}
+              filter={["==", ["geometry-type"], "Polygon"]}
+            />
+
+            {/* Render Paths (Lines) */}
+            <Mapbox.LineLayer
+              id="paths"
+              style={{ lineColor: "blue", lineWidth: 2 }}
+              filter={["==", ["geometry-type"], "LineString"]}
+            />
+
+            {/* Render Labels (Points) */}
+            <Mapbox.SymbolLayer
+              id="labels"
+              style={{
+                textField: ["get", "name"],
+                textSize: 14,
+                textColor: "black",
+              }}
+              filter={["==", ["geometry-type"], "Point"]}
+            />
+          </Mapbox.ShapeSource>
+        )}
       </Mapbox.MapView>
     </View>
   );
 };
-};
 
-export default IndoorMap;
 export default IndoorMap;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // Ensures full screen
+    flex: 1,
   },
   map: {
-    flex: 1, // Ensures MapView expands properly
+    flex: 1,
   },
 });
-
