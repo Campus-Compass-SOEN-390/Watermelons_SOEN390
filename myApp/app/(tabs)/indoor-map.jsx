@@ -59,7 +59,9 @@ const IndoorMap = () => {
     </View>
   );
 };
+};
 
+export default IndoorMap;
 export default IndoorMap;
 
 const styles = StyleSheet.create({
@@ -70,3 +72,4 @@ const styles = StyleSheet.create({
     flex: 1, // Ensures MapView expands properly
   },
 });
+
