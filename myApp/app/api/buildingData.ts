@@ -605,11 +605,19 @@ export const buildings: Building[] = [
     openHours: "Monday - Sunday: 7:00 AM - 11:00 PM",
     wheelchairAccessible: true,
     departments: [
-      "Geography, Planning and Environment",
-      "Political Science, Sociology and Anthropology, Economics",
-      "School of Irish Studies"
+      "Gina Cody School of Engineering and Computer Science",
+      "Faculty of Arts and Science",
+      "Faculty of Fine Arts",
+      "Social Sciences",
+      "John Molson School of Business",
     ],
     campus: Campus.SGW,
+    coordinates: [
+      { latitude: 45.497711897099265, longitude: -73.5790414349221 },
+      { latitude: 45.497169492234924, longitude: -73.57953995593581 },
+      { latitude: 45.496832225037465, longitude: -73.57885541961848 },
+      { latitude: 45.49737811010875, longitude: -73.57834697778854 },
+    ],
   },
   {
     id: "sgw16",
