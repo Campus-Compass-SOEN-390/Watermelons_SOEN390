@@ -52,16 +52,22 @@ const OutdoorMap = () => {
   // The missing piece: track the building user is inside
   const [highlightedBuilding, setHighlightedBuilding] = useState(null);
 
+  //Statues for displaying shuttle polylines or not
   const [showShuttleRoute, setShowShuttleRoute] = useState(false);
   const [shuttleRoute, setShuttleRoute] = useState(null);
 
 
+  {/*useEffect(() => {
+    setShowShuttleRoute(false);
+  }, [destinationLocation])*/}
   // Mapping for StartAndDestinationPoints
   const coordinatesMap = {
     "My Position": location?.latitude
       ? { latitude: location.latitude, longitude: location.longitude }
       : undefined,
     "Hall Building": { latitude: 45.4961, longitude: -73.5772 },
+    "SGW, Shuttle Stop": { latitude: 45.49706, longitude: -73.57849},
+    "Loyola, Shuttle Stop": { latitude: 45.45789, longitude: -73.63882 },
     "EV Building": { latitude: 45.4957, longitude: -73.5773 },
     "SGW Campus": { latitude: 45.4962, longitude: -73.5780 },
     "Loyola Campus": { latitude: 45.4582, longitude: -73.6405 },
@@ -78,6 +84,7 @@ const OutdoorMap = () => {
       { latitude: 45.48973, longitude: -73.577 },
       { latitude: 45.46161, longitude: -73.62401 },
       { latitude: 45.46374, longitude: -73.62888 },
+      { latitude: 45.45789, longitude: -73.63882 }
     ],
     loyolaToSgw: [
       { latitude: 45.49706, longitude: -73.57849},
@@ -85,6 +92,7 @@ const OutdoorMap = () => {
       { latitude: 45.48973, longitude: -73.577 },
       { latitude: 45.46161, longitude: -73.62401 },
       { latitude: 45.46374, longitude: -73.62888 },
+      { latitude: 45.45789, longitude: -73.63882 }
     ]
   };
 
@@ -190,8 +198,19 @@ const OutdoorMap = () => {
   const handleShuttleButton = () => {
     console.log("Shuttle button click");
     const route = activeCampus === "sgw" ? campusRoutes.sgwToLoyola : campusRoutes.loyolaToSgw;
+    setOriginLocation(coordinatesMap["My Position"]);
+    setOriginText("My Location");
+    if (activeCampus === "sgw"){
+      setDestinationLocation(coordinatesMap["SGW, Shuttle Stop"]);
+      setDestinationText("SGW, Shuttle Stop");
+    }
+    else {
+      setDestinationLocation(coordinatesMap["Loyola, Shuttle Stop"]);
+      setDestinationText("Loyola, Shuttle Stop");
+    }
     setShowShuttleRoute(true);
     setShuttleRoute(route);
+    setUpdateText(updateText + 1);
     mapRef.current.fitToCoordinates(route, {
     edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
     animated: true,
