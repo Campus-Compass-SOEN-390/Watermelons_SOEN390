@@ -167,6 +167,28 @@ const OutdoorMap = () => {
     }
   };
 
+  // Coordinates of routes for the navigation shuttle
+  const campusRoutes = {
+    sgwToLoyola: [
+      { latitude: 45.49706, longitude: -73.57849},
+      { latitude: 45.49604, longitude: -73.5793},
+      { latitude: 45.49579, longitude:-73.57934},
+      { latitude: 45.49357, longitude: -73.5817 },
+      { latitude: 45.48973, longitude: -73.577 },
+      { latitude: 45.46161, longitude: -73.62401 },
+      { latitude: 45.46374, longitude: -73.62888 },
+    ],
+    loyolaToSgw: [
+      { latitude: 45.49706, longitude: -73.57849},
+      { latitude: 45.49604, longitude: -73.5793},
+      { latitude: 45.49579, longitude:-73.57934},
+      { latitude: 45.49357, longitude: -73.5817 },
+      { latitude: 45.48973, longitude: -73.577 },
+      { latitude: 45.46161, longitude: -73.62401 },
+      { latitude: 45.46374, longitude: -73.62888 },
+    ]
+  };
+
   // Switch campus
   const toggleCampus = () => {
     setActiveCampus((prev) => (prev === "sgw" ? "loyola" : "sgw"));
