@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, Fragment } from "react";
-import { View, TouchableOpacity, Text, Modal } from "react-native";
-import MapView, { Marker, Polygon} from "react-native-maps";
+import { View, TouchableOpacity, Text, Modal, Image } from "react-native";
+import MapView, { Marker, Polygon, Polyline} from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import { MaterialIcons } from "@expo/vector-icons";
 import { isPointInPolygon } from "geolib";
@@ -47,6 +47,10 @@ const OutdoorMap = () => {
 
   // The missing piece: track the building user is inside
   const [highlightedBuilding, setHighlightedBuilding] = useState(null);
+
+  // Use state to display shuttle route or not
+  const [showShuttleRoute, setShowShuttleRoute] = useState(false);
+  const [shuttleRoute, setShuttleRoute] = useState(null);
 
   // Mapping for StartAndDestinationPoints
   const coordinatesMap = {
@@ -112,6 +116,24 @@ const OutdoorMap = () => {
     }
   };
 
+  // Coordinates of routes for the navigation shuttle
+  const campusRoutes = {
+    sgwToLoyola: [
+      { latitude: 45.49706, longitude: -73.57849},
+      { latitude: 45.49357, longitude: -73.5817 },
+      { latitude: 45.48973, longitude: -73.577 },
+      { latitude: 45.46161, longitude: -73.62401 },
+      { latitude: 45.46374, longitude: -73.62888 },
+    ],
+    loyolaToSgw: [
+      { latitude: 45.49706, longitude: -73.57849},
+      { latitude: 45.49357, longitude: -73.5817 },
+      { latitude: 45.48973, longitude: -73.577 },
+      { latitude: 45.46161, longitude: -73.62401 },
+      { latitude: 45.46374, longitude: -73.62888 },
+    ]
+  };
+
   // Switch campus
   const toggleCampus = () => {
     setActiveCampus((prev) => (prev === "sgw" ? "loyola" : "sgw"));
@@ -129,6 +151,17 @@ const OutdoorMap = () => {
       console.error("Building data is incomplete!", building);
     }
   };
+
+  const handleShuttleButton = () => {
+    console.log("Shuttle button click");
+    const route = activeCampus === "sgw" ? campusRoutes.sgwToLoyola : campusRoutes.loyolaToSgw;
+    setShowShuttleRoute(true);
+    setShuttleRoute(route);
+    mapRef.current.fitToCoordinates(route, {
+    edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
+    animated: true,
+  });
+  }
 
   return (
     <View style={styles.container}>
@@ -229,6 +262,15 @@ const OutdoorMap = () => {
               </Fragment>
             );
           })}
+
+        {showShuttleRoute && (
+          <Polyline
+            coordinates={shuttleRoute}
+            strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
+            strokeColors={['#7F0000']}
+            strokeWidth={6}
+          />
+      )}
       </MapView>
 
       {/* Floating Buttons */}
@@ -251,6 +293,24 @@ const OutdoorMap = () => {
           <Text style={styles.switchButtonText}>Switch Campus</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Switch Campus (Shuttle) Button */}
+      <View style={styles.shuttleButtonContainer}>
+        <TouchableOpacity 
+          style={styles.shuttleButton}
+          onPress={handleShuttleButton} 
+        >
+          <Image
+            source={require('../../assets/images/icon-for-shuttle.png')}
+            resizeMode="contain"
+            style={styles.shuttleIcon}
+          />
+          <Text style={styles.switchButtonText}>
+            {activeCampus === "sgw" ? "Shuttle To Loyola" : "Shuttle To SGW"}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
 
       {/* Location Permission Denial */}
       <Modal visible={showPermissionPopup} transparent animationType="slide">
