@@ -157,6 +157,7 @@ const OutdoorMap = () => {
     const route = activeCampus === "sgw" ? campusRoutes.sgwToLoyola : campusRoutes.loyolaToSgw;
     setShowShuttleRoute(true);
     setShuttleRoute(route);
+    setOriginLocation(coordinatesMap["My Location"])
     mapRef.current.fitToCoordinates(route, {
     edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
     animated: true,
