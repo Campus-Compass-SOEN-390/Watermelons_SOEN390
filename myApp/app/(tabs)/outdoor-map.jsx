@@ -52,12 +52,9 @@ const OutdoorMap = () => {
   // The missing piece: track the building user is inside
   const [highlightedBuilding, setHighlightedBuilding] = useState(null);
 
-<<<<<<< HEAD
-  // Use state to display shuttle route or not
   const [showShuttleRoute, setShowShuttleRoute] = useState(false);
   const [shuttleRoute, setShuttleRoute] = useState(null);
-=======
->>>>>>> d3bb116ea6ba9a96c3fcb91afc73dab682d988b3
+
 
   // Mapping for StartAndDestinationPoints
   const coordinatesMap = {
@@ -72,6 +69,23 @@ const OutdoorMap = () => {
     "CC, Central Building": { latitude: 45.458204, longitude: -73.640300},
     "CJ, Communications and Journalism Building": { latitude: 45.457478, longitude:-73.640354},
     "GE, Centre for Structural and Functional Genomics Building": { latitude: 45.457017, longitude:-73.640432}
+  };
+
+  const campusRoutes = {
+    sgwToLoyola: [
+      { latitude: 45.49706, longitude: -73.57849},
+      { latitude: 45.49357, longitude: -73.5817 },
+      { latitude: 45.48973, longitude: -73.577 },
+      { latitude: 45.46161, longitude: -73.62401 },
+      { latitude: 45.46374, longitude: -73.62888 },
+    ],
+    loyolaToSgw: [
+      { latitude: 45.49706, longitude: -73.57849},
+      { latitude: 45.49357, longitude: -73.5817 },
+      { latitude: 45.48973, longitude: -73.577 },
+      { latitude: 45.46161, longitude: -73.62401 },
+      { latitude: 45.46374, longitude: -73.62888 },
+    ]
   };
 
   // Animate map to correct campus
@@ -145,24 +159,6 @@ const OutdoorMap = () => {
     }
   };
 
-  // Coordinates of routes for the navigation shuttle
-  const campusRoutes = {
-    sgwToLoyola: [
-      { latitude: 45.49706, longitude: -73.57849},
-      { latitude: 45.49357, longitude: -73.5817 },
-      { latitude: 45.48973, longitude: -73.577 },
-      { latitude: 45.46161, longitude: -73.62401 },
-      { latitude: 45.46374, longitude: -73.62888 },
-    ],
-    loyolaToSgw: [
-      { latitude: 45.49706, longitude: -73.57849},
-      { latitude: 45.49357, longitude: -73.5817 },
-      { latitude: 45.48973, longitude: -73.577 },
-      { latitude: 45.46161, longitude: -73.62401 },
-      { latitude: 45.46374, longitude: -73.62888 },
-    ]
-  };
-
   // Switch campus
   const toggleCampus = () => {
     setActiveCampus((prev) => (prev === "sgw" ? "loyola" : "sgw"));
@@ -181,18 +177,6 @@ const OutdoorMap = () => {
     }
   };
 
-<<<<<<< HEAD
-  const handleShuttleButton = () => {
-    console.log("Shuttle button click");
-    const route = activeCampus === "sgw" ? campusRoutes.sgwToLoyola : campusRoutes.loyolaToSgw;
-    setShowShuttleRoute(true);
-    setShuttleRoute(route);
-    setOriginLocation(coordinatesMap["My Location"])
-    mapRef.current.fitToCoordinates(route, {
-    edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
-    animated: true,
-  });
-=======
   const handleBuildingGetDirections = (building) => {
     setOriginLocation(coordinatesMap["My Position"]);
     setOriginText("My Location");
@@ -201,7 +185,17 @@ const OutdoorMap = () => {
     setDestinationLocation(building.entranceCoordinates);
     setDestinationText(buildingFullName);
     setUpdateText(updateText + 1);
->>>>>>> d3bb116ea6ba9a96c3fcb91afc73dab682d988b3
+  }
+
+  const handleShuttleButton = () => {
+    console.log("Shuttle button click");
+    const route = activeCampus === "sgw" ? campusRoutes.sgwToLoyola : campusRoutes.loyolaToSgw;
+    setShowShuttleRoute(true);
+    setShuttleRoute(route);
+    mapRef.current.fitToCoordinates(route, {
+    edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
+    animated: true,
+  });
   }
 
   return (
@@ -308,14 +302,13 @@ const OutdoorMap = () => {
               </Fragment>
             );
           })}
-
         {showShuttleRoute && (
-          <Polyline
-            coordinates={shuttleRoute}
-            strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
-            strokeColors={['#7F0000']}
-            strokeWidth={6}
-          />
+        <Polyline
+          coordinates={shuttleRoute}
+          strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
+          strokeColors={['#7F0000']}
+          strokeWidth={6}
+        />
       )}
       </MapView>
 
@@ -356,7 +349,6 @@ const OutdoorMap = () => {
           </Text>
         </TouchableOpacity>
       </View>
-
 
       {/* Location Permission Denial */}
       <Modal visible={showPermissionPopup} transparent animationType="slide">
