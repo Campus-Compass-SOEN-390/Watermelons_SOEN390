@@ -221,6 +221,15 @@ const styles = StyleSheet.create({
   listContent: {
     padding: 10,
   },
+  listViewOuter: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#f5f5f5',
+    zIndex: 5,
+  },
   listItem: {
     backgroundColor: "white",
     borderRadius: 5,
@@ -245,14 +254,56 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   directionsButton: {
-    backgroundColor: "#1E88E5",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 3,
+    backgroundColor: "#922338",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
   },
   directionsButtonText: {
-    color: "white",
+    color: "#fff",
     fontSize: 12,
+    fontWeight: "500",
+  },
+
+  // Error container styles
+  errorContainer: {
+    position: "absolute",
+    top: 150,
+    left: 20,
+    right: 20,
+    backgroundColor: "#ffeded",
+    borderRadius: 5,
+    padding: 15,
+    zIndex: 15,
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    alignItems: "center",
+  },
+  
+  errorText: {
+    color: "#d32f2f",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  
+  retryButton: {
+    backgroundColor: "#d32f2f",
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 4,
+  },
+  
+  retryButtonText: {
+    color: "white",
+    fontWeight: "bold",
   },
 });
 

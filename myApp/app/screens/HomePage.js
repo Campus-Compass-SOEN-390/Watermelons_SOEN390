@@ -33,7 +33,7 @@ export default function HomePage() {
                         testID="loyolaButton"
                         onPress={() => router.push({
                             pathname: './interest-points',
-                            params: { mode: 'campus', campus: 'Loyola' }
+                            params: { mode: 'campus', campus: 'loyola' }
                         })}
                     >
                         <Text style={styles.buttonText}>Loyola Campus</Text>
