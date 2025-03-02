@@ -10,6 +10,7 @@ import { buildings, Campus, getBuildingById } from "../api/buildingData";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
 import { BuildingPopup } from "../components/BuildingPopUp";
 import MapDirections from "../components/MapDirections";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const OutdoorMap = () => {
   // Campus regions
@@ -38,8 +39,11 @@ const OutdoorMap = () => {
   // Start & destination markers
   const [originLocation, setOriginLocation] = useState(null);
   const [destinationLocation, setDestinationLocation] = useState(null);
+  const [originText, setOriginText] = useState("");
+  const [destinationText, setDestinationText] = useState("");
   const [travelMode, setTravelMode] = useState('TRANSIT');
   const [renderMap, setRenderMap] = useState(false);
+  const [updateText, setUpdateText] = useState(0);
 
   // Building popup
   const [selectedBuilding, setSelectedBuilding] = useState(null);
@@ -48,9 +52,12 @@ const OutdoorMap = () => {
   // The missing piece: track the building user is inside
   const [highlightedBuilding, setHighlightedBuilding] = useState(null);
 
+<<<<<<< HEAD
   // Use state to display shuttle route or not
   const [showShuttleRoute, setShowShuttleRoute] = useState(false);
   const [shuttleRoute, setShuttleRoute] = useState(null);
+=======
+>>>>>>> d3bb116ea6ba9a96c3fcb91afc73dab682d988b3
 
   // Mapping for StartAndDestinationPoints
   const coordinatesMap = {
@@ -62,6 +69,9 @@ const OutdoorMap = () => {
     "SGW Campus": { latitude: 45.4962, longitude: -73.5780 },
     "Loyola Campus": { latitude: 45.4582, longitude: -73.6405 },
     "Montreal Downtown": { latitude: 45.5017, longitude: -73.5673 },
+    "CC, Central Building": { latitude: 45.458204, longitude: -73.640300},
+    "CJ, Communications and Journalism Building": { latitude: 45.457478, longitude:-73.640354},
+    "GE, Centre for Structural and Functional Genomics Building": { latitude: 45.457017, longitude:-73.640432}
   };
 
   // Animate map to correct campus
@@ -92,6 +102,25 @@ const OutdoorMap = () => {
       setShowPermissionPopup(true);
     }
   }, [location, hasPermission]);
+
+  // Handle GO button logic 
+  const handleGoClick = () => {
+    alert("Journey started!");
+
+  };
+  const hanndleStepsClick = () => {
+    // Show Steps animate map to destination
+    setShowSteps(true);
+  };
+  const handleAddFavorite = () => {
+    // Add favorite logic
+
+    
+  };
+  //Close Steps Modal
+  const handleCloseSteps = () => {
+    setShowSteps(false);
+  };
 
   // Center on user
   const centerMapOnUser = () => {
@@ -152,6 +181,7 @@ const OutdoorMap = () => {
     }
   };
 
+<<<<<<< HEAD
   const handleShuttleButton = () => {
     console.log("Shuttle button click");
     const route = activeCampus === "sgw" ? campusRoutes.sgwToLoyola : campusRoutes.loyolaToSgw;
@@ -162,11 +192,26 @@ const OutdoorMap = () => {
     edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
     animated: true,
   });
+=======
+  const handleBuildingGetDirections = (building) => {
+    setOriginLocation(coordinatesMap["My Position"]);
+    setOriginText("My Location");
+    const buildingFullName = building.name + ", " + building.longName
+    console.log(buildingFullName);
+    setDestinationLocation(building.entranceCoordinates);
+    setDestinationText(buildingFullName);
+    setUpdateText(updateText + 1);
+>>>>>>> d3bb116ea6ba9a96c3fcb91afc73dab682d988b3
   }
 
   return (
     <View style={styles.container}>
       <StartAndDestinationPoints
+        updateText = {updateText}
+        buildingTextOrigin= {originText}
+        buildingTextDestination= {destinationText}
+        originLocation = {originLocation}
+        destinationLocation = {destinationLocation}
         setOriginLocation={setOriginLocation}
         setDestinationLocation={setDestinationLocation}
         setTravelMode={setTravelMode}
@@ -331,6 +376,8 @@ const OutdoorMap = () => {
           </View>
         </View>
       </Modal>
+    
+
 
       {/* Building Popup */}
       <BuildingPopup
@@ -340,6 +387,7 @@ const OutdoorMap = () => {
           setSelectedBuilding(null);
         }}
         building={selectedBuilding}
+        onGetDirections={handleBuildingGetDirections}
       />
     </View>
   );

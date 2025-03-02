@@ -1,11 +1,9 @@
 import React from "react";
-import { fetchAllShuttleSchedules, fetchShuttleScheduleByDay, fetchLiveShuttleData } from "../api/shuttleSchedule";
+import { fetchAllShuttleSchedules, fetchShuttleScheduleByDay, fetchLiveShuttleData, fetchShuttleInfo } from "../api/shuttleSchedule";
 import axios from "axios";
 
+jest.mock("axios"); 
 
-jest.mock("axios"); // Mock Axios
-
-// Explicitly cast Axios as a Jest Mock
 const mockedAxios = axios;
 
 describe("Shuttle Data Fetching Tests", () => {
@@ -47,10 +45,10 @@ describe("Shuttle Data Fetching Tests", () => {
    * - Ensures that the response contains `SGW` and its value is an array.
    */
   
-test("fetchShuttleScheduleByDay should return Monday schedule", async () => {
-  const schedule = await fetchShuttleScheduleByDay("WEDNESDAY");
-  expect(schedule).toHaveProperty("SGW"); // Validates the key exists
-  expect(Array.isArray(schedule.SGW)).toBe(true); // Ensures it's an array
+  test("fetchShuttleScheduleByDay should return Monday schedule", async () => {
+    const schedule = await fetchShuttleScheduleByDay("WEDNESDAY");
+    expect(schedule).toHaveProperty("SGW"); // Validates the key exists
+    expect(Array.isArray(schedule.SGW)).toBe(true); // Ensures it's an array
 });
 
   /**
@@ -95,7 +93,7 @@ test("fetchShuttleScheduleByDay should return Monday schedule", async () => {
     await expect(fetchLiveShuttleData()).rejects.toThrow("Could not retrieve shuttle data.");
   });
 
-   /**
+  /**
    * Test Case 6: Handle POST request failure in live data API
    * - Simulates a failed POST request to fetch live shuttle data.
    * - Ensures that the function throws the correct error.
@@ -123,7 +121,7 @@ test("fetchShuttleScheduleByDay should return Monday schedule", async () => {
     await expect(fetchLiveShuttleData()).rejects.toThrow("Received empty response from the server.");
   });
   
-   /**
+  /**
    * Test Case 8: Handle invalid day input for shuttle schedule
    * - Calls fetchShuttleScheduleByDay("InvalidDay").
    */
@@ -133,7 +131,155 @@ test("fetchShuttleScheduleByDay should return Monday schedule", async () => {
       "Invalid day: InvalidDay. Please provide Monday, Tuesday, Wednesday, Thursday, or Friday."
     );
   });
+
+  /**
+   * Test Case 9: Extracting relevant shuttle info
+   * - Calls fetchShuttleInfo() with a sample response and verifies the output.
+   */
+
+  test("fetchShuttleInfo should return formatted shuttle data", async () => {
+    // Mock Axios request to prevent real API call
+    mockedAxios.create.mockReturnValue(mockedAxios);
+    mockedAxios.get.mockResolvedValue({
+      status: 200,
+      data: "session cookies set",
+    });
+
+  // Mock Axios POST request for shuttle data
+    mockedAxios.post.mockResolvedValue({
+      status: 200,
+      data: {
+        d: {
+          Points: [
+            { ID: "BUS1", Latitude: 45.5017, Longitude: -73.5673 },
+            { ID: "BUS2", Latitude: 45.5088, Longitude: -73.554 },
+          ],
+        },
+      },
+    });
+
+    // Call fetchShuttleInfo(), which now automatically fetches data
+    const extractedData = await fetchShuttleInfo();
+
+    expect(extractedData).toEqual([
+      {
+        id: "BUS1",
+        latitude: 45.5017,
+        longitude: -73.5673,
+        timestamp: expect.any(String),
+      },
+      {
+        id: "BUS2",
+        latitude: 45.5088,
+        longitude: -73.554,
+        timestamp: expect.any(String),
+      },
+    ]);
+  });
+
+
+  /**
+   * Test Case 10: Handle missing "Points" in API response
+   * - Calls fetchShuttleInfo() with incomplete data.
+   * - Ensures an error is thrown.
+   */
+
+  test("fetchShuttleInfo should throw an error for missing Points field", async () => {
+    // Mock the API to return missing `Points`
+    mockedAxios.create.mockReturnValue(mockedAxios);
+    mockedAxios.get.mockResolvedValue({ status: 200, data: "session cookies set" });
+    mockedAxios.post.mockResolvedValue({ status: 200, data: { d: {} } }); //  Missing `Points`
+
+    // Ensure `fetchShuttleInfo()` throws the correct error
+    await expect(fetchShuttleInfo()).rejects.toThrow("Error processing shuttle data.");
+
+  });
+
+
+  /**
+   * Test Case 11: Handle empty Points array
+   * - Calls fetchShuttleInfo() with an empty shuttle list.
+   * - Ensures the function returns an empty array.
+   */
+  test("fetchShuttleInfo should return an empty array when no shuttles are present", async () => {
+    // Mock Axios response with empty `Points`
+    mockedAxios.create.mockReturnValue(mockedAxios);
+    mockedAxios.get.mockResolvedValue({ status: 200, data: "session cookies set" });
+    mockedAxios.post.mockResolvedValue({ status: 200, data: { d: { Points: [] } } });
+
+    // Ensure function returns an empty array
+    const extractedData = await fetchShuttleInfo();
+    expect(extractedData).toEqual([]);
+  });
+
+  /**
+   * Test Case 12: Fetch shuttle info from real-time data
+   * - Calls fetchShuttleInfo() to ensure it processes live data correctly.
+   */
+
+  test("fetchShuttleInfo should extract data from live shuttle response", async () => {
+    // Mock Axios request for session cookies
+    mockedAxios.create.mockReturnValue(mockedAxios);
+    mockedAxios.get.mockResolvedValue({
+      status: 200,
+      data: "session cookies set",
+    });
+
+    // Mock Axios POST request for shuttle data
+    mockedAxios.post.mockResolvedValue({
+      status: 200,
+      data: {
+        d: {
+          Points: [
+            { ID: "BUS1", Latitude: 45.5017, Longitude: -73.5673 },
+            { ID: "BUS2", Latitude: 45.5088, Longitude: -73.554 },
+          ],
+        },
+      },
+    });
+
+    // Call `fetchShuttleInfo()`, which should use `fetchLiveShuttleData()`
+    const extractedData = await fetchShuttleInfo();
+
+    // Validate the extracted shuttle info
+    expect(extractedData).toEqual([
+      {
+        id: "BUS1",
+        latitude: 45.5017,
+        longitude: -73.5673,
+        timestamp: expect.any(String),
+      },
+      {
+        id: "BUS2",
+        latitude: 45.5088,
+        longitude: -73.554,
+        timestamp: expect.any(String),
+      },
+    ]);
+  });
+
+  /**
+   * Test Case 13: Handle completely invalid API response
+   * - Simulates a scenario where the API returns `null` instead of expected data.
+   * - Ensures that `fetchShuttleInfo()` throws an error indicating an empty response.
+   */
+
+  test("fetchShuttleInfo should throw error for completely invalid response", async () => {
+    // Mock invalid API response
+    mockedAxios.create.mockReturnValue(mockedAxios);
+    mockedAxios.get.mockResolvedValue({ status: 200, data: "session cookies set" });
+    mockedAxios.post.mockResolvedValue({ status: 200, data: null }); // Invalid response
+
+    await expect(fetchShuttleInfo()).rejects.toThrow("Received empty response from the server.");
+
+  });
+
+
+
+
+});
+
+
   
 
   
-});
