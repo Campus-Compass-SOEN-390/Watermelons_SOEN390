@@ -109,6 +109,25 @@ export default StyleSheet.create({
     fontWeight: "bold",
     fontSize: 13,
   },
+  shuttleButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#922338",
+    padding: 10,
+    borderRadius: 20,
+    bottom: 50,
+  },
+  shuttleButtonContainer: {
+    position: "absolute",
+    bottom: 65,
+    left: 150,
+    zIndex: 2,
+  },
+  shuttleIcon: {
+    width: 15,  // Adjust width as needed (smaller size)
+    height: 15, // Adjust height as needed (smaller size)
+    marginRight: 8, // Space between image and text (optional)
+  },
   titleForMap: {
     fontSize: 20,
     fontWeight: "bold",

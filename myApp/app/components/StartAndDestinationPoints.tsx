@@ -15,28 +15,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import styles from "../styles/StartAndDestinationPointsStyles";
 import useLocation from "../hooks/useLocation";
 import Icon from "react-native-vector-icons/Foundation";
+import { useLocationContext } from '../context/LocationContext';
 import { useNavigation } from "@react-navigation/native";
-
-interface Props {
-  setOriginLocation: (location: {
-    latitude: number;
-    longitude: number;
-  }) => void;
-  setDestinationLocation: (location: {
-    latitude: number;
-    longitude: number;
-  }) => void;
-  setTravelMode: (
-    mode: "DRIVING" | "BICYCLING" | "WALKING" | "TRANSIT"
-  ) => void;
-  renderMap: boolean;
-  setRenderMap: (show: boolean) => void;
-  updateText: number;
-  buildingTextOrigin: string;
-  buildingTextDestination: string;
-  originLocation: { latitude: number; longitude: number };
-  destinationLocation: { latitude: number; longitude: number };
-}
 
 interface Step {
   id: number;
@@ -46,47 +26,30 @@ interface Step {
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
-const StartAndDestinationPoints: React.FC<Props> = ({
-  updateText,
-  buildingTextDestination,
-  buildingTextOrigin,
-  originLocation,
-  destinationLocation,
-  setOriginLocation,
-  setDestinationLocation,
-  setTravelMode,
-  renderMap,
-  setRenderMap,
+const StartAndDestinationPoints = ({
 }) => {
-  const [origin, setOrigin] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
-  const [destination, setDestination] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
-  const [showTransportation, setShowTransportation] = useState(false);
+  const { 
+    updateOrigin, 
+    updateDestination, 
+    updateShowTransportation, 
+    updateRenderMap,
+    updateTravelMode,
+    origin, 
+    destination, 
+    originText, 
+    destinationText, 
+    showTransportation, 
+    renderMap,
+    travelMode
+  } = useLocationContext();
   const { location } = useLocation();
-  const [originText, setOriginText] = useState("");
-  const [destinationText, setDestinationText] = useState("");
   const originRef = useRef<any>(null);
   const [isOriginSet, setIsOriginSet] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
-  const defaultTravel = "TRANSIT";
   const [showMyLocButton, setShowMyLocButton] = useState(true);
-  const [showTravelMode, setShowTravelMode] = useState("");
-  const [selectedMode, setSelectedMode] = useState<
-    "DRIVING" | "BICYCLING" | "WALKING" | "TRANSIT"
-  >(defaultTravel);
-  const [localUpdateText, setLocalUpdateText] = useState(0);
-  const [locationSet, setLocationSet] = useState(0);
-
-  const [showFooter, setShowFooter] = useState(false);
   const [showSteps, setShowSteps] = useState(false);
   const [routeSteps, setRouteSteps] = useState<Step[]>([]);
 
-  const navigation = useNavigation();
   // Handle "GO" button click
   const handleGoClick = () => {
     console.log("Navigating...");
@@ -99,7 +62,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({
     const originStr = `${origin.latitude},${origin.longitude}`;
     const destinationStr = `${destination.latitude},${destination.longitude}`;
 
-    const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${originStr}&destination=${destinationStr}&mode=${showTravelMode.toLowerCase()}&key=${GOOGLE_PLACES_API_KEY}`;
+    const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${originStr}&destination=${destinationStr}&mode=${travelMode.toLowerCase()}&key=${GOOGLE_PLACES_API_KEY}`;
 
     try {
       const response = await fetch(url);
@@ -127,43 +90,21 @@ const StartAndDestinationPoints: React.FC<Props> = ({
     setShowSteps(false);
   };
 
+  const navigation = useNavigation();
+
   // Handle "Add Favorite" button click
   const handleAddFavorite = () => {
     console.log("Adding to Favorites...");
   };
 
-  //This useEffect only executes when updatedText changes, aka directions come from a building Popup
   useEffect(() => {
-    setLocalUpdateText(updateText);
-    setShowTransportation(false); //Hide the transportation methods until Get Directions is pressed again
-    setShowFooter(false);
-    if (buildingTextOrigin) {
-      setOrigin(originLocation);
-      setOriginText(buildingTextOrigin);
-    }
-    if (buildingTextDestination) {
-      setDestination(destinationLocation);
-      setDestinationText(buildingTextDestination);
-    }
-  }, [updateText]);
+    updateOrigin(origin, originText);
+    updateDestination(destination, destinationText);
+  }, [origin, location, showTransportation])
 
-  //This use effect only executes if user hasn't changed origin and destination from when they were set by the building popup
   useEffect(() => {
-    if (
-      buildingTextDestination &&
-      buildingTextOrigin &&
-      localUpdateText == updateText
-    ) {
-      setOriginText(buildingTextOrigin);
-      setDestinationText(buildingTextDestination);
-    }
-  }, [origin, destination, showTransportation, showTravelMode]);
-
-  //Sets destination text to "" and destination to null anytime location changes
-  useEffect(() => {
-    setDestinationText("");
-    setDestination(null);
-  }, [locationSet]);
+    updateShowTransportation(false);
+  }, [origin, location])
 
   return (
     <View style={styles.container}>
@@ -188,25 +129,16 @@ const StartAndDestinationPoints: React.FC<Props> = ({
                   latitude: details.geometry.location.lat,
                   longitude: details.geometry.location.lng,
                 };
-                setOrigin(location);
-                setOriginLocation(location);
+                updateOrigin(location, data.description)
+                console.log("Hello went thru onPress")
                 setIsOriginSet(true);
-                setDestinationText("");
-                setDestination(null);
-                setLocalUpdateText(0);
-                setOriginText(data.description);
                 originRef.current?.setAddressText(data.description); // Allows persistance of the selected origin location
-                setShowFooter(false);
-                setShowTransportation(false);
-                setLocationSet(locationSet + 1);
-                navigation.setOptions({
-                  tabBarStyle: styles.tabBarStyle,
-                });
+                updateShowTransportation(false);
               }
             }}
             textInputProps={{
               value: originText, // This will show "My Location" or the selected place
-              onChangeText: setOriginText,
+              onChangeText: (text) => updateOrigin(origin, text),
               onFocus: () => {
                 setIsInputFocused(true);
                 setShowMyLocButton(true);
@@ -229,36 +161,18 @@ const StartAndDestinationPoints: React.FC<Props> = ({
                     latitude: location.latitude,
                     longitude: location.longitude,
                   };
-                  setOrigin(myLocation);
-                  setOriginLocation(myLocation);
                   setIsOriginSet(true);
-                  setShowFooter(false);
-                  setShowTransportation(false);
-                  setOriginText("My Location");
-                  setDestinationText("");
-                  setDestination(null);
-                  setLocalUpdateText(0);
-                  setLocationSet(locationSet + 1);
-
-                  navigation.setOptions({
-                    tabBarStyle: styles.tabBarStyle,
-                  });
-
+                  updateShowTransportation(false);
                   // Verify current location properly fetched (tested on expo app -> successful!)
                   const coords = {
                     latitude: location.latitude,
                     longitude: location.longitude,
                   };
                   console.log("Selected My Location:", coords);
-
-                  setOriginText("My Location"); // Set the input text to "My Location"
-                  setDestinationText("");
-                  setDestination(null);
+                  updateOrigin(coords, "My Location");
                   originRef.current?.setAddressText("My Location");
                   setShowMyLocButton(false);
                   setIsInputFocused(false);
-                  setLocalUpdateText(0);
-                  setLocationSet(locationSet + 1);
                 } else {
                   console.log("User location not available.");
                 }
@@ -289,20 +203,13 @@ const StartAndDestinationPoints: React.FC<Props> = ({
                   latitude: details.geometry.location.lat,
                   longitude: details.geometry.location.lng,
                 };
-                setDestination(location);
-                setDestinationLocation(location);
-                setShowFooter(false);
-                setShowTransportation(false);
-                setDestinationText(data.description);
-                setLocalUpdateText(0);
-                navigation.setOptions({
-                  tabBarStyle: styles.tabBarStyle,
-                });
+                updateDestination(location, data.description);
+                updateShowTransportation(false);
               }
             }}
             textInputProps={{
               value: destinationText,
-              onChangeText: setDestinationText,
+              onChangeText: (text) => updateDestination(destination, text),
               style: styles.input,
             }}
             styles={{
@@ -317,15 +224,8 @@ const StartAndDestinationPoints: React.FC<Props> = ({
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              console.log("Get Directions Pressed", origin, destination);
-              console.log("Text origin: yyy ", originText);
-              console.log("building text origin:", buildingTextOrigin);
-              console.log("Destination: yyy ", destinationText);
               if (origin && destination) {
-                setShowTransportation(true);
-                setRenderMap(true);
-                setTravelMode(defaultTravel);
-                setShowTravelMode(defaultTravel);
+                updateShowTransportation(true);
               }
             }}
           >
@@ -344,26 +244,20 @@ const StartAndDestinationPoints: React.FC<Props> = ({
                 onPress={() => {
                   if (origin && destination) {
                     console.log("Get Directions Pressed");
-                    setShowFooter(true);
-                    setRenderMap(true);
-                    setTravelMode(mode);
-                    setSelectedMode(mode);
-                    setShowTravelMode(mode);
-                    setShowTransportation(true);
-                    navigation.setOptions({
-                      tabBarStyle: { display: "none" },
-                    });
+                    updateRenderMap(true);
+                    updateTravelMode(mode);
+                    updateShowTransportation(true);
                   }
                 }}
                 style={[
                   styles.transportButton,
-                  selectedMode === mode && styles.selectedButton,
+                  travelMode === mode && styles.selectedButton,
                 ]}
               >
                 <MaterialIcons
                   name={icon}
                   size={24}
-                  color={selectedMode === mode ? "white" : "black"}
+                  color={travelMode === mode ? "white" : "black"}
                 />
               </TouchableOpacity>
             ))}
@@ -371,7 +265,7 @@ const StartAndDestinationPoints: React.FC<Props> = ({
         )}
       </View>
       {/* Footer */}
-      {showFooter && (
+      {renderMap && (
         <View style={styles.footerContainer}>
           <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
             <Text style={styles.footerButtonText}>GO</Text>

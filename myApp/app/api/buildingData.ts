@@ -612,6 +612,7 @@ export const buildings: Building[] = [
       "John Molson School of Business",
     ],
     campus: Campus.SGW,
+    entranceCoordinates: { latitude: 45.497092, longitude: -73.578800 },
     coordinates: [
       { latitude: 45.497711897099265, longitude: -73.5790414349221 },
       { latitude: 45.497169492234924, longitude: -73.57953995593581 },
