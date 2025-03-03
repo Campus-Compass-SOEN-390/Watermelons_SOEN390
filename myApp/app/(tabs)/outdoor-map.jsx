@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect, Fragment } from "react";
 import { View, TouchableOpacity, Text, Modal, Image } from "react-native";
 import MapView, { Marker, Polygon, Polyline} from "react-native-maps";
-import MapViewDirections from "react-native-maps-directions";
 import { MaterialIcons } from "@expo/vector-icons";
 import { isPointInPolygon } from "geolib";
 import useLocation from "../hooks/useLocation";
@@ -10,10 +9,16 @@ import { buildings, Campus, getBuildingById } from "../api/buildingData";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
 import { BuildingPopup } from "../components/BuildingPopUp";
 import MapDirections from "../components/MapDirections";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useLocationContext } from '../context/LocationContext';
+import { useNavigation } from "@react-navigation/native";
+import tabStyles from "../styles/LayoutStyles";
 
 const OutdoorMap = () => {
-  // Campus regions
+
+  //navbar
+  const navigation = useNavigation();
+
+  //Campus regions
   const sgwRegion = {
     latitude: 45.4951962,
     longitude: -73.5792229,
@@ -36,15 +41,6 @@ const OutdoorMap = () => {
   const [showLocating, setShowLocating] = useState(true);
   const [showPermissionPopup, setShowPermissionPopup] = useState(!hasPermission);
 
-  // Start & destination markers
-  const [originLocation, setOriginLocation] = useState(null);
-  const [destinationLocation, setDestinationLocation] = useState(null);
-  const [originText, setOriginText] = useState("");
-  const [destinationText, setDestinationText] = useState("");
-  const [travelMode, setTravelMode] = useState('TRANSIT');
-  const [renderMap, setRenderMap] = useState(false);
-  const [updateText, setUpdateText] = useState(0);
-
   // Building popup
   const [selectedBuilding, setSelectedBuilding] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false);
@@ -53,14 +49,25 @@ const OutdoorMap = () => {
   const [highlightedBuilding, setHighlightedBuilding] = useState(null);
 
   //Statues for displaying shuttle polylines or not
-  const [showShuttleRoute, setShowShuttleRoute] = useState(false);
-  const [shuttleRoute, setShuttleRoute] = useState(null);
+  const [shuttleRoute, setShuttleRoute] = useState("");
 
+  //Global constants to manage components used on outdoor maps page 
+  const { 
+    updateOrigin, 
+    updateDestination, 
+    updateShowTransportation, 
+    updateRenderMap, 
+    updateTravelMode,
+    updateShowShuttleRoute,
+    origin, 
+    destination, 
+    originText, 
+    destinationText, 
+    showTransportation, 
+    renderMap,
+    showShuttleRoute,
+    travelMode } = useLocationContext();
 
-  {/*useEffect(() => {
-    setShowShuttleRoute(false);
-  }, [destinationLocation])*/}
-  // Mapping for StartAndDestinationPoints
   const coordinatesMap = {
     "My Position": location?.latitude
       ? { latitude: location.latitude, longitude: location.longitude }
@@ -75,25 +82,6 @@ const OutdoorMap = () => {
     "CC, Central Building": { latitude: 45.458204, longitude: -73.640300},
     "CJ, Communications and Journalism Building": { latitude: 45.457478, longitude:-73.640354},
     "GE, Centre for Structural and Functional Genomics Building": { latitude: 45.457017, longitude:-73.640432}
-  };
-
-  const campusRoutes = {
-    sgwToLoyola: [
-      { latitude: 45.49706, longitude: -73.57849},
-      { latitude: 45.49357, longitude: -73.5817 },
-      { latitude: 45.48973, longitude: -73.577 },
-      { latitude: 45.46161, longitude: -73.62401 },
-      { latitude: 45.46374, longitude: -73.62888 },
-      { latitude: 45.45789, longitude: -73.63882 }
-    ],
-    loyolaToSgw: [
-      { latitude: 45.49706, longitude: -73.57849},
-      { latitude: 45.49357, longitude: -73.5817 },
-      { latitude: 45.48973, longitude: -73.577 },
-      { latitude: 45.46161, longitude: -73.62401 },
-      { latitude: 45.46374, longitude: -73.62888 },
-      { latitude: 45.45789, longitude: -73.63882 }
-    ]
   };
 
   // Animate map to correct campus
@@ -125,10 +113,31 @@ const OutdoorMap = () => {
     }
   }, [location, hasPermission]);
 
+  //This useEffect manages orgin, destination and the footer appearing when any of the dependcies change
+  useEffect(() => {
+      updateOrigin(origin, originText);
+      updateDestination(destination, destinationText);
+      if (renderMap == true){
+        navigation.setOptions({
+          tabBarStyle: { display: "none" },
+        });
+      }
+      if (renderMap == false){
+        navigation.setOptions({
+          tabBarStyle: tabStyles.tabBarStyle,
+        });
+      }
+    }, [origin, destination, activeCampus, travelMode, popupVisible, showShuttleRoute])
+
+  //This useEffect ensures the map is no longer rendered and the travel mode is set back to nothing when origin or location changes
+  useEffect(() => {
+    updateRenderMap(false);
+    updateTravelMode("");
+  }, [origin, destination])
+
   // Handle GO button logic 
   const handleGoClick = () => {
     alert("Journey started!");
-
   };
   const hanndleStepsClick = () => {
     // Show Steps animate map to destination
@@ -208,31 +217,26 @@ const OutdoorMap = () => {
   };
 
   const handleBuildingGetDirections = (building) => {
-    setOriginLocation(coordinatesMap["My Position"]);
-    setOriginText("My Location");
+    updateOrigin(coordinatesMap["My Position"], "My Location");
     const buildingFullName = building.name + ", " + building.longName
     console.log(buildingFullName);
-    setDestinationLocation(building.entranceCoordinates);
-    setDestinationText(buildingFullName);
-    setUpdateText(updateText + 1);
+    updateDestination(building.entranceCoordinates, buildingFullName);
+    console.log("Hello went thru handleBuildingGetDirections");
+    updateShowTransportation(true);
   }
 
-  const handleShuttleButton = () => {
+  const handleShuttleButton  = () => {
     console.log("Shuttle button click");
     const route = activeCampus === "sgw" ? campusRoutes.sgwToLoyola : campusRoutes.loyolaToSgw;
-    setOriginLocation(coordinatesMap["My Position"]);
-    setOriginText("My Location");
+    updateOrigin(coordinatesMap["My Position"], "My Location")
     if (activeCampus === "sgw"){
-      setDestinationLocation(coordinatesMap["SGW, Shuttle Stop"]);
-      setDestinationText("SGW, Shuttle Stop");
+      updateDestination(coordinatesMap["SGW, Shuttle Stop"], "SGW, Shuttle Stop");
     }
     else {
-      setDestinationLocation(coordinatesMap["Loyola, Shuttle Stop"]);
-      setDestinationText("Loyola, Shuttle Stop");
+      updateDestination(coordinatesMap["Loyola, Shuttle Stop"], "Loyola, Shuttle Stop");
     }
-    setShowShuttleRoute(true);
     setShuttleRoute(route);
-    setUpdateText(updateText + 1);
+    updateShowShuttleRoute(true);
     mapRef.current.fitToCoordinates(route, {
     edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
     animated: true,
@@ -241,45 +245,34 @@ const OutdoorMap = () => {
 
   return (
     <View style={styles.container}>
-      <StartAndDestinationPoints
-        updateText = {updateText}
-        buildingTextOrigin= {originText}
-        buildingTextDestination= {destinationText}
-        originLocation = {originLocation}
-        destinationLocation = {destinationLocation}
-        setOriginLocation={setOriginLocation}
-        setDestinationLocation={setDestinationLocation}
-        setTravelMode={setTravelMode}
-        renderMap={renderMap}
-        setRenderMap={setRenderMap}
-      />
+      <StartAndDestinationPoints/>
       <MapView
         ref={mapRef}
         style={styles.map}
         initialRegion={activeCampus === "sgw" ? sgwRegion : loyolaRegion}
         showsUserLocation={true}
       >
-        { originLocation && destinationLocation && renderMap && <MapDirections
-          origin={originLocation}
-          destination={destinationLocation}
+        { origin && destination && renderMap && <MapDirections
+          origin={origin}
+          destination={destination}
           mapRef={mapRef}
           travelMode={travelMode}
         />}
         {/* Start Marker */}
-        {originLocation &&
-          coordinatesMap[originLocation]?.latitude !== undefined && (
+        {origin &&
+          coordinatesMap[origin]?.latitude !== undefined && (
             <Marker
-              coordinate={coordinatesMap[originLocation]}
+              coordinate={coordinatesMap[origin]}
               title="Origin"
               pinColor="green"
             />
           )}
 
         {/* Destination Marker */}
-        {destinationLocation &&
-          coordinatesMap[destinationLocation]?.latitude !== undefined && (
+        {destination &&
+          coordinatesMap[destination]?.latitude !== undefined && (
             <Marker
-              coordinate={coordinatesMap[destinationLocation]}
+              coordinate={coordinatesMap[destination]}
               title="Destination"
               pinColor="red"
             />
@@ -343,7 +336,7 @@ const OutdoorMap = () => {
               </Fragment>
             );
           })}
-        {showShuttleRoute && (
+        { showShuttleRoute &&(
         <Polyline
           coordinates={shuttleRoute}
           strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
