@@ -304,7 +304,6 @@ const OutdoorMap = () => {
         {buildings
           .filter(
             (b) =>
-              b.campus === (activeCampus === "sgw" ? Campus.SGW : Campus.LOY) &&
               b.coordinates &&
               b.coordinates.length > 0
           )
