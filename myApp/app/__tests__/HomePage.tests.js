@@ -43,14 +43,20 @@ describe('Home page', () => {
         const page = render(<HomePage />);
         const sgwButton = page.getByTestId('sgwButton');
         fireEvent.press(sgwButton);
-        expect(mockPush).toHaveBeenCalledWith('/(tabs)/outdoor-map?type=sgw');
+        expect(mockPush).toHaveBeenCalledWith({
+            pathname: './interest-points',
+            params: { mode: 'campus', campus: 'sgw' }
+        });
     });
 
     it('should go to loyola campus when loyola campus button is pressed', () => {
         const page = render(<HomePage />);
         const loyolaButton = page.getByTestId('loyolaButton');
         fireEvent.press(loyolaButton);
-        expect(mockPush).toHaveBeenCalledWith('/(tabs)/outdoor-map?type=loyola');
+        expect(mockPush).toHaveBeenCalledWith({
+            pathname: './interest-points',
+            params: { mode: 'campus', campus: 'loyola' }
+        });
     });
 
     it('should navigate to Shuttle Bus Schedule when shuttle schedule button is pressed', () => {
@@ -58,5 +64,15 @@ describe('Home page', () => {
         const shuttleScheduleButton = page.getByTestId('shuttleScheduleButton');
         fireEvent.press(shuttleScheduleButton);
         expect(mockPush).toHaveBeenCalledWith('/screens/ShuttleScheduleScreen');
+    });
+
+    it('should navigate to Interest Points when interest points button is pressed', () => {
+        const page = render(<HomePage />);
+        const interestButton = page.getByTestId('interestButton');
+        fireEvent.press(interestButton);
+        expect(mockPush).toHaveBeenCalledWith({
+            pathname: './interest-points',
+            params: { mode: 'poi' }
+        });
     });
 });
