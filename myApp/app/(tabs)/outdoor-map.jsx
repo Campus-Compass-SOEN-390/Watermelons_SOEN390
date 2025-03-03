@@ -73,15 +73,12 @@ const OutdoorMap = () => {
       ? { latitude: location.latitude, longitude: location.longitude }
       : undefined,
     "Hall Building": { latitude: 45.4961, longitude: -73.5772 },
-    "SGW, Shuttle Stop": { latitude: 45.49706, longitude: -73.57849},
-    "Loyola, Shuttle Stop": { latitude: 45.45789, longitude: -73.63882 },
+    "Loyola Campus, Shuttle Stop": { latitude: 45.49706, longitude: -73.57849},
+    "SGW Campus, Shuttle Stop": { latitude: 45.45789, longitude: -73.63882 },
     "EV Building": { latitude: 45.4957, longitude: -73.5773 },
     "SGW Campus": { latitude: 45.4962, longitude: -73.5780 },
     "Loyola Campus": { latitude: 45.4582, longitude: -73.6405 },
     "Montreal Downtown": { latitude: 45.5017, longitude: -73.5673 },
-    "CC, Central Building": { latitude: 45.458204, longitude: -73.640300},
-    "CJ, Communications and Journalism Building": { latitude: 45.457478, longitude:-73.640354},
-    "GE, Centre for Structural and Functional Genomics Building": { latitude: 45.457017, longitude:-73.640432}
   };
 
   // Animate map to correct campus
@@ -117,6 +114,12 @@ const OutdoorMap = () => {
   useEffect(() => {
       updateOrigin(origin, originText);
       updateDestination(destination, destinationText);
+      if(originText == "My Location" && (destinationText == "Loyola Campus, Shuttle Stop" || destinationText == "SGW Campus, Shuttle Stop")){
+        updateShowShuttleRoute(true);
+      }
+      else{
+        updateShowShuttleRoute(false);
+      }
       if (renderMap == true){
         navigation.setOptions({
           tabBarStyle: { display: "none" },
@@ -145,8 +148,6 @@ const OutdoorMap = () => {
   };
   const handleAddFavorite = () => {
     // Add favorite logic
-
-    
   };
   //Close Steps Modal
   const handleCloseSteps = () => {
@@ -221,7 +222,6 @@ const OutdoorMap = () => {
     const buildingFullName = building.name + ", " + building.longName
     console.log(buildingFullName);
     updateDestination(building.entranceCoordinates, buildingFullName);
-    console.log("Hello went thru handleBuildingGetDirections");
     updateShowTransportation(true);
   }
 
@@ -230,13 +230,12 @@ const OutdoorMap = () => {
     const route = activeCampus === "sgw" ? campusRoutes.sgwToLoyola : campusRoutes.loyolaToSgw;
     updateOrigin(coordinatesMap["My Position"], "My Location")
     if (activeCampus === "sgw"){
-      updateDestination(coordinatesMap["SGW, Shuttle Stop"], "SGW, Shuttle Stop");
+      updateDestination(coordinatesMap["Loyola Campus, Shuttle Stop"], "Loyola Campus, Shuttle Stop");
     }
     else {
-      updateDestination(coordinatesMap["Loyola, Shuttle Stop"], "Loyola, Shuttle Stop");
+      updateDestination(coordinatesMap["SGW Campus, Shuttle Stop"], "SGW Campus, Shuttle Stop");
     }
     setShuttleRoute(route);
-    updateShowShuttleRoute(true);
     mapRef.current.fitToCoordinates(route, {
     edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
     animated: true,
