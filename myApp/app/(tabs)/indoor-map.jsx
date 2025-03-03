@@ -36,18 +36,43 @@ const IndoorMap = () => {
         {/* Render dataset (vector data) */}
         {geoJsonData?.type === "FeatureCollection" && (
           <Mapbox.ShapeSource id="indoor-geojson" shape={geoJsonData}>
-            {/* Render Walls (Polygons) */}
+            {/* Render Walls & Rooms (Polygons) */}
             <Mapbox.FillLayer
-              id="walls"
-              style={{ fillColor: "gray", fillOpacity: 0.7 }}
+              id="rooms-fill"
+              style={{
+                fillColor: "red",
+                fillOpacity: 0.2,
+              }}
               filter={["==", ["geometry-type"], "Polygon"]}
+            />
+
+            <Mapbox.LineLayer
+              id="rooms-stroke"
+              style={{
+                lineColor: "red",
+                lineWidth: 2,
+              }}
+              filter={["==", ["geometry-type"], "Polygon"]}
+            />
+
+            {/* Render Walls (Lines) */}
+            <Mapbox.LineLayer
+              id="walls-stroke"
+              style={{
+                lineColor: "red",
+                lineWidth: 2,
+              }}
+              filter={["==", ["get", "type"], "Walls"]}
             />
 
             {/* Render Paths (Lines) */}
             <Mapbox.LineLayer
               id="paths"
-              style={{ lineColor: "blue", lineWidth: 2 }}
-              filter={["==", ["geometry-type"], "LineString"]}
+              style={{
+                lineColor: "black",
+                lineWidth: 2,
+              }}
+              filter={["==", ["get", "type"], "Paths"]}
             />
 
             {/* Render Labels (Points) */}
