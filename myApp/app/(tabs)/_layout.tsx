@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text } from 'react-native'; // <-- added Text
 import Ionicons from '@expo/vector-icons/Ionicons';
 import styles from "../styles/LayoutStyles";
 import React from 'react';
+import { LocationProvider } from '../context/LocationContext';
 
 export default function TabLayout() {
   const router = useRouter();
@@ -145,15 +146,16 @@ export default function TabLayout() {
         />
       </Tabs>
 
-      <TouchableOpacity
-        style={[styles.homeButton]}
-        onPress={() => {
+          <TouchableOpacity
+          style={[styles.homeButton]}
+          onPress={() => {
           setActiveTab('index');
           router.push('/');
         }}
-      >
-        <Ionicons name="home" size={24} color="white" />
-      </TouchableOpacity>
-    </View>
+        >
+          <Ionicons name="home" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
+    </LocationProvider>
   );
 }
