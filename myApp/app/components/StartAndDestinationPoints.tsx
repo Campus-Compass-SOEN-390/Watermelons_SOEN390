@@ -100,7 +100,7 @@ const StartAndDestinationPoints = ({
   useEffect(() => {
     updateOrigin(origin, originText);
     updateDestination(destination, destinationText);
-  }, [origin, location, showTransportation])
+  }, [origin, location, originText, destinationText, showTransportation, showSteps])
 
   useEffect(() => {
     updateShowTransportation(false);
