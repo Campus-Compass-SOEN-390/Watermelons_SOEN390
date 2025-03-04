@@ -13,9 +13,11 @@ import { useNavigation } from "@react-navigation/native";
 import { BuildingPopup } from "../components/BuildingPopUp";
 import tabStyles from "../styles/LayoutStyles";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
+import MapDirections from "../components/MapDirections";
 
 const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API);
+console.log("MAPBOX API KEY:", MAPBOX_API);
 
 // Converts building.coordinates [{latitude, longitude}, ...] to [[lng, lat], ...]
 const convertCoordinates = (coords) =>
@@ -288,6 +290,11 @@ export default function IndoorMap() {
             animationMode="flyTo"
             animationDuration={1000}
           />
+
+          {/* Render Direction Route */}
+          {origin && destination && (
+            <MapDirections origin={origin} destination={destination} mapRef={mapRef} travelMode="driving" />
+          )}
 
           {/* Render building polygons */}
           {buildings
