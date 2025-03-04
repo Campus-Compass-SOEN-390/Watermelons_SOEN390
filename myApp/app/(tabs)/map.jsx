@@ -41,7 +41,6 @@ const calculateCentroid = (coordinates) => {
 };
 
 export default function IndoorMap() {
-  const [geoJsonData, setGeoJsonData] = useState(null);
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [geoJsonData, setGeoJsonData] = useState(null);
