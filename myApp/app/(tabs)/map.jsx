@@ -39,6 +39,7 @@ const calculateCentroid = (coordinates) => {
 
 export default function IndoorMap() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [geoJsonData, setGeoJsonData] = useState(null);
 
   // Campus switching
   const [activeCampus, setActiveCampus] = useState("sgw");
@@ -78,6 +79,26 @@ export default function IndoorMap() {
     showShuttleRoute,
     travelMode,
   } = useLocationContext();
+
+  // Fetch GeoJSON
+  useEffect(() => {
+    fetch(
+      `https://api.mapbox.com/datasets/v1/7anine/cm7qjtnoy2d3o1qmmngcrv0jl/features?access_token=pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Fetched GeoJSON Data:", JSON.stringify(data, null, 2));
+        if (data.features) {
+          setGeoJsonData({
+            type: "FeatureCollection",
+            features: data.features,
+          });
+        } else {
+          console.error("Invalid GeoJSON format:", data);
+        }
+      })
+      .catch((error) => console.error("Error fetching GeoJSON:", error));
+  }, []);
 
   // Animate map to correct campus
   useEffect(() => {
@@ -290,10 +311,15 @@ export default function IndoorMap() {
             animationMode="flyTo"
             animationDuration={1000}
           />
-
+    
           {/* Render Direction Route */}
           {origin && destination && (
-            <MapDirections origin={origin} destination={destination} mapRef={mapRef} travelMode="driving" />
+            <MapDirections
+              origin={origin}
+              destination={destination}
+              mapRef={mapRef}
+              travelMode="driving"
+            />
           )}
 
           {/* Render building polygons */}
@@ -350,6 +376,60 @@ export default function IndoorMap() {
                 </Fragment>
               );
             })}
+
+                    {/* Render dataset (vector data) */}
+        {geoJsonData?.type === "FeatureCollection" && (
+          <Mapbox.ShapeSource id="indoor-geojson" shape={geoJsonData}>
+            {/* Render Walls & Rooms (Polygons) */}
+            <Mapbox.FillLayer
+              id="rooms-fill"
+              style={{
+                fillColor: "red",
+                fillOpacity: 0.2,
+              }}
+              filter={["==", ["geometry-type"], "Polygon"]}
+            />
+
+            <Mapbox.LineLayer
+              id="rooms-stroke"
+              style={{
+                lineColor: "red",
+                lineWidth: 2,
+              }}
+              filter={["==", ["geometry-type"], "Polygon"]}
+            />
+
+            {/* Render Walls (Lines) */}
+            <Mapbox.LineLayer
+              id="walls-stroke"
+              style={{
+                lineColor: "red",
+                lineWidth: 2,
+              }}
+              filter={["==", ["get", "type"], "Walls"]}
+            />
+
+            {/* Render Paths (Lines) */}
+            <Mapbox.LineLayer
+              id="paths"
+              style={{
+                lineColor: "black",
+                lineWidth: 2,
+              }}
+              filter={["==", ["get", "type"], "Paths"]}
+            />
+
+            {/* Render Labels (Points) */}
+            <Mapbox.SymbolLayer
+              id="labels"
+              style={{
+                textField: ["get", "name"],
+                textSize: 14,
+                textColor: "black",
+              }}
+              filter={["==", ["geometry-type"], "Point"]}
+            />
+          </Mapbox.ShapeSource>)}
         </Mapbox.MapView>
       </View>
 
