@@ -67,18 +67,51 @@ export default function IndoorMap() {
   const [showIndoorMap, setShowIndoorMap] = useState(false);
   const [selectedIndoorBuilding, setSelectedIndoorBuilding] = useState(null);
 
-  // Handle selecting an indoor building
   const handleIndoorBuildingSelect = (building) => {
-    setShowIndoorMap(true);
-    setSelectedIndoorBuilding(building);
-    setIsExpanded(false);
+    const buildingCenter = calculateCentroid(
+      convertCoordinates(building.coordinates)
+    );
+
+    if (selectedIndoorBuilding?.id === building.id) {
+      // If the same building is reselected, recenter the camera
+      mapRef.current?.setCamera({
+        centerCoordinate: buildingCenter,
+        zoomLevel: 18, // Ensure zoom level is high enough for indoor map
+        animationMode: "flyTo",
+        animationDuration: 1000,
+      });
+    } else {
+      // Select new building and activate indoor map
+      setShowIndoorMap(true);
+      setSelectedIndoorBuilding(building);
+      setIsExpanded(false);
+
+      // Move camera to the selected building
+      mapRef.current?.setCamera({
+        centerCoordinate: buildingCenter,
+        zoomLevel: 18,
+        animationMode: "flyTo",
+        animationDuration: 1000,
+      });
+    }
   };
 
   // Handle clearing indoor mode
   const handleClearIndoorMap = () => {
     setShowIndoorMap(false);
-    setIsExpanded(false);
     setSelectedIndoorBuilding(null);
+    setIsExpanded(false);
+
+    // Reset camera to the default campus view
+    mapRef.current?.setCamera({
+      centerCoordinate:
+        activeCampus === "sgw"
+          ? [-73.5792229, 45.4951962]
+          : [-73.6417009, 45.4581281],
+      zoomLevel: 15,
+      animationMode: "flyTo",
+      animationDuration: 1000,
+    });
   };
 
   //Global constants to manage components used on outdoor maps page
@@ -119,26 +152,6 @@ export default function IndoorMap() {
       .catch((error) => console.error("Error fetching GeoJSON:", error));
   }, []);
 
-  // Fetch GeoJSON
-  useEffect(() => {
-    fetch(
-      `https://api.mapbox.com/datasets/v1/7anine/cm7qjtnoy2d3o1qmmngcrv0jl/features?access_token=pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Fetched GeoJSON Data:", JSON.stringify(data, null, 2));
-        if (data.features) {
-          setGeoJsonData({
-            type: "FeatureCollection",
-            features: data.features,
-          });
-        } else {
-          console.error("Invalid GeoJSON format:", data);
-        }
-      })
-      .catch((error) => console.error("Error fetching GeoJSON:", error));
-  }, []);
-
   // Animate map to correct campus
   useEffect(() => {
     try {
@@ -150,63 +163,6 @@ export default function IndoorMap() {
       console.log("Crashed at 1");
     }
   }, [activeCampus]);
-
-  {/* Render dataset (vector data) */}
-  {
-    geoJsonData?.type === "FeatureCollection" && (
-      <Mapbox.ShapeSource id="indoor-geojson" shape={geoJsonData}>
-        {/* Render Walls & Rooms (Polygons) */}
-        <Mapbox.FillLayer
-          id="rooms-fill"
-          style={{
-            fillColor: "red",
-            fillOpacity: 0.2,
-          }}
-          filter={["==", ["geometry-type"], "Polygon"]}
-        />
-
-        <Mapbox.LineLayer
-          id="rooms-stroke"
-          style={{
-            lineColor: "red",
-            lineWidth: 2,
-          }}
-          filter={["==", ["geometry-type"], "Polygon"]}
-        />
-
-        {/* Render Walls (Lines) */}
-        <Mapbox.LineLayer
-          id="walls-stroke"
-          style={{
-            lineColor: "red",
-            lineWidth: 2,
-          }}
-          filter={["==", ["get", "type"], "Walls"]}
-        />
-
-        {/* Render Paths (Lines) */}
-        <Mapbox.LineLayer
-          id="paths"
-          style={{
-            lineColor: "black",
-            lineWidth: 2,
-          }}
-          filter={["==", ["get", "type"], "Paths"]}
-        />
-
-        {/* Render Labels (Points) */}
-        <Mapbox.SymbolLayer
-          id="labels"
-          style={{
-            textField: ["get", "name"],
-            textSize: 14,
-            textColor: "black",
-          }}
-          filter={["==", ["geometry-type"], "Point"]}
-        />
-      </Mapbox.ShapeSource>
-    );
-  }
 
   // Check location & highlight building
   useEffect(() => {
@@ -432,15 +388,16 @@ export default function IndoorMap() {
         <StartAndDestinationPoints />
         <Mapbox.MapView style={styles.map} styleURL={Mapbox.StyleURL.Light}>
           <Mapbox.Camera
-            zoomLevel={selectedIndoorBuilding ? 18 : 15} // Zoom in if indoor is selected
+            ref={mapRef}
+            zoomLevel={selectedIndoorBuilding ? 18 : 15} // Adjust zoom based on selection
             centerCoordinate={
               selectedIndoorBuilding
                 ? calculateCentroid(
                     convertCoordinates(selectedIndoorBuilding.coordinates)
-                  ) // Zoom to building
+                  )
                 : activeCampus === "sgw"
-                ? [-73.5792229, 45.4951962] // Default SGW Campus center
-                : [-73.6417009, 45.4581281] // Default Loyola Campus center
+                ? [-73.5792229, 45.4951962]
+                : [-73.6417009, 45.4581281]
             }
             animationMode="flyTo"
             animationDuration={1000}
