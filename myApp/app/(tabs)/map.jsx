@@ -20,6 +20,7 @@ import MapboxGL from '@rnmapbox/maps';
 
 const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API);
+console.log("MAPBOX API KEY:", MAPBOX_API);
 
 // Converts building.coordinates [{latitude, longitude}, ...] to [[lng, lat], ...]
 const convertCoordinates = (coords) =>
@@ -43,6 +44,7 @@ export default function IndoorMap() {
   const [geoJsonData, setGeoJsonData] = useState(null);
 
   const [isExpanded, setIsExpanded] = useState(false);
+  const [geoJsonData, setGeoJsonData] = useState(null);
 
   // Campus switching
   const [activeCampus, setActiveCampus] = useState("sgw");
@@ -82,6 +84,26 @@ export default function IndoorMap() {
     showShuttleRoute,
     travelMode,
   } = useLocationContext();
+
+  // Fetch GeoJSON
+  useEffect(() => {
+    fetch(
+      `https://api.mapbox.com/datasets/v1/7anine/cm7qjtnoy2d3o1qmmngcrv0jl/features?access_token=pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Fetched GeoJSON Data:", JSON.stringify(data, null, 2));
+        if (data.features) {
+          setGeoJsonData({
+            type: "FeatureCollection",
+            features: data.features,
+          });
+        } else {
+          console.error("Invalid GeoJSON format:", data);
+        }
+      })
+      .catch((error) => console.error("Error fetching GeoJSON:", error));
+  }, []);
 
   // Fetch GeoJSON
   useEffect(() => {

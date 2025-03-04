@@ -109,6 +109,7 @@ const MapDirections: React.FC<Props> = ({
   };
 
   if (!origin || !destination || !route) return null;
+  if (!origin || !destination || !route) return null;
 
   return (
     <View style={{ flex: 1 }}>
