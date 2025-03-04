@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View, Modal } from "react-native";
+import { Text, TouchableOpacity, View, Modal, Image } from "react-native";
 import React, { useState, useRef, Fragment, useEffect } from "react";
 import styles from "../styles/IndoorMapStyles";
 import outdoorStyles from "../styles/OutdoorMapStyles";
@@ -13,6 +13,10 @@ import { useNavigation } from "@react-navigation/native";
 import { BuildingPopup } from "../components/BuildingPopUp";
 import tabStyles from "../styles/LayoutStyles";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
+import MapDirections from "../components/MapDirections";
+import MapboxGL from '@rnmapbox/maps';
+
+
 
 const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API);
@@ -36,6 +40,8 @@ const calculateCentroid = (coordinates) => {
 };
 
 export default function IndoorMap() {
+  const [geoJsonData, setGeoJsonData] = useState(null);
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Campus switching
@@ -77,58 +83,148 @@ export default function IndoorMap() {
     travelMode,
   } = useLocationContext();
 
+  // Fetch GeoJSON
+  useEffect(() => {
+    fetch(
+      `https://api.mapbox.com/datasets/v1/7anine/cm7qjtnoy2d3o1qmmngcrv0jl/features?access_token=pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Fetched GeoJSON Data:", JSON.stringify(data, null, 2));
+        if (data.features) {
+          setGeoJsonData({
+            type: "FeatureCollection",
+            features: data.features,
+          });
+        } else {
+          console.error("Invalid GeoJSON format:", data);
+        }
+      })
+      .catch((error) => console.error("Error fetching GeoJSON:", error));
+  }, []);
+
   // Animate map to correct campus
   useEffect(() => {
-    if (mapRef.current) {
-      const region = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
-      mapRef.current.animateToRegion(region, 1000);
+    try {
+      if (mapRef.current) {
+        const region = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
+        mapRef.current.animateToRegion(region, 1000);
+      }
+    }
+    catch{
+      console.log("Crashed at 1");
     }
   }, [activeCampus]);
 
+   {/* Render dataset (vector data) */}
+          {geoJsonData?.type === "FeatureCollection" && (
+            <Mapbox.ShapeSource id="indoor-geojson" shape={geoJsonData}>
+              {/* Render Walls & Rooms (Polygons) */}
+              <Mapbox.FillLayer
+                id="rooms-fill"
+                style={{
+                  fillColor: "red",
+                  fillOpacity: 0.2,
+                }}
+                filter={["==", ["geometry-type"], "Polygon"]}
+              />
+
+              <Mapbox.LineLayer
+                id="rooms-stroke"
+                style={{
+                  lineColor: "red",
+                  lineWidth: 2,
+                }}
+                filter={["==", ["geometry-type"], "Polygon"]}
+              />
+
+              {/* Render Walls (Lines) */}
+              <Mapbox.LineLayer
+                id="walls-stroke"
+                style={{
+                  lineColor: "red",
+                  lineWidth: 2,
+                }}
+                filter={["==", ["get", "type"], "Walls"]}
+              />
+
+              {/* Render Paths (Lines) */}
+              <Mapbox.LineLayer
+                id="paths"
+                style={{
+                  lineColor: "black",
+                  lineWidth: 2,
+                }}
+                filter={["==", ["get", "type"], "Paths"]}
+              />
+
+              {/* Render Labels (Points) */}
+              <Mapbox.SymbolLayer
+                id="labels"
+                style={{
+                  textField: ["get", "name"],
+                  textSize: 14,
+                  textColor: "black",
+                }}
+                filter={["==", ["geometry-type"], "Point"]}
+              />
+            </Mapbox.ShapeSource>
+          )}
+
   // Check location & highlight building
   useEffect(() => {
-    if (location) {
-      setShowLocating(false);
-      let found = false;
-      for (const building of buildings.filter(
-        (b) => b.coordinates && b.coordinates.length > 0
-      )) {
-        if (isPointInPolygon(location, building.coordinates)) {
-          setHighlightedBuilding(building.name);
-          found = true;
-          break;
+    try{
+      if (location) {
+        setShowLocating(false);
+        let found = false;
+        for (const building of buildings.filter(
+          (b) => b.coordinates && b.coordinates.length > 0
+        )) {
+          if (isPointInPolygon(location, building.coordinates)) {
+            setHighlightedBuilding(building.name);
+            found = true;
+            break;
+          }
         }
+        if (!found) setHighlightedBuilding(null);
       }
-      if (!found) setHighlightedBuilding(null);
+      if (!hasPermission) {
+        setShowPermissionPopup(true);
+      }
     }
-    if (!hasPermission) {
-      setShowPermissionPopup(true);
+    catch{
+      console.log("Crashed at 2");
     }
   }, [location, hasPermission]);
 
   //This useEffect manages orgin, destination and the footer appearing when any of the dependcies change
   useEffect(() => {
-    console.log("Went thru here");
-    updateOrigin(origin, originText);
-    updateDestination(destination, destinationText);
-    if (
-      originText == "My Location" &&
-      (destinationText == "Loyola Campus, Shuttle Stop" ||
-        destinationText == "SGW Campus, Shuttle Stop")
-    ) {
-      updateShowShuttleRoute(true);
-    } else {
-      updateShowShuttleRoute(false);
+    try{
+      updateOrigin(origin, originText);
+      updateDestination(destination, destinationText);
+      //these two things above are not what is crashing the app
+      if (
+        originText == "My Location" &&
+        (destinationText == "Loyola Campus, Shuttle Stop" ||
+          destinationText == "SGW Campus, Shuttle Stop")
+      ) {
+        updateShowShuttleRoute(true);
+      } else {
+        updateShowShuttleRoute(false);
+      }
+      if (renderMap == true) {
+        navigation.setOptions({
+          tabBarStyle: { display: "none" },
+        });
+      }
+      if (renderMap == false) {
+        navigation.setOptions({
+          tabBarStyle: tabStyles.tabBarStyle,
+        });
+      }
     }
-    if (renderMap == true) {
-      navigation.setOptions({
-        tabBarStyle: { display: "none" },
-      });
-    }
-    if (renderMap == false) {
-      navigation.setOptions({
-        tabBarStyle: tabStyles.tabBarStyle,
-      });
+    catch{
+      console.log("Crashed 3");
     }
   }, [
     origin,
@@ -141,8 +237,14 @@ export default function IndoorMap() {
 
   //This useEffect ensures the map is no longer rendered and the travel mode is set back to nothing when origin or location changes
   useEffect(() => {
-    updateRenderMap(false);
-    updateTravelMode("");
+    try{
+      updateRenderMap(false);
+     updateTravelMode("");
+    }
+    catch{
+      console.log("Crashed 4")
+    }
+    //These two above do not make the application crash
   }, [origin, destination]);
 
   //navbar
@@ -182,6 +284,23 @@ export default function IndoorMap() {
       { latitude: 45.46161, longitude: -73.62401 },
       { latitude: 45.46374, longitude: -73.62888 },
     ],
+  };
+
+  const lineFeature = {
+    type: 'Feature',
+    properties: {}, // Optional properties, like metadata about the feature
+    geometry: {
+      type: 'LineString',
+      coordinates: [
+        [45.49706, -73.57849 ],
+        [45.49604, -73.5793 ],
+        /*{ latitude: 45.49579, longitude: -73.57934 },
+        { latitude: 45.49357, longitude: -73.5817 },
+        { latitude: 45.48973, longitude: -73.577 },
+        { latitude: 45.46161, longitude: -73.62401 },
+        { latitude: 45.46374, longitude: -73.62888 },*/
+      ]
+    }
   };
 
   const coordinatesMap = {
@@ -237,10 +356,6 @@ export default function IndoorMap() {
       );
     }
     setShuttleRoute(route);
-    mapRef.current.fitToCoordinates(route, {
-      edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
-      animated: true,
-    });
   };
 
   // Center on campus
@@ -288,6 +403,24 @@ export default function IndoorMap() {
             animationMode="flyTo"
             animationDuration={1000}
           />
+
+          {/* Add the ShapeSource to provide geoJSON data */}
+          {showShuttleRoute && <MapboxGL.ShapeSource id="line1" shape={lineFeature}>
+            {/* LineLayer to style the line */}
+            <MapboxGL.LineLayer
+              id="linelayer1"
+              style={{
+                lineColor: 'blue', // Color of the line
+                lineWidth: 5, // Width of the line
+                lineCap: 'round', // Shape of the line ends
+                lineJoin: 'round' // Shape of the line segment joins
+              }}
+            />
+          </MapboxGL.ShapeSource>}
+          {/* Render Direction Route */}
+          {origin && destination && renderMap && (
+            <MapDirections origin={origin} destination={destination} mapRef={mapRef} travelMode={travelMode} />
+          )}
 
           {/* Render building polygons */}
           {buildings
@@ -343,6 +476,62 @@ export default function IndoorMap() {
                 </Fragment>
               );
             })}
+
+             {/* Render dataset (vector data) */}
+          {geoJsonData?.type === "FeatureCollection" && (
+            <Mapbox.ShapeSource id="indoor-geojson" shape={geoJsonData}>
+              {/* Render Walls & Rooms (Polygons) */}
+              <Mapbox.FillLayer
+                id="rooms-fill"
+                style={{
+                  fillColor: "red",
+                  fillOpacity: 0.2,
+                }}
+                filter={["==", ["geometry-type"], "Polygon"]}
+              />
+
+              <Mapbox.LineLayer
+                id="rooms-stroke"
+                style={{
+                  lineColor: "red",
+                  lineWidth: 2,
+                }}
+                filter={["==", ["geometry-type"], "Polygon"]}
+              />
+
+              {/* Render Walls (Lines) */}
+              <Mapbox.LineLayer
+                id="walls-stroke"
+                style={{
+                  lineColor: "red",
+                  lineWidth: 2,
+                }}
+                filter={["==", ["get", "type"], "Walls"]}
+              />
+
+              {/* Render Paths (Lines) */}
+              <Mapbox.LineLayer
+                id="paths"
+                style={{
+                  lineColor: "black",
+                  lineWidth: 2,
+                }}
+                filter={["==", ["get", "type"], "Paths"]}
+              />
+
+              {/* Render Labels (Points) */}
+              <Mapbox.SymbolLayer
+                id="labels"
+                style={{
+                  textField: ["get", "name"],
+                  textSize: 14,
+                  textColor: "black",
+                }}
+                filter={["==", ["geometry-type"], "Point"]}
+              />
+            </Mapbox.ShapeSource>
+          )}
+
         </Mapbox.MapView>
       </View>
 
@@ -395,6 +584,23 @@ export default function IndoorMap() {
         >
           <Text style={styles.text} onPress={toggleCampus}>
             Switch Campus
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Switch Campus (Shuttle) Button */}
+      <View style={outdoorStyles.shuttleButtonContainer}>
+        <TouchableOpacity 
+          style={outdoorStyles.shuttleButton}
+          onPress={handleShuttleButton} 
+        >
+          <Image
+            source={require('../../assets/images/icon-for-shuttle.png')}
+            resizeMode="contain"
+            style={outdoorStyles.shuttleIcon}
+          />
+          <Text style={outdoorStyles.switchButtonText}>
+            {activeCampus === "sgw" ? "Shuttle To Loyola" : "Shuttle To SGW"}
           </Text>
         </TouchableOpacity>
       </View>
