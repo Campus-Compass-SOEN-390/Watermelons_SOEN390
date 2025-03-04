@@ -18,6 +18,7 @@ export interface Building {
   longName: string;
   openHours: string;
   wheelchairAccessible: boolean;
+  hasIndoor?: boolean;
   departments: string[];
   services?: string[];
   entranceCoordinates?: Coordinates;
@@ -70,6 +71,7 @@ export const buildings: Building[] = [
     longName: "Central Building",
     openHours: "Monday - Friday: 10:00 AM - 6:00 PM, Saturday - Sunday: 11:00 AM - 5:00 PM",
     wheelchairAccessible: true,
+    hasIndoor: true,
     departments: ["Not Available"],
     campus: Campus.LOY,
     entranceCoordinates: { latitude: 45.458204, longitude: -73.640300},
@@ -390,6 +392,7 @@ export const buildings: Building[] = [
     longName: "Vanier Extension",
     openHours: "Monday - Friday: 10:00 AM - 4:00 PM",
     wheelchairAccessible: true,
+    hasIndoor: true,
     departments: ["Applied Human Sciences"],
     campus: Campus.LOY,
   },
@@ -399,6 +402,7 @@ export const buildings: Building[] = [
     longName: "Vanier Library",
     openHours: "Monday - Friday: 12:00 AM - 12:00 PM",
     wheelchairAccessible: true,
+    hasIndoor: true,
     departments: ["Not Available"],
     campus: Campus.LOY,
     entranceCoordinates: { latitude: 45.459026, longitude: -73.638606},
@@ -610,6 +614,7 @@ export const buildings: Building[] = [
     longName: "Henry F. Hall Building",
     openHours: "Monday - Sunday: 7:00 AM - 11:00 PM",
     wheelchairAccessible: true,
+    hasIndoor: true,
     departments: [
       "Gina Cody School of Engineering and Computer Science",
       "Faculty of Arts and Science",
@@ -701,6 +706,7 @@ export const buildings: Building[] = [
     longName: "John Molson School of Business",
     openHours: "Monday - Sunday: 7:00 AM - 11:00 PM",
     wheelchairAccessible: true,
+    hasIndoor: true,
     departments: [
       "Accountancy, Contemporary Dance",
       "Executive MBA Program",
