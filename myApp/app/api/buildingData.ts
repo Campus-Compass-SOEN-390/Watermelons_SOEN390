@@ -89,12 +89,17 @@ export const buildings: Building[] = [
     departments: ["Communication Studies", "Journalism"],
     campus: Campus.LOY,
     entranceCoordinates: { latitude: 45.457478, longitude: -73.640354},
-    //WRONG COORDINATES
     coordinates: [
-      { latitude: 45.457284244031285, longitude: -73.63763317156965 },
-      { latitude: 45.45701819500725, longitude: -73.63783558975122 },
-      { latitude: 45.45668459808416, longitude: -73.63699447342395 },
-      { latitude: 45.45695340567661, longitude: -73.636780263892 },
+      { latitude: 45.457826368684024, longitude: -73.64048509822287 },
+      { latitude: 45.45764763608809, longitude: -73.64063530191461 },
+      { latitude: 45.45759695912638, longitude: -73.64050268581778 },
+      { latitude: 45.457319142107366, longitude: -73.64072883982165 },
+      { latitude: 45.4571852679563, longitude: -73.64039541699574 },
+      { latitude: 45.457312690348324, longitude: -73.64028734201078 },
+      { latitude: 45.45717559029451, longitude: -73.63989643249076 },
+      { latitude: 45.45742559602471, longitude: -73.6397032771985 },
+      { latitude: 45.45756914720111, longitude: -73.64009188725076 },
+      { latitude: 45.45765947134951, longitude: -73.64001830428231 },
     ],
   },
   {
