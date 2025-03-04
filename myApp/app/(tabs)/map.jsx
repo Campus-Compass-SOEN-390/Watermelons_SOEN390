@@ -14,9 +14,7 @@ import { BuildingPopup } from "../components/BuildingPopUp";
 import tabStyles from "../styles/LayoutStyles";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
 import MapDirections from "../components/MapDirections";
-import MapboxGL from '@rnmapbox/maps';
-
-
+import MapboxGL from "@rnmapbox/maps";
 
 const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API);
@@ -41,8 +39,6 @@ const calculateCentroid = (coordinates) => {
 };
 
 export default function IndoorMap() {
-  const [geoJsonData, setGeoJsonData] = useState(null);
-
   const [isExpanded, setIsExpanded] = useState(false);
   const [geoJsonData, setGeoJsonData] = useState(null);
 
@@ -66,6 +62,24 @@ export default function IndoorMap() {
 
   //Statues for displaying shuttle polylines or not
   const [shuttleRoute, setShuttleRoute] = useState("");
+
+  // Indoor map status
+  const [showIndoorMap, setShowIndoorMap] = useState(false);
+  const [selectedIndoorBuilding, setSelectedIndoorBuilding] = useState(null);
+
+  // Handle selecting an indoor building
+  const handleIndoorBuildingSelect = (building) => {
+    setShowIndoorMap(true);
+    setSelectedIndoorBuilding(building);
+    setIsExpanded(false);
+  };
+
+  // Handle clearing indoor mode
+  const handleClearIndoorMap = () => {
+    setShowIndoorMap(false);
+    setIsExpanded(false);
+    setSelectedIndoorBuilding(null);
+  };
 
   //Global constants to manage components used on outdoor maps page
   const {
@@ -132,70 +146,71 @@ export default function IndoorMap() {
         const region = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
         mapRef.current.animateToRegion(region, 1000);
       }
-    }
-    catch{
+    } catch {
       console.log("Crashed at 1");
     }
   }, [activeCampus]);
 
-   {/* Render dataset (vector data) */}
-          {geoJsonData?.type === "FeatureCollection" && (
-            <Mapbox.ShapeSource id="indoor-geojson" shape={geoJsonData}>
-              {/* Render Walls & Rooms (Polygons) */}
-              <Mapbox.FillLayer
-                id="rooms-fill"
-                style={{
-                  fillColor: "red",
-                  fillOpacity: 0.2,
-                }}
-                filter={["==", ["geometry-type"], "Polygon"]}
-              />
+  {/* Render dataset (vector data) */}
+  {
+    geoJsonData?.type === "FeatureCollection" && (
+      <Mapbox.ShapeSource id="indoor-geojson" shape={geoJsonData}>
+        {/* Render Walls & Rooms (Polygons) */}
+        <Mapbox.FillLayer
+          id="rooms-fill"
+          style={{
+            fillColor: "red",
+            fillOpacity: 0.2,
+          }}
+          filter={["==", ["geometry-type"], "Polygon"]}
+        />
 
-              <Mapbox.LineLayer
-                id="rooms-stroke"
-                style={{
-                  lineColor: "red",
-                  lineWidth: 2,
-                }}
-                filter={["==", ["geometry-type"], "Polygon"]}
-              />
+        <Mapbox.LineLayer
+          id="rooms-stroke"
+          style={{
+            lineColor: "red",
+            lineWidth: 2,
+          }}
+          filter={["==", ["geometry-type"], "Polygon"]}
+        />
 
-              {/* Render Walls (Lines) */}
-              <Mapbox.LineLayer
-                id="walls-stroke"
-                style={{
-                  lineColor: "red",
-                  lineWidth: 2,
-                }}
-                filter={["==", ["get", "type"], "Walls"]}
-              />
+        {/* Render Walls (Lines) */}
+        <Mapbox.LineLayer
+          id="walls-stroke"
+          style={{
+            lineColor: "red",
+            lineWidth: 2,
+          }}
+          filter={["==", ["get", "type"], "Walls"]}
+        />
 
-              {/* Render Paths (Lines) */}
-              <Mapbox.LineLayer
-                id="paths"
-                style={{
-                  lineColor: "black",
-                  lineWidth: 2,
-                }}
-                filter={["==", ["get", "type"], "Paths"]}
-              />
+        {/* Render Paths (Lines) */}
+        <Mapbox.LineLayer
+          id="paths"
+          style={{
+            lineColor: "black",
+            lineWidth: 2,
+          }}
+          filter={["==", ["get", "type"], "Paths"]}
+        />
 
-              {/* Render Labels (Points) */}
-              <Mapbox.SymbolLayer
-                id="labels"
-                style={{
-                  textField: ["get", "name"],
-                  textSize: 14,
-                  textColor: "black",
-                }}
-                filter={["==", ["geometry-type"], "Point"]}
-              />
-            </Mapbox.ShapeSource>
-          )}
+        {/* Render Labels (Points) */}
+        <Mapbox.SymbolLayer
+          id="labels"
+          style={{
+            textField: ["get", "name"],
+            textSize: 14,
+            textColor: "black",
+          }}
+          filter={["==", ["geometry-type"], "Point"]}
+        />
+      </Mapbox.ShapeSource>
+    );
+  }
 
   // Check location & highlight building
   useEffect(() => {
-    try{
+    try {
       if (location) {
         setShowLocating(false);
         let found = false;
@@ -213,15 +228,14 @@ export default function IndoorMap() {
       if (!hasPermission) {
         setShowPermissionPopup(true);
       }
-    }
-    catch{
+    } catch {
       console.log("Crashed at 2");
     }
   }, [location, hasPermission]);
 
   //This useEffect manages orgin, destination and the footer appearing when any of the dependcies change
   useEffect(() => {
-    try{
+    try {
       updateOrigin(origin, originText);
       updateDestination(destination, destinationText);
       //these two things above are not what is crashing the app
@@ -244,8 +258,7 @@ export default function IndoorMap() {
           tabBarStyle: tabStyles.tabBarStyle,
         });
       }
-    }
-    catch{
+    } catch {
       console.log("Crashed 3");
     }
   }, [
@@ -259,12 +272,11 @@ export default function IndoorMap() {
 
   //This useEffect ensures the map is no longer rendered and the travel mode is set back to nothing when origin or location changes
   useEffect(() => {
-    try{
+    try {
       updateRenderMap(false);
-     updateTravelMode("");
-    }
-    catch{
-      console.log("Crashed 4")
+      updateTravelMode("");
+    } catch {
+      console.log("Crashed 4");
     }
     //These two above do not make the application crash
   }, [origin, destination]);
@@ -309,20 +321,20 @@ export default function IndoorMap() {
   };
 
   const lineFeature = {
-    type: 'Feature',
+    type: "Feature",
     properties: {}, // Optional properties, like metadata about the feature
     geometry: {
-      type: 'LineString',
+      type: "LineString",
       coordinates: [
-        [45.49706, -73.57849 ],
-        [45.49604, -73.5793 ],
+        [45.49706, -73.57849],
+        [45.49604, -73.5793],
         /*{ latitude: 45.49579, longitude: -73.57934 },
         { latitude: 45.49357, longitude: -73.5817 },
         { latitude: 45.48973, longitude: -73.577 },
         { latitude: 45.46161, longitude: -73.62401 },
         { latitude: 45.46374, longitude: -73.62888 },*/
-      ]
-    }
+      ],
+    },
   };
 
   const coordinatesMap = {
@@ -405,7 +417,7 @@ export default function IndoorMap() {
 
   // Switch campus
   const toggleCampus = () => {
-    setActiveCampus((prev) => (prev === "sgw" ? "loyola" : "sgw"));
+    setActiveCampus((prev) => (prev === "sgw" ? "loy" : "sgw"));
   };
 
   // Determine the current center based on active campus
@@ -420,87 +432,107 @@ export default function IndoorMap() {
         <StartAndDestinationPoints />
         <Mapbox.MapView style={styles.map} styleURL={Mapbox.StyleURL.Light}>
           <Mapbox.Camera
-            zoomLevel={15}
-            centerCoordinate={currentCenter}
+            zoomLevel={selectedIndoorBuilding ? 18 : 15} // Zoom in if indoor is selected
+            centerCoordinate={
+              selectedIndoorBuilding
+                ? calculateCentroid(
+                    convertCoordinates(selectedIndoorBuilding.coordinates)
+                  ) // Zoom to building
+                : activeCampus === "sgw"
+                ? [-73.5792229, 45.4951962] // Default SGW Campus center
+                : [-73.6417009, 45.4581281] // Default Loyola Campus center
+            }
             animationMode="flyTo"
             animationDuration={1000}
           />
 
           {/* Add the ShapeSource to provide geoJSON data */}
-          {showShuttleRoute && <MapboxGL.ShapeSource id="line1" shape={lineFeature}>
-            {/* LineLayer to style the line */}
-            <MapboxGL.LineLayer
-              id="linelayer1"
-              style={{
-                lineColor: 'blue', // Color of the line
-                lineWidth: 5, // Width of the line
-                lineCap: 'round', // Shape of the line ends
-                lineJoin: 'round' // Shape of the line segment joins
-              }}
-            />
-          </MapboxGL.ShapeSource>}
+          {showShuttleRoute && (
+            <MapboxGL.ShapeSource id="line1" shape={lineFeature}>
+              {/* LineLayer to style the line */}
+              <MapboxGL.LineLayer
+                id="linelayer1"
+                style={{
+                  lineColor: "blue", // Color of the line
+                  lineWidth: 5, // Width of the line
+                  lineCap: "round", // Shape of the line ends
+                  lineJoin: "round", // Shape of the line segment joins
+                }}
+              />
+            </MapboxGL.ShapeSource>
+          )}
           {/* Render Direction Route */}
           {origin && destination && renderMap && (
-            <MapDirections origin={origin} destination={destination} mapRef={mapRef} travelMode={travelMode} />
+            <MapDirections
+              origin={origin}
+              destination={destination}
+              mapRef={mapRef}
+              travelMode={travelMode}
+            />
           )}
 
           {/* Render building polygons */}
-          {buildings
-            .filter((b) => b.coordinates && b.coordinates.length > 0)
-            .map((building) => {
-              const convertedCoords = convertCoordinates(building.coordinates);
-              const centroid = calculateCentroid(convertedCoords);
-              const fillColor =
-                highlightedBuilding === building.name
-                  ? "rgba(0, 0, 255, 0.4)"
-                  : "rgba(255, 0, 0, 0.4)";
-              const strokeColor =
-                highlightedBuilding === building.name ? "blue" : "red";
+          {!showIndoorMap &&
+            buildings
+              .filter((b) => b.coordinates && b.coordinates.length > 0)
+              .map((building) => {
+                const convertedCoords = convertCoordinates(
+                  building.coordinates
+                );
+                const centroid = calculateCentroid(convertedCoords);
+                const fillColor =
+                  highlightedBuilding === building.name
+                    ? "rgba(0, 0, 255, 0.4)"
+                    : "rgba(255, 0, 0, 0.4)";
+                const strokeColor =
+                  highlightedBuilding === building.name ? "blue" : "red";
 
-              return (
-                <Fragment key={building.id}>
-                  {/* Building Polygon */}
-                  <Mapbox.ShapeSource
-                    id={`building-${building.id}`}
-                    shape={{
-                      type: "Feature",
-                      geometry: {
-                        type: "Polygon",
-                        coordinates: [convertedCoords], // Corrected format for Mapbox
-                      },
-                    }}
-                    onPress={() => handleBuildingPress(building)}
-                  >
-                    <Mapbox.FillLayer
-                      id={`fill-${building.id}`}
-                      style={{ fillColor }}
-                    />
-                    <Mapbox.LineLayer
-                      id={`stroke-${building.id}`}
-                      style={{
-                        lineColor: strokeColor,
-                        lineWidth: 3,
+                return (
+                  <Fragment key={building.id}>
+                    {/* Building Polygon */}
+                    <Mapbox.ShapeSource
+                      id={`building-${building.id}`}
+                      shape={{
+                        type: "Feature",
+                        geometry: {
+                          type: "Polygon",
+                          coordinates: [convertedCoords],
+                        },
                       }}
-                    />
-                  </Mapbox.ShapeSource>
+                      onPress={() => handleBuildingPress(building)}
+                    >
+                      <Mapbox.FillLayer
+                        id={`fill-${building.id}`}
+                        style={{ fillColor }}
+                      />
+                      <Mapbox.LineLayer
+                        id={`stroke-${building.id}`}
+                        style={{
+                          lineColor: strokeColor,
+                          lineWidth: 3,
+                        }}
+                      />
+                    </Mapbox.ShapeSource>
 
-                  {/* Invisible Tappable Marker at Centroid */}
-                  <Mapbox.PointAnnotation
-                    id={`label-${building.id}`}
-                    coordinate={centroid}
-                    anchor={{ x: 0.5, y: 0.5 }} // Center the text
-                    onSelected={() => handleBuildingPress(building)}
-                  >
-                    <View style={styles.annotationContainer}>
-                      <Text style={styles.annotationText}>{building.name}</Text>
-                    </View>
-                  </Mapbox.PointAnnotation>
-                </Fragment>
-              );
-            })}
+                    {/* Invisible Tappable Marker at Centroid */}
+                    <Mapbox.PointAnnotation
+                      id={`label-${building.id}`}
+                      coordinate={centroid}
+                      anchor={{ x: 0.5, y: 0.5 }} // Center the text
+                      onSelected={() => handleBuildingPress(building)}
+                    >
+                      <View style={styles.annotationContainer}>
+                        <Text style={styles.annotationText}>
+                          {building.name}
+                        </Text>
+                      </View>
+                    </Mapbox.PointAnnotation>
+                  </Fragment>
+                );
+              })}
 
-             {/* Render dataset (vector data) */}
-          {geoJsonData?.type === "FeatureCollection" && (
+          {/* Render dataset (vector data) */}
+          {showIndoorMap && geoJsonData?.type === "FeatureCollection" && (
             <Mapbox.ShapeSource id="indoor-geojson" shape={geoJsonData}>
               {/* Render Walls & Rooms (Polygons) */}
               <Mapbox.FillLayer
@@ -553,7 +585,6 @@ export default function IndoorMap() {
               />
             </Mapbox.ShapeSource>
           )}
-
         </Mapbox.MapView>
       </View>
 
@@ -585,15 +616,30 @@ export default function IndoorMap() {
 
         {isExpanded && (
           <View style={styles.expandedButtonsContainer}>
-            {buildings.map((building) => (
-              <TouchableOpacity
-                key={building.id}
-                style={styles.expandedButton}
-                onPress={() => handleBuildingPress(building)}
-              >
-                <Text style={styles.text}>{building.name}</Text>
-              </TouchableOpacity>
-            ))}
+            {/* "None" button to disable the indoor map */}
+            <TouchableOpacity
+              style={styles.expandedButton}
+              onPress={handleClearIndoorMap}
+            >
+              <Text style={styles.text}>Outdoor</Text>
+            </TouchableOpacity>
+
+            {/* Filtered buildings */}
+            {buildings
+              .filter(
+                (building) =>
+                  building.campus.toLowerCase() ===
+                    activeCampus.toLowerCase() && building.hasIndoor === true
+              )
+              .map((building) => (
+                <TouchableOpacity
+                  key={building.id}
+                  style={styles.expandedButton}
+                  onPress={() => handleIndoorBuildingSelect(building)}
+                >
+                  <Text style={styles.text}>{building.name}</Text>
+                </TouchableOpacity>
+              ))}
           </View>
         )}
       </View>
@@ -612,12 +658,12 @@ export default function IndoorMap() {
 
       {/* Switch Campus (Shuttle) Button */}
       <View style={outdoorStyles.shuttleButtonContainer}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={outdoorStyles.shuttleButton}
-          onPress={handleShuttleButton} 
+          onPress={handleShuttleButton}
         >
           <Image
-            source={require('../../assets/images/icon-for-shuttle.png')}
+            source={require("../../assets/images/icon-for-shuttle.png")}
             resizeMode="contain"
             style={outdoorStyles.shuttleIcon}
           />
@@ -644,7 +690,7 @@ export default function IndoorMap() {
         >
           <MaterialIcons name="place" size={24} color="white" />
           <Text style={outdoorStyles.debugText}>
-            {activeCampus === "sgw" ? "SGW" : "Loyola"}
+            {activeCampus === "sgw" ? "SGW" : "LOY"}
           </Text>
         </TouchableOpacity>
       </View>
