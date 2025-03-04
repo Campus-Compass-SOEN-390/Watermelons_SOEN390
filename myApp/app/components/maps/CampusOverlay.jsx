@@ -1,26 +1,25 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useRef, useEffect, Fragment } from "react";
 import {
   View,
   TouchableOpacity,
   Text,
   ActivityIndicator,
-  Platform,
   Image,
+  Modal,
 } from "react-native";
-import {
-  Marker,
-  Polygon,
-  Callout,
-  Polyline,
-} from "react-native-maps";
+import MapView, { Marker, Polygon, Callout, Polyline } from "react-native-maps";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { isPointInPolygon } from "geolib";
 import { buildings, Campus, getBuildingById } from "../../api/buildingData";
 import StartAndDestinationPoints from "../StartAndDestinationPoints";
 import { BuildingPopup } from "../BuildingPopUp";
 import MapDirections from "../MapDirections";
-import styles from "../../styles/UnifiedMapStyles";
 import Constants from "expo-constants";
+import styles from "../../styles/UnifiedMapStyles";
+import tabStyles from "../../styles/LayoutStyles";
+import { useNavigation } from "@react-navigation/native";
+import { useLocationContext } from "../../context/LocationContext";
+import useLocation from "../../hooks/useLocation";
 
 // API key for Google Places
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
@@ -48,7 +47,7 @@ const ActivityMarker = () => (
   </View>
 );
 
-// Custom callout component with fixed button handling
+// Custom callout component with a fixed button
 const POICallout = ({
   poi,
   location,
@@ -77,21 +76,12 @@ const POICallout = ({
         <Text style={{ marginBottom: 10 }}>
           Distance:{" "}
           {formatDistance(
-            calculateDistance(
-              location.latitude,
-              location.longitude,
-              lat,
-              lng
-            )
+            calculateDistance(location.latitude, location.longitude, lat, lng)
           )}
         </Text>
       )}
       <TouchableOpacity
-        style={{
-          backgroundColor: "#922338",
-          padding: 8,
-          borderRadius: 5,
-        }}
+        style={{ backgroundColor: "#922338", padding: 8, borderRadius: 5 }}
         onPress={handlePress}
       >
         <Text style={{ color: "#fff", textAlign: "center" }}>
@@ -102,7 +92,27 @@ const POICallout = ({
   );
 };
 
-const CampusOverlay = ({ mapRef, initialCampus, location }) => {
+const CampusOverlay = ({ mapRef, initialCampus }) => {
+  // Navigation & Location Context integration
+  const navigation = useNavigation();
+  const {
+    origin,
+    destination,
+    travelMode,
+    renderMap,
+    updateOrigin,
+    updateDestination,
+    updateTravelMode,
+    updateRenderMap,
+    updateShowTransportation,
+    updateShowShuttleRoute,
+    showShuttleRoute,
+  } = useLocationContext();
+
+  // Custom location hook (which also provides permission info)
+  const { location, hasPermission } = useLocation();
+  const [showPermissionPopup, setShowPermissionPopup] = useState(!hasPermission);
+
   // Campus regions
   const sgwRegion = {
     latitude: 45.4951962,
@@ -110,7 +120,6 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
     latitudeDelta: 0.005,
     longitudeDelta: 0.005,
   };
-
   const loyolaRegion = {
     latitude: 45.4581281,
     longitude: -73.6417009,
@@ -118,21 +127,18 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
     longitudeDelta: 0.005,
   };
 
-  // Campus state
-  const [activeCampus, setActiveCampus] = useState(initialCampus);
-  const [originLocation, setOriginLocation] = useState(null);
-  const [destinationLocation, setDestinationLocation] = useState(null);
-  const [travelMode, setTravelMode] = useState("TRANSIT");
-  const [renderMap, setRenderMap] = useState(false);
-  const [selectedBuilding, setSelectedBuilding] = useState(null);
-  const [popupVisible, setPopupVisible] = useState(false);
-  const [highlightedBuilding, setHighlightedBuilding] = useState(null);
+  // Local state for campus, zoom level, shuttle route, etc.
+  const [activeCampus, setActiveCampus] = useState(initialCampus || "sgw");
   const [currentZoomLevel, setCurrentZoomLevel] = useState({
     latitudeDelta:
       activeCampus === "sgw" ? sgwRegion.latitudeDelta : loyolaRegion.latitudeDelta,
     longitudeDelta:
       activeCampus === "sgw" ? sgwRegion.longitudeDelta : loyolaRegion.longitudeDelta,
   });
+  const [shuttleRoute, setShuttleRoute] = useState([]);
+  const [selectedBuilding, setSelectedBuilding] = useState(null);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [highlightedBuilding, setHighlightedBuilding] = useState(null);
 
   // POI state
   const [showPOIs, setShowPOIs] = useState(false);
@@ -140,46 +146,22 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
   const [restaurants, setRestaurants] = useState([]);
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedPOI, setSelectedPOI] = useState(null);
 
-  // Shuttle route state
-  const [shuttleRoute, setShuttleRoute] = useState([]);
-
-  // Coordinates mapping for start/destination points
+  // Coordinates mapping (now includes shuttle stops)
   const coordinatesMap = {
     "My Position": location?.latitude
       ? { latitude: location.latitude, longitude: location.longitude }
       : undefined,
     "Hall Building": { latitude: 45.4961, longitude: -73.5772 },
+    "Loyola Campus, Shuttle Stop": { latitude: 45.49706, longitude: -73.57849 },
+    "SGW Campus, Shuttle Stop": { latitude: 45.45789, longitude: -73.63882 },
     "EV Building": { latitude: 45.4957, longitude: -73.5773 },
     "SGW Campus": { latitude: 45.4962, longitude: -73.5780 },
     "Loyola Campus": { latitude: 45.4582, longitude: -73.6405 },
     "Montreal Downtown": { latitude: 45.5017, longitude: -73.5673 },
   };
 
-  // Define campus routes for shuttle navigation
-  const campusRoutes = {
-    sgwToLoyola: [
-      { latitude: 45.49706, longitude: -73.57849 },
-      { latitude: 45.49604, longitude: -73.5793 },
-      { latitude: 45.49579, longitude: -73.57934 },
-      { latitude: 45.49357, longitude: -73.5817 },
-      { latitude: 45.48973, longitude: -73.577 },
-      { latitude: 45.46161, longitude: -73.62401 },
-      { latitude: 45.46374, longitude: -73.62888 },
-    ],
-    loyolaToSgw: [
-      { latitude: 45.49706, longitude: -73.57849 },
-      { latitude: 45.49604, longitude: -73.5793 },
-      { latitude: 45.49579, longitude: -73.57934 },
-      { latitude: 45.49357, longitude: -73.5817 },
-      { latitude: 45.48973, longitude: -73.577 },
-      { latitude: 45.46161, longitude: -73.62401 },
-      { latitude: 45.46374, longitude: -73.62888 },
-    ],
-  };
-
-  // Effect for location-based building highlighting
+  // Effect: Highlight the building if the user's location is within one
   useEffect(() => {
     if (location) {
       let found = false;
@@ -196,7 +178,7 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
     }
   }, [location]);
 
-  // Effect for campus switching
+  // Effect: Animate map when switching campus
   useEffect(() => {
     if (mapRef.current) {
       const region = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
@@ -208,6 +190,28 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
     }
   }, [activeCampus, mapRef]);
 
+  // Effect: Update navigation options based on renderMap flag
+  useEffect(() => {
+    if (renderMap) {
+      navigation.setOptions({
+        tabBarStyle: { display: "none" },
+      });
+    } else {
+      navigation.setOptions({
+        tabBarStyle: tabStyles.tabBarStyle,
+      });
+    }
+  }, [renderMap, navigation]);
+
+  // Effect: Show permission popup if location access is denied
+  useEffect(() => {
+    if (!hasPermission) {
+      setShowPermissionPopup(true);
+    } else {
+      setShowPermissionPopup(false);
+    }
+  }, [hasPermission]);
+
   // Center map on campus
   const centerMapOnCampus = () => {
     if (mapRef.current) {
@@ -216,12 +220,27 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
     }
   };
 
-  // Switch campus
+  // Center map on user's current location
+  const centerMapOnUser = () => {
+    if (location && mapRef.current) {
+      mapRef.current.animateToRegion(
+        {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
+        },
+        1000
+      );
+    }
+  };
+
+  // Switch campus (toggle between SGW and Loyola)
   const toggleCampus = () => {
     setActiveCampus((prev) => (prev === "sgw" ? "loyola" : "sgw"));
   };
 
-  // Handle building tap
+  // Handle building tap: show popup with building details
   const handleBuildingPress = (building) => {
     const fullBuilding = getBuildingById(building.id);
     if (fullBuilding) {
@@ -230,7 +249,7 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
     }
   };
 
-  // Calculate distance for POIs
+  // Calculate distance (in meters) between two geographic points
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const toRad = (value) => (value * Math.PI) / 180;
     const R = 6371000; // Earth's radius in meters.
@@ -245,7 +264,7 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
     return R * c;
   };
 
-  // Format distance
+  // Format distance for display
   const formatDistance = (d) => {
     if (d > 1000) {
       return (d / 1000).toFixed(2) + " km";
@@ -253,19 +272,17 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
     return Math.round(d) + " m";
   };
 
-  // Fetch POIs
+  // Fetch POIs using Google Places
   const fetchPOIs = async () => {
     if (!location) return;
     setLoading(true);
     try {
       const currentRegion = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
-      let allResults = [];
-      let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentRegion.latitude},${currentRegion.longitude}&radius=1000&keyword=coffee|restaurant|tourist|bowling|cinema|theater|gold&key=${GOOGLE_PLACES_API_KEY}`;
-      let response = await fetch(url);
-      let data = await response.json();
-      allResults = data.results;
+      const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentRegion.latitude},${currentRegion.longitude}&radius=1000&keyword=coffee|restaurant|tourist|bowling|cinema|theater|gold&key=${GOOGLE_PLACES_API_KEY}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      const allResults = data.results;
 
-      // Process results: split into categories
       const coffee = [];
       const resto = [];
       const act = [];
@@ -296,7 +313,7 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
     setLoading(false);
   };
 
-  // Toggle POIs and adjust zoom level
+  // Toggle display of POIs and adjust zoom accordingly
   const togglePOIs = async () => {
     const newShowPOIs = !showPOIs;
     setShowPOIs(newShowPOIs);
@@ -305,22 +322,10 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
       if (coffeeShops.length === 0) {
         await fetchPOIs();
       }
-
       if (mapRef.current) {
         try {
-          const currentRegion = mapRef.current.getInitialRegion
-            ? mapRef.current.getInitialRegion()
-            : activeCampus === "sgw"
-            ? sgwRegion
-            : loyolaRegion;
-
-          // Save current zoom level
-          setCurrentZoomLevel({
-            latitudeDelta: currentRegion.latitudeDelta,
-            longitudeDelta: currentRegion.longitudeDelta,
-          });
-
-          // Zoom out (2x wider view)
+          const currentRegion = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
+          // Zoom out: 2x wider view
           mapRef.current.animateToRegion(
             {
               latitude: currentRegion.latitude,
@@ -337,12 +342,7 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
     } else {
       if (mapRef.current) {
         try {
-          const currentRegion = mapRef.current.getInitialRegion
-            ? mapRef.current.getInitialRegion()
-            : activeCampus === "sgw"
-            ? sgwRegion
-            : loyolaRegion;
-
+          const currentRegion = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
           mapRef.current.animateToRegion(
             {
               latitude: currentRegion.latitude,
@@ -359,7 +359,7 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
     }
   };
 
-  // Get directions to POI
+  // Get directions to a POI using the location context
   const getDirectionsToPOI = (poi) => {
     const lat = poi.geometry?.location?.lat;
     const lng = poi.geometry?.location?.lng;
@@ -368,21 +368,45 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
         latitude: lat,
         longitude: lng,
       });
-      // Set origin to "My Position" and destination to the POI coordinates
-      setOriginLocation("My Position");
-      setDestinationLocation({ latitude: lat, longitude: lng });
-      setRenderMap(true);
+      updateOrigin(coordinatesMap["My Position"], "My Position");
+      updateDestination({ latitude: lat, longitude: lng }, poi.name);
+      updateRenderMap(true);
     }
   };
 
-  // Shuttle button handler
+  // Shuttle routes for navigation between campuses
+  const campusRoutes = {
+    sgwToLoyola: [
+      { latitude: 45.49706, longitude: -73.57849 },
+      { latitude: 45.49604, longitude: -73.5793 },
+      { latitude: 45.49579, longitude: -73.57934 },
+      { latitude: 45.49357, longitude: -73.5817 },
+      { latitude: 45.48973, longitude: -73.577 },
+      { latitude: 45.46161, longitude: -73.62401 },
+      { latitude: 45.46374, longitude: -73.62888 },
+    ],
+    loyolaToSgw: [
+      { latitude: 45.49706, longitude: -73.57849 },
+      { latitude: 45.49604, longitude: -73.5793 },
+      { latitude: 45.49579, longitude: -73.57934 },
+      { latitude: 45.49357, longitude: -73.5817 },
+      { latitude: 45.48973, longitude: -73.577 },
+      { latitude: 45.46161, longitude: -73.62401 },
+      { latitude: 45.46374, longitude: -73.62888 },
+    ],
+  };
+
+  // Shuttle button handler: set origin/destination and update route polyline
   const handleShuttleButton = () => {
     const route =
-      activeCampus === "sgw"
-        ? campusRoutes.sgwToLoyola
-        : campusRoutes.loyolaToSgw;
+      activeCampus === "sgw" ? campusRoutes.sgwToLoyola : campusRoutes.loyolaToSgw;
+    updateOrigin(coordinatesMap["My Position"], "My Position");
+    if (activeCampus === "sgw") {
+      updateDestination(coordinatesMap["Loyola Campus, Shuttle Stop"], "Loyola Campus, Shuttle Stop");
+    } else {
+      updateDestination(coordinatesMap["SGW Campus, Shuttle Stop"], "SGW Campus, Shuttle Stop");
+    }
     setShuttleRoute(route);
-    // (Optional) You could update origin/destination here if needed
     if (mapRef.current) {
       mapRef.current.fitToCoordinates(route, {
         edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
@@ -391,58 +415,71 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
     }
   };
 
+  // Callback for the BuildingPopup “Get Directions” button
+  const handleBuildingGetDirections = (building) => {
+    updateOrigin(coordinatesMap["My Position"], "My Position");
+    const buildingFullName = building.name + ", " + building.longName;
+    updateDestination(building.entranceCoordinates, buildingFullName);
+    updateShowTransportation(true);
+  };
+
+  // --- New Footer Button Handlers ---
+
+  const handleGoClick = () => {
+    alert("Journey started!");
+    // Optionally, you might want to hide the footer after starting the journey.
+  };
+
+  const handleStepsClick = () => {
+    // This could show a modal or navigate to a steps view.
+    alert("Showing steps...");
+  };
+
+  const handleAddFavorite = () => {
+    // Your favorite-adding logic here.
+    alert("Added to favorites!");
+    // After adding, revert back to the regular view:
+    updateRenderMap(false);
+    updateTravelMode("");
+  };
+
+  const handleBack = () => {
+    // Simply return to the regular map view.
+    updateRenderMap(false);
+    updateTravelMode("");
+  };
+
   return (
     <>
-      {/* Route planning UI */}
-      <StartAndDestinationPoints
-        setOriginLocation={setOriginLocation}
-        setDestinationLocation={setDestinationLocation}
-        setTravelMode={setTravelMode}
-        renderMap={renderMap}
-        setRenderMap={setRenderMap}
-      />
+      {/* Route Planning UI */}
+      <StartAndDestinationPoints />
 
-      {/* Map Elements - Direction lines */}
-      {originLocation && destinationLocation && renderMap && (
+      {/* Map Directions */}
+      {origin && destination && renderMap && (
         <MapDirections
-          origin={originLocation}
-          destination={destinationLocation}
+          origin={origin}
+          destination={destination}
           mapRef={mapRef}
           travelMode={travelMode}
         />
       )}
 
-      {/* Start/End markers */}
-      {originLocation &&
-        coordinatesMap[originLocation]?.latitude !== undefined && (
-          <Marker
-            coordinate={coordinatesMap[originLocation]}
-            title="Origin"
-            pinColor="green"
-          />
+      {/* Origin & Destination Markers */}
+      {origin && coordinatesMap[origin]?.latitude !== undefined && (
+        <Marker coordinate={coordinatesMap[origin]} title="Origin" pinColor="green" />
+      )}
+      {destination &&
+        typeof destination === "string" &&
+        coordinatesMap[destination]?.latitude !== undefined && (
+          <Marker coordinate={coordinatesMap[destination]} title="Destination" pinColor="red" />
+        )}
+      {destination &&
+        typeof destination === "object" &&
+        "latitude" in destination && (
+          <Marker coordinate={destination} title="Destination" pinColor="red" />
         )}
 
-      {destinationLocation &&
-        typeof destinationLocation === "object" &&
-        "latitude" in destinationLocation && (
-          <Marker
-            coordinate={destinationLocation}
-            title="Destination"
-            pinColor="red"
-          />
-        )}
-
-      {destinationLocation &&
-        typeof destinationLocation === "string" &&
-        coordinatesMap[destinationLocation]?.latitude !== undefined && (
-          <Marker
-            coordinate={coordinatesMap[destinationLocation]}
-            title="Destination"
-            pinColor="red"
-          />
-        )}
-
-      {/* Campus center marker */}
+      {/* Campus Center Marker */}
       <Marker
         coordinate={
           activeCampus === "sgw"
@@ -453,7 +490,7 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
         description="Campus Center"
       />
 
-      {/* Building polygons */}
+      {/* Building Polygons */}
       {buildings
         .filter(
           (b) =>
@@ -472,9 +509,7 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
                     ? "rgba(0, 0, 255, 0.4)"
                     : "rgba(255, 0, 0, 0.4)"
                 }
-                strokeColor={
-                  highlightedBuilding === building.name ? "blue" : "red"
-                }
+                strokeColor={highlightedBuilding === building.name ? "blue" : "red"}
                 strokeWidth={5}
                 tappable
                 onPress={() => handleBuildingPress(building)}
@@ -488,7 +523,7 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
           );
         })}
 
-      {/* POI Markers with callouts */}
+      {/* POI Markers */}
       {showPOIs && (
         <>
           {coffeeShops.map((shop) => {
@@ -496,11 +531,7 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
             const lng = shop.geometry?.location?.lng;
             if (!lat || !lng) return null;
             return (
-              <Marker
-                key={shop.place_id}
-                coordinate={{ latitude: lat, longitude: lng }}
-                title={shop.name}
-              >
+              <Marker key={shop.place_id} coordinate={{ latitude: lat, longitude: lng }} title={shop.name}>
                 <CoffeeMarker />
                 <Callout tooltip>
                   <POICallout
@@ -520,11 +551,7 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
             const lng = restaurant.geometry?.location?.lng;
             if (!lat || !lng) return null;
             return (
-              <Marker
-                key={restaurant.place_id}
-                coordinate={{ latitude: lat, longitude: lng }}
-                title={restaurant.name}
-              >
+              <Marker key={restaurant.place_id} coordinate={{ latitude: lat, longitude: lng }} title={restaurant.name}>
                 <RestaurantMarker />
                 <Callout tooltip>
                   <POICallout
@@ -544,11 +571,7 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
             const lng = act.geometry?.location?.lng;
             if (!lat || !lng) return null;
             return (
-              <Marker
-                key={act.place_id}
-                coordinate={{ latitude: lat, longitude: lng }}
-                title={act.name}
-              >
+              <Marker key={act.place_id} coordinate={{ latitude: lat, longitude: lng }} title={act.name}>
                 <ActivityMarker />
                 <Callout tooltip>
                   <POICallout
@@ -565,34 +588,24 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
         </>
       )}
 
-      {/* Render shuttle route polyline if available */}
+      {/* Shuttle Route Polyline */}
       {shuttleRoute.length > 0 && (
-        <Polyline
-          coordinates={shuttleRoute}
-          strokeColor="#000"
-          strokeWidth={6}
-        />
+        <Polyline coordinates={shuttleRoute} strokeColor="#000" strokeWidth={6} />
       )}
 
       {/* Floating Buttons */}
       <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={centerMapOnUser}>
+          <MaterialIcons name="my-location" size={24} color="white" />
+          <Text style={styles.debugText}>Locating...</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={centerMapOnCampus}>
           <MaterialIcons name="place" size={24} color="white" />
-          <Text style={styles.debugText}>
-            {activeCampus === "sgw" ? "SGW" : "Loyola"}
-          </Text>
+          <Text style={styles.debugText}>{activeCampus === "sgw" ? "SGW" : "Loyola"}</Text>
         </TouchableOpacity>
-
-        {/* POI Toggle Button */}
         <TouchableOpacity style={styles.button} onPress={togglePOIs}>
-          <MaterialIcons
-            name={showPOIs ? "not-interested" : "stars"}
-            size={24}
-            color="white"
-          />
-          <Text style={styles.debugText}>
-            {showPOIs ? "Hide POIs" : "Show POIs"}
-          </Text>
+          <MaterialIcons name={showPOIs ? "not-interested" : "stars"} size={24} color="white" />
+          <Text style={styles.debugText}>{showPOIs ? "Hide POIs" : "Show POIs"}</Text>
         </TouchableOpacity>
       </View>
 
@@ -625,6 +638,7 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
           setSelectedBuilding(null);
         }}
         building={selectedBuilding}
+        onGetDirections={handleBuildingGetDirections}
       />
 
       {/* Loading Indicator */}
@@ -633,6 +647,22 @@ const CampusOverlay = ({ mapRef, initialCampus, location }) => {
           <ActivityIndicator size="large" color="#1E88E5" />
         </View>
       )}
+
+      {/* Location Permission Modal */}
+      <Modal visible={showPermissionPopup} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Location Permission Denied</Text>
+            <Text style={styles.modalText}>
+              Location access is required to show your current location on the map.
+              Please enable location permissions in your settings.
+            </Text>
+            <TouchableOpacity style={styles.closeButton} onPress={() => setShowPermissionPopup(false)}>
+              <Text style={styles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 };
