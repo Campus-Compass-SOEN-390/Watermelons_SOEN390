@@ -89,6 +89,7 @@ export const buildings: Building[] = [
     departments: ["Communication Studies", "Journalism"],
     campus: Campus.LOY,
     entranceCoordinates: { latitude: 45.457478, longitude: -73.640354},
+    //WRONG COORDINATES
     coordinates: [
       { latitude: 45.457284244031285, longitude: -73.63763317156965 },
       { latitude: 45.45701819500725, longitude: -73.63783558975122 },

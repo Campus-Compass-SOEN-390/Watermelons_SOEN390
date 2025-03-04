@@ -21,6 +21,9 @@ export default function TabLayout() {
             tabBarIcon: ({ focused }) => {
               let iconName;
               switch (route.name) {
+                case 'map':
+                  iconName = focused ? 'map': 'map-outline';
+                  break;
                 case 'interest-points':
                   iconName = focused ? 'pin' : 'pin-outline';
                   break;
@@ -52,6 +55,7 @@ export default function TabLayout() {
             },
           })}
         >
+          <Tabs.Screen name='map'/>
           <Tabs.Screen name="interest-points" />
           <Tabs.Screen name="indoor-map" />
           <Tabs.Screen name="outdoor-map" />

@@ -84,7 +84,10 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 13,
         fontWeight: "bold",
-    }
+    },
+    map: {
+        flex: 1,
+    },
 });
 
 export default styles;

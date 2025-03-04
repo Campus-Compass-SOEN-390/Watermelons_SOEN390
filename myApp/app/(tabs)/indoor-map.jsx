@@ -2,14 +2,24 @@ import { Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import styles from "../styles/IndoorMapStyles";
 import { MaterialIcons } from "@expo/vector-icons";
+import Mapbox from '@rnmapbox/maps';
+import Constants from "expo-constants";
+
+
+const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
+Mapbox.setAccessToken(MAPBOX_API);
 
 export default function IndoorMap() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text> This is the Indoor Map Page</Text>
-
+      {/* Indoor Map */}
+      <View style={styles.container}>
+        <Mapbox.MapView style={styles.map} styleURL={Mapbox.StyleURL.Light} >
+          <Mapbox.Camera centerCoordinate={[-73.578, 45.495]} zoomLevel={12} />
+        </Mapbox.MapView>
+      </View>
       {/* Floor Navigation Buttons */}
       <View style={styles.floorButtonContainer}>
         <TouchableOpacity 

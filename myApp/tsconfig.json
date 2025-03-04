@@ -18,7 +18,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "app/(tabs)/interest-points.jsx", "app/api/shuttleScheduleData.js", "app/server/shuttleApi.js", "app/server/server.js", "app/__tests__/shuttleApi.test.js", "app/api/shuttleLiveData.js", "app/api/shuttleSchedule.js"  ],
+, "app/(tabs)/interest-points.jsx", "app/api/shuttleScheduleData.js", "app/server/shuttleApi.js", "app/server/server.js", "app/__tests__/shuttleApi.test.js", "app/api/shuttleLiveData.js", "app/api/shuttleSchedule.js", "app/(tabs)/map.jsx"  ],
     "exclude": [
       "node_modules"
     ]

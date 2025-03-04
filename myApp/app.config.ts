@@ -6,7 +6,8 @@ export default () => ({
     name: "myApp",
     slug: "myApp",
     extra: {
-      apiKey: process.env.GOOGLE_MAPS_API_KEY
+      apiKey: process.env.GOOGLE_MAPS_API_KEY,
+      mapbox: process.env.MAPBOX_ACCESS_TOKEN
     },
     version: "1.0.0",
     sdkVersion: "52.0.0",
@@ -50,6 +51,12 @@ export default () => ({
           imageWidth: 200,
           resizeMode: "contain",
           backgroundColor: "#ffffff"
+        }
+      ],
+      [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsImpl": "mapbox"
         }
       ]
     ],
