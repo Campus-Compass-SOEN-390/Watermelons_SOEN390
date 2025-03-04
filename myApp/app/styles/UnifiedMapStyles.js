@@ -1,22 +1,28 @@
 import { StyleSheet, Dimensions } from "react-native";
 
 const { width, height } = Dimensions.get("window");
-
-// Adjustable safe area parameter for bottom buttons
 const SAFE_AREA_BOTTOM = 90;
 
-const styles = StyleSheet.create({
-  // Main container (map occupies full space)
-  container: {
+export default StyleSheet.create({
+  // Entire screen container for map
+  containerForMap: {
     flex: 1,
     backgroundColor: "#fff",
   },
-  map: {
-    width: "100%",
-    height: "100%",
+
+  // The actual container for the map
+  container: {
+    flex: 1,
+    width: width,
+    height: height,
   },
 
-  // Mode toggle at the top remains unchanged
+  // The map should fill its container
+  map: {
+    flex: 1,
+  },
+
+  // Mode toggle container (if used)
   modeToggleContainer: {
     position: "absolute",
     top: 70,
@@ -41,57 +47,82 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  // Floating buttons (other than update) now adhere to the safe area
+  // Floating buttons container (new style)
   buttonContainer: {
     position: "absolute",
-    bottom: SAFE_AREA_BOTTOM + 20,
     right: 20,
-    flexDirection: "column",
-    zIndex: 10,
+    bottom: 100, // Adjusted to leave room above the tab bar
+    alignItems: "center",
   },
   button: {
     backgroundColor: "#1E88E5",
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 5,
-    elevation: 5,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    elevation: 8,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
-    shadowRadius: 3,
+    shadowRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
   },
   debugText: {
     color: "white",
-    fontSize: 10,
+    fontSize: 12,
+    marginTop: 2,
   },
 
-  // Switch campus button adjusted for safe area
+  // Switch campus button (new style)
   switchButtonContainer: {
     position: "absolute",
-    bottom: SAFE_AREA_BOTTOM + 20,
+    bottom: 120,
     left: 20,
-    zIndex: 10,
+    zIndex: 2,
   },
   switchButton: {
-    backgroundColor: "#1E88E5",
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
+    backgroundColor: "#922338",
+    padding: 10,
+    borderRadius: 20,
   },
   switchButtonText: {
-    color: "white",
+    color: "#fff",
     fontWeight: "bold",
+    fontSize: 13,
   },
 
-  // List view button adjusted for safe area
+  // Shuttle button styles (new additions)
+  shuttleButtonContainer: {
+    position: "absolute",
+    bottom: 120,
+    left: 150,
+    zIndex: 2,
+
+  },
+  shuttleButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#922338",
+    padding: 10,
+    borderRadius: 20,
+  },
+  shuttleIcon: {
+    width: 15,
+    height: 15,
+    marginRight: 8,
+  },
+
+  // Title for the map (if needed)
+  titleForMap: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    textAlign: "center",
+    color: "#333",
+  },
+
+  // List view and update button styles from the old design (if still used)
   listButton: {
     position: "absolute",
     bottom: SAFE_AREA_BOTTOM + 20,
@@ -109,11 +140,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 3,
   },
-
-  // Update button container adjusted for safe area (with extra offset)
   updateButtonContainer: {
     position: "absolute",
-    bottom: SAFE_AREA_BOTTOM + 85, // extra offset above safe area
+    bottom: SAFE_AREA_BOTTOM + 85,
     alignSelf: "center",
     zIndex: 10,
   },
@@ -133,7 +162,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  // Loading indicator remains unchanged
+  // Loading overlay
   loadingContainer: {
     position: "absolute",
     top: 0,
@@ -146,7 +175,7 @@ const styles = StyleSheet.create({
     zIndex: 20,
   },
 
-  // Modal styles remain unchanged
+  // Modal styles
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -155,22 +184,19 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: "white",
-    borderRadius: 10,
     padding: 20,
-    width: width * 0.8,
-    maxHeight: height * 0.7,
+    borderRadius: 10,
+    width: "80%",
     alignItems: "center",
-    elevation: 5,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
-    shadowRadius: 4,
+    shadowRadius: 3,
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
-    textAlign: "center",
   },
   modalText: {
     fontSize: 14,
@@ -178,18 +204,21 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   closeButton: {
-    backgroundColor: "#1E88E5",
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-    marginTop: 15,
+    backgroundColor: "#ff5252",
+    padding: 8,
+    borderRadius: 20,
+    width: 30,
+    height: 30,
+    alignItems: "center",
+    justifyContent: "center",
   },
   closeButtonText: {
     color: "white",
     fontWeight: "bold",
+    fontSize: 16,
   },
 
-  // Filter styles remain unchanged
+  // Filter button styles (if used)
   filterButton: {
     position: "absolute",
     top: 100,
@@ -212,7 +241,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 
-  // List view styles remain unchanged
+  // List view styles (if using a list view)
   listViewContainer: {
     flex: 1,
     marginTop: 100,
@@ -222,12 +251,12 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   listViewOuter: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
     zIndex: 5,
   },
   listItem: {
@@ -287,24 +316,19 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     alignItems: "center",
   },
-  
   errorText: {
     color: "#d32f2f",
     marginBottom: 10,
     textAlign: "center",
   },
-  
   retryButton: {
     backgroundColor: "#d32f2f",
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 4,
   },
-  
   retryButtonText: {
     color: "white",
     fontWeight: "bold",
   },
 });
-
-export default styles;

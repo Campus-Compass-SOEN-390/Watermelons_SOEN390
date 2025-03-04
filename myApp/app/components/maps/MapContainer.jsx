@@ -1,15 +1,8 @@
 import React from "react";
-import { View } from "react-native";
 import MapView from "react-native-maps";
 import styles from "../../styles/UnifiedMapStyles";
 
-const MapContainer = ({ 
-  mapRef, 
-  region, 
-  setRegion, 
-  showLocating, 
-  children 
-}) => {
+const MapContainer = ({ mapRef, region, setRegion, showLocating, children }) => {
   return (
     <MapView
       ref={mapRef}
