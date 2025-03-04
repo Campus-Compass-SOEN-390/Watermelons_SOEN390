@@ -14,7 +14,6 @@ import { BuildingPopup } from "../components/BuildingPopUp";
 import tabStyles from "../styles/LayoutStyles";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
 import MapDirections from "../components/MapDirections";
-import MapboxGL from "@rnmapbox/maps";
 
 const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API);
@@ -405,9 +404,9 @@ export default function IndoorMap() {
 
           {/* Add the ShapeSource to provide geoJSON data */}
           {showShuttleRoute && (
-            <MapboxGL.ShapeSource id="line1" shape={lineFeature}>
+            <Mapbox.ShapeSource id="line1" shape={lineFeature}>
               {/* LineLayer to style the line */}
-              <MapboxGL.LineLayer
+              <Mapbox.LineLayer
                 id="linelayer1"
                 style={{
                   lineColor: "blue", // Color of the line
@@ -416,7 +415,7 @@ export default function IndoorMap() {
                   lineJoin: "round", // Shape of the line segment joins
                 }}
               />
-            </MapboxGL.ShapeSource>
+            </Mapbox.ShapeSource>
           )}
           {/* Render Direction Route */}
           {origin && destination && renderMap && (
