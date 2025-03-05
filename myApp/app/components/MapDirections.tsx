@@ -6,11 +6,6 @@ import Constants from "expo-constants";
 const MAPBOX_API_KEY = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API_KEY);
 
-console.log("🚀 MAPBOX API KEY:", MAPBOX_API_KEY);
-if (!MAPBOX_API_KEY) {
-  console.error("❌ ERROR: Missing Mapbox API Key!");
-}
-
 interface Props {
   origin: { latitude: number; longitude: number } | null;
   destination: { latitude: number; longitude: number } | null;
@@ -43,13 +38,13 @@ const MapDirections: React.FC<Props> = ({
     catch{
       console.log("Crashed 7")
     }
-  },[travelMode]);
+  },[travelMode, origin, destination]);
 
   const fetchRoute = async (mode: string, isMounted: boolean) => {
     if (!origin || !destination) return;
 
     let apiMode = mode.toLowerCase(); // Ensure mode is in the correct format
-    console.log(`🚀 Fetching route with mode: ${apiMode}`);
+    console.log(`Fetching route with mode: ${apiMode}`);
 
     let url = `https://api.mapbox.com/directions/v5/mapbox/${apiMode}/${origin.longitude},${origin.latitude};${destination.longitude},${destination.latitude}?geometries=geojson&steps=true&access_token=${MAPBOX_API_KEY}`;
 
@@ -75,15 +70,13 @@ const MapDirections: React.FC<Props> = ({
 
           fitToRoute(geometry.coordinates);
         } else {
-          console.error("❌ Invalid geometry received:", geometry);
+          console.error("Invalid geometry received:", geometry);
         }
       } else {
-        console.warn(`🚨 No route found for mode: ${apiMode}.`);
-        // Optionally handle fallback here or notify user
+        console.warn(`No route found for mode: ${apiMode}.`);
       }
     } catch (error) {
-      console.error("❌ Error fetching route:", error);
-      // Optionally handle errors more gracefully here
+      console.error("Error fetching route:", error);
     }
   };
 
