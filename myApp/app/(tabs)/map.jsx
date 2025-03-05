@@ -229,15 +229,15 @@ export default function IndoorMap() {
 
   //HERE
   //This useEffect ensures the map is no longer rendered and the travel mode is set back to nothing when origin or location changes
-  useEffect(() => {
-    try {
-      updateRenderMap(false);
-      updateTravelMode("");
-    } catch {
-      console.log("Crashed 4");
-    }
-    //These two above do not make the application crash
-  }, [origin, destination]);
+  // useEffect(() => {
+  //   try {
+  //     updateRenderMap(false);
+  //     updateTravelMode("");
+  //   } catch {
+  //     console.log("Crashed 4");
+  //   }
+  //   //These two above do not make the application crash
+  // }, [origin, destination]);
 
   //navbar
   const navigation = useNavigation();
