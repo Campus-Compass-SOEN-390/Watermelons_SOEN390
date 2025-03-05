@@ -4,7 +4,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "node -r dotenv/config expo start",
+    "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -84,6 +84,7 @@
     "@expo/cli": "^0.22.13",
     "@react-navigation/native": "^7.0.14",
     "@testing-library/react-native": "^13.0.1",
+    "@tsconfig/react-native": "^3.0.5",
     "@types/axios": "^0.9.36",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.12",
