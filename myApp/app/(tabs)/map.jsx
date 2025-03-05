@@ -188,6 +188,8 @@ export default function IndoorMap() {
     }
   }, [location, hasPermission]);
 
+
+  //HERE
   //This useEffect manages orgin, destination and the footer appearing when any of the dependcies change
   useEffect(() => {
     try {
@@ -225,6 +227,7 @@ export default function IndoorMap() {
     showShuttleRoute,
   ]);
 
+  //HERE
   //This useEffect ensures the map is no longer rendered and the travel mode is set back to nothing when origin or location changes
   useEffect(() => {
     try {
