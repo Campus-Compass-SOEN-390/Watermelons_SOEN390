@@ -27,12 +27,6 @@ export default function TabLayout() {
                 case 'interest-points':
                   iconName = focused ? 'pin' : 'pin-outline';
                   break;
-                case 'indoor-map':
-                  iconName = focused ? 'map' : 'map-outline';
-                  break;
-                case 'outdoor-map':
-                  iconName = focused ? 'map' : 'map-outline';
-                  break;
                 case 'favorites':
                   iconName = focused ? 'star' : 'star-outline';
                   break;
@@ -56,8 +50,6 @@ export default function TabLayout() {
           })}
         >
           <Tabs.Screen name='map'/>
-          <Tabs.Screen name="interest-points" />
-          <Tabs.Screen name="indoor-map" />
           <Tabs.Screen name="outdoor-map" />
           <Tabs.Screen name="favorites" />
           <Tabs.Screen name="index" />
