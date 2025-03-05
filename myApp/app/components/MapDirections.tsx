@@ -43,7 +43,7 @@ const MapDirections: React.FC<Props> = ({
     catch{
       console.log("Crashed 7")
     }
-  },[travelMode]);
+  },[travelMode, origin, destination]);
 
   const fetchRoute = async (mode: string, isMounted: boolean) => {
     if (!origin || !destination) return;

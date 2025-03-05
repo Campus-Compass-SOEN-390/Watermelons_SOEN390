@@ -229,15 +229,15 @@ export default function IndoorMap() {
 
   //HERE
   //This useEffect ensures the map is no longer rendered and the travel mode is set back to nothing when origin or location changes
-  useEffect(() => {
-    try {
-      updateRenderMap(false);
-      updateTravelMode("");
-    } catch {
-      console.log("Crashed 4");
-    }
-    //These two above do not make the application crash
-  }, [origin, destination]);
+  // useEffect(() => {
+  //   try {
+  //     updateRenderMap(false);
+  //     updateTravelMode("");
+  //   } catch {
+  //     console.log("Crashed 4");
+  //   }
+  //   //These two above do not make the application crash
+  // }, [origin, destination]);
 
   //navbar
   const navigation = useNavigation();
@@ -375,8 +375,27 @@ export default function IndoorMap() {
 
   // Switch campus
   const toggleCampus = () => {
-    setActiveCampus((prev) => (prev === "sgw" ? "loy" : "sgw"));
+    setActiveCampus((prev) => {
+      const newCampus = prev === "sgw" ? "loy" : "sgw";
+  
+      if (mapRef.current) {
+        const newCenter =
+          newCampus === "sgw"
+            ? [-73.5792229, 45.4951962] 
+            : [-73.6417009, 45.4581281]; 
+  
+        mapRef.current.setCamera({
+          centerCoordinate: newCenter,
+          zoomLevel: 15, // Adjust zoom level as needed
+          animationMode: "flyTo",
+          animationDuration: 1000,
+        });
+      }
+  
+      return newCampus;
+    });
   };
+  
 
   // Determine the current center based on active campus
   const currentCenter =
