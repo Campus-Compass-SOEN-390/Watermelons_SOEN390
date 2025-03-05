@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
-import IndoorMap from '../(tabs)/indoor-map';
+import IndoorMap from '../(tabs)/map';
 
 // Create a mock for the push function
 const mockPush = jest.fn();
