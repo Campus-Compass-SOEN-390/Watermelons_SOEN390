@@ -165,17 +165,15 @@ export default function Map() {
     }
   }, [location, hasPermission]);
 
-  //HERE
   //This useEffect manages orgin, destination and the footer appearing when any of the dependcies change
   useEffect(() => {
     try {
       updateOrigin(origin, originText);
-      updateDestination(destination, destinationText);
-      //these two things above are not what is crashing the app
       if (
         originText == "My Location" &&
         (destinationText == "Loyola Campus, Shuttle Stop" ||
           destinationText == "SGW Campus, Shuttle Stop")
+          && renderMap == true
       ) {
         updateShowShuttleRoute(true);
       } else {
@@ -203,17 +201,15 @@ export default function Map() {
     showShuttleRoute,
   ]);
 
-  //HERE
   //This useEffect ensures the map is no longer rendered and the travel mode is set back to nothing when origin or location changes
-  // useEffect(() => {
-  //   try {
-  //     updateRenderMap(false);
-  //     updateTravelMode("");
-  //   } catch {
-  //     console.log("Crashed 4");
-  //   }
-  //   //These two above do not make the application crash
-  // }, [origin, destination]);
+   useEffect(() => {
+     try {
+       updateRenderMap(false);
+       updateTravelMode("");
+     } catch {
+       console.log("Crashed 4");
+     }
+   }, [origin, destination]);
 
   //navbar
   const navigation = useNavigation();
@@ -232,45 +228,26 @@ export default function Map() {
     longitudeDelta: 0.005,
   };
 
-  // Coordinates of routes for the navigation shuttle
-  const campusRoutes = {
-    sgwToLoyola: [
-      { latitude: 45.49706, longitude: -73.57849 },
-      { latitude: 45.49604, longitude: -73.5793 },
-      { latitude: 45.49579, longitude: -73.57934 },
-      { latitude: 45.49357, longitude: -73.5817 },
-      { latitude: 45.48973, longitude: -73.577 },
-      { latitude: 45.46161, longitude: -73.62401 },
-      { latitude: 45.46374, longitude: -73.62888 },
-    ],
-    loyolaToSgw: [
-      { latitude: 45.49706, longitude: -73.57849 },
-      { latitude: 45.49604, longitude: -73.5793 },
-      { latitude: 45.49579, longitude: -73.57934 },
-      { latitude: 45.49357, longitude: -73.5817 },
-      { latitude: 45.48973, longitude: -73.577 },
-      { latitude: 45.46161, longitude: -73.62401 },
-      { latitude: 45.46374, longitude: -73.62888 },
-    ],
-  };
-
-  const lineFeature = {
+  //Coordinates for shuttle from SGW to Loyola. Need to be updated with proper coordinates. Also, need to add ones for loyola to SGW.
+  //Note that here for mapbox it is longitude first, and the latitude. So, the reverse of google maps
+  const SGWtoLoyola = {
     type: "Feature",
-    properties: {}, // Optional properties, like metadata about the feature
+    properties: {},
     geometry: {
       type: "LineString",
       coordinates: [
-        [45.49706, -73.57849],
-        [45.49604, -73.5793],
-        /*{ latitude: 45.49579, longitude: -73.57934 },
-        { latitude: 45.49357, longitude: -73.5817 },
-        { latitude: 45.48973, longitude: -73.577 },
-        { latitude: 45.46161, longitude: -73.62401 },
-        { latitude: 45.46374, longitude: -73.62888 },*/
-      ],
+        [-73.57849, 45.49706],
+        [-73.5793, 45.49604], 
+        [-73.57934, 45.49579],
+        [-73.5817, 45.49357],
+        [-73.577, 45.48973],
+        [-73.62401, 45.46161],
+        [-73.62888, 45.46374],
+        [-73.63882, 45.45789],
+      ]
     },
   };
-
+  
   const coordinatesMap = {
     "My Position": location?.latitude
       ? { latitude: location.latitude, longitude: location.longitude }
@@ -307,10 +284,6 @@ export default function Map() {
 
   const handleShuttleButton = () => {
     console.log("Shuttle button click");
-    const route =
-      activeCampus === "sgw"
-        ? campusRoutes.sgwToLoyola
-        : campusRoutes.loyolaToSgw;
     updateOrigin(coordinatesMap["My Position"], "My Location");
     if (activeCampus === "sgw") {
       updateDestination(
@@ -323,7 +296,6 @@ export default function Map() {
         "SGW Campus, Shuttle Stop"
       );
     }
-    setShuttleRoute(route);
   };
 
   // Center on campus
@@ -399,17 +371,16 @@ export default function Map() {
             animationDuration={1000}
           />
 
-          {/* Add the ShapeSource to provide geoJSON data */}
+          {/* Conditionally render line displaying shuttle bus travel */}
           {showShuttleRoute && (
-            <Mapbox.ShapeSource id="line1" shape={lineFeature}>
-              {/* LineLayer to style the line */}
+            <Mapbox.ShapeSource id="line1" shape={SGWtoLoyola}>
               <Mapbox.LineLayer
                 id="linelayer1"
                 style={{
-                  lineColor: "blue", // Color of the line
-                  lineWidth: 5, // Width of the line
-                  lineCap: "round", // Shape of the line ends
-                  lineJoin: "round", // Shape of the line segment joins
+                  lineColor: "#922338", 
+                  lineWidth: 5,
+                  lineCap: "round", 
+                  lineJoin: "round",
                 }}
               />
             </Mapbox.ShapeSource>
