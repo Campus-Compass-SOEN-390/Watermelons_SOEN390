@@ -2,6 +2,7 @@ import React from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useRouter } from 'expo-router';
 import { homepageStyles as styles } from '../styles/HomePageStyles.js'
+import { signInWithGoogle } from "../api/auth.js";
 
 export default function HomePage() {
    
@@ -58,22 +59,20 @@ export default function HomePage() {
                     </TouchableOpacity>
                 </View>
             </View>
-            <View style={styles.buttonsContainer}>
-                <Text style={styles.title}>Link your account</Text>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity 
-                    style={styles.googleButton}
-                    testID="googleButton"
-                    >
-                        <Image
-                            source={require('../../assets/images/google_logo.png')}
-                            style={styles.icon}
-                            testID="googleIcon"
-                        />
-                        <Text style={styles.googleButtonText}>Connect Google Calendar</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </View>
+            <View style={styles.buttonContainer}>
+        <TouchableOpacity 
+          style={styles.googleButton}
+          testID="googleButton"
+          onPress={signInWithGoogle} // Call the function here
+        >
+          <Image
+            source={require('../../assets/images/google_logo.png')}
+            style={styles.icon}
+            testID="googleIcon"
+          />
+          <Text style={styles.googleButtonText}>Connect Google Calendar</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
     );
 }
