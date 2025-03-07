@@ -9,15 +9,17 @@ import { buildings, getBuildingById } from "../api/buildingData";
 import { isPointInPolygon } from "geolib";
 import useLocation from "../hooks/useLocation";
 import { useLocationContext } from "../context/LocationContext";
+import { useIndoorMapContext } from "../context/IndoorMapContext"
 import { useNavigation } from "@react-navigation/native";
 import { BuildingPopup } from "../components/BuildingPopUp";
 import tabStyles from "../styles/LayoutStyles";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
 import MapDirections from "../components/MapDirections";
 import ShortestPathMap from "../components/IndoorMap/ShortestPathMap";
-import nodeCoordinates from "../components/IndoorMap/Coordinates/nodeCoordinates";
 import h8Coordinates from "../components/IndoorMap/Coordinates/h8coordinates";
 import h8Graph from "../components/IndoorMap/Graphs/h8Graph";
+import { handleIndoorBuildingSelect, calculateCentroid, convertCoordinates } from "../utils/indoor-map";
+import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap"
 
 const MAPBOX_API =
   "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw";
@@ -26,27 +28,7 @@ Mapbox.setAccessToken(MAPBOX_API);
 console.log("MAPBOX API KEY:", MAPBOX_API);
 console.log("GOOGLE API KEY:", Constants.expoConfig?.extra?.apiKey);
 
-// Converts building.coordinates [{latitude, longitude}, ...] to [[lng, lat], ...]
-const convertCoordinates = (coords) =>
-  coords.map(({ latitude, longitude }) => [longitude, latitude]);
-
-// Function to calculate the centroid of a polygon
-const calculateCentroid = (coordinates) => {
-  let x = 0,
-    y = 0,
-    n = coordinates.length;
-
-  coordinates.forEach(([lng, lat]) => {
-    x += lng;
-    y += lat;
-  });
-
-  return [x / n, y / n]; // Returns [longitude, latitude]
-};
-
 export default function Map() {
-  const [isExpanded, setIsExpanded] = useState(false);
-
   // Zoom level
   const [zoomLevel, setZoomLevel] = useState(15);
 
@@ -71,41 +53,23 @@ export default function Map() {
   //Statues for displaying shuttle polylines or not
   const [shuttleRoute, setShuttleRoute] = useState("");
 
-  // Indoor map status
-  const [selectedIndoorBuilding, setSelectedIndoorBuilding] = useState(null);
-
-  const handleIndoorBuildingSelect = (building) => {
-    const buildingCenter = calculateCentroid(
-      convertCoordinates(building.coordinates)
-    );
-
-    if (selectedIndoorBuilding?.id === building.id) {
-      // If the same building is reselected, recenter the camera
-      mapRef.current?.setCamera({
-        centerCoordinate: buildingCenter,
-        zoomLevel: 18, // Ensure zoom level is high enough for indoor map
-        animationMode: "flyTo",
-        animationDuration: 1000,
-      });
-    } else {
-      // Select new building and activate indoor map
-      setSelectedIndoorBuilding(building);
-      setIsExpanded(false);
-
-      // Move camera to the selected building
-      mapRef.current?.setCamera({
-        centerCoordinate: buildingCenter,
-        zoomLevel: 18,
-        animationMode: "flyTo",
-        animationDuration: 1000,
-      });
-    }
+  const coordinatesMap = {
+    "My Position": location?.latitude
+      ? { latitude: location.latitude, longitude: location.longitude }
+      : undefined,
+    "Hall Building": { latitude: 45.4961, longitude: -73.5772 },
+    "Loyola Campus, Shuttle Stop": { latitude: 45.49706, longitude: -73.57849 },
+    "SGW Campus, Shuttle Stop": { latitude: 45.45789, longitude: -73.63882 },
+    "EV Building": { latitude: 45.4957, longitude: -73.5773 },
+    "SGW Campus": { latitude: 45.4962, longitude: -73.578 },
+    "Loyola Campus": { latitude: 45.4582, longitude: -73.6405 },
+    "Montreal Downtown": { latitude: 45.5017, longitude: -73.5673 },
   };
 
   // Handle clearing indoor mode
   const handleClearIndoorMap = () => {
-    setSelectedIndoorBuilding(null);
-    setIsExpanded(false);
+    updateSelectedIndoorBuilding(null);
+    updateIsExpanded(false);
 
     // Reset camera to the default campus view
     mapRef.current?.setCamera({
@@ -136,6 +100,14 @@ export default function Map() {
     showShuttleRoute,
     travelMode,
   } = useLocationContext();
+
+  //Global constants to manage indoor-maps
+  const {
+    isExpanded,
+    selectedIndoorBuilding,
+    updateIsExpanded,
+    updateSelectedIndoorBuilding
+  } = useIndoorMapContext()
 
   // Animate map to correct campus
   useEffect(() => {
@@ -174,7 +146,6 @@ export default function Map() {
     }
   }, [location, hasPermission]);
 
-  //HERE
   //This useEffect manages orgin, destination and the footer appearing when any of the dependcies change
   useEffect(() => {
     try {
@@ -185,6 +156,7 @@ export default function Map() {
         originText == "My Location" &&
         (destinationText == "Loyola Campus, Shuttle Stop" ||
           destinationText == "SGW Campus, Shuttle Stop")
+          && renderMap == true
       ) {
         updateShowShuttleRoute(true);
       } else {
@@ -212,7 +184,6 @@ export default function Map() {
     showShuttleRoute,
   ]);
 
-  //HERE
   //This useEffect ensures the map is no longer rendered and the travel mode is set back to nothing when origin or location changes
    useEffect(() => {
      try {
@@ -221,77 +192,10 @@ export default function Map() {
      } catch {
        console.log("Crashed 4");
      }
-     //These two above do not make the application crash
    }, [origin, destination]);
 
   //navbar
   const navigation = useNavigation();
-
-  //Campus regions
-  const sgwRegion = {
-    latitude: 45.4951962,
-    longitude: -73.5792229,
-    latitudeDelta: 0.005,
-    longitudeDelta: 0.005,
-  };
-  const loyolaRegion = {
-    latitude: 45.4581281,
-    longitude: -73.6417009,
-    latitudeDelta: 0.005,
-    longitudeDelta: 0.005,
-  };
-
-  // Coordinates of routes for the navigation shuttle
-  const campusRoutes = {
-    sgwToLoyola: [
-      { latitude: 45.49706, longitude: -73.57849 },
-      { latitude: 45.49604, longitude: -73.5793 },
-      { latitude: 45.49579, longitude: -73.57934 },
-      { latitude: 45.49357, longitude: -73.5817 },
-      { latitude: 45.48973, longitude: -73.577 },
-      { latitude: 45.46161, longitude: -73.62401 },
-      { latitude: 45.46374, longitude: -73.62888 },
-    ],
-    loyolaToSgw: [
-      { latitude: 45.49706, longitude: -73.57849 },
-      { latitude: 45.49604, longitude: -73.5793 },
-      { latitude: 45.49579, longitude: -73.57934 },
-      { latitude: 45.49357, longitude: -73.5817 },
-      { latitude: 45.48973, longitude: -73.577 },
-      { latitude: 45.46161, longitude: -73.62401 },
-      { latitude: 45.46374, longitude: -73.62888 },
-    ],
-  };
-
-  const lineFeature = {
-    type: "Feature",
-    properties: {}, // Optional properties, like metadata about the feature
-    geometry: {
-      type: "LineString",
-      coordinates: [
-        [45.49706, -73.57849],
-        [45.49604, -73.5793],
-        /*{ latitude: 45.49579, longitude: -73.57934 },
-        { latitude: 45.49357, longitude: -73.5817 },
-        { latitude: 45.48973, longitude: -73.577 },
-        { latitude: 45.46161, longitude: -73.62401 },
-        { latitude: 45.46374, longitude: -73.62888 },*/
-      ],
-    },
-  };
-
-  const coordinatesMap = {
-    "My Position": location?.latitude
-      ? { latitude: location.latitude, longitude: location.longitude }
-      : undefined,
-    "Hall Building": { latitude: 45.4961, longitude: -73.5772 },
-    "Loyola Campus, Shuttle Stop": { latitude: 45.49706, longitude: -73.57849 },
-    "SGW Campus, Shuttle Stop": { latitude: 45.45789, longitude: -73.63882 },
-    "EV Building": { latitude: 45.4957, longitude: -73.5773 },
-    "SGW Campus": { latitude: 45.4962, longitude: -73.578 },
-    "Loyola Campus": { latitude: 45.4582, longitude: -73.6405 },
-    "Montreal Downtown": { latitude: 45.5017, longitude: -73.5673 },
-  };
 
   // Handle building tap
   const handleBuildingPress = (building) => {
@@ -316,10 +220,6 @@ export default function Map() {
 
   const handleShuttleButton = () => {
     console.log("Shuttle button click");
-    const route =
-      activeCampus === "sgw"
-        ? campusRoutes.sgwToLoyola
-        : campusRoutes.loyolaToSgw;
     updateOrigin(coordinatesMap["My Position"], "My Location");
     if (activeCampus === "sgw") {
       updateDestination(
@@ -332,7 +232,6 @@ export default function Map() {
         "SGW Campus, Shuttle Stop"
       );
     }
-    setShuttleRoute(route);
   };
 
   // Center on campus
@@ -412,17 +311,17 @@ export default function Map() {
             animationDuration={1000}
           />
 
-          {/* Add the ShapeSource to provide geoJSON data */}
+          {/* Conditionally render line displaying shuttle bus travel */}
           {showShuttleRoute && (
-            <Mapbox.ShapeSource id="line1" shape={lineFeature}>
+            <Mapbox.ShapeSource id="line1" shape={SGWtoLoyola}>
               {/* LineLayer to style the line */}
               <Mapbox.LineLayer
                 id="linelayer1"
                 style={{
-                  lineColor: "blue", // Color of the line
-                  lineWidth: 5, // Width of the line
-                  lineCap: "round", // Shape of the line ends
-                  lineJoin: "round", // Shape of the line segment joins
+                  lineColor: "#922338", 
+                  lineWidth: 5,
+                  lineCap: "round", 
+                  lineJoin: "round",
                 }}
               />
             </Mapbox.ShapeSource>
@@ -607,7 +506,7 @@ export default function Map() {
       >
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setIsExpanded(!isExpanded)}
+          onPress={() => updateIsExpanded(!isExpanded)}
           testID="buildings-button"
         >
           <MaterialIcons name="location-city" size={24} color="black" />
@@ -634,7 +533,7 @@ export default function Map() {
                 <TouchableOpacity
                   key={building.id}
                   style={styles.expandedButton}
-                  onPress={() => handleIndoorBuildingSelect(building)}
+                  onPress={() => handleIndoorBuildingSelect(building, selectedIndoorBuilding, updateIsExpanded, updateSelectedIndoorBuilding, mapRef)}
                 >
                   <Text style={styles.text}>{building.name}</Text>
                 </TouchableOpacity>
