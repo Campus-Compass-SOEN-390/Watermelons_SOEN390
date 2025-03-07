@@ -1,11 +1,4 @@
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  Modal,
-  Image,
-  SafeAreaView,
-} from "react-native";
+import { Text, TouchableOpacity, View, Modal, Image } from "react-native";
 import React, { useState, useRef, Fragment, useEffect } from "react";
 import styles from "../styles/IndoorMapStyles";
 import outdoorStyles from "../styles/OutdoorMapStyles";
@@ -586,8 +579,8 @@ export default function Map() {
         <ShortestPathMap
           graph={h8Graph}
           nodeCoordinates={h8Coordinates}
-          startNode={originText} // ✅ Correct ID format
-          endNode={destinationText} // ✅ Correct ID format
+          startNode={originText} 
+          endNode={destinationText} 
         />
         </Mapbox.MapView>
       </View>
