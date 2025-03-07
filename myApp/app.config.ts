@@ -1,5 +1,4 @@
-import 'dotenv/config';
-
+import "dotenv/config";
 export default () => ({
   expo: {
     entryPoint: "./myApp/app/index.js",
@@ -7,7 +6,7 @@ export default () => ({
     slug: "myApp",
     extra: {
       apiKey: process.env.GOOGLE_MAPS_API_KEY,
-      mapbox: process.env.MAPBOX_ACCESS_TOKEN
+      mapbox: process.env.MAPBOX_ACCESS_TOKEN,
     },
     version: "1.0.0",
     sdkVersion: "52.0.0",
@@ -16,16 +15,13 @@ export default () => ({
     scheme: "myapp",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
-    ios: {
-      supportsTablet: true,
-      bundleIdentifier: "com.anonymous.myApp",
-    },
+    ios: { supportsTablet: true, bundleIdentifier: "com.anonymous.myApp" },
     android: {
       adaptiveIcon: {
         foregroundImage: "./assets/images/adaptive-icon.png",
-        backgroundColor: "#ffffff"
+        backgroundColor: "#ffffff",
       },
-      package: "com.anonymous.myApp"
+      package: "com.anonymous.myApp",
     },
     web: {
       bundler: "metro",
@@ -37,10 +33,10 @@ export default () => ({
           attrs: {
             src: `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_API_KEY}&libraries=places`,
             async: true,
-            defer: true
-          }
-        }
-      ]
+            defer: true,
+          },
+        },
+      ],
     },
     plugins: [
       "expo-router",
@@ -50,18 +46,16 @@ export default () => ({
           image: "./assets/images/splash-icon.png",
           imageWidth: 200,
           resizeMode: "contain",
-          backgroundColor: "#ffffff"
-        }
+          backgroundColor: "#ffffff",
+        },
       ],
       [
-        "@rnmapbox/maps",
-        {
-          "RNMapboxMapsImpl": "mapbox"
+        "@rnmapbox/maps", 
+        { 
+          RNMapboxMapsImpl: "mapbox" 
         }
-      ]
+      ],
     ],
-    experiments: {
-      typedRoutes: true
-    }
-  }
+    experiments: { typedRoutes: true },
+  },
 });

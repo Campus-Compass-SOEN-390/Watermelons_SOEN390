@@ -1,5 +1,11 @@
 import { Text, TouchableOpacity, View, Modal, Image } from "react-native";
-import React, { useState, useRef, Fragment, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  Fragment,
+  useEffect,
+  SafeAreaView,
+} from "react";
 import styles from "../styles/IndoorMapStyles";
 import outdoorStyles from "../styles/OutdoorMapStyles";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -14,8 +20,12 @@ import { BuildingPopup } from "../components/BuildingPopUp";
 import tabStyles from "../styles/LayoutStyles";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
 import MapDirections from "../components/MapDirections";
+import ShortestPathMap from "../components/IndoorMap/ShortestPathMap";
+import nodeCoordinates from "../components/IndoorMap/Coordinates/nodeCoordinates";
 
-const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
+const MAPBOX_API =
+  "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw";
+// const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API);
 console.log("MAPBOX API KEY:", MAPBOX_API);
 console.log("GOOGLE API KEY:", Constants.expoConfig?.extra?.apiKey);
@@ -542,29 +552,29 @@ export default function Map() {
               id="points-layer"
               sourceID="indoor-map"
               sourceLayerID="h8"
-              minZoomLevel={18} 
+              minZoomLevel={18}
               style={{
-                iconImage: "marker", 
+                iconImage: "marker",
                 iconSize: 1.0,
-                iconAllowOverlap: true, 
+                iconAllowOverlap: true,
               }}
-              filter={["==", ["geometry-type"], "Point"]} 
+              filter={["==", ["geometry-type"], "Point"]}
             />
 
             <Mapbox.SymbolLayer
               id="text-layer"
               sourceID="indoor-map"
               sourceLayerID="h8"
-              minZoomLevel={18} 
+              minZoomLevel={18}
               style={{
-                textField: ["get", "name"], 
+                textField: ["get", "name"],
                 textSize: 14,
                 textColor: "black",
                 textHaloColor: "white",
                 textHaloWidth: 1,
-                textAllowOverlap: true, 
+                textAllowOverlap: true,
               }}
-              filter={["==", ["geometry-type"], "Point"]} 
+              filter={["==", ["geometry-type"], "Point"]}
             />
           </Mapbox.VectorSource>
         </Mapbox.MapView>
@@ -706,6 +716,14 @@ export default function Map() {
         building={selectedBuilding}
         onGetDirections={handleBuildingGetDirections}
       />
+
+      <SafeAreaView style={{ flex: 1 }}>
+        <ShortestPathMap
+          startNode="path_801" // ✅ Correct ID format
+          endNode="path_802" // ✅ Correct ID format
+          nodeCoordinates={nodeCoordinates}
+        />
+      </SafeAreaView>
     </View>
   );
 }
