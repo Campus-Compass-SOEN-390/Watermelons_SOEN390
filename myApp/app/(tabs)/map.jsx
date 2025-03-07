@@ -1,10 +1,12 @@
-import { Text, TouchableOpacity, View, Modal, Image, SafeAreaView, } from "react-native";
-import React, {
-  useState,
-  useRef,
-  Fragment,
-  useEffect,
-} from "react";
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  Modal,
+  Image,
+  SafeAreaView,
+} from "react-native";
+import React, { useState, useRef, Fragment, useEffect } from "react";
 import styles from "../styles/IndoorMapStyles";
 import outdoorStyles from "../styles/OutdoorMapStyles";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -49,6 +51,9 @@ const calculateCentroid = (coordinates) => {
 
 export default function Map() {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  // Zoom level
+  const [zoomLevel, setZoomLevel] = useState(15);
 
   // Campus switching
   const [activeCampus, setActiveCampus] = useState("sgw");
@@ -381,6 +386,10 @@ export default function Map() {
     });
   };
 
+  const onRegionDidChange = (region) => {
+    setZoomLevel(region.properties.zoomLevel);
+  };
+
   // Determine the current center based on active campus
   const currentCenter =
     activeCampus === "sgw"
@@ -391,7 +400,7 @@ export default function Map() {
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
         <StartAndDestinationPoints />
-        <Mapbox.MapView style={styles.map} styleURL={Mapbox.StyleURL.Light}>
+        <Mapbox.MapView style={styles.map} styleURL={Mapbox.StyleURL.Light} onRegionDidChange={onRegionDidChange}>
           <Mapbox.Camera
             ref={mapRef}
             zoomLevel={selectedIndoorBuilding ? 18 : 15} // Adjust zoom based on selection
@@ -495,12 +504,12 @@ export default function Map() {
           <Mapbox.VectorSource
             id="indoor-map"
             url="mapbox://7anine.cm7qjtnoy2d3o1qmmngcrv0jl-6thbv"
+            minZoomLevel={18}
           >
             <Mapbox.FillLayer
               id="room-fill-layer"
               sourceID="indoor-map"
               sourceLayerID="h8"
-              minZoomLevel={18}
               style={{
                 fillColor: "red",
                 fillOpacity: 0.2,
@@ -512,7 +521,6 @@ export default function Map() {
               id="room-line-layer"
               sourceID="indoor-map"
               sourceLayerID="h8"
-              minZoomLevel={18}
               style={{
                 lineColor: "red",
                 lineWidth: 2,
@@ -525,7 +533,6 @@ export default function Map() {
               id="path-line-layer"
               sourceID="indoor-map"
               sourceLayerID="h8"
-              minZoomLevel={18}
               style={{
                 lineColor: "black",
                 lineWidth: 2,
@@ -538,7 +545,6 @@ export default function Map() {
               id="wall-line-layer"
               sourceID="indoor-map"
               sourceLayerID="h8"
-              minZoomLevel={18}
               style={{
                 lineColor: "red",
                 lineWidth: 2,
@@ -551,7 +557,6 @@ export default function Map() {
               id="points-layer"
               sourceID="indoor-map"
               sourceLayerID="h8"
-              minZoomLevel={18}
               style={{
                 iconImage: "marker",
                 iconSize: 1.0,
@@ -564,7 +569,6 @@ export default function Map() {
               id="text-layer"
               sourceID="indoor-map"
               sourceLayerID="h8"
-              minZoomLevel={18}
               style={{
                 textField: ["get", "name"],
                 textSize: 14,
@@ -577,15 +581,16 @@ export default function Map() {
             />
           </Mapbox.VectorSource>
 
-        <ShortestPathMap
-          startNode="801" // ✅ Correct ID format
-          endNode="802" // ✅ Correct ID format
-          nodeCoordinates={nodeCoordinates}
-        />
+          <ShortestPathMap
+            startNode="801" // ✅ Correct ID format
+            endNode="802" // ✅ Correct ID format
+            nodeCoordinates={nodeCoordinates}
+          />
         </Mapbox.MapView>
       </View>
 
       {/* Floor Navigation Buttons */}
+      { zoomLevel >= 18 &&
       <View style={styles.floorButtonContainer}>
         <TouchableOpacity style={styles.button} testID="floor-up">
           <MaterialIcons name="keyboard-arrow-up" size={24} color="black" />
@@ -595,6 +600,7 @@ export default function Map() {
           <MaterialIcons name="keyboard-arrow-down" size={24} color="black" />
         </TouchableOpacity>
       </View>
+      }
 
       {/* Buildings Navigation Button */}
       <View
