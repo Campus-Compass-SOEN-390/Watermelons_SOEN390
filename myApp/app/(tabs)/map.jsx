@@ -23,6 +23,8 @@ import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
 import MapDirections from "../components/MapDirections";
 import ShortestPathMap from "../components/IndoorMap/ShortestPathMap";
 import nodeCoordinates from "../components/IndoorMap/Coordinates/nodeCoordinates";
+import h8Coordinates from "../components/IndoorMap/Coordinates/h8coordinates";
+import h8Graph from "../components/IndoorMap/Graphs/h8Graph";
 
 const MAPBOX_API =
   "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw";
@@ -219,15 +221,15 @@ export default function Map() {
 
   //HERE
   //This useEffect ensures the map is no longer rendered and the travel mode is set back to nothing when origin or location changes
-  // useEffect(() => {
-  //   try {
-  //     updateRenderMap(false);
-  //     updateTravelMode("");
-  //   } catch {
-  //     console.log("Crashed 4");
-  //   }
-  //   //These two above do not make the application crash
-  // }, [origin, destination]);
+   useEffect(() => {
+     try {
+       updateRenderMap(false);
+       updateTravelMode("");
+     } catch {
+       console.log("Crashed 4");
+     }
+     //These two above do not make the application crash
+   }, [origin, destination]);
 
   //navbar
   const navigation = useNavigation();
@@ -581,11 +583,12 @@ export default function Map() {
             />
           </Mapbox.VectorSource>
 
-          <ShortestPathMap
-            startNode="801" // ✅ Correct ID format
-            endNode="802" // ✅ Correct ID format
-            nodeCoordinates={nodeCoordinates}
-          />
+        <ShortestPathMap
+          graph={h8Graph}
+          nodeCoordinates={h8Coordinates}
+          startNode={originText} // ✅ Correct ID format
+          endNode={destinationText} // ✅ Correct ID format
+        />
         </Mapbox.MapView>
       </View>
 
