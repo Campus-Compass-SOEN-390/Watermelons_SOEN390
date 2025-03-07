@@ -20,6 +20,7 @@ import h8Coordinates from "../components/IndoorMap/Coordinates/h8coordinates";
 import h8Graph from "../components/IndoorMap/Graphs/h8Graph";
 import { handleIndoorBuildingSelect, calculateCentroid, convertCoordinates } from "../utils/indoor-map";
 import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap"
+import { extractShuttleInfo } from "../api/shuttleLiveData";
 
 const MAPBOX_API =
   "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw";
@@ -52,6 +53,11 @@ export default function Map() {
 
   //Statues for displaying shuttle polylines or not
   const [shuttleRoute, setShuttleRoute] = useState("");
+
+  //Set Shuttle Live loc
+  const [shuttleLocations, setShuttleLocations] = useState([]);
+
+
 
   const coordinatesMap = {
     "My Position": location?.latitude
@@ -284,6 +290,24 @@ export default function Map() {
     setZoomLevel(region.properties.zoomLevel);
   };
 
+  //fetch shuttle live data
+  useEffect(() => {
+    const fetchShuttleData = async () => {
+      try {
+        const shuttleData = await extractShuttleInfo(); // Replace with actual API function
+        console.log("Shuttle Data:", shuttleData);
+        setShuttleLocations(shuttleData); // Assume this returns an array of {latitude, longitude}
+      } catch (error) {
+        console.error("Error fetching shuttle data:", error);
+      }
+    };
+  
+    fetchShuttleData();
+    //const interval = setInterval(fetchShuttleData, fetchInterval);
+  
+  }, []);
+
+
   // Determine the current center based on active campus
   const currentCenter =
     activeCampus === "sgw"
@@ -474,6 +498,37 @@ export default function Map() {
               filter={["==", ["geometry-type"], "Point"]}
             />
           </Mapbox.VectorSource>
+
+          
+{shuttleLocations.map((shuttle) => {
+          console.log("Shuttle data:", shuttle.latitude, shuttle.longitude); // Log each shuttle's data to the console
+
+                  return (
+                    <Mapbox.ShapeSource
+                    key={shuttle.id}
+                    id={`shuttle-${shuttle.id}`}
+                    shape={{
+                      type: "Feature",
+                      geometry: {
+                        type: "Point",
+                        coordinates: [shuttle.longitude, shuttle.latitude],
+                      },
+                    }}
+                  >
+                    <Mapbox.CircleLayer
+                      id={`circle-${shuttle.id}`}
+                      style={{
+                        circleRadius: 6,
+                        circleColor: "#ff0000", // Red dot
+                        circleOpacity: 0.8,
+                        circleStrokeWidth: 1,
+                        circleStrokeColor: "#fff",
+                      }}
+                    />
+                  </Mapbox.ShapeSource>
+      );
+      })}
+
 
         <ShortestPathMap
           graph={h8Graph}
