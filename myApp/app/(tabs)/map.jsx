@@ -582,8 +582,8 @@ export default function Map() {
         <ShortestPathMap
           graph={h8Graph}
           nodeCoordinates={h8Coordinates}
-          startNode="H817" // ✅ Correct ID format
-          endNode="H829" // ✅ Correct ID format
+          startNode={originText} // ✅ Correct ID format
+          endNode={destinationText} // ✅ Correct ID format
         />
         </Mapbox.MapView>
       </View>
