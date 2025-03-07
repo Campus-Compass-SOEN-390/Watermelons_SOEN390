@@ -1,29 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
 import Mapbox from "@rnmapbox/maps";
 import { dijkstra } from "./ShortestPath";
 import Graph from "./Graphs/Graph";
 import nodeCoordinates from "./Coordinates/nodeCoordinates";
 
 // Set your Mapbox access token
-Mapbox.setAccessToken("YOUR_MAPBOX_ACCESS_TOKEN");
+Mapbox.setAccessToken("sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw");
 
-const ShortestPathMap = ({ startNode, endNode, nodeCoordinates }) => {
+const ShortestPathMap = ({ startNode, endNode }) => {
   const [pathCoordinates, setPathCoordinates] = useState([]);
 
   useEffect(() => {
     if (!startNode || !endNode || !nodeCoordinates) return;
 
     // Find shortest path using Dijkstra's algorithm
-    const shortestPathNodes = dijkstra(hallwayGraph, startNode, endNode);
+    const shortestPathNodes = dijkstra(Graph, startNode, endNode);
 
     if (shortestPathNodes) {
       const coordinates = shortestPathNodes.map((node) => nodeCoordinates[node]);
       setPathCoordinates(coordinates);
     }
-  }, [startNode, endNode, nodeCoordinates]);
+  }, [startNode, endNode]);
 
-  if (pathCoordinates.length < 2) return null;
+  if (pathCoordinates.length < 2) return null; // Don't render if path is invalid
 
   const geoJsonPath = {
     type: "FeatureCollection",
@@ -40,22 +39,17 @@ const ShortestPathMap = ({ startNode, endNode, nodeCoordinates }) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <Mapbox.MapView style={{ flex: 1 }}>
-        <Mapbox.Camera zoomLevel={18} centerCoordinate={pathCoordinates[0]} />
-        <Mapbox.ShapeSource id="shortestPath" shape={geoJsonPath}>
-          <Mapbox.LineLayer
-            id="pathLayer"
-            style={{
-              lineColor: "blue",
-              lineWidth: 4,
-              lineJoin: "round",
-              lineCap: "round",
-            }}
-          />
-        </Mapbox.ShapeSource>
-      </Mapbox.MapView>
-    </View>
+    <Mapbox.ShapeSource id="shortestPath" shape={geoJsonPath}>
+      <Mapbox.LineLayer
+        id="pathLayer"
+        style={{
+          lineColor: "blue",
+          lineWidth: 4,
+          lineJoin: "round",
+          lineCap: "round",
+        }}
+      />
+    </Mapbox.ShapeSource>
   );
 };
 

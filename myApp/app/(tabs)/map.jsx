@@ -1,10 +1,9 @@
-import { Text, TouchableOpacity, View, Modal, Image } from "react-native";
+import { Text, TouchableOpacity, View, Modal, Image, SafeAreaView, } from "react-native";
 import React, {
   useState,
   useRef,
   Fragment,
   useEffect,
-  SafeAreaView,
 } from "react";
 import styles from "../styles/IndoorMapStyles";
 import outdoorStyles from "../styles/OutdoorMapStyles";
@@ -577,6 +576,12 @@ export default function Map() {
               filter={["==", ["geometry-type"], "Point"]}
             />
           </Mapbox.VectorSource>
+
+        <ShortestPathMap
+          startNode="801" // ✅ Correct ID format
+          endNode="802" // ✅ Correct ID format
+          nodeCoordinates={nodeCoordinates}
+        />
         </Mapbox.MapView>
       </View>
 
@@ -716,14 +721,6 @@ export default function Map() {
         building={selectedBuilding}
         onGetDirections={handleBuildingGetDirections}
       />
-
-      <SafeAreaView style={{ flex: 1 }}>
-        <ShortestPathMap
-          startNode="path_801" // ✅ Correct ID format
-          endNode="path_802" // ✅ Correct ID format
-          nodeCoordinates={nodeCoordinates}
-        />
-      </SafeAreaView>
     </View>
   );
 }
