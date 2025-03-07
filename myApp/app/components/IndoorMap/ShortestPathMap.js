@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
 import Mapbox from "@rnmapbox/maps";
 import { dijkstra } from "./ShortestPath";
-import Graph from "./Graphs/Graph";
-import nodeCoordinates from "./Coordinates/nodeCoordinates";
 
 // Set your Mapbox access token
 Mapbox.setAccessToken("sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw");
 
-const ShortestPathMap = ({ startNode, endNode }) => {
+const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode }) => {
   const [pathCoordinates, setPathCoordinates] = useState([]);
 
   useEffect(() => {
     if (!startNode || !endNode || !nodeCoordinates) return;
 
     // Find shortest path using Dijkstra's algorithm
-    const shortestPathNodes = dijkstra(Graph, startNode, endNode);
+    const shortestPathNodes = dijkstra(graph, startNode, endNode);
 
     if (shortestPathNodes) {
       const coordinates = shortestPathNodes.map((node) => nodeCoordinates[node]);
