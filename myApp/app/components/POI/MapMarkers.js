@@ -1,7 +1,7 @@
 import React from "react";
 import Mapbox from "@rnmapbox/maps";
 import { TouchableOpacity } from "react-native";
-
+import {View} from 'react-native';
 // Update MapMarkers to handle coordinates correctly and make markers clickable
 export default function MapMarkers({ data, MarkerComponent, onMarkerPress }) {
   console.log("MapMarkers data:", data[0]);

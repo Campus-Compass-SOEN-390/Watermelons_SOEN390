@@ -15,9 +15,13 @@ const POIPopup = ({ poi, distance, onClose, onGetDirections }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="poi-popup">
       {/* Close button */}
-      <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+      <TouchableOpacity 
+        style={styles.closeButton} 
+        onPress={onClose}
+        testID="close-button"
+      >
         <MaterialIcons name="close" size={20} color="#666" />
       </TouchableOpacity>
 
@@ -32,7 +36,11 @@ const POIPopup = ({ poi, distance, onClose, onGetDirections }) => {
       </Text>
 
       {/* Get directions button */}
-      <TouchableOpacity style={styles.directionsButton} onPress={onGetDirections}>
+      <TouchableOpacity 
+        style={styles.directionsButton} 
+        onPress={onGetDirections}
+        testID="directions-button"
+      >
         <MaterialIcons name="directions" size={16} color="white" />
         <Text style={styles.directionsText}>Get Directions</Text>
       </TouchableOpacity>

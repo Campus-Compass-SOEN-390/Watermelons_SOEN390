@@ -46,6 +46,7 @@ const POIListItem = ({ item, userLocation, calculateDistance }) => {
                     source={{ uri: imageUrl }}
                     style={styles.poiImage}
                     resizeMode="cover"
+                    testID="poi-image"
                     onError={(e) => {
                         console.log(`Image error for ${item.name}:`, e.nativeEvent.error);
                         setImageError(true);
@@ -113,7 +114,7 @@ const POIList = ({
     if (isLoading && !refreshing) {
         return (
             <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#922338" />
+                <ActivityIndicator size="large" color="#922338" testID="activity-indicator" />
                 <Text style={styles.loadingText}>Loading places...</Text>
             </View>
         );
@@ -149,6 +150,7 @@ const POIList = ({
 
     return (
         <FlatList
+            testID="poi-flatlist"
             data={data}
             renderItem={({ item }) => (
                 <POIListItem
