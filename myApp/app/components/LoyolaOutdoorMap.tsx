@@ -167,9 +167,10 @@ const LoyolaOutdoorMap = () => {
         onClose={() => {
           setPopupVisible(false);
           setSelectedBuilding(null); // Clear selected building when closing
-        }}
-        building={selectedBuilding}
-      />
+        } }
+        building={selectedBuilding} onGetDirections={function (building: any): void {
+          throw new Error("Function not implemented.");
+        } }      />
 
       {/* Popup Modal for Location Permission Denial */}
       <Modal visible={showPermissionPopup} transparent animationType="slide">

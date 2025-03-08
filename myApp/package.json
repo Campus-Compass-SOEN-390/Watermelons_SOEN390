@@ -38,6 +38,7 @@
     "expo": "^52.0.37",
     "expo-blur": "~14.0.3",
     "expo-constants": "~17.0.5",
+    "expo-dev-client": "~5.0.12",
     "expo-font": "~13.0.3",
     "expo-haptics": "~14.0.1",
     "expo-linking": "~7.0.5",
@@ -81,6 +82,7 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@expo/cli": "^0.22.13",
+    "@react-native-community/cli": "latest",
     "@react-navigation/native": "^7.0.14",
     "@testing-library/react-native": "^13.0.1",
     "@types/axios": "^0.9.36",

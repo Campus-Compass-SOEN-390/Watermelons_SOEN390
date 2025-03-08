@@ -15,7 +15,8 @@ import tabStyles from "../styles/LayoutStyles";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
 import MapDirections from "../components/MapDirections";
 
-const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
+//const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
+const MAPBOX_API = "pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw"
 Mapbox.setAccessToken(MAPBOX_API);
 console.log("MAPBOX API KEY:", MAPBOX_API);
 console.log("GOOGLE API KEY:", Constants.expoConfig?.extra?.apiKey);

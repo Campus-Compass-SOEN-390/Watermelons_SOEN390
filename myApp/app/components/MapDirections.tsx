@@ -3,7 +3,8 @@ import Mapbox from "@rnmapbox/maps";
 import { View } from "react-native";
 import Constants from "expo-constants";
 
-const MAPBOX_API_KEY = Constants.expoConfig?.extra?.mapbox;
+//const MAPBOX_API_KEY = Constants.expoConfig?.extra?.mapbox;
+const MAPBOX_API_KEY = "pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw"
 Mapbox.setAccessToken(MAPBOX_API_KEY);
 
 interface Props {
