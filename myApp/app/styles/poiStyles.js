@@ -59,7 +59,7 @@ export const styles = StyleSheet.create({
   },
   updateButtonContainer: {
     position: "absolute",
-    top: 20,
+    bottom: 320,
     alignSelf: "center",
     backgroundColor: "rgba(255,255,255,0.8)",
     borderRadius: 5,
