@@ -1,5 +1,19 @@
-import { Text, TouchableOpacity, View, Modal, Image, ActivityIndicator } from "react-native";
-import React, { useState, useRef, Fragment, useEffect, useMemo, useCallback } from "react";
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  Modal,
+  Image,
+  ActivityIndicator,
+} from "react-native";
+import React, {
+  useState,
+  useRef,
+  Fragment,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import styles from "../styles/IndoorMapStyles";
 import outdoorStyles from "../styles/OutdoorMapStyles";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -17,12 +31,12 @@ import MapDirections from "../components/MapDirections";
 // Import POI related components
 import MapMarkers from "../components/POI/MapMarkers";
 import FilterModal from "../components/POI/FilterModal";
-import { CoffeeMarker, RestaurantMarker, ActivityMarker } from "../components/POI/Markers";
 import {
-  fetchPOIData,
-  updatePOICache,
-  getCachedPOIData,
-} from "../api/poiApi";
+  CoffeeMarker,
+  RestaurantMarker,
+  ActivityMarker,
+} from "../components/POI/Markers";
+import { fetchPOIData, updatePOICache, getCachedPOIData } from "../api/poiApi";
 import { styles as poiStyles } from "../styles/poiStyles";
 
 const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
@@ -61,9 +75,8 @@ export default function IndoorMap() {
   // Location & permissions
   const { location, hasPermission } = useLocation();
   const [showLocating, setShowLocating] = useState(true);
-  const [showPermissionPopup, setShowPermissionPopup] = useState(
-    !hasPermission
-  );
+  const [showPermissionPopup, setShowPermissionPopup] =
+    useState(!hasPermission);
 
   // Building popup
   const [selectedBuilding, setSelectedBuilding] = useState(null);
@@ -86,21 +99,21 @@ export default function IndoorMap() {
   const [loading, setLoading] = useState(false);
   const [region, setRegion] = useState(null);
   const [lastFetchedRegion, setLastFetchedRegion] = useState(null);
-  const [showUpdateButton, setShowUpdateButton] = useState(false);
+  const [showUpdateButton, setShowUpdateButton] = useState(true);
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
   const [distance, setDistance] = useState(10);
   const [showCafes, setShowCafes] = useState(true);
   const [showRestaurants, setShowRestaurants] = useState(true);
   const [showActivities, setShowActivities] = useState(true);
   const [poiError, setPoiError] = useState(null);
-  const [showPOI, setShowPOI] = useState(false);
+  const [showPOI, setShowPOI] = useState(true);
 
   const isFetchingRef = useRef(false);
   const activeRequestRef = useRef(null);
 
   const handleIndoorBuildingSelect = (building) => {
     const buildingCenter = calculateCentroid(
-      convertCoordinates(building.coordinates)
+      convertCoordinates(building.coordinates),
     );
 
     if (selectedIndoorBuilding?.id === building.id) {
@@ -166,7 +179,7 @@ export default function IndoorMap() {
   // Fetch GeoJSON
   useEffect(() => {
     fetch(
-      `https://api.mapbox.com/datasets/v1/7anine/cm7qjtnoy2d3o1qmmngcrv0jl/features?access_token=pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw`
+      `https://api.mapbox.com/datasets/v1/7anine/cm7qjtnoy2d3o1qmmngcrv0jl/features?access_token=pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw`,
     )
       .then((response) => response.json())
       .then((data) => {
@@ -205,7 +218,7 @@ export default function IndoorMap() {
         setShowLocating(false);
         let found = false;
         for (const building of buildings.filter(
-          (b) => b.coordinates && b.coordinates.length > 0
+          (b) => b.coordinates && b.coordinates.length > 0,
         )) {
           if (isPointInPolygon(location, building.coordinates)) {
             setHighlightedBuilding(building.name);
@@ -222,7 +235,6 @@ export default function IndoorMap() {
       console.log("Crashed at 2");
     }
   }, [location, hasPermission]);
-
 
   //This useEffect manages orgin, destination and the footer appearing when any of the dependcies change
   useEffect(() => {
@@ -277,7 +289,7 @@ export default function IndoorMap() {
   // Load cached POI data on mount if available
   useEffect(() => {
     if (!showPOI) return;
-    
+
     const cachedData = getCachedPOIData();
     if (
       cachedData.coffeeShops.length > 0 ||
@@ -291,7 +303,11 @@ export default function IndoorMap() {
         setLastFetchedRegion(cachedData.lastRegion);
       }
       const now = Date.now();
-      if (now - cachedData.lastFetchTime > 10 * 60 * 1000 && location && region) {
+      if (
+        now - cachedData.lastFetchTime > 10 * 60 * 1000 &&
+        location &&
+        region
+      ) {
         console.log("Cache is stale, fetching new POI data");
         handleFetchPlaces();
       } else {
@@ -313,7 +329,7 @@ export default function IndoorMap() {
   // Initial fetch if no data is loaded
   useEffect(() => {
     if (!showPOI) return;
-    
+
     const shouldFetch =
       location &&
       region &&
@@ -325,7 +341,14 @@ export default function IndoorMap() {
       console.log("Initial data fetch triggered");
       handleFetchPlaces();
     }
-  }, [location, coffeeShops.length, restaurants.length, activities.length, showPOI, region]);
+  }, [
+    location,
+    coffeeShops.length,
+    restaurants.length,
+    activities.length,
+    showPOI,
+    region,
+  ]);
 
   // Cleanup active requests on unmount
   useEffect(() => {
@@ -356,7 +379,7 @@ export default function IndoorMap() {
       setActivities(act);
       updatePOICache(coffee, resto, act, currentRegion);
       setLastFetchedRegion(currentRegion);
-      setShowUpdateButton(false);
+      setShowUpdateButton(true);
     } catch (error) {
       if (error.name === "AbortError") {
         console.log("Fetch aborted");
@@ -471,12 +494,12 @@ export default function IndoorMap() {
     if (activeCampus === "sgw") {
       updateDestination(
         coordinatesMap["Loyola Campus, Shuttle Stop"],
-        "Loyola Campus, Shuttle Stop"
+        "Loyola Campus, Shuttle Stop",
       );
     } else {
       updateDestination(
         coordinatesMap["SGW Campus, Shuttle Stop"],
-        "SGW Campus, Shuttle Stop"
+        "SGW Campus, Shuttle Stop",
       );
     }
     setShuttleRoute(route);
@@ -500,7 +523,7 @@ export default function IndoorMap() {
           latitudeDelta: 0.005,
           longitudeDelta: 0.005,
         },
-        1000
+        1000,
       );
     }
   };
@@ -509,13 +532,13 @@ export default function IndoorMap() {
   const toggleCampus = () => {
     setActiveCampus((prev) => {
       const newCampus = prev === "sgw" ? "loy" : "sgw";
-  
+
       if (mapRef.current) {
         const newCenter =
           newCampus === "sgw"
-            ? [-73.5792229, 45.4951962] 
-            : [-73.6417009, 45.4581281]; 
-  
+            ? [-73.5792229, 45.4951962]
+            : [-73.6417009, 45.4581281];
+
         mapRef.current.setCamera({
           centerCoordinate: newCenter,
           zoomLevel: 15, // Adjust zoom level as needed
@@ -523,14 +546,14 @@ export default function IndoorMap() {
           animationDuration: 1000,
         });
       }
-  
+
       return newCampus;
     });
   };
-  
+
   // Toggle POI display
   const togglePOI = () => {
-    setShowPOI(prev => !prev);
+    setShowPOI((prev) => !prev);
     if (!showPOI && region) {
       handleFetchPlaces();
     }
@@ -539,33 +562,35 @@ export default function IndoorMap() {
   // Further filter points based on distance and selected filters
   const filteredPoints = useMemo(() => {
     if (!location || !showPOI) return [];
-    
-    const sortedPoints = [...coffeeShops, ...restaurants, ...activities].sort((a, b) => {
-      const aLat = a.geometry?.location?.lat;
-      const aLng = a.geometry?.location?.lng;
-      const bLat = b.geometry?.location?.lat;
-      const bLng = b.geometry?.location?.lng;
-      const aDistance =
-        aLat && aLng
-          ? calculateDistance(
-              location.latitude,
-              location.longitude,
-              aLat,
-              aLng,
-            )
-          : Infinity;
-      const bDistance =
-        bLat && bLng
-          ? calculateDistance(
-              location.latitude,
-              location.longitude,
-              bLat,
-              bLng,
-            )
-          : Infinity;
-      return aDistance - bDistance;
-    });
-    
+
+    const sortedPoints = [...coffeeShops, ...restaurants, ...activities].sort(
+      (a, b) => {
+        const aLat = a.geometry?.location?.lat;
+        const aLng = a.geometry?.location?.lng;
+        const bLat = b.geometry?.location?.lat;
+        const bLng = b.geometry?.location?.lng;
+        const aDistance =
+          aLat && aLng
+            ? calculateDistance(
+                location.latitude,
+                location.longitude,
+                aLat,
+                aLng,
+              )
+            : Infinity;
+        const bDistance =
+          bLat && bLng
+            ? calculateDistance(
+                location.latitude,
+                location.longitude,
+                bLat,
+                bLng,
+              )
+            : Infinity;
+        return aDistance - bDistance;
+      },
+    );
+
     return sortedPoints.filter((point) => {
       const lat = point.geometry?.location?.lat;
       const lng = point.geometry?.location?.lng;
@@ -604,15 +629,15 @@ export default function IndoorMap() {
       return isCafe || isRestaurant || isActivity;
     });
   }, [
-    coffeeShops, 
-    restaurants, 
-    activities, 
-    location, 
-    distance, 
-    showCafes, 
-    showRestaurants, 
+    coffeeShops,
+    restaurants,
+    activities,
+    location,
+    distance,
+    showCafes,
+    showRestaurants,
     showActivities,
-    showPOI
+    showPOI,
   ]);
 
   // Determine the current center based on active campus
@@ -632,11 +657,11 @@ export default function IndoorMap() {
             centerCoordinate={
               selectedIndoorBuilding
                 ? calculateCentroid(
-                    convertCoordinates(selectedIndoorBuilding.coordinates)
+                    convertCoordinates(selectedIndoorBuilding.coordinates),
                   )
                 : activeCampus === "sgw"
-                ? [-73.5792229, 45.4951962]
-                : [-73.6417009, 45.4581281]
+                  ? [-73.5792229, 45.4951962]
+                  : [-73.6417009, 45.4581281]
             }
             animationMode="flyTo"
             animationDuration={1000}
@@ -673,7 +698,7 @@ export default function IndoorMap() {
               .filter((b) => b.coordinates && b.coordinates.length > 0)
               .map((building) => {
                 const convertedCoords = convertCoordinates(
-                  building.coordinates
+                  building.coordinates,
                 );
                 const centroid = calculateCentroid(convertedCoords);
                 const fillColor =
@@ -840,7 +865,7 @@ export default function IndoorMap() {
               .filter(
                 (building) =>
                   building.campus.toLowerCase() ===
-                    activeCampus.toLowerCase() && building.hasIndoor === true
+                    activeCampus.toLowerCase() && building.hasIndoor === true,
               )
               .map((building) => (
                 <TouchableOpacity
@@ -891,12 +916,10 @@ export default function IndoorMap() {
           onPress={() => setIsFilterModalVisible(true)}
         >
           <MaterialIcons name="filter-list" size={22} color="white" />
-          <Text style={outdoorStyles.actionButtonText}>
-            Filters
-          </Text>
+          <Text style={outdoorStyles.actionButtonText}>Filters</Text>
         </TouchableOpacity>
       )}
-      
+
       {/* POI Loading Indicator */}
       {loading && (
         <View style={outdoorStyles.loadingContainer}>
@@ -905,12 +928,11 @@ export default function IndoorMap() {
       )}
 
       {/* POI Update Button - only visible when POI is enabled and region changed */}
-      {true && (
+      {showUpdateButton && showPOI && (
         <TouchableOpacity
-          style={poiStyles.updateButton}
+          style={poiStyles.updateButtonContainer}
           onPress={() => handleFetchPlaces(region)}
         >
-          <MaterialIcons name="refresh" size={22} color="white" />
           <Text style={poiStyles.updateButtonText}>Update POIs</Text>
         </TouchableOpacity>
       )}
@@ -931,14 +953,12 @@ export default function IndoorMap() {
 
       {/* Floating Buttons */}
       <View style={outdoorStyles.buttonContainer}>
-        <TouchableOpacity
-          style={outdoorStyles.button}
-          onPress={togglePOI}
-        >
-          <MaterialIcons name={showPOI ? "local-dining" : "restaurant"} size={24} color="white" />
-          <Text style={outdoorStyles.debugText}>
-            {showPOI ? "Hide POI" : "Show POI"}
-          </Text>
+        <TouchableOpacity style={outdoorStyles.button} onPress={togglePOI}>
+          <MaterialIcons
+            name={showPOI ? "local-dining" : "restaurant"}
+            size={24}
+            color="white"
+          />
         </TouchableOpacity>
       </View>
 

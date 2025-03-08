@@ -1,16 +1,23 @@
+// outdoorMapStyles.js
 import { StyleSheet, Dimensions } from "react-native";
+
+// Set these variables as needed (or import them from a config)
+const safeAreaTop = 20;
+const safeAreaBottom = 20;
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 export default StyleSheet.create({
-  // Entire screen container
+  // Container that wraps the whole screen, now accounting for safe areas
   containerForMap: {
     flex: 1,
     backgroundColor: "#fff",
+    paddingTop: safeAreaTop,
+    paddingBottom: 0,
   },
 
-  // The actual map should fill the available space
+  // The actual map container – note that its size remains the full screen dimensions.
   container: {
     flex: 1,
     width: screenWidth,
@@ -20,24 +27,17 @@ export default StyleSheet.create({
     flex: 1,
   },
 
-  // Floating buttons container: positioned near bottom-right
+  // Floating buttons container: positioned near bottom-right, raised above the safe area
   buttonContainer: {
     position: "absolute",
     right: 20,
-    bottom: 100, // Enough space above the tab bar
+    bottom: safeAreaBottom + 80, // 80px above bottom safe area margin
     alignItems: "center",
   },
-  // Redesigned modern floating button
   button: {
-    backgroundColor: "#1E88E5", // Modern blue shade
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    elevation: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
+    backgroundColor: "#922338",
+    padding: 10,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 16,
@@ -48,12 +48,14 @@ export default StyleSheet.create({
     marginTop: 2,
   },
 
-  // Modal styles remain the same:
+  // Modal styles adjusted for safe areas
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
+    paddingTop: safeAreaTop,
+    paddingBottom: safeAreaBottom,
   },
   modalContent: {
     backgroundColor: "white",
@@ -90,10 +92,11 @@ export default StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
-  // Switch Button Container is now positioned on the left
+
+  // Switch Button Container now placed above the bottom safe area
   switchButtonContainer: {
     position: "absolute",
-    bottom: 65,
+    bottom: safeAreaBottom + 15,
     left: 20,
     zIndex: 2,
   },
@@ -101,32 +104,33 @@ export default StyleSheet.create({
     backgroundColor: "#922338",
     padding: 10,
     borderRadius: 20,
-    bottom: 50,
+    marginBottom: 10,
   },
-  // Switch Button Text: white, bold, and easily readable
   switchButtonText: {
     color: "#fff",
     fontWeight: "bold",
     fontSize: 13,
   },
+
+  // Shuttle button styled and positioned similar to other buttons
   shuttleButton: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#922338",
     padding: 10,
     borderRadius: 20,
-    bottom: 50,
+    marginBottom: 10,
   },
   shuttleButtonContainer: {
     position: "absolute",
-    bottom: 65,
+    bottom: safeAreaBottom + 85,
     left: 150,
     zIndex: 2,
   },
   shuttleIcon: {
-    width: 15, // Adjust width as needed (smaller size)
-    height: 15, // Adjust height as needed (smaller size)
-    marginRight: 8, // Space between image and text (optional)
+    width: 15,
+    height: 15,
+    marginRight: 8,
   },
   titleForMap: {
     fontSize: 20,
@@ -136,15 +140,15 @@ export default StyleSheet.create({
     color: "#333",
   },
   annotationContainer: {
-    backgroundColor: "rgba(255, 255, 255, 0.7)", 
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
     borderRadius: 10,
     padding: 10,
   },
   annotationText: {
     fontWeight: "bold",
     textAlign: "center",
-    color: "#333", 
+    color: "#333",
     fontSize: 24,
-    fontFamily: 'Arial'
+    fontFamily: "Arial",
   },
 });

@@ -1,79 +1,93 @@
-// src/styles/poiStyles.js
-import { StyleSheet } from "react-native";
+// poiStyles.js
+import { StyleSheet, Dimensions } from "react-native";
+
+// Set safe area variables (adjust as needed)
+const safeAreaTop = 20;
+const safeAreaBottom = 20;
+
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 
 export const styles = StyleSheet.create({
+  // Modal styles for POI components, including safe area padding
   modalContainer: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    paddingTop: safeAreaTop,
+    paddingBottom: safeAreaBottom,
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: "#ffffff",
     padding: 20,
     borderRadius: 10,
+    width: "80%",
     alignItems: "center",
+    shadowColor: "#000",
+    elevation: 8,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
+    marginBottom: 10,
   },
+  modalText: {
+    fontSize: 14,
+    textAlign: "center",
+    marginBottom: 15,
+  },
+  closeButton: {
+    backgroundColor: "#ff5252",
+    padding: 8,
+    borderRadius: 20,
+    width: 30,
+    height: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  closeButtonText: {
+    color: "#ffffff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+
+  // Updated POI button styled to match the team theme.
+  // Positioned at the bottom center, just above the safe area.
+  updateButtonContainer: {
+    position: "absolute",
+    bottom: safeAreaBottom + 20,
+    alignSelf: "center",
+    backgroundColor: "#922338", // Team's primary color
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    shadowColor: "#000",
+    elevation: 8,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+  },
+  updateButtonText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+
+  // Redesigned filter option style for the POI filtering modal.
+  // This layout uses a light background, rounded corners, and proper spacing.
   filterOption: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    width: "80%",
+    width: "90%",
     marginVertical: 10,
-  },
-  closeButton: {
-    marginTop: 20,
     padding: 10,
-    backgroundColor: "#1E88E5",
-    borderRadius: 5,
-  },
-  closeButtonText: {
-    color: "white",
-  },
-  filterButton: {
-    position: "absolute",
-    bottom: 20,
-    left: 20,
-    backgroundColor: "#1E88E5",
-    padding: 10,
-    borderRadius: 5,
-  },
-  filterButtonText: {
-    color: "white",
-  },
-  buttonContainer: {
-    position: "absolute",
-    bottom: 20,
-    right: 20,
-    flexDirection: "column",
-  },
-  button: {
-    marginVertical: 5,
-    backgroundColor: "#1E88E5",
-    padding: 10,
-    borderRadius: 5,
-  },
-  updateButtonContainer: {
-    position: "absolute",
-    bottom: 320,
-    alignSelf: "center",
-    backgroundColor: "rgba(255,255,255,0.8)",
-    borderRadius: 5,
-  },
-  updateButton: {
-    padding: 10,
-  },
-  updateButtonText: {
-    color: "#1E88E5",
-  },
-  loadingContainer: {
-    position: "absolute",
-    top: "50%",
-    left: 0,
-    right: 0,
+    backgroundColor: "#f2f2f2",
+    borderRadius: 10,
   },
 });
