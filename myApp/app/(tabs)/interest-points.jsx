@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-Text, 
-  TouchableOpacity, 
-  SafeAreaView, 
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
   StatusBar,
   Alert
 } from 'react-native';
@@ -25,7 +25,7 @@ const InterestPoints = () => {
   });
   const [userLocation, setUserLocation] = useState(null);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
-  
+
   // Filter states
   const [distance, setDistance] = useState(2);
   const [showCafes, setShowCafes] = useState(true);
@@ -35,11 +35,11 @@ const InterestPoints = () => {
   // Get user location and load POI data
   useEffect(() => {
     let isMounted = true;
-    
+
     const loadLocationAndData = async () => {
       setIsLoading(true);
       setError(null);
-      
+
       try {
         console.log("Getting location permissions...");
         let { status } = await Location.requestForegroundPermissionsAsync();
@@ -50,25 +50,25 @@ const InterestPoints = () => {
           }
           return;
         }
-        
+
         console.log("Getting current location...");
         const location = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.Balanced
         });
-        
+
         if (!isMounted) return;
-        
+
         const coords = {
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
         };
-        
+
         console.log("Location obtained:", coords);
         setUserLocation(coords);
-        
+
         // Always fetch fresh data from current location
         await fetchPOIs(coords);
-        
+
       } catch (err) {
         console.error("Error in location and data loading:", err);
         if (isMounted) {
@@ -77,12 +77,12 @@ const InterestPoints = () => {
         }
       }
     };
-    
+
     loadLocationAndData();
-    
+
     return () => { isMounted = false; };
   }, []);
-  
+
   // Function to fetch POIs
   const fetchPOIs = async (coords) => {
     if (!coords) {
@@ -91,21 +91,21 @@ const InterestPoints = () => {
       setIsLoading(false);
       return;
     }
-    
+
     try {
       console.log("Fetching POI data for", coords);
       const abortController = new AbortController();
-      
+
       const region = {
         latitude: coords.latitude,
         longitude: coords.longitude,
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
       };
-      
+
       const result = await fetchPOIData(region, abortController.signal);
       console.log(`POI data fetched: ${result.coffee?.length || 0} cafes, ${result.resto?.length || 0} restaurants, ${result.act?.length || 0} activities`);
-      
+
       setPoiData({
         coffeeShops: result.coffee || [],
         restaurants: result.resto || [],
@@ -124,17 +124,17 @@ const InterestPoints = () => {
   const handleRefresh = async () => {
     console.log("Refreshing data...");
     setRefreshing(true);
-    
+
     try {
       const location = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.Balanced
       });
-      
+
       const coords = {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
       };
-      
+
       setUserLocation(coords);
       await fetchPOIs(coords);
     } catch (err) {
@@ -146,41 +146,41 @@ const InterestPoints = () => {
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     if (!lat1 || !lon1 || !lat2 || !lon2) return null;
-    
+
     const R = 6371; // Radius of the earth in km
     const dLat = deg2rad(lat2 - lat1);
     const dLon = deg2rad(lon2 - lon1);
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c; // Distance in km
     return d;
   };
 
   const deg2rad = (deg) => {
-    return deg * (Math.PI/180);
+    return deg * (Math.PI / 180);
   };
 
   const getFilteredData = () => {
     if (!userLocation) return [];
-    
+
     let allPOIs = [];
-    
+
     if (showCafes) {
-      allPOIs = [...allPOIs, ...poiData.coffeeShops.map(poi => ({...poi, category: 'cafe'}))]
+      allPOIs = [...allPOIs, ...poiData.coffeeShops.map(poi => ({ ...poi, category: 'cafe' }))]
     }
     if (showRestaurants) {
-      allPOIs = [...allPOIs, ...poiData.restaurants.map(poi => ({...poi, category: 'restaurant'}))]
+      allPOIs = [...allPOIs, ...poiData.restaurants.map(poi => ({ ...poi, category: 'restaurant' }))]
     }
     if (showActivities) {
-      allPOIs = [...allPOIs, ...poiData.activities.map(poi => ({...poi, category: 'activity'}))]
+      allPOIs = [...allPOIs, ...poiData.activities.map(poi => ({ ...poi, category: 'activity' }))]
     }
-    
+
     return allPOIs.filter(poi => {
       const poiDistance = calculateDistance(
-        userLocation.latitude, 
+        userLocation.latitude,
         userLocation.longitude,
         poi.geometry?.location?.lat,
         poi.geometry?.location?.lng
@@ -188,13 +188,13 @@ const InterestPoints = () => {
       return poiDistance !== null && poiDistance <= distance;
     }).sort((a, b) => {
       const distA = calculateDistance(
-        userLocation.latitude, 
+        userLocation.latitude,
         userLocation.longitude,
         a.geometry?.location?.lat,
         a.geometry?.location?.lng
       );
       const distB = calculateDistance(
-        userLocation.latitude, 
+        userLocation.latitude,
         userLocation.longitude,
         b.geometry?.location?.lat,
         b.geometry?.location?.lng
