@@ -36,6 +36,7 @@ import {
   RestaurantMarker,
   ActivityMarker,
 } from "../components/POI/Markers";
+import POIPopup from "../components/POI/POIPopup"; // Import the new component
 import { fetchPOIData, updatePOICache, getCachedPOIData } from "../api/poiApi";
 import { styles as poiStyles } from "../styles/poiStyles";
 
@@ -99,14 +100,17 @@ export default function IndoorMap() {
   const [loading, setLoading] = useState(false);
   const [region, setRegion] = useState(null);
   const [lastFetchedRegion, setLastFetchedRegion] = useState(null);
-  const [showUpdateButton, setShowUpdateButton] = useState(true);
+  const [showUpdateButton, setShowUpdateButton] = useState(false);
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
   const [distance, setDistance] = useState(10);
   const [showCafes, setShowCafes] = useState(true);
   const [showRestaurants, setShowRestaurants] = useState(true);
   const [showActivities, setShowActivities] = useState(true);
   const [poiError, setPoiError] = useState(null);
-  const [showPOI, setShowPOI] = useState(true);
+  const [showPOI, setShowPOI] = useState(false);
+
+  // Add state for selected POI
+  const [selectedPOI, setSelectedPOI] = useState(null);
 
   const isFetchingRef = useRef(false);
   const activeRequestRef = useRef(null);
@@ -204,7 +208,12 @@ export default function IndoorMap() {
         if (!region) {
           setRegion(currentRegion);
         }
-        mapRef.current.animateToRegion(currentRegion, 1000);
+        mapRef.current.setCamera({
+          centerCoordinate: [currentRegion.longitude, currentRegion.latitude],
+          zoomLevel: 15,
+          animationMode: "flyTo",
+          animationDuration: 1000,
+        });
       }
     } catch {
       console.log("Crashed at 1");
@@ -379,7 +388,7 @@ export default function IndoorMap() {
       setActivities(act);
       updatePOICache(coffee, resto, act, currentRegion);
       setLastFetchedRegion(currentRegion);
-      setShowUpdateButton(true);
+      setShowUpdateButton(false);
     } catch (error) {
       if (error.name === "AbortError") {
         console.log("Fetch aborted");
@@ -394,10 +403,50 @@ export default function IndoorMap() {
     }
   };
 
-  //navbar
+  // Add a tracking flag to prevent duplicate region change events
+  const isRegionChangingRef = useRef(false);
+
+  // Fix the handleRegionChange function to properly handle the Mapbox event object
+  const handleRegionChange = useCallback((feature) => {
+    if (isRegionChangingRef.current || !feature || !feature.properties) return;
+    
+    try {
+      // Get the center coordinates from the visibleBounds property
+      const { visibleBounds } = feature.properties;
+      if (!visibleBounds || visibleBounds.length < 2) {
+        console.log("No valid bounds in region change event");
+        return;
+      }
+      
+      // Calculate center from the visible bounds [sw, ne]
+      const centerLng = (visibleBounds[0][0] + visibleBounds[1][0]) / 2;
+      const centerLat = (visibleBounds[0][1] + visibleBounds[1][1]) / 2;
+      
+      if (isNaN(centerLat) || isNaN(centerLng)) {
+        console.log("Invalid center coordinates calculated from region change");
+        return;
+      }
+      
+      const newRegion = {
+        latitude: centerLat,
+        longitude: centerLng,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
+      };
+
+      // Update region state with current map center
+      setRegion(newRegion);
+      
+      console.log("Map region updated:", newRegion);
+    } catch (error) {
+      console.error("Error in handleRegionChange:", error);
+    }
+  }, []);
+
+  // navbar
   const navigation = useNavigation();
 
-  //Campus regions
+  // Campus regions
   const sgwRegion = {
     latitude: 45.4951962,
     longitude: -73.5792229,
@@ -509,22 +558,24 @@ export default function IndoorMap() {
   const centerMapOnCampus = () => {
     if (mapRef.current) {
       const currentRegion = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
-      mapRef.current.animateToRegion(currentRegion, 1000);
+      mapRef.current.setCamera({
+        centerCoordinate: [currentRegion.longitude, currentRegion.latitude],
+        zoomLevel: 15,
+        animationMode: "flyTo",
+        animationDuration: 1000,
+      });
     }
   };
 
   // Center on user
   const centerMapOnUser = () => {
     if (location && mapRef.current) {
-      mapRef.current.animateToRegion(
-        {
-          latitude: location.latitude,
-          longitude: location.longitude,
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005,
-        },
-        1000,
-      );
+      mapRef.current.setCamera({
+        centerCoordinate: [location.longitude, location.latitude],
+        zoomLevel: 17,
+        animationMode: "flyTo",
+        animationDuration: 1000,
+      });
     }
   };
 
@@ -646,11 +697,42 @@ export default function IndoorMap() {
       ? [-73.5792229, 45.4951962]
       : [-73.6417009, 45.4581281];
 
+  // Handle POI marker press
+  const handlePOIPress = (poi) => {
+    setSelectedPOI(selectedPOI?.place_id === poi.place_id ? null : poi);
+  };
+
+  // Calculate distance to the selected POI
+  const getDistanceToPOI = (poi) => {
+    if (!location || !poi?.geometry?.location) return null;
+    
+    const lat1 = location.latitude;
+    const lon1 = location.longitude;
+    const lat2 = poi.geometry.location.lat;
+    const lon2 = poi.geometry.location.lng;
+    
+    return calculateDistance(lat1, lon1, lat2, lon2);
+  };
+
+  // Handle "Get Directions" button press
+  const handleGetDirections = (poi) => {
+    if (!poi?.geometry?.location) return;
+    
+    // For now, just close the popup
+    // Later we can add actual directions functionality
+    setSelectedPOI(null);
+    console.log("Get directions to:", poi.name);
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
         <StartAndDestinationPoints />
-        <Mapbox.MapView style={styles.map} styleURL={Mapbox.StyleURL.Light}>
+        <Mapbox.MapView 
+          style={styles.map} 
+          styleURL={Mapbox.StyleURL.Light}
+          onRegionDidChange={(feature) => handleRegionChange(feature)}
+        >
           <Mapbox.Camera
             ref={mapRef}
             zoomLevel={selectedIndoorBuilding ? 18 : 15} // Adjust zoom based on selection
@@ -811,17 +893,53 @@ export default function IndoorMap() {
           {showPOI && (
             <>
               {showCafes && coffeeShops.length > 0 && (
-                <MapMarkers data={coffeeShops} MarkerComponent="CoffeeMarker" />
+                <MapMarkers 
+                  data={coffeeShops} 
+                  MarkerComponent={CoffeeMarker} 
+                  onMarkerPress={handlePOIPress}
+                />
               )}
               {showRestaurants && restaurants.length > 0 && (
-                <MapMarkers data={restaurants} MarkerComponent="Restaurant" />
+                <MapMarkers 
+                  data={restaurants} 
+                  MarkerComponent={RestaurantMarker} 
+                  onMarkerPress={handlePOIPress}
+                />
               )}
               {showActivities && activities.length > 0 && (
-                <MapMarkers data={activities} MarkerComponent="Activity" />
+                <MapMarkers 
+                  data={activities} 
+                  MarkerComponent={ActivityMarker} 
+                  onMarkerPress={handlePOIPress}
+                />
               )}
             </>
           )}
         </Mapbox.MapView>
+      </View>
+
+      {/* Position Buttons */}
+      <View style={styles.positionButtonsContainer}>
+        {/* User Location Button */}
+        <TouchableOpacity 
+          style={styles.positionButton} 
+          onPress={centerMapOnUser}
+          testID="locate-me-button"
+        >
+          <MaterialIcons name="my-location" size={24} color="black" />
+        </TouchableOpacity>
+        
+        {/* Campus Location Button */}
+        <TouchableOpacity 
+          style={styles.positionButton} 
+          onPress={centerMapOnCampus}
+          testID="locate-campus-button"
+        >
+          <MaterialIcons name="location-on" size={24} color="black" />
+          <Text style={styles.campusButtonText}>
+            {activeCampus === "sgw" ? "SGW" : "LOY"}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       {/* Floor Navigation Buttons */}
@@ -915,8 +1033,7 @@ export default function IndoorMap() {
           style={outdoorStyles.actionButton}
           onPress={() => setIsFilterModalVisible(true)}
         >
-          <MaterialIcons name="filter-list" size={22} color="white" />
-          <Text style={outdoorStyles.actionButtonText}>Filters</Text>
+          <MaterialIcons name="filter-list" size={24} color="white" />
         </TouchableOpacity>
       )}
 
@@ -991,6 +1108,43 @@ export default function IndoorMap() {
         building={selectedBuilding}
         onGetDirections={handleBuildingGetDirections}
       />
+
+      {/* Floating POI popup container */}
+      {selectedPOI && (
+        <View
+          style={{
+            position: "absolute",
+            bottom: 120,
+            left: 0,
+            right: 0,
+            alignItems: "center",
+            zIndex: 999,
+          }}
+          pointerEvents="box-none"
+        >
+          <View pointerEvents="auto">
+            <POIPopup
+              poi={selectedPOI}
+              distance={getDistanceToPOI(selectedPOI)}
+              onClose={() => setSelectedPOI(null)}
+              onGetDirections={() => {
+                console.log(`Get directions for address: ${selectedPOI.vicinity || "unknown"}`);
+                setSelectedPOI(null);
+              }}
+            />
+          </View>
+        </View>
+      )}
     </View>
   );
+}
+
+// Helper function for debouncing
+function debounce(func, wait) {
+  let timeout;
+  return function(...args) {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
 }

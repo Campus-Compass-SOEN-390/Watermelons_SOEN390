@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: screenWidth,
     height: screenHeight,
+    position: 'relative',
   },
   floorButtonContainer: {
     backgroundColor: "#ffffff",
@@ -87,6 +88,46 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  loadingContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.7)",
+    zIndex: 20,
+  },
+  // Position button styles
+  positionButtonsContainer: {
+    position: "absolute",
+    left: 20,
+    bottom: 340, // Position above floor button container
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  positionButton: {
+    backgroundColor: "#ffffff",
+    width: 50,
+    height: 50,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
+    shadowColor: "#000",
+    elevation: 8,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+  },
+  campusButtonText: {
+    fontSize: 10,
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 

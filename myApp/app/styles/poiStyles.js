@@ -57,10 +57,10 @@ export const styles = StyleSheet.create({
   },
 
   // Updated POI button styled to match the team theme.
-  // Positioned at the bottom center, just above the safe area.
+  // Repositioned near top for easier access
   updateButtonContainer: {
     position: "absolute",
-    bottom: safeAreaBottom + 20,
+    top: safeAreaTop + 230, // Positioned below other top buttons
     alignSelf: "center",
     backgroundColor: "#922338", // Team's primary color
     borderRadius: 20,
@@ -71,6 +71,7 @@ export const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
+    zIndex: 10,
   },
   updateButtonText: {
     color: "#fff",
@@ -78,8 +79,6 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  // Redesigned filter option style for the POI filtering modal.
-  // This layout uses a light background, rounded corners, and proper spacing.
   filterOption: {
     flexDirection: "row",
     alignItems: "center",

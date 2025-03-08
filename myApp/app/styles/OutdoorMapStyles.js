@@ -22,17 +22,21 @@ export default StyleSheet.create({
     flex: 1,
     width: screenWidth,
     height: screenHeight,
+    position: 'relative',
   },
   map: {
     flex: 1,
+    width: '100%',
+    height: '100%',
   },
 
-  // Floating buttons container: positioned near bottom-right, raised above the safe area
+  // Floating buttons container: Moved to bottom-right
   buttonContainer: {
     position: "absolute",
     right: 20,
-    bottom: safeAreaBottom + 80, // 80px above bottom safe area margin
+    bottom: 100, // Position above tab bar
     alignItems: "center",
+    zIndex: 10,
   },
   button: {
     backgroundColor: "#922338",
@@ -41,6 +45,8 @@ export default StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 16,
+    width: 50,
+    height: 50,
   },
   debugText: {
     color: "white",
@@ -150,5 +156,44 @@ export default StyleSheet.create({
     color: "#333",
     fontSize: 24,
     fontFamily: "Arial",
+  },
+
+  // Action button (Filter button) - repositioned to bottom right
+  actionButton: {
+    position: "absolute",
+    bottom: 180, // Position above the POI toggle button
+    right: 20,
+    backgroundColor: "#922338",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+    borderRadius: 20,
+    zIndex: 10,
+    width: 50,
+    height: 50,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  actionButtonText: {
+    color: "white",
+    marginLeft: 5,
+    fontWeight: "bold",
+  },
+
+  // Loading indicato
+  loadingContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    color: "#922338",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.7)",
+    zIndex: 20,
   },
 });

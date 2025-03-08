@@ -1,11 +1,10 @@
 import React from "react";
 import Mapbox from "@rnmapbox/maps";
-import { RestaurantMarker, CoffeeMarker, ActivityMarker } from "./Markers";
-import { Text } from "react-native";
+import { TouchableOpacity } from "react-native";
 
-// Update MapMarkers to handle coordinates correctly
-export default function MapMarkers({ data, MarkerComponent }) {
-  console.debug("marker", MarkerComponent);
+// Update MapMarkers to handle coordinates correctly and make markers clickable
+export default function MapMarkers({ data, MarkerComponent, onMarkerPress }) {
+  console.log("MapMarkers data:", data[0]);
   return data.map((point) => {
     const lat = point?.geometry?.location?.lat;
     const lng = point?.geometry?.location?.lng;
@@ -16,14 +15,17 @@ export default function MapMarkers({ data, MarkerComponent }) {
       point.place_id || `marker-${Math.random().toString(36).substr(2, 9)}`;
 
     return (
-      <Mapbox.PointAnnotation
+      <Mapbox.MarkerView
         key={pointId}
         id={pointId}
         coordinate={[lng, lat]}
         title={point.name || "Location"}
+        onPress={() => onMarkerPress && onMarkerPress(point)}
       >
-        <Text>{MarkerComponent}</Text>
-      </Mapbox.PointAnnotation>
+        <TouchableOpacity onPress={() => onMarkerPress && onMarkerPress(point)}>
+          <MarkerComponent />
+        </TouchableOpacity>
+      </Mapbox.MarkerView>
     );
   });
 }
