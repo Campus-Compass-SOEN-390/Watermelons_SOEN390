@@ -15,10 +15,16 @@ import tabStyles from "../styles/LayoutStyles";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
 import MapDirections from "../components/MapDirections";
 
-const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
+// const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
+// Mapbox.setAccessToken(MAPBOX_API);
+// console.log("MAPBOX API KEY:", MAPBOX_API);
+// console.log("GOOGLE API KEY:", Constants.expoConfig?.extra?.apiKey);
+
+const MAPBOX_API = "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw";
 Mapbox.setAccessToken(MAPBOX_API);
 console.log("MAPBOX API KEY:", MAPBOX_API);
-console.log("GOOGLE API KEY:", Constants.expoConfig?.extra?.apiKey);
+console.log("GOOGLE API KEY:", "YOUR_GOOGLE_API_KEY");
+
 
 // Converts building.coordinates [{latitude, longitude}, ...] to [[lng, lat], ...]
 const convertCoordinates = (coords) =>

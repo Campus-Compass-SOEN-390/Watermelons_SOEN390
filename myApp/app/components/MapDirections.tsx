@@ -3,8 +3,11 @@ import Mapbox from "@rnmapbox/maps";
 import { View } from "react-native";
 import Constants from "expo-constants";
 
-const MAPBOX_API_KEY = Constants.expoConfig?.extra?.mapbox;
+// const MAPBOX_API_KEY = Constants.expoConfig?.extra?.mapbox;
+// Mapbox.setAccessToken(MAPBOX_API_KEY);
+const MAPBOX_API_KEY = "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw";
 Mapbox.setAccessToken(MAPBOX_API_KEY);
+
 
 interface Props {
   origin: { latitude: number; longitude: number } | null;
