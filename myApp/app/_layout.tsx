@@ -1,5 +1,6 @@
 import React from 'react';
 import { Stack } from 'expo-router';
+import { IndoorMapProvider } from './context/IndoorMapContext';
 
 export default function RootLayout() {
   return (

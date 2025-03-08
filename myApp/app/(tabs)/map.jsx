@@ -23,11 +23,25 @@ import { buildings, getBuildingById } from "../api/buildingData";
 import { isPointInPolygon } from "geolib";
 import useLocation from "../hooks/useLocation";
 import { useLocationContext } from "../context/LocationContext";
+import { useIndoorMapContext } from "../context/IndoorMapContext";
 import { useNavigation } from "@react-navigation/native";
 import { BuildingPopup } from "../components/BuildingPopUp";
 import tabStyles from "../styles/LayoutStyles";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
+import IndoorMap from "../components/IndoorMap/IndoorMap";
+import FloorNavigation from "../components/FloorNavigation";
 import MapDirections from "../components/MapDirections";
+import ShortestPathMap from "../components/IndoorMap/ShortestPathMap";
+import { nodeCoordinates } from "../components/IndoorMap/Coordinates/hCoordinates";
+import { graph } from "../components/IndoorMap/Graphs/hGraph";
+import {
+  handleIndoorBuildingSelect,
+  handleClearIndoorMap,
+  calculateCentroid,
+  convertCoordinates,
+} from "../utils/indoor-map";
+import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
+import { extractShuttleInfo } from "../api/shuttleLiveData";
 // Import POI related components
 import MapMarkers from "../components/POI/MapMarkers";
 import FilterModal from "../components/POI/FilterModal";
@@ -69,6 +83,8 @@ export default function IndoorMap() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [geoJsonData, setGeoJsonData] = useState(null);
 
+
+export default function Map() {
   // Campus switching
   const [activeCampus, setActiveCampus] = useState("sgw");
   const mapRef = useRef(null);
@@ -89,10 +105,36 @@ export default function IndoorMap() {
   //Statues for displaying shuttle polylines or not
   const [shuttleRoute, setShuttleRoute] = useState("");
 
-  // Indoor map status
-  const [showIndoorMap, setShowIndoorMap] = useState(false);
-  const [selectedIndoorBuilding, setSelectedIndoorBuilding] = useState(null);
+  //Set Shuttle Live loc
+  const [shuttleLocations, setShuttleLocations] = useState([]);
+  const fetchInterval = 30000;
 
+  const coordinatesMap = {
+    "My Position": location?.latitude
+      ? { latitude: location.latitude, longitude: location.longitude }
+      : undefined,
+    "Hall Building": { latitude: 45.4961, longitude: -73.5772 },
+    "Loyola Campus, Shuttle Stop": { latitude: 45.49706, longitude: -73.57849 },
+    "SGW Campus, Shuttle Stop": { latitude: 45.45789, longitude: -73.63882 },
+    "EV Building": { latitude: 45.4957, longitude: -73.5773 },
+    "SGW Campus": { latitude: 45.4962, longitude: -73.578 },
+    "Loyola Campus": { latitude: 45.4582, longitude: -73.6405 },
+    "Montreal Downtown": { latitude: 45.5017, longitude: -73.5673 },
+  };
+
+  // Track selected floor
+  const [selectedFloor, setSelectedFloor] = useState(null);
+
+  // Handles indoor building selection
+  const selectIndoorBuilding = (building) => {
+    handleIndoorBuildingSelect(
+      building,
+      selectedIndoorBuilding,
+      updateIsExpanded,
+      updateSelectedIndoorBuilding,
+      setSelectedFloor,
+      mapRef
+    );
   // POI related state
   const [coffeeShops, setCoffeeShops] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
@@ -144,6 +186,15 @@ export default function IndoorMap() {
     }
   };
 
+  // Handle clearing indoor mode when "Outdoor" is pressed
+  const clearIndoorMap = () => {
+    handleClearIndoorMap(
+      updateSelectedIndoorBuilding,
+      updateIsExpanded,
+      mapRef,
+      activeCampus,
+      setSelectedFloor
+    );
   // Handle clearing indoor mode
   const handleClearIndoorMap = () => {
     setShowIndoorMap(false);
@@ -180,6 +231,13 @@ export default function IndoorMap() {
     travelMode,
   } = useLocationContext();
 
+  //Global constants to manage indoor-maps
+  const {
+    isExpanded,
+    selectedIndoorBuilding,
+    updateIsExpanded,
+    updateSelectedIndoorBuilding,
+  } = useIndoorMapContext();
   // Fetch GeoJSON
   useEffect(() => {
     fetch(
@@ -254,7 +312,8 @@ export default function IndoorMap() {
       if (
         originText == "My Location" &&
         (destinationText == "Loyola Campus, Shuttle Stop" ||
-          destinationText == "SGW Campus, Shuttle Stop")
+          destinationText == "SGW Campus, Shuttle Stop") &&
+        renderMap == true
       ) {
         updateShowShuttleRoute(true);
       } else {
@@ -297,6 +356,13 @@ export default function IndoorMap() {
 
   // Load cached POI data on mount if available
   useEffect(() => {
+    try {
+      updateRenderMap(false);
+      updateTravelMode("");
+    } catch {
+      console.log("Crashed 4");
+    }
+  }, [origin, destination]);
     if (!showPOI) return;
 
     const cachedData = getCachedPOIData();
@@ -535,10 +601,9 @@ export default function IndoorMap() {
 
   const handleShuttleButton = () => {
     console.log("Shuttle button click");
-    const route =
-      activeCampus === "sgw"
-        ? campusRoutes.sgwToLoyola
-        : campusRoutes.loyolaToSgw;
+    
+    
+   
     updateOrigin(coordinatesMap["My Position"], "My Location");
     if (activeCampus === "sgw") {
       updateDestination(
@@ -551,7 +616,6 @@ export default function IndoorMap() {
         "SGW Campus, Shuttle Stop",
       );
     }
-    setShuttleRoute(route);
   };
 
   // Center on campus
@@ -581,6 +645,44 @@ export default function IndoorMap() {
 
   // Switch campus
   const toggleCampus = () => {
+    setActiveCampus((prev) => {
+      const newCampus = prev === "sgw" ? "loy" : "sgw";
+
+      if (mapRef.current) {
+        const newCenter =
+          newCampus === "sgw"
+            ? [-73.5792229, 45.4951962]
+            : [-73.6417009, 45.4581281];
+
+        mapRef.current.setCamera({
+          centerCoordinate: newCenter,
+          zoomLevel: 15, // Adjust zoom level as needed
+          animationMode: "flyTo",
+          animationDuration: 1000,
+        });
+      }
+
+      return newCampus;
+    });
+  };
+
+  //fetch shuttle live data
+  useEffect(() => {
+    const fetchShuttleData = async () => {
+      try {
+        const shuttleData = await extractShuttleInfo(); // Replace with actual API function
+        console.log("Shuttle Data:", shuttleData);
+        setShuttleLocations(shuttleData); // Assume this returns an array of {latitude, longitude}
+      } catch (error) {
+        console.error("Error fetching shuttle data:", error);
+      }
+    };
+
+    fetchShuttleData();
+    const interval = setInterval(fetchShuttleData, fetchInterval);
+
+    return () => clearInterval(interval); 
+  }, []);
     setActiveCampus((prev) => {
       const newCampus = prev === "sgw" ? "loy" : "sgw";
 
@@ -736,12 +838,18 @@ export default function IndoorMap() {
           <Mapbox.Camera
             ref={mapRef}
             zoomLevel={selectedIndoorBuilding ? 18 : 15} // Adjust zoom based on selection
+            ref={mapRef}
+            zoomLevel={selectedIndoorBuilding ? 18 : 15} // Adjust zoom based on selection
             centerCoordinate={
               selectedIndoorBuilding
                 ? calculateCentroid(
+                    convertCoordinates(selectedIndoorBuilding.coordinates)
+                  )
                     convertCoordinates(selectedIndoorBuilding.coordinates),
                   )
                 : activeCampus === "sgw"
+                ? [-73.5792229, 45.4951962]
+                : [-73.6417009, 45.4581281]
                   ? [-73.5792229, 45.4951962]
                   : [-73.6417009, 45.4581281]
             }
@@ -749,19 +857,22 @@ export default function IndoorMap() {
             animationDuration={1000}
           />
 
-          {/* Add the ShapeSource to provide geoJSON data */}
+          {/* Conditionally render line displaying shuttle bus travel */}
           {showShuttleRoute && (
+            <Mapbox.ShapeSource id="line1" shape={SGWtoLoyola}>
             <Mapbox.ShapeSource id="line1" shape={lineFeature}>
               {/* LineLayer to style the line */}
               <Mapbox.LineLayer
+              <Mapbox.LineLayer
                 id="linelayer1"
                 style={{
-                  lineColor: "blue", // Color of the line
-                  lineWidth: 5, // Width of the line
-                  lineCap: "round", // Shape of the line ends
-                  lineJoin: "round", // Shape of the line segment joins
+                  lineColor: "#922338",
+                  lineWidth: 5,
+                  lineCap: "round",
+                  lineJoin: "round",
                 }}
               />
+            </Mapbox.ShapeSource>
             </Mapbox.ShapeSource>
           )}
           {/* Render Direction Route */}
@@ -775,6 +886,17 @@ export default function IndoorMap() {
           )}
 
           {/* Render building polygons */}
+          {buildings
+            .filter((b) => b.coordinates && b.coordinates.length > 0)
+            .map((building) => {
+              const convertedCoords = convertCoordinates(building.coordinates);
+              const centroid = calculateCentroid(convertedCoords);
+              const fillColor =
+                highlightedBuilding === building.name
+                  ? "rgba(0, 0, 255, 0.4)"
+                  : "rgba(255, 0, 0, 0.4)";
+              const strokeColor =
+                highlightedBuilding === building.name ? "blue" : "red";
           {!showIndoorMap &&
             buildings
               .filter((b) => b.coordinates && b.coordinates.length > 0)
@@ -790,103 +912,90 @@ export default function IndoorMap() {
                 const strokeColor =
                   highlightedBuilding === building.name ? "blue" : "red";
 
-                return (
-                  <Fragment key={building.id}>
-                    {/* Building Polygon */}
-                    <Mapbox.ShapeSource
-                      id={`building-${building.id}`}
-                      shape={{
-                        type: "Feature",
-                        geometry: {
-                          type: "Polygon",
-                          coordinates: [convertedCoords],
-                        },
+              return (
+                <Fragment key={building.id}>
+                  {/* Building Polygon */}
+                  <Mapbox.ShapeSource
+                    id={`building-${building.id}`}
+                    shape={{
+                      type: "Feature",
+                      geometry: {
+                        type: "Polygon",
+                        coordinates: [convertedCoords],
+                      },
+                    }}
+                    onPress={() => handleBuildingPress(building)}
+                  >
+                    <Mapbox.FillLayer
+                      id={`fill-${building.id}`}
+                      style={{ fillColor }}
+                      maxZoomLevel={18}
+                    />
+                    <Mapbox.LineLayer
+                      id={`stroke-${building.id}`}
+                      style={{
+                        lineColor: strokeColor,
+                        lineWidth: 3,
                       }}
-                      onPress={() => handleBuildingPress(building)}
-                    >
-                      <Mapbox.FillLayer
-                        id={`fill-${building.id}`}
-                        style={{ fillColor }}
-                      />
-                      <Mapbox.LineLayer
-                        id={`stroke-${building.id}`}
-                        style={{
-                          lineColor: strokeColor,
-                          lineWidth: 3,
-                        }}
-                      />
-                    </Mapbox.ShapeSource>
+                      maxZoomLevel={18}
+                    />
+                  </Mapbox.ShapeSource>
 
-                    {/* Invisible Tappable Marker at Centroid */}
-                    <Mapbox.PointAnnotation
-                      id={`label-${building.id}`}
-                      coordinate={centroid}
-                      anchor={{ x: 0.5, y: 0.5 }} // Center the text
-                      onSelected={() => handleBuildingPress(building)}
-                    >
-                      <View style={styles.annotationContainer}>
-                        <Text style={styles.annotationText}>
-                          {building.name}
-                        </Text>
-                      </View>
-                    </Mapbox.PointAnnotation>
-                  </Fragment>
-                );
-              })}
+                  {/* Invisible Tappable Marker at Centroid */}
+                  <Mapbox.PointAnnotation
+                    id={`label-${building.id}`}
+                    coordinate={centroid}
+                    anchor={{ x: 0.5, y: 0.5 }} // Center the text
+                    onSelected={() => handleBuildingPress(building)}
+                  >
+                    <View style={styles.annotationContainer}>
+                      <Text style={styles.annotationText}>{building.name}</Text>
+                    </View>
+                  </Mapbox.PointAnnotation>
+                </Fragment>
+              );
+            })}
 
-          {/* Render dataset (vector data) */}
-          {showIndoorMap && geoJsonData?.type === "FeatureCollection" && (
-            <Mapbox.ShapeSource id="indoor-geojson" shape={geoJsonData}>
-              {/* Render Walls & Rooms (Polygons) */}
-              <Mapbox.FillLayer
-                id="rooms-fill"
-                style={{
-                  fillColor: "red",
-                  fillOpacity: 0.2,
+          {/* Indoor Map Using Vector Tileset */}
+          <IndoorMap
+            selectedBuilding={selectedIndoorBuilding} 
+            selectedFloor={selectedFloor} 
+           />
+
+          {/* Shuttle bus live location */}
+          { showShuttleRoute &&  shuttleLocations.map((shuttle)  => (
+            <Mapbox.ShapeSource
+                key={shuttle.id}
+                id={`shuttle-${shuttle.id}`}
+                shape={{
+                  type: "Feature",
+                  geometry: {
+                    type: "Point",
+                    coordinates: [shuttle.longitude, shuttle.latitude],
+                  },
                 }}
-                filter={["==", ["geometry-type"], "Polygon"]}
-              />
+              >
 
-              <Mapbox.LineLayer
-                id="rooms-stroke"
-                style={{
-                  lineColor: "red",
-                  lineWidth: 2,
-                }}
-                filter={["==", ["geometry-type"], "Polygon"]}
-              />
-
-              {/* Render Walls (Lines) */}
-              <Mapbox.LineLayer
-                id="walls-stroke"
-                style={{
-                  lineColor: "red",
-                  lineWidth: 2,
-                }}
-                filter={["==", ["get", "type"], "Walls"]}
-              />
-
-              {/* Render Paths (Lines) */}
-              <Mapbox.LineLayer
-                id="paths"
-                style={{
-                  lineColor: "black",
-                  lineWidth: 2,
-                }}
-                filter={["==", ["get", "type"], "Paths"]}
-              />
-
-              {/* Render Labels (Points) */}
               <Mapbox.SymbolLayer
-                id="labels"
-                style={{
-                  textField: ["get", "name"],
-                  textSize: 14,
-                  textColor: "black",
-                }}
-                filter={["==", ["geometry-type"], "Point"]}
+                  id={`icon-${shuttle.id}`}
+                  style={{
+                    iconImage: require("../../assets/images/icon-for-shuttle.png"), 
+                    iconSize: 0.15, 
+                    iconAllowOverlap: true,
+                  }}
               />
+                
+              
             </Mapbox.ShapeSource>
+            ))}
+
+          <ShortestPathMap
+            graph={graph}
+            nodeCoordinates={nodeCoordinates}
+            startNode={originText}
+            endNode={destinationText}
+            currentFloor={selectedFloor}
+          />
           )}
 
           {/* POI Markers */}
@@ -943,15 +1052,13 @@ export default function IndoorMap() {
       </View>
 
       {/* Floor Navigation Buttons */}
-      <View style={styles.floorButtonContainer}>
-        <TouchableOpacity style={styles.button} testID="floor-up">
-          <MaterialIcons name="keyboard-arrow-up" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.text}>1</Text>
-        <TouchableOpacity style={styles.button} testID="floor-down">
-          <MaterialIcons name="keyboard-arrow-down" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
+      {selectedIndoorBuilding && (
+        <FloorNavigation
+          selectedBuilding={selectedIndoorBuilding}
+          selectedFloor={selectedFloor}
+          onChangeFloor={setSelectedFloor}
+        />
+      )}
 
       {/* Buildings Navigation Button */}
       <View
@@ -962,10 +1069,16 @@ export default function IndoorMap() {
       >
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setIsExpanded(!isExpanded)}
+          onPress={() => updateIsExpanded(!isExpanded)}
           testID="buildings-button"
         >
-          <MaterialIcons name="location-city" size={24} color="black" />
+          {selectedIndoorBuilding ? (
+            <Text style={styles.text}>
+              {selectedIndoorBuilding.name}
+            </Text>
+          ) : (
+            <MaterialIcons name="location-city" size={24} color="black" />
+          )}
         </TouchableOpacity>
 
         {isExpanded && (
@@ -973,7 +1086,7 @@ export default function IndoorMap() {
             {/* "None" button to disable the indoor map */}
             <TouchableOpacity
               style={styles.expandedButton}
-              onPress={handleClearIndoorMap}
+              onPress={clearIndoorMap}
             >
               <Text style={styles.text}>Outdoor</Text>
             </TouchableOpacity>
@@ -989,7 +1102,16 @@ export default function IndoorMap() {
                 <TouchableOpacity
                   key={building.id}
                   style={styles.expandedButton}
-                  onPress={() => handleIndoorBuildingSelect(building)}
+                  onPress={() =>
+                    handleIndoorBuildingSelect(
+                      building,
+                      selectedIndoorBuilding,
+                      updateIsExpanded,
+                      updateSelectedIndoorBuilding,
+                      setSelectedFloor,
+                      mapRef
+                    )
+                  }
                 >
                   <Text style={styles.text}>{building.name}</Text>
                 </TouchableOpacity>
@@ -1002,11 +1124,10 @@ export default function IndoorMap() {
       <View style={styles.switchCampusButton}>
         <TouchableOpacity
           disabled={isExpanded}
+          onPress={toggleCampus}
           style={isExpanded ? styles.disabledButton : null}
         >
-          <Text style={styles.text} onPress={toggleCampus}>
-            Switch Campus
-          </Text>
+          <Text style={styles.text}>Switch Campus</Text>
         </TouchableOpacity>
       </View>
 

@@ -17,4 +17,3 @@ local.properties
 
 #ignore gradle properties file which may contain sensitive info
 gradle.properties
-
