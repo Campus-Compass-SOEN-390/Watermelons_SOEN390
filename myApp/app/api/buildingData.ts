@@ -24,6 +24,7 @@ export interface Building {
   entranceCoordinates?: Coordinates;
   coordinates?: Coordinates[];
   campus: Campus;
+  floors?: string[];
 }
 
 /*
@@ -76,11 +77,12 @@ export const buildings: Building[] = [
     campus: Campus.LOY,
     entranceCoordinates: { latitude: 45.458204, longitude: -73.640300},
     coordinates: [
-      { latitude: 45.45879783164691, longitude: -73.64116974399921 },
-      { latitude: 45.45839267330936, longitude: -73.64143115333147 },
-      { latitude: 45.45781370224986, longitude: -73.63984341091212 },
-      { latitude: 45.458255329639066, longitude: -73.63945350094436 },
+      { latitude: 45.457999374846594, longitude: -73.64002740862307 },
+      { latitude: 45.458147030102054, longitude: -73.63991164528939 },
+      { latitude: 45.45845186658153, longitude: -73.64070264342544 },
+      { latitude: 45.45831866677116, longitude: -73.6408411067038 },
     ],
+    floors: ["1"]
   },
   {
     id: "loy5",
@@ -395,6 +397,16 @@ export const buildings: Building[] = [
     hasIndoor: true,
     departments: ["Applied Human Sciences"],
     campus: Campus.LOY,
+    coordinates: [
+      { latitude: 45.45904613500073, longitude: -73.63886968342378 },
+      { latitude: 45.45888922189155, longitude: -73.63899031746624 },
+      { latitude: 45.458882815187735, longitude: -73.63895934760006 },
+      { latitude: 45.458819238504674, longitude: -73.63901047658516 },
+      { latitude: 45.45860773773947, longitude: -73.63844145129575 },
+      { latitude: 45.45881029651895, longitude: -73.63827855197167 },
+      { latitude: 45.45904401197535, longitude: -73.63887416941836 }
+    ],
+    floors: ["1", "2"]
   },
   {
     id: "loy27",
@@ -407,25 +419,39 @@ export const buildings: Building[] = [
     campus: Campus.LOY,
     entranceCoordinates: { latitude: 45.459026, longitude: -73.638606},
     coordinates: [
-      { latitude: 45.459485372131994, longitude: -73.63913679975713 },
-      { latitude: 45.45935160556695, longitude: -73.63923974928578 },
-      { latitude: 45.45932201115127, longitude: -73.63918067988408 },
-      { latitude: 45.45926755738584, longitude: -73.63921949691948 },
-      { latitude: 45.45930425449441, longitude: -73.63932413414534 },
-      { latitude: 45.45921783868454, longitude: -73.6393308849341 },
-      { latitude: 45.45921783868454, longitude: -73.63933594802567 },
-      { latitude: 45.459112482243995, longitude: -73.63941864518803 },
-      { latitude: 45.45899292020223, longitude: -73.63912667357397 },
-      { latitude: 45.45908170392085, longitude: -73.63900515937621 },
-      { latitude: 45.45903672018755, longitude: -73.63887858208687 },
-      { latitude: 45.45884257945327, longitude: -73.6390254117425 },
-      { latitude: 45.45861884326248, longitude: -73.63841615304815 },
-      { latitude: 45.4588567848922, longitude: -73.63820012780769 },
-      { latitude: 45.458812984767114, longitude: -73.63807017512399 },
-      { latitude: 45.45910301198917, longitude: -73.63784908679193 },
-      { latitude: 45.459213103564494, longitude: -73.63813261992004 },
-      { latitude: 45.459134974081564, longitude: -73.6382018155049 },
+      { latitude: 45.45915168514816, longitude: -73.63782617091084 },
+      { latitude: 45.45925802196206, longitude: -73.6381491120312 },
+      { latitude: 45.45918113903406, longitude: -73.63821094243147 },
+      { latitude: 45.45933683461399, longitude: -73.63861922677894 },
+      { latitude: 45.459317613918586, longitude: -73.63863468437886 },
+      { latitude: 45.45949798808937, longitude: -73.63913982393846 },
+      { latitude: 45.45936139640867, longitude: -73.63923300163438 },
+      { latitude: 45.45935138823015, longitude: -73.63920770680852 },
+      { latitude: 45.459332167539685, longitude: -73.63922316440845 },
+      { latitude: 45.45932132534088, longitude: -73.63919576168128 },
+      { latitude: 45.45929766909299, longitude: -73.63921478641956 },
+      { latitude: 45.45931184735858, longitude: -73.63925062075558 },
+      { latitude: 45.45928523407446, longitude: -73.63927202358654 },
+      { latitude: 45.45929876784339, longitude: -73.6393111548708 },
+      { latitude: 45.459172259845246, longitude: -73.63941011589272 },
+      { latitude: 45.45916391966881, longitude: -73.63938903687122 },
+      { latitude: 45.45911217146926, longitude: -73.63943065348688 },
+      { latitude: 45.458988357566255, longitude: -73.63910787427096 },
+      { latitude: 45.459090375624044, longitude: -73.63902583008604 },
+      { latitude: 45.45907324025936, longitude: -73.63899237384213 },
+      { latitude: 45.459090982516614, longitude: -73.63897810528795 },
+      { latitude: 45.45881029651895, longitude: -73.63827855197167 },
+      { latitude: 45.458866480577, longitude: -73.63823336821764 },
+      { latitude: 45.458852946704695, longitude: -73.6381942369334 },
+      { latitude: 45.45888547429942, longitude: -73.63816807791771 },
+      { latitude: 45.458867125816084, longitude: -73.63812170407098 },
+      { latitude: 45.458901776433436, longitude: -73.63809105906071 },
+      { latitude: 45.458882404416755, longitude: -73.63803717246134 },
+      { latitude: 45.4589106859338, longitude: -73.6380199854348 },
+      { latitude: 45.458904658266334, longitude: -73.63799982526949 },
+      { latitude: 45.459150017112535, longitude: -73.63782195510643 }
     ],
+    floors: ["1", "2"]
   },
   // SGW Campus Buildings
   {
@@ -630,6 +656,7 @@ export const buildings: Building[] = [
       { latitude: 45.496832225037465, longitude: -73.57885541961848 },
       { latitude: 45.49737811010875, longitude: -73.57834697778854 },
     ],
+    floors: ["1", "2", "8", "9"]
   },
   {
     id: "sgw16",
@@ -726,6 +753,7 @@ export const buildings: Building[] = [
       { latitude: 45.49501011165603, longitude: -73.5787600651902 },
       { latitude: 45.495193735650766, longitude: -73.57853184516286 },
     ],
+    floors: ["1", "2"]
   },
   {
     id: "sgw22",
