@@ -423,7 +423,10 @@ export default function Map() {
             })}
 
           {/* Indoor Map Using Vector Tileset */}
-          <IndoorMap />
+          <IndoorMap
+            selectedBuilding={selectedIndoorBuilding} 
+            selectedFloor={selectedFloor} 
+           />
 
           {shuttleLocations.map((shuttle) => {
             console.log("Shuttle data:", shuttle.latitude, shuttle.longitude); // Log each shuttle's data to the console
