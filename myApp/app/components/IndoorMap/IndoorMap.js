@@ -3,8 +3,7 @@ import Mapbox from "@rnmapbox/maps";
 
 const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
   const [geoJsonData, setGeoJsonData] = useState(null);
-  const MAPBOX_ACCESS_TOKEN =
-    "pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw";
+  const MAPBOX_ACCESS_TOKEN = Constants.expoConfig?.extra?.mapbox;
   const DATASET_ID = "cm7qjtnoy2d3o1qmmngcrv0jl";
 
   useEffect(() => {
