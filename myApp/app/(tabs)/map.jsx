@@ -430,7 +430,10 @@ export default function Map() {
             })}
 
           {/* Indoor Map Using Vector Tileset */}
-          <IndoorMap />
+          <IndoorMap
+            selectedBuilding={selectedIndoorBuilding} 
+            selectedFloor={selectedFloor} 
+           />
 
           {/* Shuttle bus live location */}
           { showShuttle &&  shuttleLocations.map((shuttle)  => (
