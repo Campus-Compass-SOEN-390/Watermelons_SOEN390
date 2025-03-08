@@ -1,0 +1,136 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "type": "path", "id": "path_801" },
+      "geometry": {
+        "coordinates": [
+          [-73.578991, 45.497488],
+          [-73.579013, 45.497485]
+        ],
+        "type": "LineString"
+      },
+      "id": "059e502e71232028365ec5542c631c1a"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "door",
+        "name": 802,
+        "floor": 8,
+        "building": "Hall",
+        "id": 802,
+        "connected_to": ["path_802"]
+      },
+      "geometry": { "coordinates": [-73.57888, 45.497453], "type": "Point" },
+      "id": "34e538ef18d908b8dfc19f6b3c5f9cc6"
+    },
+    {
+      "type": "Feature",
+      "properties": { "type": "path", "id": "path_803" },
+      "geometry": {
+        "coordinates": [
+          [-73.578919, 45.497565],
+          [-73.578925, 45.497577]
+        ],
+        "type": "LineString"
+      },
+      "id": "41e063fe0dd5be6510fd5c50ea4fa8a4"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path_804",
+        "connected_to": ["path_801", "path_802", "main_path"]
+      },
+      "geometry": { "coordinates": [-73.578907, 45.497448], "type": "Point" },
+      "id": "635fe380691ac641137d9a700a7f5a32"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "path",
+        "id": "main_path",
+        "connected_to": ["path_801", "path_802", "path_803", "path_804"]
+      },
+      "geometry": {
+        "coordinates": [
+          [-73.578991, 45.497488],
+          [-73.578919, 45.497565],
+          [-73.578834, 45.497525],
+          [-73.578895, 45.497461],
+          [-73.578907, 45.497448],
+          [-73.578991, 45.497488]
+        ],
+        "type": "LineString"
+      },
+      "id": "7d066590ec425137cb77eebc643e85ad"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path_802",
+        "connected_to": ["802", "path_804", "path_803", "main_path"]
+      },
+      "geometry": { "coordinates": [-73.578895, 45.49746], "type": "Point" },
+      "id": "9193f801dd77c9b6d5e45b05df59bec6"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path_801",
+        "connected_to": ["801", "path_803", "path_804", "main_path"]
+      },
+      "geometry": { "coordinates": [-73.578991, 45.497488], "type": "Point" },
+      "id": "9217839f99096ed16d2a8e6398fae362"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "door",
+        "name": 803,
+        "floor": 8,
+        "building": "Hall",
+        "id": 803,
+        "connected_to": ["path_803"]
+      },
+      "geometry": { "coordinates": [-73.578925, 45.497577], "type": "Point" },
+      "id": "9a25c0712e3f8883924fca606b8a31bb"
+    },
+    {
+      "type": "Feature",
+      "properties": { "type": "path", "id": "path_802" },
+      "geometry": {
+        "coordinates": [
+          [-73.578895, 45.49746],
+          [-73.578879, 45.497452]
+        ],
+        "type": "LineString"
+      },
+      "id": "b3ff1fedb405a1c3dd814a38ddbc3dcd"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "type": "door",
+        "name": 801,
+        "floor": 8,
+        "building": "Hall",
+        "id": 801,
+        "connected_to": ["path_801"]
+      },
+      "geometry": { "coordinates": [-73.579013, 45.497485], "type": "Point" },
+      "id": "e584779bf75ee0870a456278dea6add9"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path_803",
+        "connected_to": ["803", "path_801", "path_802", "main_path"]
+      },
+      "geometry": { "coordinates": [-73.578918, 45.497564], "type": "Point" },
+      "id": "f74982da345a33989dbb1607981371a8"
+    }
+  ]
+}

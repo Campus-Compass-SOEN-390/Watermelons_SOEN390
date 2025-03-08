@@ -16,7 +16,6 @@ import styles from "../styles/StartAndDestinationPointsStyles";
 import useLocation from "../hooks/useLocation";
 import Icon from "react-native-vector-icons/Foundation";
 import { useLocationContext } from '../context/LocationContext';
-import { useNavigation } from "@react-navigation/native";
 
 interface Step {
   id: number;
@@ -90,20 +89,28 @@ const StartAndDestinationPoints = ({
     setShowSteps(false);
   };
 
-  const navigation = useNavigation();
-
   // Handle "Add Favorite" button click
   const handleAddFavorite = () => {
     console.log("Adding to Favorites...");
   };
 
   useEffect(() => {
-    updateOrigin(origin, originText);
-    updateDestination(destination, destinationText);
-  }, [origin, location, showTransportation])
+    try{
+      updateOrigin(origin, originText);
+      updateDestination(destination, destinationText);
+    }
+    catch{
+      console.log("Crashed 5")
+    }
+  }, [origin, location, {/*originText, destinationText*/}, showTransportation, showSteps])
 
   useEffect(() => {
-    updateShowTransportation(false);
+    try{
+      updateShowTransportation(false);
+    }
+    catch{
+      console.log("Crashed 4")
+    }
   }, [origin, location])
 
   return (

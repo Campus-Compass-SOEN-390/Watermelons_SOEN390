@@ -43,14 +43,14 @@ describe('Home page', () => {
         const page = render(<HomePage />);
         const sgwButton = page.getByTestId('sgwButton');
         fireEvent.press(sgwButton);
-        expect(mockPush).toHaveBeenCalledWith('/(tabs)/outdoor-map?type=sgw');
+        expect(mockPush).toHaveBeenCalledWith('/(tabs)/map?type=sgw');
     });
 
     it('should go to loyola campus when loyola campus button is pressed', () => {
         const page = render(<HomePage />);
         const loyolaButton = page.getByTestId('loyolaButton');
         fireEvent.press(loyolaButton);
-        expect(mockPush).toHaveBeenCalledWith('/(tabs)/outdoor-map?type=loyola');
+        expect(mockPush).toHaveBeenCalledWith('/(tabs)/map?type=loyola');
     });
 
     it('should navigate to Shuttle Bus Schedule when shuttle schedule button is pressed', () => {

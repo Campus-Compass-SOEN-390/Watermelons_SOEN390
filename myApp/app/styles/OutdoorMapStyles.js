@@ -124,7 +124,7 @@ export default StyleSheet.create({
     zIndex: 2,
   },
   shuttleIcon: {
-    width: 15,  // Adjust width as needed (smaller size)
+    width: 15, // Adjust width as needed (smaller size)
     height: 15, // Adjust height as needed (smaller size)
     marginRight: 8, // Space between image and text (optional)
   },
@@ -135,6 +135,16 @@ export default StyleSheet.create({
     textAlign: "center",
     color: "#333",
   },
-
-  
+  annotationContainer: {
+    backgroundColor: "rgba(255, 255, 255, 0.7)", 
+    borderRadius: 10,
+    padding: 10,
+  },
+  annotationText: {
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#333", 
+    fontSize: 24,
+    fontFamily: 'Arial'
+  },
 });
