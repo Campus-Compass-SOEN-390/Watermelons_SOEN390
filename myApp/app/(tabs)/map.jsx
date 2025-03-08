@@ -18,8 +18,8 @@ import IndoorMap from "../components/IndoorMap/IndoorMap";
 import FloorNavigation from "../components/FloorNavigation";
 import MapDirections from "../components/MapDirections";
 import ShortestPathMap from "../components/IndoorMap/ShortestPathMap";
-import h8Coordinates from "../components/IndoorMap/Coordinates/h8coordinates";
-import h8Graph from "../components/IndoorMap/Graphs/h8Graph";
+import { nodeCoordinates } from "../components/IndoorMap/Coordinates/hCoordinates";
+import { graph } from "../components/IndoorMap/Graphs/hGraph";
 import {
   handleIndoorBuildingSelect,
   handleClearIndoorMap,
@@ -463,10 +463,11 @@ export default function Map() {
             ))}
 
           <ShortestPathMap
-            graph={h8Graph}
-            nodeCoordinates={h8Coordinates}
+            graph={graph}
+            nodeCoordinates={nodeCoordinates}
             startNode={originText}
             endNode={destinationText}
+            currentFloor={selectedFloor}
           />
         </Mapbox.MapView>
       </View>
