@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Mapbox from "@rnmapbox/maps";
+import Constants from "expo-constants";
 
 const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
   const [geoJsonData, setGeoJsonData] = useState(null);
