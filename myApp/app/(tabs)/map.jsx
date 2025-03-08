@@ -56,7 +56,6 @@ export default function Map() {
 
   //Set Shuttle Live loc
   const [shuttleLocations, setShuttleLocations] = useState([]);
-  const [showShuttle, setShowShuttle] = useState(false);
   const fetchInterval = 30000;
 
   const coordinatesMap = {
@@ -432,7 +431,7 @@ export default function Map() {
            />
 
           {/* Shuttle bus live location */}
-          { showShuttle &&  shuttleLocations.map((shuttle)  => (
+          { showShuttleRoute &&  shuttleLocations.map((shuttle)  => (
             <Mapbox.ShapeSource
                 key={shuttle.id}
                 id={`shuttle-${shuttle.id}`}
