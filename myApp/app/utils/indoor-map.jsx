@@ -9,23 +9,27 @@ export const handleIndoorBuildingSelect = (
 ) => {
   const buildingCenter = calculateCentroid(convertCoordinates(building.coordinates));
 
+  // Determine the default floor for the building
+  const defaultFloor = building.floors?.length ? building.floors[0] : selectedIndoorBuilding?.floors?.[0] || null;
+
   if (selectedIndoorBuilding?.id === building.id) {
-    // If the same building is selected, just recenter
+    // If reselecting the same building, just recenter without resetting floor
     mapRef.current?.setCamera({
       centerCoordinate: buildingCenter,
-      zoomLevel: 18, // Ensure high enough zoom level
+      zoomLevel: 18,
       animationMode: "flyTo",
       animationDuration: 1000,
     });
+
     updateIsExpanded(false);
-    setSelectedFloor(building.floors ? building.floors[0] : null);
+    setSelectedFloor((prevFloor) => prevFloor ?? defaultFloor);
   } else {
     // Select a new building and reset to its default first floor
     updateSelectedIndoorBuilding(building);
     updateIsExpanded(false);
-    setSelectedFloor(building.floors ? building.floors[0] : null);
+    setSelectedFloor(defaultFloor);
 
-    // Move camera to the selected building
+    // Move camera to the new building
     mapRef.current?.setCamera({
       centerCoordinate: buildingCenter,
       zoomLevel: 18,

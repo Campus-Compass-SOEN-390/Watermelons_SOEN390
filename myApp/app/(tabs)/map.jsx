@@ -29,12 +29,8 @@ import {
 import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
 import { extractShuttleInfo } from "../api/shuttleLiveData";
 
-const MAPBOX_API =
-  "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw";
-// const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
+const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API);
-console.log("MAPBOX API KEY:", MAPBOX_API);
-console.log("GOOGLE API KEY:", Constants.expoConfig?.extra?.apiKey);
 
 export default function Map() {
   // Campus switching

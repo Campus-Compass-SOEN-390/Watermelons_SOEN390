@@ -3,8 +3,9 @@ import Mapbox from "@rnmapbox/maps";
 
 const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
   const [geoJsonData, setGeoJsonData] = useState(null);
-  const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw"; 
-  const DATASET_ID = "cm7qjtnoy2d3o1qmmngcrv0jl"; 
+  const MAPBOX_ACCESS_TOKEN =
+    "pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw";
+  const DATASET_ID = "cm7qjtnoy2d3o1qmmngcrv0jl";
 
   useEffect(() => {
     const fetchGeoJson = async () => {
@@ -12,7 +13,8 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         const response = await fetch(
           `https://api.mapbox.com/datasets/v1/7anine/${DATASET_ID}/features?access_token=${MAPBOX_ACCESS_TOKEN}`
         );
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        if (!response.ok)
+          throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
         setGeoJsonData(data);
       } catch (error) {
@@ -23,15 +25,24 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
     fetchGeoJson();
   }, []);
 
-  if (!geoJsonData) return null; 
+  if (!geoJsonData) return null;
 
-  // Filter features based on selected building & floor
+  // Filter features: selected floor for the selected building + first floors of other buildings
   const filteredGeoJson = {
     type: "FeatureCollection",
     features: geoJsonData.features.filter((feature) => {
-      const buildingMatch = selectedBuilding ? feature.properties.building === selectedBuilding.name : true;
-      const floorMatch = selectedFloor !== null ? feature.properties.floor === Number(selectedFloor) : true;
-      return buildingMatch && floorMatch;
+      const featureBuilding = feature.properties.building;
+      const featureFloor = feature.properties.floor;
+      const featureType = feature.properties.type;
+
+      // Always show first floors of all buildings
+      if (!selectedBuilding) return featureFloor === 1;
+
+      return (
+        (featureBuilding === selectedBuilding.name &&
+          featureFloor === Number(selectedFloor)) || // Selected building & floor
+        (featureBuilding !== selectedBuilding.name && featureFloor === 1) // Other buildings' first floor
+      );
     }),
   };
 
@@ -45,8 +56,12 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
           fillColor: "red",
           fillOpacity: 0.2,
         }}
-        filter={["any", ["==", ["geometry-type"], "Polygon"], ["==", ["geometry-type"], "MultiPolygon"]]}
-        minZoomLevel={18} // ✅ Apply minZoomLevel here
+        filter={[
+          "any",
+          ["==", ["geometry-type"], "Polygon"],
+          ["==", ["geometry-type"], "MultiPolygon"],
+        ]}
+        minZoomLevel={18}
       />
 
       {/* Room Outline */}
@@ -58,8 +73,12 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
           lineWidth: 2,
           lineOpacity: 1.0,
         }}
-        filter={["any", ["==", ["geometry-type"], "Polygon"], ["==", ["geometry-type"], "MultiPolygon"]]}
-        minZoomLevel={18} // ✅ Apply minZoomLevel here
+        filter={[
+          "any",
+          ["==", ["geometry-type"], "Polygon"],
+          ["==", ["geometry-type"], "MultiPolygon"],
+        ]}
+        minZoomLevel={18}
       />
 
       {/* Pathways (LineString & MultiLineString) */}
@@ -71,8 +90,13 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
           lineWidth: 2,
           lineOpacity: 1.0,
         }}
-        filter={["any", ["==", ["geometry-type"], "LineString"], ["==", ["geometry-type"], "MultiLineString"]]}
-        minZoomLevel={18} // ✅ Apply minZoomLevel here
+        filter={[
+          "any",
+          ["==", ["geometry-type"], "LineString"],
+          ["==", ["geometry-type"], "MultiLineString"],
+          ["==", ["get", "type"], "Paths"],
+        ]}
+        minZoomLevel={18}
       />
 
       {/* Walls (LineString & MultiLineString) */}
@@ -84,28 +108,35 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
           lineWidth: 2,
           lineOpacity: 1.0,
         }}
-        filter={["any", ["==", ["geometry-type"], "LineString"], ["==", ["geometry-type"], "MultiLineString"]]}
-        minZoomLevel={18} // ✅ Apply minZoomLevel here
+        filter={[
+          "any",
+          ["==", ["geometry-type"], "LineString"],
+          ["==", ["geometry-type"], "MultiLineString"],
+          ["==", ["get", "type"], "Walls"],
+        ]}
+        minZoomLevel={18}
       />
 
       {/* Labels for Doors & Points of Interest (Only for Points) */}
       <Mapbox.SymbolLayer
-        id="door-text-layer"
-        sourceID="indoor-map"
-        style={{
-          textField: ["coalesce", ["get", "name"], "Unnamed"], // Fallback if no name
-          textSize: 14,
-          textColor: "black",
-          textHaloColor: "white",
-          textHaloWidth: 1,
-        }}
-        filter={[
-          "all",
-          ["==", ["geometry-type"], "Point"],
-          ["any", ["==", ["get", "type"], "Door"], ["==", ["get", "type"], "Point of Interest"]],
-        ]}
-        minZoomLevel={18} // ✅ Apply minZoomLevel here
-      />
+  id="door-text-layer"
+  sourceID="indoor-map"
+  style={{
+    textField: ["coalesce", ["get", "name"], "Unnamed"], // Fallback for missing names
+    textSize: 14,
+    textColor: "black",
+    textHaloColor: "white",
+    textHaloWidth: 1,
+  }}
+  filter={[
+    "all",
+    ["==", ["geometry-type"], "Point"], 
+    ["==", ["get", "floor"], Number(selectedFloor)] 
+  ]}
+  minZoomLevel={18}
+/>
+
+
     </Mapbox.ShapeSource>
   );
 };
