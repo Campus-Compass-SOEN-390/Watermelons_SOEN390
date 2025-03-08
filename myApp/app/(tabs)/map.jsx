@@ -60,6 +60,8 @@ export default function Map() {
 
   //Set Shuttle Live loc
   const [shuttleLocations, setShuttleLocations] = useState([]);
+  const [showShuttle, setShowShuttle] = useState(false);
+  const fetchInterval = 30000;
 
   const coordinatesMap = {
     "My Position": location?.latitude
@@ -237,6 +239,9 @@ export default function Map() {
 
   const handleShuttleButton = () => {
     console.log("Shuttle button click");
+    setShowShuttle(true);
+    console.log(showShuttle);
+   
     updateOrigin(coordinatesMap["My Position"], "My Location");
     if (activeCampus === "sgw") {
       updateDestination(
@@ -310,7 +315,9 @@ export default function Map() {
     };
 
     fetchShuttleData();
-    //const interval = setInterval(fetchShuttleData, fetchInterval);
+    const interval = setInterval(fetchShuttleData, fetchInterval);
+
+    return () => clearInterval(interval); 
   }, []);
 
   // Determine the current center based on active campus
@@ -425,11 +432,9 @@ export default function Map() {
           {/* Indoor Map Using Vector Tileset */}
           <IndoorMap />
 
-          {shuttleLocations.map((shuttle) => {
-            console.log("Shuttle data:", shuttle.latitude, shuttle.longitude); // Log each shuttle's data to the console
-
-            return (
-              <Mapbox.ShapeSource
+          {/* Shuttle bus live location */}
+          { showShuttle &&  shuttleLocations.map((shuttle)  => (
+            <Mapbox.ShapeSource
                 key={shuttle.id}
                 id={`shuttle-${shuttle.id}`}
                 shape={{
@@ -440,19 +445,19 @@ export default function Map() {
                   },
                 }}
               >
-                <Mapbox.CircleLayer
-                  id={`circle-${shuttle.id}`}
+
+              <Mapbox.SymbolLayer
+                  id={`icon-${shuttle.id}`}
                   style={{
-                    circleRadius: 6,
-                    circleColor: "#ff0000", // Red dot
-                    circleOpacity: 0.8,
-                    circleStrokeWidth: 1,
-                    circleStrokeColor: "#fff",
+                    iconImage: require("../../assets/images/icon-for-shuttle.png"), 
+                    iconSize: 0.15, 
+                    iconAllowOverlap: true,
                   }}
-                />
-              </Mapbox.ShapeSource>
-            );
-          })}
+              />
+                
+              
+            </Mapbox.ShapeSource>
+            ))}
 
           <ShortestPathMap
             graph={h8Graph}
