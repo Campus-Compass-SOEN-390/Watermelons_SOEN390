@@ -21,7 +21,7 @@ describe("Building Data Tests", () => {
   // Test: User inside Pavillon EV Building should return true
   test("User inside Pavillon EV Building should return true", () => {
     // Using a point adjusted to be inside Pavillon EV Building (from merged data)
-    const userLocation = { latitude: 45.4957, longitude: -73.5780 };
+    const userLocation = { latitude: 45.495476, longitude: -73.578178 };
     const pavillonBuilding = buildings.find(
       (b) => b.longName === "Pavillon EV Building"
     );
