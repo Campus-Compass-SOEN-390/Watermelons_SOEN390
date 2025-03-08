@@ -234,8 +234,8 @@ export default function Map() {
 
   const handleShuttleButton = () => {
     console.log("Shuttle button click");
-    setShowShuttle(true);
-    console.log(showShuttle);
+    
+    
    
     updateOrigin(coordinatesMap["My Position"], "My Location");
     if (activeCampus === "sgw") {
