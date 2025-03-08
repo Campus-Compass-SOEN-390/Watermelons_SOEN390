@@ -89,4 +89,110 @@ export const styles = StyleSheet.create({
     backgroundColor: "#f2f2f2",
     borderRadius: 10,
   },
+
+  // Enhanced Filter Modal Styles
+  filterModalContainer: {
+    flex: 1,
+    justifyContent: "flex-end", // Position from bottom
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  filterModalContent: {
+    backgroundColor: "#ffffff",
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 40,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 8,
+    bottom: -40,
+  },
+  filterModalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 24,
+  },
+  filterModalTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "#333",
+  },
+  filterSection: {
+    marginVertical: 12,
+  },
+  filterSectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#555",
+    marginBottom: 8,
+  },
+  distanceValue: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#922338", // App's primary color
+    textAlign: "center",
+    marginTop: 8,
+  },
+  filterOption: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  filterOptionText: {
+    fontSize: 16,
+    color: "#333",
+    fontWeight: "500",
+  },
+  customSlider: {
+    width: "100%",
+    height: 40,
+    marginTop: 8,
+  },
+  categoryIcon: {
+    width: 24,
+    height: 24,
+    marginRight: 12,
+  },
+  categoryContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  applyButton: {
+    backgroundColor: "#922338", // App's primary color
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 24,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  applyButtonText: {
+    color: "#ffffff",
+    fontSize: 18,
+    fontWeight: "700",
+  },
+  closeModalButton: {
+    backgroundColor: "rgba(0,0,0,0.05)",
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  closeModalIcon: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#555",
+  },
 });
