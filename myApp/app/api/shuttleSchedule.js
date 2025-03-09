@@ -11,8 +11,9 @@ export const fetchShuttleScheduleByDay = async (day) => {
     return getShuttleScheduleByDay(day);
   } catch (error) {
     console.warn("Error fetching schedule:", error.message);
+    throw new Error(`Invalid day: ${day}. Please provide Monday, Tuesday, Wednesday, Thursday, or Friday.`);
     // Instead of re-throwing, just return null
-    return null;
+    
   }
 };
 

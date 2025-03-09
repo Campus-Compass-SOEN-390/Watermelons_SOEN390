@@ -1,5 +1,5 @@
 import React from "react";
-import { getGoogleTravelTime, getSortedTravelTimes } from "../api/googleMapsApi";
+import { getGoogleTravelTime, getTravelTimes } from "../api/googleMapsApi";
 import { findNearestLocation, haversineDistance } from "./distanceShuttle";
 import { fetchShuttleInfo, fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
 import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
@@ -44,12 +44,16 @@ export const estimateShuttleTravelTime = async (userLocation, destinationCampus)
 
   // Get all possible travel times to the stop
   const travelModes = ["walking", "driving", "transit", "bicycling"];
-  const travelOptions = await getSortedTravelTimes(userLocation, departureStop, travelModes);
+  const travelOptions = await getTravelTimes(userLocation, departureStop, travelModes);
   if (!travelOptions.length) {
     return null; // No available transportation
   }
 
-  const travelTimeToStop = travelOptions[0].duration; // Shortest travel time
+  const validOptions = travelOptions.filter(option => option.duration !== null);
+if (!validOptions.length) return null; // No available transportation
+
+const travelTimeToStop = Math.min(...validOptions.map(option => option.duration));
+ // Shortest travel time
 
   // Determine next available shuttle departure time
   const stopKey = destinationCampus === "LOY" ? "SGW" : "LOY";
