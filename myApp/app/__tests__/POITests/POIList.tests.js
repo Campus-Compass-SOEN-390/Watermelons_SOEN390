@@ -2,15 +2,25 @@
 
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import { ActivityIndicator, FlatList, Image, Text } from 'react-native';
 import POIList from '../../components/POI/POIList';
-import Constants from 'expo-constants';
 
 // Ensure a dummy API key is available
 jest.mock('expo-constants', () => ({
   default: {
     expoConfig: { extra: { apiKey: 'dummy-key' } },
   },
+}));
+
+// Mock the LocationContext
+jest.mock('@/app/context/LocationContext', () => ({
+  useLocationContext: () => ({
+    updateDestination: jest.fn(),
+    updateOrigin: jest.fn(),
+    updateShowTransportation: jest.fn(),
+    updateRenderMap: jest.fn(),
+    updateTravelMode: jest.fn(),
+    updateShowShuttleRoute: jest.fn(),
+  }),
 }));
 
 // Mock Ionicons from @expo/vector-icons to simply render a Text component
@@ -66,6 +76,7 @@ describe('POIList Component', () => {
     // Assumes the ActivityIndicator has testID="activity-indicator"
     expect(queryByTestId('activity-indicator')).toBeTruthy();
   });
+
 
   it('renders error state with retry button when error exists and no data', () => {
     const onRefreshMock = jest.fn();
