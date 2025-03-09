@@ -25,8 +25,7 @@ interface Step {
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
-const StartAndDestinationPoints = ({
-}) => {
+const StartAndDestinationPoints = () => {
   const { 
     updateOrigin, 
     updateDestination, 
@@ -43,7 +42,6 @@ const StartAndDestinationPoints = ({
   } = useLocationContext();
   const { location } = useLocation();
   const originRef = useRef<any>(null);
-  const [isOriginSet, setIsOriginSet] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showMyLocButton, setShowMyLocButton] = useState(true);
   const [showSteps, setShowSteps] = useState(false);
@@ -137,8 +135,7 @@ const StartAndDestinationPoints = ({
                   longitude: details.geometry.location.lng,
                 };
                 updateOrigin(location, data.description)
-                console.log("Hello went thru onPress")
-                setIsOriginSet(true);
+                console.log("Hello went thru onPress");
                 originRef.current?.setAddressText(data.description); // Allows persistance of the selected origin location
                 updateShowTransportation(false);
               }
@@ -164,11 +161,6 @@ const StartAndDestinationPoints = ({
               onPress={() => {
                 Keyboard.dismiss();
                 if (location) {
-                  const myLocation = {
-                    latitude: location.latitude,
-                    longitude: location.longitude,
-                  };
-                  setIsOriginSet(true);
                   updateShowTransportation(false);
                   // Verify current location properly fetched (tested on expo app -> successful!)
                   const coords = {

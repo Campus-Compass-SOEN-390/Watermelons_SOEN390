@@ -23,22 +23,25 @@ const MapDirections: React.FC<Props> = ({
   const cameraRef = useRef<Mapbox.Camera | null>(null);
 
   useEffect(() => {
-    try{
-      let isMounted = true;
+    let isMounted = true;
 
-      if (origin && destination && travelMode) {
-        fetchRoute(travelMode, isMounted);
+    const fetchData = async () => {
+      try {
+        if (origin && destination && travelMode) {
+          await fetchRoute(travelMode, isMounted);
+        }
+      } catch (error) {
+        console.log("Error in fetchData:", error);
       }
+    };
 
-      return () => {
-        isMounted = false;
-        console.log("🧹 Cleaning up...");
-      };
-    }
-    catch{
-      console.log("Crashed 7")
-    }
-  },[travelMode, origin, destination]);
+    fetchData();
+
+    return () => {
+      isMounted = false;
+      console.log("🧹 Cleaning up...");
+    };
+  }, [travelMode, origin, destination]);
 
   const fetchRoute = async (mode: string, isMounted: boolean) => {
     if (!origin || !destination) return;
@@ -56,7 +59,7 @@ const MapDirections: React.FC<Props> = ({
 
       if (data.routes && data.routes.length > 0) {
         const geometry = data.routes[0].geometry;
-        if (geometry && geometry.coordinates && geometry.coordinates.length > 0) {
+        if (geometry?.coordinates?.length > 0) {
           setRoute({
             type: "FeatureCollection",
             features: [

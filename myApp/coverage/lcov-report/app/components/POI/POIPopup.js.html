@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -159,7 +159,34 @@
 <a name='L94'></a><a href='#L94'>94</a>
 <a name='L95'></a><a href='#L95'>95</a>
 <a name='L96'></a><a href='#L96'>96</a>
-<a name='L97'></a><a href='#L97'>97</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -205,6 +232,31 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -258,6 +310,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import PropTypes from 'prop-types';
 &nbsp;
 const POIPopup = ({ poi, distance, onClose, onGetDirections }) =&gt; {
   if (!poi) return null;
@@ -272,12 +325,15 @@ const POIPopup = ({ poi, distance, onClose, onGetDirections }) =&gt; {
   };
 &nbsp;
   return (
-    &lt;View style={styles.container} testID="poi-popup"&gt;
+    &lt;View style={styles.container} testID="poi-popup" accessible={true} accessibilityLabel="Point of interest information"&gt;
       {/* Close button */}
       &lt;TouchableOpacity 
         style={styles.closeButton} 
         onPress={onClose}
         testID="close-button"
+        accessible={true}
+        accessibilityLabel="Close point of interest information"
+        accessibilityRole="button"
       &gt;
         &lt;MaterialIcons name="close" size={20} color="#666" /&gt;
       &lt;/TouchableOpacity&gt;
@@ -297,12 +353,34 @@ const POIPopup = ({ poi, distance, onClose, onGetDirections }) =&gt; {
         style={styles.directionsButton} 
         onPress={onGetDirections}
         testID="directions-button"
+        accessible={true}
+        accessibilityLabel="Get directions to this location"
+        accessibilityRole="button"
       &gt;
         &lt;MaterialIcons name="directions" size={16} color="white" /&gt;
         &lt;Text style={styles.directionsText}&gt;Get Directions&lt;/Text&gt;
       &lt;/TouchableOpacity&gt;
     &lt;/View&gt;
   );
+};
+&nbsp;
+// Define prop types
+POIPopup.propTypes = {
+  poi: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    rating: PropTypes.number,
+    user_ratings_total: PropTypes.number,
+    vicinity: PropTypes.string,
+  }),
+  distance: PropTypes.number,
+  onClose: PropTypes.func.isRequired,
+  onGetDirections: PropTypes.func.isRequired,
+};
+&nbsp;
+// Define default props
+POIPopup.defaultProps = {
+  poi: null,
+  distance: null,
 };
 &nbsp;
 const styles = StyleSheet.create({
@@ -358,7 +436,7 @@ export default POIPopup;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-03-08T19:13:35.738Z
+                at 2025-03-09T11:07:46.258Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

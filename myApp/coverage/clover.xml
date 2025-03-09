@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1741461215758" clover="3.2.0">
-  <project timestamp="1741461215758" name="All files">
-    <metrics statements="185" coveredstatements="180" conditionals="156" coveredconditionals="133" methods="41" coveredmethods="39" elements="382" coveredelements="352" complexity="0" loc="185" ncloc="185" packages="5" files="16" classes="16"/>
+<coverage generated="1741518466275" clover="3.2.0">
+  <project timestamp="1741518466275" name="All files">
+    <metrics statements="205" coveredstatements="198" conditionals="159" coveredconditionals="134" methods="46" coveredmethods="44" elements="410" coveredelements="376" complexity="0" loc="205" ncloc="205" packages="6" files="17" classes="17"/>
     <package name="app.api">
       <metrics statements="125" coveredstatements="122" conditionals="84" coveredconditionals="74" methods="21" coveredmethods="21"/>
       <file name="buildingData.ts" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/api/buildingData.ts">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
-        <line num="39" count="2" type="stmt"/>
-        <line num="868" count="2" type="stmt"/>
-        <line num="870" count="2" type="stmt"/>
-        <line num="871" count="92" type="stmt"/>
+        <line num="40" count="2" type="stmt"/>
+        <line num="971" count="2" type="stmt"/>
+        <line num="973" count="2" type="stmt"/>
+        <line num="974" count="92" type="stmt"/>
       </file>
       <file name="buildingService.ts" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/api/buildingService.ts">
         <metrics statements="9" coveredstatements="9" conditionals="7" coveredconditionals="7" methods="2" coveredmethods="2"/>
@@ -148,10 +148,23 @@
         <line num="50" count="2" type="stmt"/>
       </file>
     </package>
+    <package name="app.components">
+      <metrics statements="7" coveredstatements="7" conditionals="8" coveredconditionals="4" methods="3" coveredmethods="3"/>
+      <file name="BuildingPopUp.tsx" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/components/BuildingPopUp.tsx">
+        <metrics statements="7" coveredstatements="7" conditionals="8" coveredconditionals="4" methods="3" coveredmethods="3"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="16" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="18" count="4" type="stmt"/>
+        <line num="48" count="1" type="stmt"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="57" count="1" type="stmt"/>
+        <line num="58" count="1" type="stmt"/>
+      </file>
+    </package>
     <package name="app.components.POI">
-      <metrics statements="47" coveredstatements="46" conditionals="70" coveredconditionals="58" methods="15" coveredmethods="14"/>
+      <metrics statements="61" coveredstatements="58" conditionals="65" coveredconditionals="55" methods="17" coveredmethods="16"/>
       <file name="MapMarkers.js" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/components/POI/MapMarkers.js">
-        <metrics statements="9" coveredstatements="8" conditionals="12" coveredconditionals="10" methods="4" coveredmethods="3"/>
+        <metrics statements="9" coveredstatements="8" conditionals="8" coveredconditionals="8" methods="4" coveredmethods="3"/>
         <line num="7" count="10" type="stmt"/>
         <line num="8" count="10" type="stmt"/>
         <line num="9" count="18" type="stmt"/>
@@ -159,55 +172,69 @@
         <line num="11" count="18" type="cond" truecount="4" falsecount="0"/>
         <line num="15" count="16" type="cond" truecount="2" falsecount="0"/>
         <line num="17" count="16" type="stmt"/>
-        <line num="23" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="25" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="25" count="2" type="stmt"/>
       </file>
       <file name="Markers.js" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/components/POI/Markers.js">
         <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
-        <line num="8" count="1" type="stmt"/>
-        <line num="9" count="4" type="stmt"/>
-        <line num="14" count="1" type="stmt"/>
-        <line num="15" count="4" type="stmt"/>
-        <line num="20" count="1" type="stmt"/>
-        <line num="21" count="4" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="4" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="4" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="20" count="4" type="stmt"/>
       </file>
       <file name="POIList.js" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/components/POI/POIList.js">
-        <metrics statements="24" coveredstatements="24" conditionals="46" coveredconditionals="37" methods="6" coveredmethods="6"/>
-        <line num="15" count="1" type="stmt"/>
-        <line num="17" count="1" type="stmt"/>
-        <line num="18" count="8" type="stmt"/>
-        <line num="20" count="8" type="stmt"/>
-        <line num="28" count="8" type="cond" truecount="3" falsecount="0"/>
-        <line num="31" count="8" type="cond" truecount="2" falsecount="0"/>
-        <line num="36" count="8" type="stmt"/>
-        <line num="37" count="1" type="stmt"/>
-        <line num="38" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="39" count="1" type="stmt"/>
-        <line num="42" count="8" type="stmt"/>
-        <line num="51" count="1" type="stmt"/>
+        <metrics statements="36" coveredstatements="34" conditionals="45" coveredconditionals="36" methods="8" coveredmethods="8"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="19" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="20" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="25" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="26" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="31" count="8" type="stmt"/>
+        <line num="33" count="8" type="stmt"/>
+        <line num="41" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="44" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="49" count="8" type="stmt"/>
+        <line num="50" count="1" type="stmt"/>
+        <line num="51" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="52" count="1" type="stmt"/>
-        <line num="105" count="1" type="stmt"/>
-        <line num="114" count="7" type="cond" truecount="4" falsecount="0"/>
-        <line num="115" count="1" type="stmt"/>
-        <line num="123" count="6" type="cond" truecount="5" falsecount="0"/>
-        <line num="124" count="1" type="stmt"/>
-        <line num="138" count="5" type="cond" truecount="4" falsecount="0"/>
-        <line num="139" count="1" type="stmt"/>
-        <line num="149" count="4" type="stmt"/>
-        <line num="151" count="4" type="stmt"/>
-        <line num="156" count="7" type="stmt"/>
-        <line num="162" count="11" type="cond" truecount="1" falsecount="1"/>
+        <line num="55" count="8" type="stmt"/>
+        <line num="64" count="1" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="116" count="1" type="stmt"/>
+        <line num="142" count="1" type="stmt"/>
+        <line num="146" count="1" type="stmt"/>
+        <line num="155" count="7" type="cond" truecount="4" falsecount="0"/>
+        <line num="156" count="1" type="stmt"/>
+        <line num="164" count="6" type="cond" truecount="5" falsecount="0"/>
+        <line num="165" count="1" type="stmt"/>
+        <line num="179" count="5" type="cond" truecount="4" falsecount="0"/>
+        <line num="180" count="1" type="stmt"/>
+        <line num="190" count="4" type="stmt"/>
+        <line num="192" count="4" type="stmt"/>
+        <line num="197" count="7" type="stmt"/>
+        <line num="203" count="11" type="cond" truecount="1" falsecount="1"/>
+        <line num="222" count="1" type="stmt"/>
+        <line num="235" count="1" type="stmt"/>
       </file>
       <file name="POIPopup.js" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/components/POI/POIPopup.js">
-        <metrics statements="8" coveredstatements="8" conditionals="12" coveredconditionals="11" methods="2" coveredmethods="2"/>
-        <line num="5" count="1" type="stmt"/>
-        <line num="6" count="9" type="cond" truecount="2" falsecount="0"/>
-        <line num="9" count="8" type="stmt"/>
-        <line num="10" count="7" type="cond" truecount="2" falsecount="0"/>
-        <line num="11" count="6" type="stmt"/>
-        <line num="13" count="1" type="stmt"/>
-        <line num="17" count="8" type="stmt"/>
-        <line num="51" count="1" type="stmt"/>
+        <metrics statements="10" coveredstatements="10" conditionals="12" coveredconditionals="11" methods="2" coveredmethods="2"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="10" count="8" type="stmt"/>
+        <line num="11" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="12" count="6" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="18" count="8" type="stmt"/>
+        <line num="59" count="1" type="stmt"/>
+        <line num="72" count="1" type="stmt"/>
+        <line num="77" count="1" type="stmt"/>
       </file>
     </package>
     <package name="app.screens">
@@ -223,15 +250,14 @@
       </file>
     </package>
     <package name="app.styles">
-      <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="1" methods="0" coveredmethods="0"/>
+      <metrics statements="4" coveredstatements="4" conditionals="2" coveredconditionals="1" methods="0" coveredmethods="0"/>
+      <file name="BuildingPopupStyles.js" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/styles/BuildingPopupStyles.js">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="3" count="1" type="stmt"/>
+      </file>
       <file name="HomePageStyles.js" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/styles/HomePageStyles.js">
         <metrics statements="1" coveredstatements="1" conditionals="2" coveredconditionals="1" methods="0" coveredmethods="0"/>
         <line num="3" count="1" type="stmt"/>
-      </file>
-      <file name="InterestPointsStyles.js" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/styles/InterestPointsStyles.js">
-        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-        <line num="3" count="1" type="stmt"/>
-        <line num="4" count="1" type="stmt"/>
       </file>
       <file name="POIListStyle.js" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/styles/POIListStyle.js">
         <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
