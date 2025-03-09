@@ -15,7 +15,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import styles from "../styles/StartAndDestinationPointsStyles";
 import useLocation from "../hooks/useLocation";
 import Icon from "react-native-vector-icons/Foundation";
-import { useLocationContext } from '../context/LocationContext';
+import { useLocationContext } from "../context/LocationContext";
+import { getTravelTimes } from "../api/googleMapsApi";
 
 interface Step {
   id: number;
@@ -25,20 +26,21 @@ interface Step {
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
-const StartAndDestinationPoints = () => {
-  const { 
-    updateOrigin, 
-    updateDestination, 
-    updateShowTransportation, 
+const StartAndDestinationPoints = ({}) => {
+  const {
+    updateOrigin,
+    updateDestination,
+    updateShowTransportation,
+
     updateRenderMap,
     updateTravelMode,
-    origin, 
-    destination, 
-    originText, 
-    destinationText, 
-    showTransportation, 
+    origin,
+    destination,
+    originText,
+    destinationText,
+    showTransportation,
     renderMap,
-    travelMode
+    travelMode,
   } = useLocationContext();
   const { location } = useLocation();
   const originRef = useRef<any>(null);
@@ -46,6 +48,23 @@ const StartAndDestinationPoints = () => {
   const [showMyLocButton, setShowMyLocButton] = useState(true);
   const [showSteps, setShowSteps] = useState(false);
   const [routeSteps, setRouteSteps] = useState<Step[]>([]);
+  const [travelTimes, setTravelTimes] = useState<{ [key: string]: number | null }>({});
+  const [loading, setLoading] = useState(false);
+
+  // Fetch travel times when origin or destination changes
+  useEffect(() => {
+    if (origin && destination) {
+      setLoading(true);
+      getTravelTimes(origin, destination).then((times) => {
+        const timesMap: { [key: string]: number | null } = {};
+        times.forEach(({ mode, duration }) => {
+          timesMap[mode] = duration;
+        });
+        setTravelTimes(timesMap);
+        setLoading(false);
+      });
+    }
+  }, [origin, destination]);
 
   //Handle "GO" button click
   const handleGoClick = () => {
@@ -93,23 +112,29 @@ const StartAndDestinationPoints = () => {
   };
 
   useEffect(() => {
-    try{
+    try {
       updateOrigin(origin, originText);
       updateDestination(destination, destinationText);
+    } catch {
+      console.log("Crashed 5");
     }
-    catch{
-      console.log("Crashed 5")
-    }
-  }, [origin, location, {/*originText, destinationText*/}, showTransportation, showSteps])
+  }, [
+    origin,
+    location,
+    {
+      /*originText, destinationText*/
+    },
+    showTransportation,
+    showSteps,
+  ]);
 
   useEffect(() => {
-    try{
+    try {
       updateShowTransportation(false);
+    } catch {
+      console.log("Crashed 4");
     }
-    catch{
-      console.log("Crashed 4")
-    }
-  }, [origin, location])
+  }, [origin, location]);
 
   return (
     <View style={styles.container}>
@@ -134,8 +159,10 @@ const StartAndDestinationPoints = () => {
                   latitude: details.geometry.location.lat,
                   longitude: details.geometry.location.lng,
                 };
-                updateOrigin(location, data.description)
+                
+                updateOrigin(location, data.description);
                 console.log("Hello went thru onPress");
+                setIsOriginSet(true);
                 originRef.current?.setAddressText(data.description); // Allows persistance of the selected origin location
                 updateShowTransportation(false);
               }
@@ -233,10 +260,10 @@ const StartAndDestinationPoints = () => {
         ) : (
           <View style={styles.buttonContainer}>
             {[
-              { mode: "DRIVING" as const, icon: "directions-car" as const },
-              { mode: "TRANSIT" as const, icon: "directions-bus" as const },
-              { mode: "WALKING" as const, icon: "directions-walk" as const },
-              { mode: "BICYCLING" as const, icon: "directions-bike" as const },
+              { mode: "driving" as const, icon: "directions-car" as const },
+              { mode: "transit" as const, icon: "directions-bus" as const },
+              { mode: "walking" as const, icon: "directions-walk" as const },
+              { mode: "bicycling" as const, icon: "directions-bike" as const },
             ].map(({ mode, icon }) => (
               <TouchableOpacity
                 key={mode}
@@ -258,6 +285,13 @@ const StartAndDestinationPoints = () => {
                   size={24}
                   color={travelMode === mode ? "white" : "black"}
                 />
+                <Text style={{ fontSize: 14, marginTop: 5 }}>
+                  {loading
+                    ? "..."
+                    : travelTimes[mode]
+                    ? `${travelTimes[mode]} min`
+                    : "N/A"}
+                </Text>
               </TouchableOpacity>
             ))}
           </View>

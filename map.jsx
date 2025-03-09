@@ -39,6 +39,9 @@ import {
 import POIPopup from "../components/POI/POIPopup"; // Import the new component
 import { fetchPOIData, updatePOICache, getCachedPOIData } from "../api/poiApi";
 import { styles as poiStyles } from "../styles/poiStyles";
+import { estimateShuttleTravelTime, estimateShuttleFromButton } from "../utils/shuttleUtils";
+import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
+
 
 const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API);
@@ -533,27 +536,63 @@ export default function IndoorMap() {
     updateShowTransportation(true);
   };
 
-  const handleShuttleButton = () => {
-    console.log("Shuttle button click");
-    const route =
-      activeCampus === "sgw"
-        ? campusRoutes.sgwToLoyola
-        : campusRoutes.loyolaToSgw;
-    updateOrigin(coordinatesMap["My Position"], "My Location");
-    if (activeCampus === "sgw") {
-      updateDestination(
-        coordinatesMap["Loyola Campus, Shuttle Stop"],
-        "Loyola Campus, Shuttle Stop",
-      );
-    } else {
-      updateDestination(
-        coordinatesMap["SGW Campus, Shuttle Stop"],
-        "SGW Campus, Shuttle Stop",
-      );
-    }
-    setShuttleRoute(route);
-  };
+  // const handleShuttleButton = () => {
+  //   console.log("Shuttle button click");
+  //   const route =
+  //     activeCampus === "sgw"
+  //       ? campusRoutes.sgwToLoyola
+  //       : campusRoutes.loyolaToSgw;
+  //   updateOrigin(coordinatesMap["My Position"], "My Location");
+  //   if (activeCampus === "sgw") {
+  //     updateDestination(
+  //       coordinatesMap["Loyola Campus, Shuttle Stop"],
+  //       "Loyola Campus, Shuttle Stop",
+  //     );
+  //   } else {
+  //     updateDestination(
+  //       coordinatesMap["SGW Campus, Shuttle Stop"],
+  //       "SGW Campus, Shuttle Stop",
+  //     );
+  //   }
+  //   setShuttleRoute(route);
+  // };
+  
+  const [shuttleTime, setShuttleTime] = useState(null);
+  const [shuttleDetails, setShuttleDetails] = useState(null);
+  const [nextShuttle, setNextShuttle] = useState(null);
+  const [isShuttlePopupVisible, setIsShuttlePopupVisible] = useState(false); // Fix this
 
+  const handleShuttleButton = async () => {
+    console.log("Shuttle button clicked");
+    
+    const route = activeCampus === "sgw" ? campusRoutes.sgwToLoyola : campusRoutes.loyolaToSgw;
+    
+    updateOrigin(coordinatesMap["My Position"], "My Location");
+
+    if (activeCampus === "sgw") {
+        updateDestination(coordinatesMap["Loyola Campus, Shuttle Stop"], "Loyola Campus, Shuttle Stop");
+    } else {
+        updateDestination(coordinatesMap["SGW Campus, Shuttle Stop"], "SGW Campus, Shuttle Stop");
+    }
+
+    setShuttleRoute(route);
+
+    // Fetch shuttle time and open popup
+    try {
+      const result = await estimateShuttleFromButton(activeCampus === "sgw" ? "SGW" : "LOY");
+      setShuttleTime(result.totalTime);
+      setShuttleDetails(result);
+      setNextShuttle(result.waitTime);
+      console.log("Opening popup, setting isShuttlePopupVisible to true");
+      setIsShuttlePopupVisible(true); // Move inside try block
+  } catch (error) {
+      setShuttleTime(null);
+      setShuttleDetails(null);
+      setNextShuttle(null);
+  }
+  
+};
+  
   // Center on campus
   const centerMapOnCampus = () => {
     if (mapRef.current) {
@@ -1013,6 +1052,28 @@ export default function IndoorMap() {
       {/* Switch Campus (Shuttle) Button */}
       <View style={outdoorStyles.shuttleButtonContainer}>
         <TouchableOpacity
+        style={outdoorStyles.shuttleButton}
+        onPress={handleShuttleButton}>
+        <Image
+            source={require("../../assets/images/icon-for-shuttle.png")}
+            resizeMode="contain"
+            style={outdoorStyles.shuttleIcon}
+        />
+          <Text style={outdoorStyles.switchButtonText}>
+            {activeCampus === "sgw" ? "Shuttle To Loyola" : "Shuttle To SGW"} 
+            {shuttleTime ? ` - ${shuttleTime} min` : ""}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <ShuttleInfoPopup 
+      visible={isShuttlePopupVisible} 
+      onClose={() => setIsShuttlePopupVisible(false)}
+      shuttleDetails={shuttleDetails} // ✅ Ensure this is passed
+  />
+
+      {/* <View style={outdoorStyles.shuttleButtonContainer}>
+        <TouchableOpacity
           style={outdoorStyles.shuttleButton}
           onPress={handleShuttleButton}
         >
@@ -1025,7 +1086,7 @@ export default function IndoorMap() {
             {activeCampus === "sgw" ? "Shuttle To Loyola" : "Shuttle To SGW"}
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       {/* POI Filter Button - only visible when POI is enabled */}
       {showPOI && (
