@@ -11,6 +11,24 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/POIListStyle';
 import Constants from "expo-constants";
+import { useLocationContext } from '@/app/context/LocationContext';
+
+const {
+    updateOrigin,
+    updateDestination,
+    updateShowTransportation,
+    updateRenderMap,
+    updateTravelMode,
+    updateShowShuttleRoute,
+    origin,
+    destination,
+    originText,
+    destinationText,
+    showTransportation,
+    renderMap,
+    showShuttleRoute,
+    travelMode,
+  } = useLocationContext();
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
@@ -37,6 +55,7 @@ const POIListItem = ({ item, userLocation, calculateDistance }) => {
         console.log(`Get directions to: ${item.name}`);
         console.log(`Address: ${item.vicinity || 'Address not available'}`);
         console.log(`Coordinates: ${item.geometry?.location?.lat}, ${item.geometry?.location?.lng}`);
+        updateDestination({latitude: item.geometry.location.lat, longitude: item.geometry.location}, item.name);
     };
 
     return (
