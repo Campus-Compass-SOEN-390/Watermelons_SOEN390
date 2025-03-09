@@ -58,7 +58,6 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
   // useEffect to update origin and destination if locationData is not null
   useEffect(() => {
     if (POIlocationData) {
-      updateOrigin({ latitude: POIlocationData.lat, longitude: POIlocationData.lng }, "My Location");
       updateDestination({ latitude: POIlocationData.lat, longitude: POIlocationData.lng }, POIlocationData.name);
     }
   }, [POIlocationData]); // This effect runs whenever locationData changes
