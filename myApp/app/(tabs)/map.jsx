@@ -699,6 +699,14 @@ export default function Map() {
     console.log("Get directions to:", poi.name);
   };
 
+  // Handle "Get Directions" button press
+  const handlePOIGetDirections = (poi) => {
+    if (!poi?.geometry?.location) return;
+    updateOrigin(coordinatesMap["My Position"], "My Location");
+    updateDestination({latitude: poi.geometry.location.lat, longitude: poi.geometry.location.lng }, poi.name);
+    updateShowTransportation(true);
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -1116,6 +1124,7 @@ export default function Map() {
               onClose={() => setSelectedPOI(null)}
               onGetDirections={() => {
                 console.log(`Get directions for address: ${selectedPOI.vicinity || "unknown"}`);
+                handlePOIGetDirections(selectedPOI);
                 setSelectedPOI(null);
               }}
             />
