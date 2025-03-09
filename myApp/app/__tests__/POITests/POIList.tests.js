@@ -13,6 +13,20 @@ jest.mock('expo-constants', () => ({
   },
 }));
 
+// Mock expo-router
+jest.mock('expo-router', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}));
+
+// Mock the location context
+jest.mock('@/app/context/LocationContext', () => ({
+  useLocationContext: () => ({
+    updatePOILocationData: jest.fn(),
+  }),
+}));
+
 // Mock Ionicons from @expo/vector-icons to simply render a Text component
 jest.mock('@expo/vector-icons', () => {
   const { Text } = require('react-native'); // now in-scope
