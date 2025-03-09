@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import PropTypes from "prop-types";
 import styles from "../styles/IndoorMapStyles";
 
 const FloorNavigation = ({ selectedBuilding, selectedFloor, onChangeFloor }) => {
@@ -40,6 +41,13 @@ const FloorNavigation = ({ selectedBuilding, selectedFloor, onChangeFloor }) => 
       </TouchableOpacity>
     </View>
   );
+};
+FloorNavigation.propTypes = {
+  selectedBuilding: PropTypes.shape({
+    floors: PropTypes.array
+  }),
+  selectedFloor: PropTypes.string,
+  onChangeFloor: PropTypes.func.isRequired
 };
 
 export default FloorNavigation;

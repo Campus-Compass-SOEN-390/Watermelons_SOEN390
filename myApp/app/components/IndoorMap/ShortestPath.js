@@ -13,7 +13,7 @@ export function dijkstra(graph, startNode, endNode) {
   while (unvisitedNodes.size > 0) {
     // Get the node with the smallest distance
     let currentNode = [...unvisitedNodes].reduce((a, b) =>
-      distances[a] < distances[b] ? a : b
+      distances[a] < distances[b] ? a : b, null
     );
 
     unvisitedNodes.delete(currentNode);

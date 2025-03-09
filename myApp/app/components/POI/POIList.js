@@ -164,7 +164,7 @@ const POIList = ({
     if (error && (!data || data.length === 0)) {
         return (
             <View style={styles.noResultsContainer}>
-                <Text style={styles.errorText}>{error || "An error occurred"}</Text>
+                <Text style={styles.errorText}>{error ?? "An error occurred"}</Text>
                 <TouchableOpacity
                     style={[styles.retryButton, { marginTop: 20 }]}
                     onPress={onRefresh}
