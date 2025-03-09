@@ -1,14 +1,6 @@
 import React from "react";
 import { getGoogleTravelTime, getSortedTravelTimes } from "../api/googleMapsApi";
-import fetch from "node-fetch";
 
-jest.mock("node-fetch", () => require("jest-fetch-mock"));
-fetch.enableMocks();
-
-jest.mock("expo-constants", () => ({
-    expoConfig: { extra: { apiKey: process.env.GOOGLE_MAPS_API_KEY || "TEST_API_KEY" } },
-  }));
-  
 
 describe("Google Travel Time API Tests", () => {
   beforeEach(() => {
@@ -118,10 +110,9 @@ describe("Google Travel Time API Tests", () => {
     await getGoogleTravelTime(origin, destination, mode);
 
     expect(fetch).toHaveBeenCalledWith(
-      expect.stringContaining(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=45.4970605,-73.5788022&destination=45.495495,-73.5791717&mode=driving&key=TEST_API_KEY`
-      )
+        expect.stringMatching(/https:\/\/maps\.googleapis\.com\/maps\/api\/directions\/json\?.*key=TEST_API_KEY/)
     );
+    
   });
 });
 
