@@ -32,6 +32,8 @@ export const getRealTimeShuttleData = async () => {
 
     // In case the response is empty 
     if (!response.data) {
+
+      console.error("Error fetching real-time shuttle data: Received empty response from the server.");
       throw new Error("Received empty response from the server."); 
     }
 
@@ -39,6 +41,8 @@ export const getRealTimeShuttleData = async () => {
   } catch (error) {
     
     if (error.message !== "Received empty response from the server.") {
+
+      console.error("Error fetching real-time shuttle data:", error.message);
       throw new Error("Could not retrieve shuttle data."); 
     }
 
