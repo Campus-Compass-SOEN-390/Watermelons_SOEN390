@@ -139,9 +139,7 @@ POIListItem.propTypes = {
     calculateDistance: PropTypes.func.isRequired
 };
 
-POIListItem.defaultProps = {
-    userLocation: { latitude: 0, longitude: 0 }
-};
+
 
 const POIList = ({
     data,

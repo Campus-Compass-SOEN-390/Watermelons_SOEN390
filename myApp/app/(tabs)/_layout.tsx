@@ -4,6 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import styles from "../styles/LayoutStyles";
 import { LocationProvider } from '../context/LocationContext';
 import { IndoorMapProvider } from '../context/IndoorMapContext';
+import React from 'react';
 
 export default function TabLayout() {
   const router = useRouter();
