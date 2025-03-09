@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
     View,
     Text,
@@ -16,6 +17,18 @@ import { useLocationContext } from '@/app/context/LocationContext';
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
+const getCategoryStyle = (category) => {
+    if (category === 'cafe') return styles.cafeBadge;
+    if (category === 'restaurant') return styles.restaurantBadge;
+    return styles.activityBadge;
+};
+
+const getCategoryText = (category) => {
+    if (category === 'cafe') return 'Cafe';
+    if (category === 'restaurant') return 'Restaurant';
+    return 'Activity';
+};
+
 const POIListItem = ({ item, userLocation, calculateDistance }) => {
     const [imageError, setImageError] = useState(false);
 
@@ -27,7 +40,7 @@ const POIListItem = ({ item, userLocation, calculateDistance }) => {
     );
 
     // Extract photo reference using proper path
-    const photoReference = !imageError && item.photos && item.photos[0]?.photo_reference;
+    const photoReference = !imageError && item.photos?.[0]?.photo_reference;
 
     // Build photo URL following Google Places API requirements
     const imageUrl = photoReference
@@ -93,12 +106,10 @@ const POIListItem = ({ item, userLocation, calculateDistance }) => {
                 <View style={styles.categoryContainer}>
                     <View style={[
                         styles.categoryBadge,
-                        item.category === 'cafe' ? styles.cafeBadge :
-                            item.category === 'restaurant' ? styles.restaurantBadge : styles.activityBadge
+                        getCategoryStyle(item.category)
                     ]}>
                         <Text style={styles.categoryText}>
-                            {item.category === 'cafe' ? 'Cafe' :
-                                item.category === 'restaurant' ? 'Restaurant' : 'Activity'}
+                            {getCategoryText(item.category)}
                         </Text>
                     </View>
                     {item.rating && (
@@ -122,6 +133,34 @@ const POIListItem = ({ item, userLocation, calculateDistance }) => {
     );
 };
 
+POIListItem.propTypes = {
+    item: PropTypes.shape({
+        name: PropTypes.string,
+        place_id: PropTypes.string,
+        vicinity: PropTypes.string,
+        category: PropTypes.string,
+        rating: PropTypes.number,
+        geometry: PropTypes.shape({
+            location: PropTypes.shape({
+                lat: PropTypes.number,
+                lng: PropTypes.number
+            })
+        }),
+        photos: PropTypes.arrayOf(
+            PropTypes.shape({
+                photo_reference: PropTypes.string
+            })
+        )
+    }).isRequired,
+    userLocation: PropTypes.shape({
+        latitude: PropTypes.number,
+        longitude: PropTypes.number
+    }),
+    calculateDistance: PropTypes.func.isRequired
+};
+
+
+
 const POIList = ({
     data,
     userLocation,
@@ -143,7 +182,7 @@ const POIList = ({
     if (error && (!data || data.length === 0)) {
         return (
             <View style={styles.noResultsContainer}>
-                <Text style={styles.errorText}>{error ? error : "An error occurred"}</Text>
+                <Text style={styles.errorText}>{error ?? "An error occurred"}</Text>
                 <TouchableOpacity
                     style={[styles.retryButton, { marginTop: 20 }]}
                     onPress={onRefresh}
@@ -197,5 +236,20 @@ const POIList = ({
         />
     );
 };
+
+POIList.propTypes = {
+    data: PropTypes.array,
+    userLocation: PropTypes.shape({
+        latitude: PropTypes.number,
+        longitude: PropTypes.number
+    }),
+    isLoading: PropTypes.bool,
+    error: PropTypes.string,
+    refreshing: PropTypes.bool,
+    onRefresh: PropTypes.func.isRequired,
+    calculateDistance: PropTypes.func.isRequired
+};
+
+
 
 export default POIList;

@@ -1,8 +1,9 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import PropTypes from 'prop-types';
 
-const POIPopup = ({ poi, distance, onClose, onGetDirections }) => {
+const POIPopup = ({ poi = null, distance = null, onClose, onGetDirections }) => {
   if (!poi) return null;
 
   // Format distance in a readable way
@@ -15,12 +16,15 @@ const POIPopup = ({ poi, distance, onClose, onGetDirections }) => {
   };
 
   return (
-    <View style={styles.container} testID="poi-popup">
+    <View style={styles.container} testID="poi-popup" accessible={true} accessibilityLabel="Point of interest information">
       {/* Close button */}
       <TouchableOpacity 
         style={styles.closeButton} 
         onPress={onClose}
         testID="close-button"
+        accessible={true}
+        accessibilityLabel="Close point of interest information"
+        accessibilityRole="button"
       >
         <MaterialIcons name="close" size={20} color="#666" />
       </TouchableOpacity>
@@ -40,12 +44,28 @@ const POIPopup = ({ poi, distance, onClose, onGetDirections }) => {
         style={styles.directionsButton} 
         onPress={onGetDirections}
         testID="directions-button"
+        accessible={true}
+        accessibilityLabel="Get directions to this location"
+        accessibilityRole="button"
       >
         <MaterialIcons name="directions" size={16} color="white" />
         <Text style={styles.directionsText}>Get Directions</Text>
       </TouchableOpacity>
     </View>
   );
+};
+
+// Define prop types
+POIPopup.propTypes = {
+  poi: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    rating: PropTypes.number,
+    user_ratings_total: PropTypes.number,
+    vicinity: PropTypes.string,
+  }),
+  distance: PropTypes.number,
+  onClose: PropTypes.func.isRequired,
+  onGetDirections: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({

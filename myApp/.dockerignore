@@ -1,0 +1,12 @@
+# Ignore local node modules if you want a fresh install inside Docker
+node_modules
+
+# Ignore build output or coverage
+.expo
+coverage
+build
+
+# Any other files you do not want to copy into the container
+.git
+.github
+.scannerwork

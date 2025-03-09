@@ -1,10 +1,11 @@
-// jest.setup.js
 import fetchMock from "jest-fetch-mock";
 
+// Enable mocks globally
 fetchMock.enableMocks();
-
-// Ensure mock is applied globally
 global.fetch = fetchMock;
+
+// Ensure API key is correctly set in Jest tests
+process.env.GOOGLE_MAPS_API_KEY = "TEST_API_KEY"; 
 
 global.FormData = require('form-data');
 
