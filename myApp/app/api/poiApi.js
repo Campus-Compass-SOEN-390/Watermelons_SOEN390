@@ -26,7 +26,7 @@ export const getCachedPOIData = () => {
 };
 
 export const fetchPOIData = async (currentRegion, signal) => {
-  if (!currentRegion || !currentRegion.latitude || !currentRegion.longitude) {
+  if (!currentRegion?.latitude || !currentRegion?.longitude) {
     console.error("Invalid region data:", currentRegion);
     throw new Error("Invalid region data for POI fetch");
   }
