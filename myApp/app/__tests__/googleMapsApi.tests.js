@@ -6,8 +6,9 @@ jest.mock("node-fetch", () => require("jest-fetch-mock"));
 fetch.enableMocks();
 
 jest.mock("expo-constants", () => ({
-  expoConfig: { extra: { apiKey: "TEST_API_KEY" } },
-}));
+    expoConfig: { extra: { apiKey: process.env.GOOGLE_MAPS_API_KEY || "TEST_API_KEY" } },
+  }));
+  
 
 describe("Google Travel Time API Tests", () => {
   beforeEach(() => {

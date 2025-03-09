@@ -44,15 +44,23 @@ export const estimateShuttleTravelTime = async (userLocation, destinationCampus)
     }) || [];
     
     let nextShuttleTime = stopSchedule.find(time => time > currentTime);
-    if (!nextShuttleTime) {
+
+    // 🔥 FIX: Ensure `nextShuttleTime` is valid before proceeding
+    if (nextShuttleTime === undefined) {  
         throw new Error("No shuttle available at this time.");
     }
+    
+    
     let waitTime = Math.max(0, nextShuttleTime - currentTime);
     
     // Estimate shuttle ride duration based on distance and speed assumption (40 km/h)
     const shuttleRideTime = (destinationCampus === "LOY")
         ? haversineDistance(sgwStop, loyolaRegion) / 40 * 60
         : haversineDistance(loyolaStop, sgwRegion) / 40 * 60;
+
+    if (isNaN(travelTimeToStop) || isNaN(shuttleRideTime)) {
+            throw new Error("Invalid travel time calculation.");
+        }
     
     // Total estimated travel time
     return travelTimeToStop + waitTime + shuttleRideTime;

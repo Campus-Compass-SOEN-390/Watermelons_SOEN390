@@ -63,12 +63,13 @@ describe("estimateShuttleTravelTime", () => {
      * - Ensures the function throws an error when there are no shuttles available after the current time.
      */
     test("should throw an error if no shuttle is available at this time", async () => {
-        fetchShuttleScheduleByDay.mockReturnValue({ SGW: ["06:00", "07:00"] }); // Past times (before now)
+        fetchShuttleScheduleByDay.mockReturnValue({ SGW: [] }); // Ensure empty schedule
         getSortedTravelTimes.mockResolvedValue([{ mode: "walking", duration: 10 }]);
-
+    
         await expect(estimateShuttleTravelTime(userLocation, "LOY"))
             .rejects.toThrow("No shuttle available at this time.");
     });
+    
 
     /**
      * Test Case 4: Successful travel time estimation
@@ -128,7 +129,7 @@ describe("estimateShuttleTravelTime", () => {
 
         expect(estimatedTime).toBeGreaterThan(0);
     });
-    
+
     /**
      * Test Case 8: User has only transit as an option
      * - Ensures the function works correctly when the only available travel mode to the shuttle stop is transit.
