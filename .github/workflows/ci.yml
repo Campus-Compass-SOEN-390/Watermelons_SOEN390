@@ -1,0 +1,107 @@
+name: CI Workflow for Concordia Campus Guide
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  build-and-test:
+    name: Build and Test
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Debug Directory Structure
+        run: ls -R
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: myApp
+
+      - name: Set Environment Variables
+        run: echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" >> $GITHUB_ENV
+
+      - name: Run tests
+        run: npm test
+        working-directory: myApp
+
+  android-ios-tests:
+    name: Android & iOS Tests
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Debug Directory Structure
+        run: ls -R
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: myApp
+
+      - name: Set Environment Variables
+        run: echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" >> $GITHUB_ENV
+
+      - name: Run Jest tests for Android
+        run: npm run test:android
+        working-directory: myApp
+
+      - name: Run Jest tests for iOS
+        run: npm run test:ios
+        working-directory: myApp
+
+  test:
+    runs-on: ubuntu-latest
+    name: Codecov report
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and deps
+        uses: actions/setup-node@v3
+
+      - name: Install dependencies
+        run: npm install 
+        working-directory: myApp
+
+      - name: Set Environment Variables
+        run: echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" >> $GITHUB_ENV
+
+      - name: Check Jest installation
+        run: npm run jest --version
+        working-directory: myApp
+
+      - name: Run tests with coverage
+        run: npm run test:ci:coverage
+        working-directory: myApp
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
