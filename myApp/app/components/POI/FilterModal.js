@@ -2,6 +2,7 @@
 import React from "react";
 import { Modal, View, Text, TouchableOpacity, Switch, SafeAreaView } from "react-native";
 import Slider from "@react-native-community/slider";
+import PropTypes from 'prop-types';
 import { styles } from "../../styles/poiStyles";
 
 const FilterModal = ({
@@ -104,6 +105,19 @@ const FilterModal = ({
       </View>
     </Modal>
   );
+};
+
+FilterModal.propTypes = {
+  isVisible: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  distance: PropTypes.number.isRequired,
+  setDistance: PropTypes.func.isRequired,
+  showCafes: PropTypes.bool.isRequired,
+  setShowCafes: PropTypes.func.isRequired,
+  showRestaurants: PropTypes.bool.isRequired,
+  setShowRestaurants: PropTypes.func.isRequired,
+  showActivities: PropTypes.bool.isRequired,
+  setShowActivities: PropTypes.func.isRequired,
 };
 
 export default FilterModal;
