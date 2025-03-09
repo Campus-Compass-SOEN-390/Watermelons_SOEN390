@@ -1,9 +1,7 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import React from "react";
-import { Link } from "expo-router";
 import HomePage from "./screens/HomePage";
 import 'react-native-get-random-values';
-import { v4 as uuidv4 } from 'react-native-uuid';
 
 export default function Index() {
 
