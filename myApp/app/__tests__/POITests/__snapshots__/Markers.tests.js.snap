@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Marker Components Snapshots ActivityMarker matches snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "white",
+      "borderRadius": 5,
+      "padding": 5,
+    }
+  }
+>
+  <View
+    color="green"
+    size={20}
+    testID="icon-run"
+  />
+</View>
+`;
+
+exports[`Marker Components Snapshots CoffeeMarker matches snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "white",
+      "borderRadius": 5,
+      "padding": 5,
+    }
+  }
+>
+  <View
+    color="black"
+    size={24}
+    testID="icon-coffee"
+  />
+</View>
+`;
+
+exports[`Marker Components Snapshots RestaurantMarker matches snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "white",
+      "borderRadius": 5,
+      "padding": 5,
+    }
+  }
+>
+  <View
+    color="orange"
+    size={24}
+    testID="icon-silverware-fork-knife"
+  />
+</View>
+`;
