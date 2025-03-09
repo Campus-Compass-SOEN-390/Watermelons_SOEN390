@@ -18,8 +18,8 @@ import IndoorMap from "../components/IndoorMap/IndoorMap";
 import FloorNavigation from "../components/FloorNavigation";
 import MapDirections from "../components/MapDirections";
 import ShortestPathMap from "../components/IndoorMap/ShortestPathMap";
-import h8Coordinates from "../components/IndoorMap/Coordinates/h8coordinates";
-import h8Graph from "../components/IndoorMap/Graphs/h8Graph";
+import { nodeCoordinates } from "../components/IndoorMap/Coordinates/hCoordinates";
+import { graph } from "../components/IndoorMap/Graphs/hGraph";
 import {
   handleIndoorBuildingSelect,
   handleClearIndoorMap,
@@ -29,12 +29,8 @@ import {
 import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
 import { extractShuttleInfo } from "../api/shuttleLiveData";
 
-const MAPBOX_API =
-  "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw";
-// const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
+const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API);
-console.log("MAPBOX API KEY:", MAPBOX_API);
-console.log("GOOGLE API KEY:", Constants.expoConfig?.extra?.apiKey);
 
 export default function Map() {
   // Campus switching
@@ -60,7 +56,6 @@ export default function Map() {
 
   //Set Shuttle Live loc
   const [shuttleLocations, setShuttleLocations] = useState([]);
-  const [showShuttle, setShowShuttle] = useState(false);
   const fetchInterval = 30000;
 
   const coordinatesMap = {
@@ -239,8 +234,8 @@ export default function Map() {
 
   const handleShuttleButton = () => {
     console.log("Shuttle button click");
-    setShowShuttle(true);
-    console.log(showShuttle);
+    
+    
    
     updateOrigin(coordinatesMap["My Position"], "My Location");
     if (activeCampus === "sgw") {
@@ -436,7 +431,7 @@ export default function Map() {
            />
 
           {/* Shuttle bus live location */}
-          { showShuttle &&  shuttleLocations.map((shuttle)  => (
+          { showShuttleRoute &&  shuttleLocations.map((shuttle)  => (
             <Mapbox.ShapeSource
                 key={shuttle.id}
                 id={`shuttle-${shuttle.id}`}
@@ -463,10 +458,11 @@ export default function Map() {
             ))}
 
           <ShortestPathMap
-            graph={h8Graph}
-            nodeCoordinates={h8Coordinates}
+            graph={graph}
+            nodeCoordinates={nodeCoordinates}
             startNode={originText}
             endNode={destinationText}
+            currentFloor={selectedFloor}
           />
         </Mapbox.MapView>
       </View>
