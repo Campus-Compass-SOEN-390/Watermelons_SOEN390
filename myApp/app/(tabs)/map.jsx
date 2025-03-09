@@ -4,7 +4,6 @@ import React, {
   useRef,
   Fragment,
   useEffect,
-  useMemo,
   useCallback,
 } from "react";
 import styles from "../styles/IndoorMapStyles";
@@ -617,15 +616,17 @@ export default function MapView() {
           <Mapbox.Camera
             ref={mapRef}
             zoomLevel={selectedIndoorBuilding ? 18 : 15} // Adjust zoom based on selection
-            centerCoordinate={
-              selectedIndoorBuilding
-                ? calculateCentroid(
-                    convertCoordinates(selectedIndoorBuilding.coordinates),
-                  )
-                : activeCampus === "sgw"
+            centerCoordinate={(() => {
+              if (selectedIndoorBuilding) {
+                return calculateCentroid(
+                  convertCoordinates(selectedIndoorBuilding.coordinates)
+                );
+              } else {
+                return activeCampus === "sgw" 
                   ? [-73.5792229, 45.4951962]
-                  : [-73.6417009, 45.4581281]
-            }
+                  : [-73.6417009, 45.4581281];
+              }
+            })()}
             animationMode="flyTo"
             animationDuration={1000}
           />

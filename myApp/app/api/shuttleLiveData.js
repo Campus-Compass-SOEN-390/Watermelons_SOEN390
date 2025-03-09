@@ -1,4 +1,3 @@
-import React from "react";
 import axios from "axios";
 
 // Step 1: Function to get session cookies
@@ -33,7 +32,6 @@ export const getRealTimeShuttleData = async () => {
 
     // In case the response is empty 
     if (!response.data) {
-      //console.error("Error fetching real-time shuttle data: Received empty response from the server.");
       throw new Error("Received empty response from the server."); 
     }
 
@@ -41,7 +39,6 @@ export const getRealTimeShuttleData = async () => {
   } catch (error) {
     
     if (error.message !== "Received empty response from the server.") {
-      //console.error("Error fetching real-time shuttle data:", error.message);
       throw new Error("Could not retrieve shuttle data."); 
     }
 
@@ -58,13 +55,13 @@ export const extractShuttleInfo = async () => {
     const rawData = await getRealTimeShuttleData();
 
     // Check if the expected structure is present
-    if (!rawData || !rawData.d || !Array.isArray(rawData.d.Points)) {
+    if (!Array.isArray(rawData?.d?.Points)) {
       throw new Error("Invalid data format received.");
     }
 
     // Extract the shuttle information
     return rawData.d.Points
-      .filter(point => point.ID && point.ID.startsWith("BUS")) // Ensure ID exists before filtering
+      .filter(point => point.ID?.startsWith("BUS")) // Using optional chaining
       .map(bus => ({
         id: bus.ID,
         latitude: bus.Latitude || 0, // Default to 0 if undefined
