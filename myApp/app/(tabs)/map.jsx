@@ -28,13 +28,18 @@ import {
 } from "../utils/indoor-map";
 import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
 import { extractShuttleInfo } from "../api/shuttleLiveData";
+import { useLocalSearchParams } from "expo-router";
 
 const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API);
 
 export default function Map() {
+
+  //get Campus type from homePage
+  const { type } = useLocalSearchParams();
+
   // Campus switching
-  const [activeCampus, setActiveCampus] = useState("sgw");
+  const [activeCampus, setActiveCampus] = useState(type);
   const mapRef = useRef(null);
 
   // Location & permissions
@@ -253,6 +258,7 @@ export default function Map() {
 
   // Center on campus
   const centerMapOnCampus = () => {
+    
     if (mapRef.current) {
       const region = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
       mapRef.current.animateToRegion(region, 1000);
