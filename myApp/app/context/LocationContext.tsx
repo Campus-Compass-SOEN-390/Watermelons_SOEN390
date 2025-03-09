@@ -88,9 +88,6 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
     console.log("FROM LOCATION CONTEXT", lat, lng, name)
   }, []);
 
-
- // const value = { 
-
   const value = React.useMemo(() => ({ 
     origin, 
     destination, 
