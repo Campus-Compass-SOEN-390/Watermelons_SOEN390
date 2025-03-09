@@ -224,7 +224,7 @@ export default function MapView() {
           tabBarStyle: { display: "none" },
         });
       }
-      if (renderMap) {
+      if (!renderMap) {
         navigation.setOptions({
           tabBarStyle: tabStyles.tabBarStyle,
         });
