@@ -7,11 +7,11 @@ export const fetchAllShuttleSchedules = async () => getAllShuttleSchedules();
 // Fetch a specific day's schedule
 export const fetchShuttleScheduleByDay = async (day) => {
   try {
-      console.log(`Fetching shuttle schedule for: ${day}`);
+      //console.log(`Fetching shuttle schedule for: ${day}`);
       return getShuttleScheduleByDay(day); // Now this throws an error for invalid days
   } catch (error) {
       console.error("Error fetching schedule:", error.message);
-      throw error; // 🚨 Re-throw the error so tests correctly catch it
+      throw error; //  Re-throw the error so tests correctly catch it
   }
 };
 
