@@ -35,6 +35,7 @@ import {
 } from "../utils/indoor-map";
 import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
 import { extractShuttleInfo } from "../api/shuttleLiveData";
+import { useLocalSearchParams } from "expo-router";
 
 // Import POI related components
 import MapMarkers from "../components/POI/MapMarkers";
@@ -56,8 +57,12 @@ Mapbox.setAccessToken(MAPBOX_API);
 const REGION_CHANGE_THRESHOLD = 0.005;
 
 export default function Map() {
+
+  //get Campus type from homePage
+  const { type } = useLocalSearchParams();
+
   // Campus switching
-  const [activeCampus, setActiveCampus] = useState("sgw");
+  const [activeCampus, setActiveCampus] = useState(type);
   const mapRef = useRef(null);
 
   // Location & permissions
@@ -478,6 +483,16 @@ export default function Map() {
     updateShowTransportation(true);
   };
 
+  const handleBuildingSetStartingPoint = (building) => {
+    if (!building || !building.entranceCoordinates) {
+      console.error("Invalid building data:", building);
+      return;
+    }
+    const buildingFullName = `${building.name}, ${building.longName}`;
+    updateOrigin(building.entranceCoordinates, buildingFullName);
+  };
+  
+
   const handleShuttleButton = () => {
     console.log("Shuttle button click");
 
@@ -497,6 +512,7 @@ export default function Map() {
 
   // Center on campus
   const centerMapOnCampus = () => {
+    
     if (mapRef.current) {
       const currentRegion = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
       mapRef.current.setCamera({
@@ -1103,6 +1119,7 @@ export default function Map() {
         }}
         building={selectedBuilding}
         onGetDirections={handleBuildingGetDirections}
+        setAsStartingPoint={handleBuildingSetStartingPoint}
       />
       {/* Floating POI popup container */}
       {selectedPOI && (
