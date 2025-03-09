@@ -1,5 +1,5 @@
 import React from "react";
-import { estimateShuttleTravelTime } from "../utils/shuttleUtils";
+import { estimateShuttleTravelTime, estimateShuttleFromButton } from "../utils/shuttleUtils";
 import { getSortedTravelTimes } from "../api/googleMapsApi";
 import { fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
 import { haversineDistance } from "../utils/distanceShuttle";
@@ -165,4 +165,69 @@ describe("estimateShuttleTravelTime", () => {
     });
 
     
+});
+
+describe("estimateShuttleFromButton", () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    /**
+     * Test Case 1: No shuttle service available today
+     */
+    test("should throw an error if no shuttle service is available today", async () => {
+        fetchShuttleScheduleByDay.mockReturnValue(null);
+
+        await expect(estimateShuttleFromButton("SGW"))
+            .rejects.toThrow("No shuttle service available today.");
+    });
+
+    /**
+     * Test Case 2: No shuttle available at this time
+     */
+    test("should throw an error if no shuttle is available at this time", async () => {
+        fetchShuttleScheduleByDay.mockReturnValue({ SGW: [] }); // No scheduled shuttles
+
+        await expect(estimateShuttleFromButton("SGW"))
+            .rejects.toThrow("No shuttle available at this time.");
+    });
+
+    /**
+     * Test Case 3: Successful estimation when a shuttle is available
+     */
+    test("should return estimated wait time and shuttle ride time", async () => {
+        fetchShuttleScheduleByDay.mockReturnValue({
+            SGW: ["12:30", "13:00", "14:00"],  // Future times
+            LOY: ["12:45", "13:15", "14:15"]
+        });
+
+        haversineDistance.mockReturnValue(7); // Assume 7km distance
+
+        const result = await estimateShuttleFromButton("SGW");
+
+        console.log("Test Result:", result);
+
+        expect(result.waitTime).toBeGreaterThanOrEqual(0);
+        expect(result.shuttleRideTime).toBeGreaterThan(0);
+        expect(result.totalTime).toEqual(result.waitTime + result.shuttleRideTime);
+    });
+
+    /**
+     * Test Case 4: Late-night shuttle case
+     */
+    test("should handle late-night shuttle schedules", async () => {
+        fetchShuttleScheduleByDay.mockReturnValue({
+            SGW: ["23:30", "23:45"],
+            LOY: ["23:50", "00:15"]
+        });
+
+        haversineDistance.mockReturnValue(7);
+
+        const result = await estimateShuttleFromButton("LOY");
+
+        expect(result.waitTime).toBeGreaterThanOrEqual(0);
+        expect(result.shuttleRideTime).toBeGreaterThan(0);
+    });
+
+
 });

@@ -45,7 +45,6 @@ export const estimateShuttleTravelTime = async (userLocation, destinationCampus)
     
     let nextShuttleTime = stopSchedule.find(time => time > currentTime);
 
-    // 🔥 FIX: Ensure `nextShuttleTime` is valid before proceeding
     if (nextShuttleTime === undefined) {  
         throw new Error("No shuttle available at this time.");
     }
@@ -65,3 +64,52 @@ export const estimateShuttleTravelTime = async (userLocation, destinationCampus)
     // Total estimated travel time
     return travelTimeToStop + waitTime + shuttleRideTime;
 };
+
+export const estimateShuttleFromButton = async (currentStop) => {
+    const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
+    const now = new Date();
+    const currentTime = now.getHours() * 60 + now.getMinutes(); // Convert to minutes
+
+    // Fetch shuttle schedule
+    const schedule = fetchShuttleScheduleByDay(today);
+    if (!schedule) {
+        throw new Error("No shuttle service available today.");
+    }
+
+    // Determine the next available shuttle departure time
+    const stopKey = currentStop === "SGW" ? "SGW" : "LOY";
+    const destination = currentStop === "SGW" ? "LOY" : "SGW";
+
+    const stopSchedule = schedule[stopKey]?.map(time => {
+        const [hours, minutes] = time.split(":").map(Number);
+        return hours * 60 + minutes; // Convert time to minutes
+    }) || [];
+
+    let nextShuttleTime = stopSchedule.find(time => time > currentTime);
+    
+    if (nextShuttleTime === undefined) {  
+        throw new Error("No shuttle available at this time.");
+    }
+
+    let waitTime = Math.max(0, nextShuttleTime - currentTime);
+
+    // Estimate shuttle ride duration based on distance and speed assumption (40 km/h)
+    const sgwStop = { latitude: SGWtoLoyola.geometry.coordinates[0][1], longitude: SGWtoLoyola.geometry.coordinates[0][0] };
+    const loyolaStop = { latitude: SGWtoLoyola.geometry.coordinates.slice(-1)[0][1], longitude: SGWtoLoyola.geometry.coordinates.slice(-1)[0][0] };
+
+    const shuttleRideTime = (currentStop === "SGW")
+        ? haversineDistance(sgwStop, loyolaRegion) / 40 * 60
+        : haversineDistance(loyolaStop, sgwRegion) / 40 * 60;
+
+    if (isNaN(shuttleRideTime)) {
+        throw new Error("Invalid travel time calculation.");
+    }
+
+    // Return the estimated wait + travel time for the button
+    return {
+        waitTime,
+        shuttleRideTime,
+        totalTime: waitTime + shuttleRideTime
+    };
+};
+
