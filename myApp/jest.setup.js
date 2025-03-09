@@ -2,7 +2,7 @@
 import fetchMock from "jest-fetch-mock";
 
 fetchMock.enableMocks();
-
+process.env.GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY || "test_api_key";
 // Ensure mock is applied globally
 global.fetch = fetchMock;
 
