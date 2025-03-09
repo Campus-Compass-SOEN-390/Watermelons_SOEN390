@@ -1,0 +1,70 @@
+appId: com.anonymous.myApp  
+---
+- launchApp
+
+# Open the Points of Interest page
+- tapOn:
+    id: "interestButton"
+
+# Swipe up to scroll through points of interest
+- swipe:
+    start: 47%,67%
+    end: 49%,20%
+    duration: 638
+
+# Open the Filter menu
+- tapOn: " Filter"
+
+# Select filter options
+- tapOn:
+    point: 87%,68%
+- tapOn:
+    point: 87%,75%
+
+# Select a point of interest
+- tapOn:
+    point: 49%,93%
+
+# Open the Filter menu again
+- tapOn: " Filter"
+
+# Select additional filter options
+- tapOn:
+    point: 88%,82%
+- tapOn:
+    point: 84%,69%
+
+# Swipe horizontally to browse categories
+- swipe:
+    start: 23%,54%
+    end: 34%,54%
+    duration: 876
+
+# Select another point of interest
+- tapOn:
+    point: 50%,92%
+
+# Close the page or return to the previous screen
+- tapOn: ""
+
+# Go on the sgw campus map
+- tapOn:
+    id: "sgwButton"
+
+# Click on the POI button
+- tapOn:
+    id: "locate-me-button"
+
+# Click on the POI filter button 
+- tapOn:
+    id: "locate-me-button"
+
+# Change the distance range
+- swipe:
+  start: 91%,54%
+  end: 63%,54%
+  duration: 740
+  
+# Apply filter
+- tapOn:
+  point: 46%,92%
