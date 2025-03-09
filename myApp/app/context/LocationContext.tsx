@@ -89,7 +89,7 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
   }, []);
 
 
-  const value = { 
+ // const value = { 
 
   const value = React.useMemo(() => ({ 
     origin, 
@@ -109,11 +109,8 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
     updateTravelMode,
     updateShowShuttleRoute,
     updatePOILocationData, // expose the update function
-   };
-
-    updateShowShuttleRoute
    }), [origin, destination, originText, destinationText, showTransportation, renderMap, showFooter, travelMode, showShuttleRoute, updateOrigin, updateDestination, updateShowTransportation, updateRenderMap, updateShowFooter, updateTravelMode, updateShowShuttleRoute]);
-
+  
   return (
     <LocationContext.Provider value={value}>
       {children}
