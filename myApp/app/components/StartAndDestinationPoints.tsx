@@ -49,7 +49,7 @@ const StartAndDestinationPoints = ({
   const [showSteps, setShowSteps] = useState(false);
   const [routeSteps, setRouteSteps] = useState<Step[]>([]);
 
-  // Handle "GO" button click
+  //Handle "GO" button click
   const handleGoClick = () => {
     console.log("Navigating...");
   };
