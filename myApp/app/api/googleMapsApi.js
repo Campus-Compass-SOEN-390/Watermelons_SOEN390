@@ -1,7 +1,7 @@
 import React from "react";
 import Constants from "expo-constants";
 
-const GOOGLE_API_KEY = Constants.expoConfig?.extra?.apiKey;
+const GOOGLE_API_KEY = process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
 
 /**
  * Fetch travel time from Google Maps API with traffic consideration.
