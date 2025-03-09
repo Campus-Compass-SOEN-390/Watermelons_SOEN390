@@ -1,5 +1,5 @@
 import React from "react";
-import { getGoogleTravelTime, getSortedTravelTimes } from "../api/googleMapsApi";
+import { getGoogleTravelTime, getTravelTimes } from "../api/googleMapsApi";
 
 
 describe("Google Travel Time API Tests", () => {
@@ -40,7 +40,7 @@ describe("Google Travel Time API Tests", () => {
  * - Calls getGoogleTravelTime() when the API returns no available routes.
  * - Ensures the function returns `0` when no valid routes are found.
  */
-  test("should return 0 if Google API returns no routes", async () => {
+  test("should return null if Google API returns no routes", async () => {
     fetch.mockResponseOnce(JSON.stringify({ routes: [] }));
 
     const origin = { latitude: 45.4970605, longitude: -73.5788022 };
@@ -48,7 +48,8 @@ describe("Google Travel Time API Tests", () => {
     const mode = "driving";
 
     const time = await getGoogleTravelTime(origin, destination, mode);
-    expect(time).toBe(0); // No route found → Return 0
+    expect(time).toBeNull();
+
   });
 
  /**
@@ -56,7 +57,7 @@ describe("Google Travel Time API Tests", () => {
  * - Simulates network error when fetching travel time data.
  * - Ensures the function handles errors and returns `0`.
  */
-  test("should return 0 if fetch request fails", async () => {
+  test("should return null if fetch request fails", async () => {
     fetch.mockReject(new Error("Network error"));
 
     const origin = { latitude: 45.4970605, longitude: -73.5788022 };
@@ -64,7 +65,7 @@ describe("Google Travel Time API Tests", () => {
     const mode = "walking";
 
     const time = await getGoogleTravelTime(origin, destination, mode);
-    expect(time).toBe(0); // Fetch failure → Return 0
+    expect(time).toBeNull();
   });
 
  /**
@@ -72,7 +73,7 @@ describe("Google Travel Time API Tests", () => {
  * - Simulates an API response missing the expected routes field.
  * - Ensures the function returns 0 to handle unexpected response structures.
  */
-  test("should return 0 if API response is malformed", async () => {
+  test("should return null if API response is malformed", async () => {
     fetch.mockResponseOnce(JSON.stringify({})); // No `routes` field
 
     const origin = { latitude: 45.4970605, longitude: -73.5788022 };
@@ -80,7 +81,7 @@ describe("Google Travel Time API Tests", () => {
     const mode = "walking";
 
     const time = await getGoogleTravelTime(origin, destination, mode);
-    expect(time).toBe(0); // Malformed response → Return 0
+    expect(time).toBeNull();
   });
 
  /**
@@ -113,5 +114,82 @@ describe("Google Travel Time API Tests", () => {
         expect.stringMatching(/https:\/\/maps\.googleapis\.com\/maps\/api\/directions\/json\?.*key=TEST_API_KEY/)
     );
     
+  });
+
+  /**
+   * Test Case 6: Successful response for multiple travel modes
+   * - Ensures it returns travel times correctly for each mode.
+   */
+  test("should return correct travel times for multiple modes", async () => {
+    fetch.mockResponse(
+      JSON.stringify({
+        routes: [
+          {
+            legs: [
+              {
+                duration: { value: 1200 }, // 20 minutes
+              },
+            ],
+          },
+        ],
+      })
+    );
+
+    const origin = { latitude: 45.4970605, longitude: -73.5788022 };
+    const destination = { latitude: 45.495495, longitude: -73.5791717 };
+    const modes = ["walking", "driving"];
+
+    const times = await getTravelTimes(origin, destination, modes);
+
+    expect(times).toEqual([
+      { mode: "walking", duration: 20 },
+      { mode: "driving", duration: 20 },
+    ]);
+  });
+
+  /**
+   * Test Case 7: Some travel modes fail while others succeed
+   * - Simulates a scenario where one mode has a response but another fails.
+   */
+  test("should handle partial failures gracefully", async () => {
+    fetch
+      .mockResponseOnce(
+        JSON.stringify({
+          routes: [
+            {
+              legs: [
+                {
+                  duration: { value: 900 }, // 15 minutes
+                },
+              ],
+            },
+          ],
+        })
+      )
+      .mockRejectOnce(new Error("Network error"));
+
+    const origin = { latitude: 45.4970605, longitude: -73.5788022 };
+    const destination = { latitude: 45.495495, longitude: -73.5791717 };
+    const modes = ["walking", "driving"];
+
+    const times = await getTravelTimes(origin, destination, modes);
+
+    expect(times).toEqual([
+      { mode: "walking", duration: 15 },
+      { mode: "driving", duration: null }, // Failed request
+    ]);
+  });
+
+
+  /**
+   * Test Case 8: Handles empty modes array
+   * - Ensures function handles empty mode list correctly.
+   */
+  test("should return an empty array if no travel modes are provided", async () => {
+    const origin = { latitude: 45.4970605, longitude: -73.5788022 };
+    const destination = { latitude: 45.495495, longitude: -73.5791717 };
+
+    const times = await getTravelTimes(origin, destination, []);
+    expect(times).toEqual([]);
   });
 });
