@@ -56,7 +56,7 @@ Mapbox.setAccessToken(MAPBOX_API);
 // Constants for POI functionality
 const REGION_CHANGE_THRESHOLD = 0.005;
 
-export default function Map() {
+export default function MapView() {
 
   //get Campus type from homePage
   const { type } = useLocalSearchParams();
@@ -67,7 +67,6 @@ export default function Map() {
 
   // Location & permissions
   const { location, hasPermission } = useLocation();
-  const [showLocating, setShowLocating] = useState(true);
   const [showPermissionPopup, setShowPermissionPopup] =
     useState(!hasPermission);
 
@@ -79,7 +78,7 @@ export default function Map() {
   const [highlightedBuilding, setHighlightedBuilding] = useState(null);
 
   //Statues for displaying shuttle polylines or not
-  const [shuttleRoute, setShuttleRoute] = useState("");
+  //const [shuttleRoute, setShuttleRoute] = useState("");
 
   //Set Shuttle Live loc
   const [shuttleLocations, setShuttleLocations] = useState([]);
@@ -98,7 +97,6 @@ export default function Map() {
   const [showCafes, setShowCafes] = useState(true);
   const [showRestaurants, setShowRestaurants] = useState(true);
   const [showActivities, setShowActivities] = useState(true);
-  const [poiError, setPoiError] = useState(null);
   const [showPOI, setShowPOI] = useState(false);
   const [selectedPOI, setSelectedPOI] = useState(null);
   const isFetchingRef = useRef(false);
@@ -120,17 +118,6 @@ export default function Map() {
   // Track selected floor
   const [selectedFloor, setSelectedFloor] = useState(null);
 
-  // Handles indoor building selection
-  const selectIndoorBuilding = (building) => {
-    handleIndoorBuildingSelect(
-      building,
-      selectedIndoorBuilding,
-      updateIsExpanded,
-      updateSelectedIndoorBuilding,
-      setSelectedFloor,
-      mapRef,
-    );
-  };
 
   // Handle clearing indoor mode when "Outdoor" is pressed
   const clearIndoorMap = () => {
@@ -155,7 +142,6 @@ export default function Map() {
     destination,
     originText,
     destinationText,
-    showTransportation,
     renderMap,
     showShuttleRoute,
     travelMode,
@@ -193,7 +179,6 @@ export default function Map() {
   useEffect(() => {
     try {
       if (location) {
-        setShowLocating(false);
         let found = false;
         for (const building of buildings.filter(
           (b) => b.coordinates && b.coordinates.length > 0,
@@ -224,18 +209,18 @@ export default function Map() {
         originText == "My Location" &&
         (destinationText == "Loyola Campus, Shuttle Stop" ||
           destinationText == "SGW Campus, Shuttle Stop") &&
-        renderMap == true
+        renderMap
       ) {
         updateShowShuttleRoute(true);
       } else {
         updateShowShuttleRoute(false);
       }
-      if (renderMap == true) {
+      if (renderMap) {
         navigation.setOptions({
           tabBarStyle: { display: "none" },
         });
       }
-      if (renderMap == false) {
+      if (renderMap) {
         navigation.setOptions({
           tabBarStyle: tabStyles.tabBarStyle,
         });
@@ -349,7 +334,7 @@ export default function Map() {
     if (!currentRegion && mapRef.current) {
       try {
         const camera = await mapRef.current.getCamera();
-        if (camera && camera.centerCoordinate) {
+        if (camera?.centerCoordinate) {
           currentRegion = {
             latitude: camera.centerCoordinate[1],
             longitude: camera.centerCoordinate[0],
@@ -374,7 +359,6 @@ export default function Map() {
     }
     
     console.log("Starting POI fetch for region:", currentRegion);
-    setPoiError(null);
     setLoading(true);
     isFetchingRef.current = true;
     
@@ -400,7 +384,6 @@ export default function Map() {
         console.log("Fetch aborted");
       } else {
         console.error("Error fetching places:", error);
-        setPoiError("Failed to load points of interest. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -414,7 +397,7 @@ export default function Map() {
 
   // Fix the handleRegionChange function to properly handle the Mapbox event object
   const handleRegionChange = useCallback((feature) => {
-    if (isRegionChangingRef.current || !feature || !feature.properties) return;
+    if (isRegionChangingRef.current || !feature?.properties) return;
 
     try {
       // Get the center coordinates from the visibleBounds property
@@ -484,7 +467,7 @@ export default function Map() {
   };
 
   const handleBuildingSetStartingPoint = (building) => {
-    if (!building || !building.entranceCoordinates) {
+    if (!building?.entranceCoordinates) {
       console.error("Invalid building data:", building);
       return;
     }
@@ -583,86 +566,6 @@ export default function Map() {
     }
   };
 
-  // Further filter points based on distance and selected filters
-  const filteredPoints = useMemo(() => {
-    if (!location || !showPOI) return [];
-
-    const sortedPoints = [...coffeeShops, ...restaurants, ...activities].sort(
-      (a, b) => {
-        const aLat = a.geometry?.location?.lat;
-        const aLng = a.geometry?.location?.lng;
-        const bLat = b.geometry?.location?.lat;
-        const bLng = b.geometry?.location?.lng;
-        const aDistance =
-          aLat && aLng
-            ? calculateDistance(
-                location.latitude,
-                location.longitude,
-                aLat,
-                aLng,
-              )
-            : Infinity;
-        const bDistance =
-          bLat && bLng
-            ? calculateDistance(
-                location.latitude,
-                location.longitude,
-                bLat,
-                bLng,
-              )
-            : Infinity;
-        return aDistance - bDistance;
-      },
-    );
-
-    return sortedPoints.filter((point) => {
-      const lat = point.geometry?.location?.lat;
-      const lng = point.geometry?.location?.lng;
-      if (!lat || !lng) return false;
-      const d = calculateDistance(
-        location.latitude,
-        location.longitude,
-        lat,
-        lng,
-      );
-      if (d > distance * 1000) return false;
-      const types = point.types || [];
-      const name = point.name.toLowerCase();
-      const isCafe =
-        showCafes &&
-        (types.includes("cafe") ||
-          name.includes("coffee") ||
-          types.includes("bakery"));
-      const isRestaurant =
-        showRestaurants &&
-        (types.includes("restaurant") ||
-          types.includes("meal_takeaway") ||
-          types.includes("meal_delivery"));
-      const isActivity =
-        showActivities &&
-        (types.includes("tourist_attraction") ||
-          types.includes("movie_theater") ||
-          types.includes("amusement_park") ||
-          types.includes("museum") ||
-          name.includes("tourist") ||
-          name.includes("bowling") ||
-          name.includes("cinema") ||
-          name.includes("theater") ||
-          name.includes("museum") ||
-          name.includes("attraction"));
-      return isCafe || isRestaurant || isActivity;
-    });
-  }, [
-    coffeeShops,
-    restaurants,
-    activities,
-    location,
-    distance,
-    showCafes,
-    showRestaurants,
-    showActivities,
-    showPOI,
-  ]);
 
   //fetch shuttle live data
   useEffect(() => {
@@ -682,11 +585,7 @@ export default function Map() {
     return () => clearInterval(interval);
   }, []);
 
-  // Determine the current center based on active campus
-  const currentCenter =
-    activeCampus === "sgw"
-      ? [-73.5792229, 45.4951962]
-      : [-73.6417009, 45.4581281];
+
 
   // Handle POI marker press
   const handlePOIPress = (poi) => {
@@ -705,15 +604,6 @@ export default function Map() {
     return calculateDistance(lat1, lon1, lat2, lon2);
   };
 
-  // Handle "Get Directions" button press
-  const handleGetDirections = (poi) => {
-    if (!poi?.geometry?.location) return;
-
-    // For now, just close the popup
-    // Later we can add actual directions functionality
-    setSelectedPOI(null);
-    console.log("Get directions to:", poi.name);
-  };
 
   return (
     <View style={{ flex: 1 }}>
