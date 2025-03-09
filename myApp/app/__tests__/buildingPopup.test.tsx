@@ -20,7 +20,7 @@ describe("BuildingPopup Component", () => {
     onClose: mockOnClose,
     building: mockBuilding,
     onGetDirections: mockOnGetDirections,
-    useAsStartingPoint: mockUseAsStartingPoint,
+    setAsStartingPoint: mockSetAsStartingPoint,
   };
 
   it("renders building information correctly", () => {
@@ -44,13 +44,13 @@ describe("BuildingPopup Component", () => {
     expect(mockOnClose).toHaveBeenCalled(); // Should close the modal
   });
 
-  it("calls useAsStartingPoint when 'Set Starting Point' button is pressed", () => {
+  it("calls setAsStartingPoint when 'Set Starting Point' button is pressed", () => {
     const { getByText } = render(<BuildingPopup {...defaultProps} />);
     const setStartPointButton = getByText("Use As Starting Point");
 
     fireEvent.press(setStartPointButton);
 
-    expect(mockUseAsStartingPoint).toHaveBeenCalledWith(mockBuilding);
+    expect(mockSetAsStartingPoint).toHaveBeenCalledWith(mockBuilding);
     expect(mockOnClose).toHaveBeenCalled(); // Should close the modal
   });
 
