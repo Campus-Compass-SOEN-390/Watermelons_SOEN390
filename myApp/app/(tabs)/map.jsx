@@ -232,6 +232,11 @@ export default function Map() {
     updateShowTransportation(true);
   };
 
+  const handleBuildingSetStartingPoint = (building) => {
+    const buildingFullName = building.name + ", " + building.longName;
+    updateOrigin(building.entranceCoordinates, buildingFullName);
+  }
+
   const handleShuttleButton = () => {
     console.log("Shuttle button click");
     
@@ -614,6 +619,7 @@ export default function Map() {
         }}
         building={selectedBuilding}
         onGetDirections={handleBuildingGetDirections}
+        useAsStartingPoint={handleBuildingSetStartingPoint}
       />
     </View>
   );
