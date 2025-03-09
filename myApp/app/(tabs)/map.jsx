@@ -48,6 +48,9 @@ import {
 import POIPopup from "../components/POI/POIPopup"; // Import the new component
 import { fetchPOIData, updatePOICache, getCachedPOIData } from "../api/poiApi";
 import { styles as poiStyles } from "../styles/poiStyles";
+import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
+import { estimateShuttleFromButton } from "../utils/shuttleUtils";
+
 
 const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API);
@@ -74,6 +77,8 @@ export default function Map() {
   // Building popup
   const [selectedBuilding, setSelectedBuilding] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false);
+  const [shuttlePopupVisible, setShuttlePopupVisible] = useState(false);
+  const [shuttleDetails, setShuttleDetails] = useState(null);
 
   // The missing piece: track the building user is inside
   const [highlightedBuilding, setHighlightedBuilding] = useState(null);
@@ -493,22 +498,47 @@ export default function Map() {
   };
   
 
-  const handleShuttleButton = () => {
+  const handleShuttleButton = async () => {
     console.log("Shuttle button click");
-
+  
+    // Update origin & destination as before
     updateOrigin(coordinatesMap["My Position"], "My Location");
     if (activeCampus === "sgw") {
       updateDestination(
         coordinatesMap["Loyola Campus, Shuttle Stop"],
-        "Loyola Campus, Shuttle Stop",
+        "Loyola Campus, Shuttle Stop"
       );
     } else {
       updateDestination(
         coordinatesMap["SGW Campus, Shuttle Stop"],
-        "SGW Campus, Shuttle Stop",
+        "SGW Campus, Shuttle Stop"
       );
     }
-  };
+  
+    try {
+      const currentStop = activeCampus === "sgw" ? "SGW" : "LOY";
+      const shuttleResult = await estimateShuttleFromButton(currentStop);
+  
+      // If the utility returned an object with "error", store it directly.
+      if (shuttleResult?.error) {
+        setShuttleDetails({ error: shuttleResult.error });
+      } else if (!shuttleResult) {
+        // If it's null or undefined for some reason
+        setShuttleDetails({ error: "No bus available." });
+      } else {
+        // If valid times
+        setShuttleDetails(shuttleResult);
+      }
+    } catch (error) {
+      // If something truly unexpected happens
+      console.warn("Error estimating shuttle time:", error);
+      setShuttleDetails({ error: error.message });
+    }
+  
+    // Show the popup
+    setShuttlePopupVisible(true);
+  };  
+  
 
   // Center on campus
   const centerMapOnCampus = () => {
@@ -672,7 +702,7 @@ export default function Map() {
         console.log("Shuttle Data:", shuttleData);
         setShuttleLocations(shuttleData); // Assume this returns an array of {latitude, longitude}
       } catch (error) {
-        console.error("Error fetching shuttle data:", error);
+        console.warn("Error fetching schedule:", error.message);
       }
     };
 
@@ -1009,28 +1039,6 @@ export default function Map() {
         </TouchableOpacity>
       </View>
 
-      {/* Old Floating Buttons
-      <View style={outdoorStyles.buttonContainer}>
-        <TouchableOpacity
-          style={outdoorStyles.button}
-          onPress={centerMapOnUser}
-        >
-          <MaterialIcons name="my-location" size={24} color="white" />
-          {showLocating && (
-            <Text style={outdoorStyles.debugText}>Locating...</Text>
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={outdoorStyles.button}
-          onPress={centerMapOnCampus}
-        >
-          <MaterialIcons name="place" size={24} color="white" />
-          <Text style={outdoorStyles.debugText}>
-            {activeCampus === "sgw" ? "SGW" : "LOY"}
-          </Text>
-        </TouchableOpacity>
-      </View>*/}
-
       {/* POI Filter Button - only visible when POI is enabled */}
       {showPOI && (
         <TouchableOpacity
@@ -1113,6 +1121,12 @@ export default function Map() {
         onGetDirections={handleBuildingGetDirections}
         setAsStartingPoint={handleBuildingSetStartingPoint}
       />
+      <ShuttleInfoPopup
+        visible={shuttlePopupVisible}
+        onClose={() => setShuttlePopupVisible(false)}
+        shuttleDetails={shuttleDetails}
+      />
+
       {/* Floating POI popup container */}
       {selectedPOI && (
         <View

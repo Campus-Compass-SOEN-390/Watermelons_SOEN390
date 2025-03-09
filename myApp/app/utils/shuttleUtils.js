@@ -8,108 +8,141 @@ import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
  * Estimate total shuttle travel time for the user
  * @param {Object} userLocation - { latitude, longitude }
  * @param {string} destinationCampus - "LOY" or "SGW"
- * @returns {Promise<number|string>} Estimated total travel time in minutes, or a message if no shuttle is available
+ * @returns {Promise<number|null|{error:string}>}
+ *    - number: total travel time (minutes) if valid
+ *    - null: if no shuttle is available
+ *    - { error: string }: if it's a weekend or another error scenario you want to handle
  */
 export const estimateShuttleTravelTime = async (userLocation, destinationCampus) => {
-    const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
-    const now = new Date();
-    const currentTime = now.getHours() * 60 + now.getMinutes(); // Convert to minutes
-    
-    // No shuttle on weekends
-    const schedule = fetchShuttleScheduleByDay(today);
-    if (!schedule) {
-        throw new Error("No shuttle service available today.");
-    }
-    
-    // Define fixed shuttle stops
-    const sgwStop = { latitude: SGWtoLoyola.geometry.coordinates[0][1], longitude: SGWtoLoyola.geometry.coordinates[0][0] };
-    const loyolaStop = { latitude: SGWtoLoyola.geometry.coordinates.slice(-1)[0][1], longitude: SGWtoLoyola.geometry.coordinates.slice(-1)[0][0] };
-    
-    // Select correct stop based on destination
-    const departureStop = destinationCampus === "LOY" ? sgwStop : loyolaStop;
-    
-    // Get all possible travel times to the stop (walking, driving, transit, etc.)
-    const travelModes = ["walking", "driving", "transit", "bicycling"];
-    const travelOptions = await getSortedTravelTimes(userLocation, departureStop, travelModes);
-    if (!travelOptions.length) {
-        throw new Error("No available transportation to the shuttle stop.");
-    }
-    const travelTimeToStop = travelOptions[0].duration; // Pick the shortest travel time
-    
-    // Determine next available shuttle departure time
-    const stopKey = destinationCampus === "LOY" ? "SGW" : "LOY";
-    const stopSchedule = schedule[stopKey]?.map(time => {
-        const [hours, minutes] = time.split(":").map(Number);
-        return hours * 60 + minutes; // Convert time to minutes
-    }) || [];
-    
-    let nextShuttleTime = stopSchedule.find(time => time > currentTime);
+  const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
+  const now = new Date();
+  const currentTime = now.getHours() * 60 + now.getMinutes(); // Convert to minutes
 
-    if (nextShuttleTime === undefined) {  
-        throw new Error("No shuttle available at this time.");
-    }
-    
-    
-    let waitTime = Math.max(0, nextShuttleTime - currentTime);
-    
-    // Estimate shuttle ride duration based on distance and speed assumption (40 km/h)
-    const shuttleRideTime = (destinationCampus === "LOY")
-        ? haversineDistance(sgwStop, loyolaRegion) / 40 * 60
-        : haversineDistance(loyolaStop, sgwRegion) / 40 * 60;
+  // 1) Quick weekend check
+  if (today === "Saturday" || today === "Sunday") {
+    return { error: "No bus available on weekends." };
+  }
 
-    if (isNaN(travelTimeToStop) || isNaN(shuttleRideTime)) {
-            throw new Error("Invalid travel time calculation.");
-        }
-    
-    // Total estimated travel time
-    return travelTimeToStop + waitTime + shuttleRideTime;
+  // 2) Fetch schedule for today
+  const schedule = await fetchShuttleScheduleByDay(today);
+  if (!schedule) {
+    return null;
+  }
+
+  // Define fixed shuttle stops
+  const sgwStop = {
+    latitude: SGWtoLoyola.geometry.coordinates[0][1],
+    longitude: SGWtoLoyola.geometry.coordinates[0][0],
+  };
+  const loyolaStop = {
+    latitude: SGWtoLoyola.geometry.coordinates.slice(-1)[0][1],
+    longitude: SGWtoLoyola.geometry.coordinates.slice(-1)[0][0],
+  };
+
+  // Select correct stop based on destination
+  const departureStop = destinationCampus === "LOY" ? sgwStop : loyolaStop;
+
+  // Get all possible travel times to the stop
+  const travelModes = ["walking", "driving", "transit", "bicycling"];
+  const travelOptions = await getSortedTravelTimes(userLocation, departureStop, travelModes);
+  if (!travelOptions.length) {
+    return null; // No available transportation
+  }
+
+  const travelTimeToStop = travelOptions[0].duration; // Shortest travel time
+
+  // Determine next available shuttle departure time
+  const stopKey = destinationCampus === "LOY" ? "SGW" : "LOY";
+  const stopSchedule = schedule[stopKey]?.map((time) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes; // Convert time to minutes
+  }) || [];
+
+  let nextShuttleTime = stopSchedule.find((time) => time > currentTime);
+  if (nextShuttleTime === undefined) {
+    // No shuttle left today
+    return null;
+  }
+
+  let waitTime = Math.max(0, nextShuttleTime - currentTime);
+
+  // Estimate shuttle ride duration (40 km/h)
+  const shuttleRideTime =
+    destinationCampus === "LOY"
+      ? (haversineDistance(sgwStop, loyolaRegion) / 40) * 60
+      : (haversineDistance(loyolaStop, sgwRegion) / 40) * 60;
+
+  if (isNaN(travelTimeToStop) || isNaN(shuttleRideTime)) {
+    return null; // Invalid calculation
+  }
+
+  // Total estimated travel time
+  return travelTimeToStop + waitTime + shuttleRideTime;
 };
 
+/**
+ * Estimate shuttle times (wait + ride) for a button press
+ * @param {string} currentStop - "SGW" or "LOY"
+ * @returns {Promise<{waitTime:number, shuttleRideTime:number, totalTime:number}|null|{error:string}>}
+ *    - { waitTime, shuttleRideTime, totalTime }: valid times
+ *    - null: if no shuttle is available
+ *    - { error: string }: if it's a weekend or another error scenario you want to handle
+ */
 export const estimateShuttleFromButton = async (currentStop) => {
-    const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
-    const now = new Date();
-    const currentTime = now.getHours() * 60 + now.getMinutes(); // Convert to minutes
+  const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
+  const now = new Date();
+  const currentTime = now.getHours() * 60 + now.getMinutes(); // Convert to minutes
 
-    // Fetch shuttle schedule
-    const schedule = fetchShuttleScheduleByDay(today);
-    if (!schedule) {
-        throw new Error("No shuttle service available today.");
-    }
+  // 1) Quick weekend check
+  if (today === "Saturday" || today === "Sunday") {
+    return { error: "No bus available on weekends." };
+  }
 
-    // Determine the next available shuttle departure time
-    const stopKey = currentStop === "SGW" ? "SGW" : "LOY";
-    const destination = currentStop === "SGW" ? "LOY" : "SGW";
+  // 2) Fetch shuttle schedule
+  const schedule = await fetchShuttleScheduleByDay(today);
+  if (!schedule) {
+    return null; // No schedule (holiday, etc.)
+  }
 
-    const stopSchedule = schedule[stopKey]?.map(time => {
-        const [hours, minutes] = time.split(":").map(Number);
-        return hours * 60 + minutes; // Convert time to minutes
-    }) || [];
+  // Determine the next available shuttle departure time
+  const stopKey = currentStop === "SGW" ? "SGW" : "LOY";
+  const destination = currentStop === "SGW" ? "LOY" : "SGW";
 
-    let nextShuttleTime = stopSchedule.find(time => time > currentTime);
-    
-    if (nextShuttleTime === undefined) {  
-        throw new Error("No shuttle available at this time.");
-    }
+  const stopSchedule = schedule[stopKey]?.map((time) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes; // Convert time to minutes
+  }) || [];
 
-    let waitTime = Math.max(0, nextShuttleTime - currentTime);
+  let nextShuttleTime = stopSchedule.find((time) => time > currentTime);
+  if (nextShuttleTime === undefined) {
+    return null; // No upcoming shuttle
+  }
 
-    // Estimate shuttle ride duration based on distance and speed assumption (40 km/h)
-    const sgwStop = { latitude: SGWtoLoyola.geometry.coordinates[0][1], longitude: SGWtoLoyola.geometry.coordinates[0][0] };
-    const loyolaStop = { latitude: SGWtoLoyola.geometry.coordinates.slice(-1)[0][1], longitude: SGWtoLoyola.geometry.coordinates.slice(-1)[0][0] };
+  let waitTime = Math.max(0, nextShuttleTime - currentTime);
 
-    const shuttleRideTime = (currentStop === "SGW")
-        ? haversineDistance(sgwStop, loyolaRegion) / 40 * 60
-        : haversineDistance(loyolaStop, sgwRegion) / 40 * 60;
+  // Estimate shuttle ride duration (40 km/h)
+  const sgwStop = {
+    latitude: SGWtoLoyola.geometry.coordinates[0][1],
+    longitude: SGWtoLoyola.geometry.coordinates[0][0],
+  };
+  const loyolaStop = {
+    latitude: SGWtoLoyola.geometry.coordinates.slice(-1)[0][1],
+    longitude: SGWtoLoyola.geometry.coordinates.slice(-1)[0][0],
+  };
 
-    if (isNaN(shuttleRideTime)) {
-        throw new Error("Invalid travel time calculation.");
-    }
+  const shuttleRideTime =
+    currentStop === "SGW"
+      ? (haversineDistance(sgwStop, loyolaRegion) / 40) * 60
+      : (haversineDistance(loyolaStop, sgwRegion) / 40) * 60;
 
-    // Return the estimated wait + travel time for the button
-    return {
-        waitTime,
-        shuttleRideTime,
-        totalTime: waitTime + shuttleRideTime
-    };
+  if (isNaN(shuttleRideTime)) {
+    return null; // Invalid calculation
+  }
+
+  // Return wait + ride times
+  return {
+    waitTime,
+    shuttleRideTime,
+    totalTime: waitTime + shuttleRideTime,
+  };
 };
-
