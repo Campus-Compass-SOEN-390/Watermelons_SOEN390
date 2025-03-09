@@ -61,6 +61,10 @@ export default function Map() {
   //get Campus type from homePage
   const { type } = useLocalSearchParams();
 
+  //get coordinates and name from POI page 
+  const { name, lat, lng } = useLocalSearchParams();
+
+  console.log(name, lat, lng);
   // Campus switching
   const [activeCampus, setActiveCampus] = useState(type);
   const mapRef = useRef(null);
@@ -217,6 +221,7 @@ export default function Map() {
   //This useEffect manages orgin, destination and the footer appearing when any of the dependcies change
   useEffect(() => {
     try {
+      console.log("IN MAP:", destinationText, renderMap);
       updateOrigin(origin, originText);
       updateDestination(destination, destinationText);
       //these two things above are not what is crashing the app
