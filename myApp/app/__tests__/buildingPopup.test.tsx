@@ -46,7 +46,7 @@ describe("BuildingPopup Component", () => {
 
   it("calls useAsStartingPoint when 'Set Starting Point' button is pressed", () => {
     const { getByText } = render(<BuildingPopup {...defaultProps} />);
-    const setStartPointButton = getByText("Set Starting Point");
+    const setStartPointButton = getByText("Use As Starting Point");
 
     fireEvent.press(setStartPointButton);
 
