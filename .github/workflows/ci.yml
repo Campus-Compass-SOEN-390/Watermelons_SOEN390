@@ -16,29 +16,27 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest, macos-latest] # Runs on both Windows and macOS
+        os: [windows-latest, macos-latest]
 
     steps:
-      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Debug Directory Structure (for troubleshooting)
       - name: Debug Directory Structure
         run: ls -R
 
-      # Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16
 
-      # Install dependencies
       - name: Install dependencies
         run: npm install
         working-directory: myApp
 
-      # Run tests
+      - name: Set Environment Variables
+        run: echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" >> $GITHUB_ENV
+
       - name: Run tests
         run: npm test
         working-directory: myApp
@@ -52,61 +50,58 @@ jobs:
         os: [windows-latest, macos-latest]
 
     steps:
-      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Debug Directory Structure (for troubleshooting)
       - name: Debug Directory Structure
         run: ls -R
 
-      # Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      # Install dependencies
       - name: Install dependencies
         run: npm install
         working-directory: myApp
 
-      # Run Jest tests for Android
+      - name: Set Environment Variables
+        run: echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" >> $GITHUB_ENV
+
       - name: Run Jest tests for Android
         run: npm run test:android
         working-directory: myApp
 
-      # Run Jest tests for iOS
       - name: Run Jest tests for iOS
         run: npm run test:ios
         working-directory: myApp
-        
-  
-  #Codecov      
-  test:
-          runs-on: ubuntu-latest
-          name: Codecov report
-          steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-      
-            - name: Setup Node.js and deps
-              uses: actions/setup-node@v3
 
-            - name: Install dependencies
-              run: npm install 
-              working-directory: myApp
-              
-             # Check Jest installation (this will ensure Jest is installed and accessible)
-            - name: Check Jest installation
-              run: npm run jest --version
-              working-directory: myApp
-      
-            - name: Run tests with coverage
-              run: npm run test:ci:coverage
-              working-directory: myApp
-      
-            - name: Upload coverage to Codecov
-              uses: codecov/codecov-action@v4
-              env:
-                CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  test:
+    runs-on: ubuntu-latest
+    name: Codecov report
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and deps
+        uses: actions/setup-node@v3
+
+      - name: Install dependencies
+        run: npm install 
+        working-directory: myApp
+
+      - name: Set Environment Variables
+        run: echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" >> $GITHUB_ENV
+
+      - name: Check Jest installation
+        run: npm run jest --version
+        working-directory: myApp
+
+      - name: Run tests with coverage
+        run: npm run test:ci:coverage
+        working-directory: myApp
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
