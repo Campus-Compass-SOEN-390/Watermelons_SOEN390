@@ -484,9 +484,14 @@ export default function Map() {
   };
 
   const handleBuildingSetStartingPoint = (building) => {
-    const buildingFullName = building.name + ", " + building.longName;
+    if (!building || !building.entranceCoordinates) {
+      console.error("Invalid building data:", building);
+      return;
+    }
+    const buildingFullName = `${building.name}, ${building.longName}`;
     updateOrigin(building.entranceCoordinates, buildingFullName);
-  }
+  };
+  
 
   const handleShuttleButton = () => {
     console.log("Shuttle button click");
