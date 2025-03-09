@@ -1,5 +1,6 @@
 //This file is used to handle states relating to the location/outdoor maps managed across different pages
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { useLocalSearchParams } from "expo-router"; 
 
 //Interface for the context
 interface LocationContextType {
@@ -24,6 +25,7 @@ interface LocationContextType {
 const LocationContext = createContext<LocationContextType | null>(null);
 
 export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const { name, lat, lng } = useLocalSearchParams();
   const [origin, setOrigin] = useState<{ latitude: number; longitude: number } | null>(null);
   const [destination, setDestination] = useState<{ latitude: number; longitude: number } | null>(null);
   const [originText, setOriginText] = useState('');
@@ -34,6 +36,13 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [travelMode, setTravelMode] = useState("");
   const [showShuttleRoute, setShowShuttleRoute] = useState(false);
 
+
+  const [POIlocationData, setPOILocationData] = useState<{ name: string; lat: number; lng: number } | null>(null);
+
+  const updatePOILocationData = (name: string, lat: number, lng: number) => {
+    console.log("LOC CONTEXT", name, lat,)
+    setPOILocationData({ name, lat, lng });
+  };
   const updateOrigin = (location: { latitude: number; longitude: number } | null, text: string) => {
     console.log("Location updated to:", text, location)
     setOrigin(location);
@@ -45,6 +54,13 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
     setDestination(location);
     setDestinationText(text);
   };
+
+  // useEffect to update origin and destination if locationData is not null
+  useEffect(() => {
+    if (POIlocationData) {
+      updateDestination({ latitude: POIlocationData.lat, longitude: POIlocationData.lng }, POIlocationData.name);
+    }
+  }, [POIlocationData]); // This effect runs whenever locationData changes
 
   const updateShowTransportation = (setting: boolean) => {
     setShowTransportation(setting);
@@ -66,6 +82,12 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
     setShowShuttleRoute(setting);
   }
 
+  useEffect(() => {
+    //const { name, lat, lng } = useLocalSearchParams();
+
+    console.log("FROM LOCATION CONTEXT", lat, lng, name)
+  }, []);
+
   const value = React.useMemo(() => ({ 
     origin, 
     destination, 
@@ -82,9 +104,10 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
     updateRenderMap,
     updateShowFooter,
     updateTravelMode,
-    updateShowShuttleRoute
+    updateShowShuttleRoute,
+    updatePOILocationData, // expose the update function
    }), [origin, destination, originText, destinationText, showTransportation, renderMap, showFooter, travelMode, showShuttleRoute, updateOrigin, updateDestination, updateShowTransportation, updateRenderMap, updateShowFooter, updateTravelMode, updateShowShuttleRoute]);
-
+  
   return (
     <LocationContext.Provider value={value}>
       {children}

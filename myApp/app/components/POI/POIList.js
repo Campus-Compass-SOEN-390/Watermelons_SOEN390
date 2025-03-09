@@ -12,6 +12,8 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/POIListStyle';
 import Constants from "expo-constants";
+import { useRouter } from "expo-router";
+import { useLocationContext } from '@/app/context/LocationContext';
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
@@ -45,11 +47,29 @@ const POIListItem = ({ item, userLocation, calculateDistance }) => {
         ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoReference}&key=${GOOGLE_PLACES_API_KEY}`
         : null;
 
+    const router = useRouter();
+    const { updatePOILocationData } = useLocationContext();
     // Handle Get Directions button press
     const handleGetDirections = () => {
         console.log(`Get directions to: ${item.name}`);
         console.log(`Address: ${item.vicinity || 'Address not available'}`);
         console.log(`Coordinates: ${item.geometry?.location?.lat}, ${item.geometry?.location?.lng}`);
+    
+        const name = item.name;
+    const lat = item.geometry?.location?.lat;
+    const lng = item.geometry?.location?.lng;
+
+    // Update the context data without redirecting
+    updatePOILocationData(name, lat, lng);
+        // Navigate to a new page with the location details
+    router.push({
+        pathname: "/(tabs)/map",
+        params: {
+            name: item.name,
+            lat: item.geometry?.location?.lat,
+            lng: item.geometry?.location?.lng,
+        },
+    });
     };
 
     return (

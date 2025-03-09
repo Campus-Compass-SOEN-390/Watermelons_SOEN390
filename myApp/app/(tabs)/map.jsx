@@ -60,6 +60,10 @@ export default function MapView() {
   //get Campus type from homePage
   const { type } = useLocalSearchParams();
 
+  //get coordinates and name from POI page 
+  const { name, lat, lng } = useLocalSearchParams();
+
+  console.log(name, lat, lng);
   // Campus switching
   const [activeCampus, setActiveCampus] = useState(type);
   const mapRef = useRef(null);
@@ -201,6 +205,7 @@ export default function MapView() {
   //This useEffect manages orgin, destination and the footer appearing when any of the dependcies change
   useEffect(() => {
     try {
+      console.log("IN MAP:", destinationText, renderMap);
       updateOrigin(origin, originText);
       updateDestination(destination, destinationText);
       //these two things above are not what is crashing the app
@@ -219,7 +224,7 @@ export default function MapView() {
           tabBarStyle: { display: "none" },
         });
       }
-      if (renderMap) {
+      if (!renderMap) {
         navigation.setOptions({
           tabBarStyle: tabStyles.tabBarStyle,
         });
@@ -603,6 +608,14 @@ export default function MapView() {
     return calculateDistance(lat1, lon1, lat2, lon2);
   };
 
+
+  // Handle "Get Directions" button press
+  const handlePOIGetDirections = (poi) => {
+    if (!poi?.geometry?.location) return;
+    updateOrigin(coordinatesMap["My Position"], "My Location");
+    updateDestination({latitude: poi.geometry.location.lat, longitude: poi.geometry.location.lng }, poi.name);
+    updateShowTransportation(true);
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -1024,6 +1037,7 @@ export default function MapView() {
               onClose={() => setSelectedPOI(null)}
               onGetDirections={() => {
                 console.log(`Get directions for address: ${selectedPOI.vicinity || "unknown"}`);
+                handlePOIGetDirections(selectedPOI);
                 setSelectedPOI(null);
               }}
             />

@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95% </span>
+                <span class="strong">95.55% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>38/40</span>
+                <span class='fraction'>43/45</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.44% </span>
+                <span class="strong">95.12% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>34/36</span>
+                <span class='fraction'>39/41</span>
             </div>
         
             
@@ -306,7 +306,21 @@
 <a name='L241'></a><a href='#L241'>241</a>
 <a name='L242'></a><a href='#L242'>242</a>
 <a name='L243'></a><a href='#L243'>243</a>
-<a name='L244'></a><a href='#L244'>244</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L244'></a><a href='#L244'>244</a>
+<a name='L245'></a><a href='#L245'>245</a>
+<a name='L246'></a><a href='#L246'>246</a>
+<a name='L247'></a><a href='#L247'>247</a>
+<a name='L248'></a><a href='#L248'>248</a>
+<a name='L249'></a><a href='#L249'>249</a>
+<a name='L250'></a><a href='#L250'>250</a>
+<a name='L251'></a><a href='#L251'>251</a>
+<a name='L252'></a><a href='#L252'>252</a>
+<a name='L253'></a><a href='#L253'>253</a>
+<a name='L254'></a><a href='#L254'>254</a>
+<a name='L255'></a><a href='#L255'>255</a>
+<a name='L256'></a><a href='#L256'>256</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -353,12 +367,30 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -446,8 +478,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -540,12 +570,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -563,6 +587,8 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/POIListStyle';
 import Constants from "expo-constants";
+import { useRouter } from "expo-router";
+import { useLocationContext } from '@/app/context/LocationContext';
 &nbsp;
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 &nbsp;
@@ -596,11 +622,29 @@ const POIListItem = ({ item, userLocation, calculateDistance }) =&gt; {
         ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&amp;photoreference=${photoReference}&amp;key=${GOOGLE_PLACES_API_KEY}`
         : null;
 &nbsp;
+    const router = useRouter();
+    const { updatePOILocationData } = useLocationContext();
     // Handle Get Directions button press
     const handleGetDirections = () =&gt; {
         console.log(`Get directions to: ${item.name}`);
         console.log(`Address: ${item.vicinity || <span class="branch-1 cbranch-no" title="branch not covered" >'Address not available'}</span>`);
         console.log(`Coordinates: ${item.geometry?.location?.lat}, ${item.geometry?.location?.lng}`);
+    
+        const name = item.name;
+    const lat = item.geometry?.location?.lat;
+    const lng = item.geometry?.location?.lng;
+&nbsp;
+    // Update the context data without redirecting
+    updatePOILocationData(name, lat, lng);
+        // Navigate to a new page with the location details
+    router.push({
+        pathname: "/(tabs)/map",
+        params: {
+            name: item.name,
+            lat: item.geometry?.location?.lat,
+            lng: item.geometry?.location?.lng,
+        },
+    });
     };
 &nbsp;
     return (
@@ -690,9 +734,7 @@ POIListItem.propTypes = {
     calculateDistance: PropTypes.func.isRequired
 };
 &nbsp;
-POIListItem.defaultProps = {
-    userLocation: { latitude: 0, longitude: 0 }
-};
+&nbsp;
 &nbsp;
 const POIList = ({
     data,
@@ -715,7 +757,7 @@ const POIList = ({
     if (error &amp;&amp; (!data || data.length === 0)) {
         return (
             &lt;View style={styles.noResultsContainer}&gt;
-                &lt;Text style={styles.errorText}&gt;{error || <span class="branch-1 cbranch-no" title="branch not covered" >"An error occurred"}</span>&lt;/Text&gt;
+                &lt;Text style={styles.errorText}&gt;{error ?? <span class="branch-1 cbranch-no" title="branch not covered" >"An error occurred"}</span>&lt;/Text&gt;
                 &lt;TouchableOpacity
                     style={[styles.retryButton, { marginTop: 20 }]}
                     onPress={onRefresh}
@@ -783,13 +825,7 @@ POIList.propTypes = {
     calculateDistance: PropTypes.func.isRequired
 };
 &nbsp;
-POIList.defaultProps = {
-    data: [],
-    isLoading: false,
-    refreshing: false,
-    error: null,
-    userLocation: { latitude: 0, longitude: 0 }
-};
+&nbsp;
 &nbsp;
 export default POIList;
 &nbsp;</pre></td></tr></table></pre>
@@ -799,7 +835,7 @@ export default POIList;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-03-09T11:07:46.258Z
+                at 2025-03-09T19:46:04.247Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
