@@ -1,4 +1,4 @@
-name: SonarQube Analysis at http://34.134.31.194:9000
+name: SonarQube Analysis
 
 on:
   push:
