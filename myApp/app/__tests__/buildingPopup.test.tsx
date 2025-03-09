@@ -5,7 +5,7 @@ import BuildingPopup, { BuildingPopupProps } from "../components/BuildingPopUp";
 describe("BuildingPopup Component", () => {
   const mockOnClose = jest.fn();
   const mockOnGetDirections = jest.fn();
-  const mockUseAsStartingPoint = jest.fn();
+  const mockSetAsStartingPoint = jest.fn();
 
   const mockBuilding = {
     name: "Mock Building",

@@ -9,10 +9,10 @@ export interface BuildingPopupProps {
   onClose: () => void;
   building: any | null; // Replace "any" with your Building type if available
   onGetDirections(building: any): void
-  useAsStartingPoint(building: any): void
+  setAsStartingPoint(building: any): void
 }
 
-export const BuildingPopup: React.FC<BuildingPopupProps> = ({ visible, onClose, building, onGetDirections, useAsStartingPoint }) => {
+export const BuildingPopup: React.FC<BuildingPopupProps> = ({ visible, onClose, building, onGetDirections, setAsStartingPoint }) => {
   if (!building) return null; // Don't render if no building is selected
 
   return (
@@ -54,7 +54,7 @@ export const BuildingPopup: React.FC<BuildingPopupProps> = ({ visible, onClose, 
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, styles.startPointButton]} 
             onPress={() => {
-            useAsStartingPoint(building);
+            setAsStartingPoint(building);
             onClose();
             }
             }>

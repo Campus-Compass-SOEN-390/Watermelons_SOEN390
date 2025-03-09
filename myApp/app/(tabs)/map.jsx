@@ -619,7 +619,7 @@ export default function Map() {
         }}
         building={selectedBuilding}
         onGetDirections={handleBuildingGetDirections}
-        useAsStartingPoint={handleBuildingSetStartingPoint}
+        setAsStartingPoint={handleBuildingSetStartingPoint}
       />
     </View>
   );
