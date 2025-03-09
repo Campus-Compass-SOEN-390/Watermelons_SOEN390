@@ -209,7 +209,7 @@ const InterestPoints = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <View style={styles.headerContainer}>
-        <View style={{ flex: 1 }}></View> {/* Empty space on the left */}
+        <View style={{ flex: 1 }}></View>
         <TouchableOpacity
           style={styles.filterButton}
           onPress={() => setFilterModalVisible(true)}
