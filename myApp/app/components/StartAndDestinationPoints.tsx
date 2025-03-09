@@ -31,6 +31,7 @@ const StartAndDestinationPoints = ({}) => {
     updateOrigin,
     updateDestination,
     updateShowTransportation,
+
     updateRenderMap,
     updateTravelMode,
     origin,
@@ -43,7 +44,6 @@ const StartAndDestinationPoints = ({}) => {
   } = useLocationContext();
   const { location } = useLocation();
   const originRef = useRef<any>(null);
-  const [isOriginSet, setIsOriginSet] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showMyLocButton, setShowMyLocButton] = useState(true);
   const [showSteps, setShowSteps] = useState(false);
@@ -159,6 +159,7 @@ const StartAndDestinationPoints = ({}) => {
                   latitude: details.geometry.location.lat,
                   longitude: details.geometry.location.lng,
                 };
+                
                 updateOrigin(location, data.description);
                 console.log("Hello went thru onPress");
                 setIsOriginSet(true);
@@ -187,11 +188,6 @@ const StartAndDestinationPoints = ({}) => {
               onPress={() => {
                 Keyboard.dismiss();
                 if (location) {
-                  const myLocation = {
-                    latitude: location.latitude,
-                    longitude: location.longitude,
-                  };
-                  setIsOriginSet(true);
                   updateShowTransportation(false);
                   // Verify current location properly fetched (tested on expo app -> successful!)
                   const coords = {

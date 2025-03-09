@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Mapbox from "@rnmapbox/maps";
 import Constants from "expo-constants";
+import PropTypes from 'prop-types';
 
 const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
   const [geoJsonData, setGeoJsonData] = useState(null);
@@ -33,7 +34,6 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
     features: geoJsonData.features.filter((feature) => {
       const featureBuilding = feature.properties.building;
       const featureFloor = feature.properties.floor;
-      const featureType = feature.properties.type;
 
       // Always show first floors of all buildings
       if (!selectedBuilding) return featureFloor === 1;
@@ -139,6 +139,12 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
 
     </Mapbox.ShapeSource>
   );
+};
+IndoorMap.propTypes = {
+  selectedBuilding: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+  }),
+  selectedFloor: PropTypes.string
 };
 
 export default IndoorMap;

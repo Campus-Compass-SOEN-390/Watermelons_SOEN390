@@ -10,7 +10,7 @@ export default function ShuttleScheduleScreen() {
   const [error, setError] = useState(null);
   const [nextBus, setNextBus] = useState(null);
   const [campus, setCampus] = useState('SGW'); // Toggle between SGW and LOY
-  const [showWarning, setShowWarning] = useState(false); // For showing warning popup
+  //const [showWarning, setShowWarning] = useState(false); // For showing warning popup
 
   useEffect(() => {
     const loadSchedule = async () => {
@@ -141,7 +141,7 @@ if (!schedule) {
         </View>
 
         {splitSchedule(schedule[campus]).map(({ am, pm }, index) => (
-          <View key={index} style={styles.tableRow}>
+          <View key={`${am}-${pm}-${index}`} style={styles.tableRow}>
             <Text style={[styles.tableText, am === nextBus && styles.highlight]}>
               {am || ''}
             </Text>

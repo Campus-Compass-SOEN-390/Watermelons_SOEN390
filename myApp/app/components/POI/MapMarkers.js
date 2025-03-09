@@ -1,7 +1,7 @@
 import React from "react";
 import Mapbox from "@rnmapbox/maps";
 import { TouchableOpacity } from "react-native";
-import {View} from 'react-native';
+
 // Update MapMarkers to handle coordinates correctly and make markers clickable
 export default function MapMarkers({ data, MarkerComponent, onMarkerPress }) {
   console.log("MapMarkers data:", data[0]);
@@ -12,7 +12,7 @@ export default function MapMarkers({ data, MarkerComponent, onMarkerPress }) {
 
     // Generate a unique key/id using place_id or fallback to a random id
     const pointId =
-      point.place_id || `marker-${Math.random().toString(36).substr(2, 9)}`;
+      point.place_id || `marker-${Math.random().toString(36).substring(2, 11)}`;
 
     return (
       <Mapbox.MarkerView
@@ -20,9 +20,9 @@ export default function MapMarkers({ data, MarkerComponent, onMarkerPress }) {
         id={pointId}
         coordinate={[lng, lat]}
         title={point.name || "Location"}
-        onPress={() => onMarkerPress && onMarkerPress(point)}
+        onPress={() => onMarkerPress?.(point)}
       >
-        <TouchableOpacity onPress={() => onMarkerPress && onMarkerPress(point)}>
+        <TouchableOpacity onPress={() => onMarkerPress?.(point)}>
           <MarkerComponent />
         </TouchableOpacity>
       </Mapbox.MarkerView>

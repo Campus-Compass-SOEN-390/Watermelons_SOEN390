@@ -1,6 +1,4 @@
-import { getAllBuildings, getBuildingById } from "./buildingData";
-import { Building } from "./buildingData";
-
+import { getAllBuildings, getBuildingById, Building } from "./buildingData";
 // Get all building information
 export const fetchAllBuildings = async (): Promise<Building[]> => {
   return getAllBuildings();
