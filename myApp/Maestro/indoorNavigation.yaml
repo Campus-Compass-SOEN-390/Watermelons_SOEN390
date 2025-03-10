@@ -1,0 +1,28 @@
+appId: com.anonymous.myApp  
+---
+- launchApp
+
+# Select SGW campus
+- tapOn:
+    id: "sgwButton"
+
+# Open buildings list
+- tapOn:
+    id: "buildings-button"
+
+# Select building "H"
+- tapOn: "H"
+
+# Move up a floor
+- tapOn:
+    id: "floor-up"
+
+# Swipe to navigate the indoor map
+- swipe:
+    start: 81%,61%
+    end: 23%,25%
+    duration: 462
+
+# Move up another floor
+- tapOn:
+    id: "floor-up"

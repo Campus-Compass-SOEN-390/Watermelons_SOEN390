@@ -162,7 +162,6 @@ const StartAndDestinationPoints = ({}) => {
                 
                 updateOrigin(location, data.description);
                 console.log("Hello went thru onPress");
-                setIsOriginSet(true);
                 originRef.current?.setAddressText(data.description); // Allows persistance of the selected origin location
                 updateShowTransportation(false);
               }

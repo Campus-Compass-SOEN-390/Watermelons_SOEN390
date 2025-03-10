@@ -1,0 +1,34 @@
+appId: com.anonymous.myApp  
+---
+- launchApp
+
+# Select SGW
+- tapOn:
+    id: "sgwButton"
+
+# Tap on a building in SGW
+- tapOn:
+    id: "card:com.anonymous.myApp:sceneID:com.anonymous.myApp-default"
+
+# Close the building pop-up
+- tapOn: " Close"  # Adjust based on where the close button is
+
+# Switch to Loyola Campus
+- tapOn: "Switch Campus"
+
+# Tap on a building in Loyola
+- tapOn:
+    id: "card:com.anonymous.myApp:sceneID:com.anonymous.myApp-default"
+
+# Close the Loyola building pop-up
+- tapOn:
+    point: 51%,72%
+
+# myLocation
+- tapOn:
+    id: "locate-me-button"
+    
+# go back to campus 
+- tapOn:
+    id: "locate-campus-button"
+

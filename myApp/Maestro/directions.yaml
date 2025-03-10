@@ -1,0 +1,49 @@
+appId: com.anonymous.myApp  
+---
+- launchApp
+
+# Select SGW campus
+- tapOn:
+    id: "sgwButton"
+
+# Tap on the origin location field and enter "Hall"
+- tapOn: "Type or select origin location"
+- inputText: "Hall"
+
+# Select the suggested "Hall" option
+- tapOn:
+    point: 49%,26%
+
+# Tap on the destination location field and enter "JMSB"
+- tapOn: "Type or select destination location"
+- inputText: "JMSB"
+
+# Select the suggested "JMSB" option
+- tapOn:
+    point: 49%,26%
+
+# Get directions
+- tapOn: "Get Directions"
+
+# Select different route options
+- tapOn: " 1 min"
+- tapOn: " 3 min"
+- tapOn: " 3 min"
+- tapOn: " 1 min"
+
+# View steps
+- tapOn: "Steps"
+- tapOn:
+    point: 50%,63%
+
+# Start navigation
+- tapOn: "GO"
+
+# Shuttle navigation between campuses
+- tapOn: "Shuttle To Loyola"
+- tapOn:
+    point: "50%,54%"
+- tapOn: "Switch Campus"
+- tapOn: "Shuttle To SGW"
+- tapOn:
+    point: "50%,54%"
