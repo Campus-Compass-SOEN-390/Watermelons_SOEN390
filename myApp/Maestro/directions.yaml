@@ -41,7 +41,9 @@ appId: com.anonymous.myApp
 
 # Shuttle navigation between campuses
 - tapOn: "Shuttle To Loyola"
-- tapOn: " Close"
+- tapOn:
+    point: "50%,54%"
 - tapOn: "Switch Campus"
 - tapOn: "Shuttle To SGW"
-- tapOn: " Close"
+- tapOn:
+    point: "50%,54%"

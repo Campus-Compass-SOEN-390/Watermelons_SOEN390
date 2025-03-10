@@ -61,10 +61,10 @@ appId: com.anonymous.myApp
 
 # Change the distance range
 - swipe:
-  start: 91%,54%
-  end: 63%,54%
-  duration: 740
+    start: 91%,54%
+    end: 63%,54%
+    duration: 740
   
 # Apply filter
 - tapOn:
-  point: 46%,92%
+    point: 46%,92%
