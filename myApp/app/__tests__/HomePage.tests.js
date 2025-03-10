@@ -59,4 +59,12 @@ describe('Home page', () => {
         fireEvent.press(shuttleScheduleButton);
         expect(mockPush).toHaveBeenCalledWith('/screens/ShuttleScheduleScreen');
     });
+
+    it('should navigate to Point of Interest Page when point of interest button is pressed', () => {
+        const page = render(<HomePage />);
+        const interestButton = page.getByTestId('interestButton');
+        fireEvent.press(interestButton);
+        expect(mockPush).toHaveBeenCalledWith('(tabs)/interest-points');
+    });
+
 });
