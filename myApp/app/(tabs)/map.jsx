@@ -153,6 +153,7 @@ export default function MapView() {
     renderMap,
     showShuttleRoute,
     travelMode,
+    showTransportation
   } = useLocationContext();
 
   //Global constants to manage indoor-maps
@@ -244,6 +245,7 @@ export default function MapView() {
     travelMode,
     popupVisible,
     showShuttleRoute,
+    showTransportation
   ]);
 
   // POI distance calculation function
