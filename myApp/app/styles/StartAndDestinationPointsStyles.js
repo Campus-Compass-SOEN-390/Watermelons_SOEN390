@@ -72,7 +72,6 @@ export default StyleSheet.create({
     maxHeight: 150,
     zIndex: 10,
   },
-
   dropdownTo: {
     position: "absolute",
     top: 40,
@@ -87,7 +86,6 @@ export default StyleSheet.create({
     maxHeight: 150,
     zIndex: 11,
   },
-
   dropdownItem: {
     padding: 10,
     borderBottomWidth: 1,
@@ -156,7 +154,6 @@ export default StyleSheet.create({
     fontSize: 13,
     fontWeight: "bold",
   },
-
   goButton: {
     fontSize: 8,
     backgroundColor: "#0FA958",
@@ -165,21 +162,31 @@ export default StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 10,
   },
-
   stepsButton: {
     backgroundColor: "#393a41",
     padding: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
   },
-
   favoriteButton: {
     backgroundColor: "#393a41",
     padding: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
   },
-  // Modal styles remain the same:
+  etaText: {
+    fontSize: 16,
+    color: "#333",
+    marginBottom: 5,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  cancelButton: {
+    fontSize: 26,
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   modalContainer: {
     flex: 1,
     justifyContent: "center",

@@ -5,12 +5,14 @@ import StartAndDestinationPoints from '../components/StartAndDestinationPoints';
 const mockPush = jest.fn();
 const mockSetRenderMap = jest.fn();
 const mockSetTravelMode = jest.fn();
-const mockSetSelectedMode = jest.fn();
+const mockUpdateShowTransportation = jest.fn();
+const mockUpdateRenderMap = jest.fn();
 
 jest.mock('expo-router', () => ({
   useRouter: () => ({ push: mockPush }),
 }));
 
+// Here we modify the mock so that the rendered component includes a cancel button.
 jest.mock('../components/StartAndDestinationPoints', () => {
   const { View, TouchableOpacity } = require('react-native');
   return jest.fn(() => (
@@ -23,6 +25,13 @@ jest.mock('../components/StartAndDestinationPoints', () => {
         <TouchableOpacity testID="transport-button-TRANSIT" onPress={() => mockSetTravelMode('TRANSIT')} />
         <TouchableOpacity testID="transport-button-WALKING" onPress={() => mockSetTravelMode('WALKING')} />
         <TouchableOpacity testID="transport-button-BICYCLING" onPress={() => mockSetTravelMode('BICYCLING')} />
+        <TouchableOpacity
+          testID="cancelButton"
+          onPress={() => {
+            mockUpdateShowTransportation(false);
+            mockUpdateRenderMap(false);
+          }}
+        />
       </View>
     </>
   ));
@@ -32,6 +41,8 @@ describe('StartAndDestinationPoints', () => {
   beforeEach(() => {
     mockPush.mockClear();
     mockSetTravelMode.mockClear();
+    mockUpdateShowTransportation.mockClear();
+    mockUpdateRenderMap.mockClear();
   });
 
   it('should render input fields and button', () => {
@@ -49,11 +60,9 @@ describe('StartAndDestinationPoints', () => {
 
   it('should render transportation buttons after pressing Get Directions', async () => {
     const { getByTestId } = render(<StartAndDestinationPoints />);
-
     await act(async () => {
       fireEvent.press(getByTestId('getDirectionsButton'));
     });
-
     expect(getByTestId('transport-button-DRIVING')).toBeTruthy();
     expect(getByTestId('transport-button-TRANSIT')).toBeTruthy();
     expect(getByTestId('transport-button-WALKING')).toBeTruthy();
@@ -62,15 +71,21 @@ describe('StartAndDestinationPoints', () => {
 
   it('should update selected mode when a transportation button is clicked', async () => {
     const { getByTestId } = render(<StartAndDestinationPoints />);
-
     await act(async () => {
       fireEvent.press(getByTestId('getDirectionsButton'));
     });
-
     await act(async () => {
       fireEvent.press(getByTestId('transport-button-TRANSIT'));
     });
-
     expect(mockSetTravelMode).toHaveBeenCalledWith('TRANSIT');
+  });
+
+  it('should call updateShowTransportation and updateRenderMap when cancel button is pressed', async () => {
+    const { getByTestId } = render(<StartAndDestinationPoints />);
+    await act(async () => {
+      fireEvent.press(getByTestId('cancelButton'));
+    });
+    expect(mockUpdateShowTransportation).toHaveBeenCalledWith(false);
+    expect(mockUpdateRenderMap).toHaveBeenCalledWith(false);
   });
 });

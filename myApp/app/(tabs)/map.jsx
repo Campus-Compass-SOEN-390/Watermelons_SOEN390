@@ -51,8 +51,8 @@ import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
 import { estimateShuttleFromButton } from "../utils/shuttleUtils";
 
 
-const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
-Mapbox.setAccessToken(MAPBOX_API);
+const MAPBOX_API = Constants.expoConfig?.extra?.mapbox; 
+Mapbox.setAccessToken("MAPBOX_API");
 
 
 // Constants for POI functionality

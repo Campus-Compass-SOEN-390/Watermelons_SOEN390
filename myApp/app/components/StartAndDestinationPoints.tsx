@@ -31,7 +31,6 @@ const StartAndDestinationPoints = ({}) => {
     updateOrigin,
     updateDestination,
     updateShowTransportation,
-
     updateRenderMap,
     updateTravelMode,
     origin,
@@ -66,7 +65,7 @@ const StartAndDestinationPoints = ({}) => {
     }
   }, [origin, destination]);
 
-  //Handle "GO" button click
+  // Handle "GO" button click
   const handleGoClick = () => {
     console.log("Navigating...");
   };
@@ -88,7 +87,7 @@ const StartAndDestinationPoints = ({}) => {
         const stepsArray = data.routes[0].legs[0].steps.map(
           (step: any, index: number) => ({
             id: index,
-            instruction: step.html_instructions.replace(/<[^>]+>/g, ""), // Remove HTML tags
+            instruction: step.html_instructions.replace(/<[^>]+>/g, ""),
             distance: step.distance.text,
           })
         );
@@ -104,11 +103,6 @@ const StartAndDestinationPoints = ({}) => {
   // Close steps modal
   const handleCloseSteps = () => {
     setShowSteps(false);
-  };
-
-  // Handle "Add Favorite" button click
-  const handleAddFavorite = () => {
-    console.log("Adding to Favorites...");
   };
 
   useEffect(() => {
@@ -151,7 +145,7 @@ const StartAndDestinationPoints = ({}) => {
             query={{
               key: GOOGLE_PLACES_API_KEY,
               language: "en",
-              components: "country:ca", // restrict data within Canada
+              components: "country:ca",
             }}
             onPress={(data, details = null) => {
               if (details) {
@@ -159,15 +153,14 @@ const StartAndDestinationPoints = ({}) => {
                   latitude: details.geometry.location.lat,
                   longitude: details.geometry.location.lng,
                 };
-                
                 updateOrigin(location, data.description);
                 console.log("Hello went thru onPress");
-                originRef.current?.setAddressText(data.description); // Allows persistance of the selected origin location
+                originRef.current?.setAddressText(data.description);
                 updateShowTransportation(false);
               }
             }}
             textInputProps={{
-              value: originText, // This will show "My Location" or the selected place
+              value: originText,
               onChangeText: (text) => updateOrigin(origin, text),
               onFocus: () => {
                 setIsInputFocused(true);
@@ -188,7 +181,6 @@ const StartAndDestinationPoints = ({}) => {
                 Keyboard.dismiss();
                 if (location) {
                   updateShowTransportation(false);
-                  // Verify current location properly fetched (tested on expo app -> successful!)
                   const coords = {
                     latitude: location.latitude,
                     longitude: location.longitude,
@@ -220,7 +212,7 @@ const StartAndDestinationPoints = ({}) => {
             query={{
               key: GOOGLE_PLACES_API_KEY,
               language: "en",
-              components: "country:ca", // restrict data within Canada
+              components: "country:ca",
             }}
             onPress={(data, details = null) => {
               if (details) {
@@ -243,9 +235,8 @@ const StartAndDestinationPoints = ({}) => {
             }}
           />
         </View>
-        {/* Conditional Rendering */}
+        {/* Conditional Rendering for Directions Options */}
         {!showTransportation ? (
-          /* Get Directions Button */
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
@@ -296,23 +287,33 @@ const StartAndDestinationPoints = ({}) => {
           </View>
         )}
       </View>
-      {/* Footer */}
+      {/* Footer with ETA and "X" Button */}
       {renderMap && (
         <View style={styles.footerContainer}>
+          {/* ETA Display */}
+          <Text style={styles.etaText}>
+            ETA:{" "}
+            {loading
+              ? "Calculating..."
+              : travelTimes[travelMode]
+              ? `${travelTimes[travelMode]} min`
+              : "N/A"}
+          </Text>
           <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
             <Text style={styles.footerButtonText}>GO</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.stepsButton}
-            onPress={handleStepsClick}
-          >
+          <TouchableOpacity style={styles.stepsButton} onPress={handleStepsClick}>
             <Text style={styles.footerButtonText}>Steps</Text>
           </TouchableOpacity>
+          {/* "X" Button as a red cancel */}
           <TouchableOpacity
-            style={styles.favoriteButton}
-            onPress={handleAddFavorite}
+            style={styles.cancelButton}
+            onPress={() => {
+              updateShowTransportation(false);
+              updateRenderMap(false);
+            }}
           >
-            <Text style={styles.footerButtonText}>Add favorite</Text>
+            <Text style={[styles.footerButtonText, { color: "red" }]}>X</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -363,13 +364,11 @@ const myLocationStyles = StyleSheet.create({
     height: 44,
     borderBottomColor: "#ccc",
     borderBottomWidth: 1,
-
-    // to accomodate for the icon position
     flexDirection: "row",
   },
   myLocationText: {
     fontSize: 16,
-    color: "black", // Change to white for better visibility
+    color: "black",
     fontWeight: "bold",
   },
 });
