@@ -65,21 +65,15 @@ const MapDirections: React.FC<Props> = ({
     try {
       const response = await fetch(url);
       const data = await response.json();
-
       console.log("Google Maps API Response:", JSON.stringify(data, null, 2));
-
       if (!isMounted) return;
-
       if (data.routes && data.routes.length > 0) {
         //iterate and store all route options
-        const routeOptions: GeoJSON.FeatureCollection[] = [];
-
-        for (const route of data.routes) {
+        const routeOptions: GeoJSON.FeatureCollection[] = data.routes.map((route: any) => {
           const encodedPolyline = route.overview_polyline.points;
           const decodedCoordinates = polyline.decode(encodedPolyline);
           const geoJsonCoordinates = decodedCoordinates.map(([lat, lng]) => [lng, lat]);
-
-          routeOptions.push({
+          return {
             type: "FeatureCollection",
             features: [
               {
@@ -91,8 +85,8 @@ const MapDirections: React.FC<Props> = ({
                 properties: {},
               },
             ],
-          });
-        }
+          };
+        });
         setRoutes(routeOptions);
       } else {
         console.warn("No routes found in Google Maps API response.");
