@@ -1,7 +1,7 @@
 // This file is used to handle states relating to the indoor map managed across different pages
 import React, { createContext, useContext, useState, ReactNode, useMemo } from 'react';
 
-// Define a Building type (adjust as needed based on your actual data structure)
+// Define a Building type
 interface Building {
   id: string;
   name: string;
@@ -22,14 +22,14 @@ const IndoorMapContext = createContext<IndoorMapContextType | null>(null);
 
 export const IndoorMapProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [selectedIndoorBuilding, setSelectedIndoorBuilding] = useState<Building | null>(null); // ✅ Explicit type added
+  const [selectedIndoorBuilding, setSelectedIndoorBuilding] = useState<Building | null>(null); 
 
   const updateIsExpanded = (setting: boolean) => {
     console.log("isExpanded updated to:", setting);
     setIsExpanded(setting);
   };
 
-  const updateSelectedIndoorBuilding = (building: Building | null) => { // ✅ Allow null
+  const updateSelectedIndoorBuilding = (building: Building | null) => { 
     console.log("selectedIndoorBuilding updated to:", building);
     setSelectedIndoorBuilding(building);
   }
@@ -38,7 +38,7 @@ export const IndoorMapProvider: React.FC<{ children: ReactNode }> = ({ children 
     isExpanded, 
     selectedIndoorBuilding, 
     updateIsExpanded,
-    updateSelectedIndoorBuilding // ✅ Added this
+    updateSelectedIndoorBuilding 
   }), [isExpanded, selectedIndoorBuilding, updateIsExpanded, updateSelectedIndoorBuilding]);
 
   return (

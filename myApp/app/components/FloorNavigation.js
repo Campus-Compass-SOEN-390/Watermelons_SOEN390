@@ -7,8 +7,12 @@ import styles from "../styles/IndoorMapStyles";
 const FloorNavigation = ({ selectedBuilding, selectedFloor, onChangeFloor }) => {
   if (!selectedBuilding?.floors || selectedBuilding.floors.length === 0) return null;
 
-  const floors = selectedBuilding.floors;
-  const currentIndex = floors.indexOf(selectedFloor || floors[0]);
+  // Sort floors numerically
+  const floors = [...selectedBuilding.floors].sort((a, b) => Number(a) - Number(b));
+
+  // Ensure default floor is "1" if it exists, otherwise use the lowest floor
+  const defaultFloor = floors.includes("1") ? "1" : floors[0];
+  const currentIndex = floors.indexOf(selectedFloor || defaultFloor);
 
   const handleChangeFloor = (direction) => {
     if (direction === "up" && currentIndex < floors.length - 1) {
@@ -16,6 +20,11 @@ const FloorNavigation = ({ selectedBuilding, selectedFloor, onChangeFloor }) => 
     } else if (direction === "down" && currentIndex > 0) {
       onChangeFloor(floors[currentIndex - 1]);
     }
+  };
+
+  const formatFloorName = (floor) => {
+    if (floor === "-2") return "S2";
+    return floor;
   };
 
   return (
@@ -29,7 +38,7 @@ const FloorNavigation = ({ selectedBuilding, selectedFloor, onChangeFloor }) => 
         <MaterialIcons name="keyboard-arrow-up" size={24} color="black" />
       </TouchableOpacity>
 
-      <Text style={styles.text}>{selectedFloor || floors[0]}</Text>
+      <Text style={styles.text}>{formatFloorName(selectedFloor || defaultFloor)}</Text>
 
       <TouchableOpacity
         style={[styles.button, currentIndex === 0 && styles.disabledButton]}
@@ -42,6 +51,7 @@ const FloorNavigation = ({ selectedBuilding, selectedFloor, onChangeFloor }) => 
     </View>
   );
 };
+
 FloorNavigation.propTypes = {
   selectedBuilding: PropTypes.shape({
     floors: PropTypes.array

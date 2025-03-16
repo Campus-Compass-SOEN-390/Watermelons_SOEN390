@@ -31,7 +31,7 @@ import {
   handleClearIndoorMap,
   calculateCentroid,
   convertCoordinates,
-} from "../utils/indoor-map";
+} from "../utils/IndoorMapUtils";
 import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
 import { extractShuttleInfo } from "../api/shuttleLiveData";
 import { useLocalSearchParams } from "expo-router";
@@ -50,9 +50,9 @@ import { styles as poiStyles } from "../styles/poiStyles";
 import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
 import { estimateShuttleFromButton } from "../utils/shuttleUtils";
 
-
-const MAPBOX_API = Constants.expoConfig?.extra?.mapbox; 
-Mapbox.setAccessToken("MAPBOX_API");
+const MAPBOX_API = "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw";
+// const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
+Mapbox.setAccessToken(MAPBOX_API);
 
 
 // Constants for POI functionality
@@ -692,7 +692,7 @@ export default function MapView() {
             </Mapbox.ShapeSource>
           )}
           {/* Render Direction Route */}
-          {origin && destination && renderMap && (
+          {origin && destination && renderMap (
             <MapDirections
               origin={origin}
               destination={destination}
@@ -700,6 +700,14 @@ export default function MapView() {
               travelMode={travelMode}
             />
           )}
+          
+            <ShortestPathMap
+              graph={graph}
+              nodeCoordinates={nodeCoordinates}
+              startNode={originText}
+              endNode={destinationText}
+              currentFloor={selectedFloor}
+            />
 
           {/* Render building polygons */}
           {buildings
@@ -788,14 +796,6 @@ export default function MapView() {
                 />
               </Mapbox.ShapeSource>
             ))}
-
-          <ShortestPathMap
-            graph={graph}
-            nodeCoordinates={nodeCoordinates}
-            startNode={originText}
-            endNode={destinationText}
-            currentFloor={selectedFloor}
-          />
 
           {/* POI Markers */}
           {showPOI && (

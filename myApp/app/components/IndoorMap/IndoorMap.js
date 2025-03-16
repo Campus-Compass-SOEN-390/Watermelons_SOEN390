@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Mapbox from "@rnmapbox/maps";
 import Constants from "expo-constants";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
   const [geoJsonData, setGeoJsonData] = useState(null);
@@ -119,26 +119,79 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         minZoomLevel={18}
       />
 
-      {/* Labels for Doors & Points of Interest (Only for Points) */}
+      {/* Labels for Doors*/}
       <Mapbox.SymbolLayer
-  id="door-text-layer"
-  sourceID="indoor-map"
-  style={{
-    textField: ["coalesce", ["get", "name"], "Unnamed"], // Fallback for missing names
-    textSize: 14,
-    textColor: "black",
-    textHaloColor: "white",
-    textHaloWidth: 1,
-  }}
-  filter={[
-    "all",
-    ["==", ["geometry-type"], "Point"], 
-    ["==", ["get", "floor"], Number(selectedFloor)] 
-  ]}
-  minZoomLevel={18}
-/>
+        id="door-text-layer"
+        sourceID="indoor-map"
+        style={{
+          textField: ["coalesce", ["get", "id"], "Unnamed"],
+          textSize: 14,
+          textColor: "black",
+          textHaloColor: "white",
+          textHaloWidth: 1,
+        }}
+        filter={
+          selectedBuilding
+            ? [
+                "all",
+                ["==", ["geometry-type"], "Point"],
+                [
+                  "any",
+                  ["==", ["get", "type"], "Door"],
+                  ["==", ["get", "type"], "Doors"],
+                ],
+                ["==", ["get", "floor"], Number(selectedFloor)],
+              ]
+            : [
+                "all",
+                ["==", ["geometry-type"], "Point"],
+                [
+                  "any",
+                  ["==", ["get", "type"], "Door"],
+                  ["==", ["get", "type"], "Doors"],
+                ],
+                ["==", ["get", "floor"], 1],
+              ]
+        }
+        minZoomLevel={18}
+      />
 
-
+      {/* Labels for POIs*/}
+      <Mapbox.SymbolLayer
+        id="poi-text-layer"
+        sourceID="indoor-map"
+        style={{
+          textField: ["coalesce", ["get", "name"], "Unnamed"],
+          textSize: 14,
+          textColor: "black",
+          textHaloColor: "white",
+          textHaloWidth: 1,
+        }}
+        filter={
+          selectedBuilding
+            ? [
+                "all",
+                ["==", ["geometry-type"], "Point"],
+                [
+                  "any",
+                  ["==", ["get", "type"], "Point of Interest"],
+                  ["==", ["get", "type"], "Points of Interest"],
+                ],
+                ["==", ["get", "floor"], Number(selectedFloor)],
+              ]
+            : [
+                "all",
+                ["==", ["geometry-type"], "Point"],
+                [
+                  "any",
+                  ["==", ["get", "type"], "Point of Interest"],
+                  ["==", ["get", "type"], "Points of Interest"],
+                ],
+                ["==", ["get", "floor"], 1],
+              ]
+        }
+        minZoomLevel={18}
+      />
     </Mapbox.ShapeSource>
   );
 };
@@ -146,7 +199,7 @@ IndoorMap.propTypes = {
   selectedBuilding: PropTypes.shape({
     name: PropTypes.string.isRequired,
   }),
-  selectedFloor: PropTypes.string
+  selectedFloor: PropTypes.string,
 };
 
 export default IndoorMap;
