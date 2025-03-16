@@ -8,6 +8,8 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
   const MAPBOX_ACCESS_TOKEN = Constants.expoConfig?.extra?.mapbox;
   const DATASET_ID = "cm7qjtnoy2d3o1qmmngcrv0jl";
 
+  Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
+
   useEffect(() => {
     const fetchGeoJson = async () => {
       try {
