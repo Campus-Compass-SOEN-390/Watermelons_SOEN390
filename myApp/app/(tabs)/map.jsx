@@ -51,8 +51,8 @@ import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
 import { estimateShuttleFromButton } from "../utils/shuttleUtils";
 
 
-const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
-Mapbox.setAccessToken(MAPBOX_API);
+const MAPBOX_API = Constants.expoConfig?.extra?.mapbox; 
+Mapbox.setAccessToken("MAPBOX_API");
 
 
 // Constants for POI functionality
@@ -153,6 +153,7 @@ export default function MapView() {
     renderMap,
     showShuttleRoute,
     travelMode,
+    showTransportation
   } = useLocationContext();
 
   //Global constants to manage indoor-maps
@@ -244,6 +245,7 @@ export default function MapView() {
     travelMode,
     popupVisible,
     showShuttleRoute,
+    showTransportation
   ]);
 
   // POI distance calculation function
