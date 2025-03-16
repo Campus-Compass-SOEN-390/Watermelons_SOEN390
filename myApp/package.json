@@ -91,6 +91,7 @@
     "@types/axios": "^0.9.36",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.12",
+    "@types/mapbox__polyline": "^1.0.5",
     "@types/react": "~18.3.12",
     "@types/react-native": "^0.73.0",
     "@types/react-native-vector-icons": "^6.4.18",
