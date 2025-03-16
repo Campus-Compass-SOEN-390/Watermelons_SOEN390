@@ -1,6 +1,11 @@
 import React from "react";
 import { render, waitFor } from "@testing-library/react-native";
 import MapDirections from "../../components/MapDirections";
+import polyline from '@mapbox/polyline';
+
+jest.mock('@mapbox/polyline', () => ({
+  decode: jest.fn(() => [[-73.6, 45.5], [-73.7, 45.6]]),
+}));
 
 jest.mock("@rnmapbox/maps", () => ({
   setAccessToken: jest.fn(),
@@ -8,10 +13,6 @@ jest.mock("@rnmapbox/maps", () => ({
   Camera: jest.fn(() => null),
   ShapeSource: jest.fn(({ children }) => <>{children}</>),
   LineLayer: jest.fn(() => null),
-}));
-
-jest.mock('@mapbox/polyline', () => ({
-  decode: jest.fn(() => [[-73.6, 45.5], [-73.7, 45.6]]), // Mock the decode function as needed
 }));
 
 global.fetch = jest.fn();
