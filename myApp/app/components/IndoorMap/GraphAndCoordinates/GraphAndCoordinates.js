@@ -20,6 +20,11 @@ export const graph = {
   "MB1.127": {
     "path-MB1.127": 1
   },
+  "path-VL103.1": {
+    "path-VL103-56": 17,
+    "path-VL103": 13,
+    "path-VL104": 21
+  },
   "VE2mbath": {
     "path-VE2mbath": 2
   },
@@ -58,13 +63,12 @@ export const graph = {
   "path-VL104": {
     "VL104": 4,
     "path-VL105": 4,
-    "path-VL103": 24,
-    "path-VL107": 16
+    "path-VL103.1": 21
   },
   "path-VL149": {
     "VL149": 2,
     "path-VL150": 6,
-    "path-VL1elevator": 10
+    "path-VL1.1elevator": 5
   },
   "path-stairs1": {
     "CCStairs1": 2,
@@ -111,15 +115,15 @@ export const graph = {
   },
   "path-H1stairs2": {
     "path-H1stairs1": 5,
-    "elevatorH2": 18,
+    "elevatorH2": 17,
     "stairs2H1": 9,
     "elevatorH1": 12
   },
   "VL1stairs": {
-    "path-VL1stairs": 2,
-    "VL2stairs2": 28,
-    "VL2stairs1": 2,
-    "path-VL1elevator": 6
+    "path-VL1stairs": 1,
+    "VL2stairs2": 2,
+    "VL2stairs": 30,
+    "path-VL1elevator": 32
   },
   "VL216": {
     "path-VL216": 1
@@ -136,7 +140,7 @@ export const graph = {
   "MB1.210": {
     "path-MB1.210": 23,
     "MB1.210": 0,
-    "path2-MB1.210": 2
+    "path-MB1.210.2": 2
   },
   "path-VL2wbath": {
     "VL2wbath": 5,
@@ -175,7 +179,7 @@ export const graph = {
     "path-H867-H865": 1
   },
   "MB1Escalator": {
-    "escalatorMBS2": 19,
+    "escalatorMBS2": 18,
     "path-MB1.117": 3
   },
   "path-H801-H63-5-7": {
@@ -233,7 +237,7 @@ export const graph = {
     "path-H807-H8mbath": 15
   },
   "MB1-entrance": {
-    "path2-MB1.128": 7
+    "path-MB1.128.2": 7
   },
   "path-H925.2": {
     "path-H925.1": 3,
@@ -253,7 +257,7 @@ export const graph = {
   "CCWashroom2": {},
   "H8stairs3": {
     "path-H8stairs3": 2,
-    "H9stairs2": 6
+    "H9stairs2": 4
   },
   "path-DownH8escalator": {
     "path-UpH8escalator": 12,
@@ -283,11 +287,11 @@ export const graph = {
     "path-H919": 2
   },
   "path-VL1stairs": {
-    "VL1stairs": 2,
-    "path-VL1mbath": 29,
-    "path-VL1wbath": 31,
-    "path-VL144": 8,
-    "path-VL145": 0
+    "VL1stairs": 1,
+    "path-VL1mbath": 2,
+    "path-VL1wbath": 2,
+    "path-VL144": 23,
+    "path-VL145": 31
   },
   "path-H845": {
     "path-H843": 6,
@@ -318,7 +322,7 @@ export const graph = {
   },
   "escalator-up1H2": {
     "path-H220": 9,
-    "escalator-upH1": 12
+    "escalator-upH1": 13
   },
   "path-H961.23": {
     "H961.23": 1,
@@ -330,6 +334,7 @@ export const graph = {
   },
   "path-VL111": {
     "path-VL110": 4,
+    "path-VL112-09-13-08": 4,
     "VL111": 1
   },
   "H847": {
@@ -380,7 +385,7 @@ export const graph = {
     "MB1.210": 23,
     "MB1.101": 3,
     "MB1.102": 11,
-    "path3-stairs1MB1": 3,
+    "path-stairs1MB1.3": 3,
     "path-MB1.102": 11,
     "path-stairs1MB1": 25
   },
@@ -422,20 +427,19 @@ export const graph = {
   "VL104": {
     "path-VL104": 4
   },
-  "path2-MB1.128": {
+  "path-MB1.128.2": {
     "MB1-entrance": 7,
     "path-MB1.128": 2,
     "path-MB1.129": 10
   },
   "H8stairs4": {
     "path-H8stairs4-H8elevator": 1,
-    "H9stairs3": 3
+    "H9stairs3": 5
   },
   "path-VL110": {
     "path-VL111": 4,
     "VL110": 1,
-    "path-VL114": 15,
-    "VL114": 15
+    "path-VL110.2": 5,
   },
   "path-CC117": {
     "CC117": 2,
@@ -512,10 +516,7 @@ export const graph = {
     "path-H849": 4
   },
   "VL114": {
-    "path-VL114": 0,
-    "VL114": 0,
-    "path-VL115": 4,
-    "path-VL110": 15
+    "path-VL114": 3
   },
   "H961.4": {
     "path-H961.4": 1
@@ -529,7 +530,7 @@ export const graph = {
     "path-VE201-02.1-02.2-03-04-05": 2
   },
   "escalatorMBS2": {
-    "MB1Escalator": 19,
+    "MB1Escalator": 18,
     "path_MBS2Stairs2": 18
   },
   "H961.33": {
@@ -559,9 +560,9 @@ export const graph = {
   "VL105": {
     "path-VL105": 4
   },
-  "path3-stairs1MB1": {
+  "path-stairs1MB1.3": {
     "path-MB1.210": 3,
-    "path2-stairs1MB1": 26
+    "path-stairs1MB1.2": 26
   },
   "H927.4": {
     "path-H927.4": 1,
@@ -588,10 +589,8 @@ export const graph = {
     "path-H863": 2
   },
   "path-VL1mbath": {
-    "path-VL1stairs": 29,
+    "path-VL1stairs": 2,
     "path-VL130-44-17-VL1mbath": 4,
-    "path-VL1mbath": 0,
-    "path-VL118": 12,
     "VL1mbath": 2
   },
   "H961.27": {
@@ -621,7 +620,7 @@ export const graph = {
     "path-VL1mbath": 4,
     "path-VL117": 5,
     "path-VL130": 12,
-    "path-VL144": 20
+    "path-VL144.2": 10
   },
   "H867": {
     "path-H867-H865": 1
@@ -631,18 +630,18 @@ export const graph = {
   },
   "DownH9escalator": {
     "path-DownH9escalator": 2,
-    "DownH8escalator": 5
+    "DownH8escalator": 4
   },
   "path-VL112-09-13-08": {
     "VL109": 3,
-    "path-VL107": 11,
-    "VL108": 2,
+    "path-VL111": 4,
+    "VL112": 2,
     "VL113": 2,
-    "VL112": 2
+    "VL108": 2
   },
   "VL2elevator": {
     "path-VL2elevator": 1,
-    "VL1elevator": 3
+    "VL1elevator": 2
   },
   "path-CC104": {
     "path-CC150": 3,
@@ -662,7 +661,7 @@ export const graph = {
   "path-VL150": {
     "path-VL149": 6,
     "VL150": 2,
-    "path-VL154": 10
+    "path-VL150.1": 1
   },
   "path-MB1.102": {
     "MB1.102": 2,
@@ -745,6 +744,10 @@ export const graph = {
     "path-bathroom": 8,
     "MB1.124": 1
   },
+  "path-VL114.1": {
+    "path-VL114": 5,
+    "path-VL110.3": 8
+  },
   "H962": {
     "path-H962": 2
   },
@@ -757,10 +760,9 @@ export const graph = {
   "MBS2.114": {
     "path-MBS2.114": 3
   },
-  "path2-MB1.210": {
+  "path-MB1.210.2": {
     "MB1.210": 2,
-    "PathToElevatorsMB1": 6,
-    "path-stairs1MB1": 2
+    "PathToElevatorsMB1": 6
   },
   "VL103": {
     "path-VL103": 3
@@ -778,11 +780,15 @@ export const graph = {
   "path-VL115": {
     "VL115": 3,
     "path-VL114": 4,
-    "path-VL116": 3,
-    "VL114": 4
+    "path-VL116": 3
   },
   "H961.2": {
     "path-H961.2": 1
+  },
+  "path-VL110.2": {
+    "path-VL110": 5,
+    "path-VL107.2": 9,
+    "path-VL110.3": 3
   },
   "VE202.2": {
     "path-VE201-02.1-02.2-03-04-05": 3
@@ -800,10 +806,9 @@ export const graph = {
     "path-MB1.108": 4
   },
   "path-VL118": {
-    "path-VL1mbath": 12,
+    "path-VL118.1": 8,
     "VL118": 3,
-    "path-VL129": 3,
-    "path-VL1wbath": 9
+    "path-VL129": 3
   },
   "VL145": {
     "path-VL145": 3
@@ -814,13 +819,13 @@ export const graph = {
     "path-H9stairs2": 6
   },
   "elevatorH2": {
-    "path-H1stairs2": 18,
+    "path-H1stairs2": 17,
     "elevatorH1": 9,
     "path-elevatorH2": 7
   },
   "stairs1MB1": {
     "path-stairs1MB1": 2,
-    "MBS2Stairs2": 24
+    "MBS2Stairs2": 23
   },
   "path-H8mbath": {
     "path-H807-H8mbath": 6,
@@ -903,14 +908,13 @@ export const graph = {
     "path-H835": 3
   },
   "VL2stairs2": {
-    "VL1stairs": 28,
+    "VL1stairs": 2,
     "path-VL2stairs": 2
   },
   "path-stairs1MB1": {
     "stairs1MB1": 2,
-    "path2-MB1.210": 2,
     "path-MB1.210": 25,
-    "path2-stairs1MB1": 2
+    "path-stairs1MB1.2": 2
   },
   "path-H998": {
     "H998": 1,
@@ -978,7 +982,7 @@ export const graph = {
   },
   "H8stairs1": {
     "path-H8stairs1": 2,
-    "H9stairs4": 4
+    "H9stairs4": 6
   },
   "path-CC119-CC124": {
     "CC119": 2,
@@ -1010,7 +1014,7 @@ export const graph = {
   },
   "stairsH2": {
     "path-H280": 10,
-    "path-H8stairs2": 22,
+    "path-H8stairs2": 23,
     "stairs2H1": 6
   },
   "elevatorMB1": {
@@ -1027,6 +1031,10 @@ export const graph = {
   },
   "H985": {
     "path-H985": 1
+  },
+  "path-VL144.2": {
+    "path-VL130-44-17-VL1mbath": 10,
+    "path-VL144": 17
   },
   "path-H859": {
     "H859": 2,
@@ -1096,13 +1104,17 @@ export const graph = {
   "H963": {
     "path-H963": 2
   },
+  "VL1stairs1": {
+    "path-VL1stairs1": 2
+  },
   "VE217": {
     "path-VE217": 2
   },
   "path-VL144": {
-    "path-VL130-44-17-VL1mbath": 20,
     "VL144": 2,
-    "path-VL1stairs": 8
+    "path-VL144.2": 17,
+    "path-VL1stairs": 23,
+    "path-VL1stairs1": 8
   },
   "path-MBS2.103": {
     "path-MBS2.104": 3,
@@ -1116,7 +1128,7 @@ export const graph = {
     "path-H919": 1
   },
   "VL153": {
-    "path-VE153": 3
+    "path-VL153": 3
   },
   "H220": {
     "path-H220": 7
@@ -1139,7 +1151,7 @@ export const graph = {
   },
   "PathToElevatorsMB1": {
     "path-elevatorMB1": 7,
-    "path2-MB1.210": 6,
+    "path-MB1.210.2": 6,
     "path-MB1.117": 7
   },
   "VL1mbath": {
@@ -1231,6 +1243,10 @@ export const graph = {
     "path-VE212": 3,
     "VE211": 1
   },
+  "path-VL105.1": {
+    "path-VL105": 5,
+    "path-VL107": 12
+  },
   "MB1.103": {
     "path-MB1.102": 4
   },
@@ -1245,7 +1261,7 @@ export const graph = {
     "path-VE224": 2
   },
   "H9stairs3": {
-    "H8stairs4": 3,
+    "H8stairs4": 5,
     "path-H9stairs3": 1
   },
   "path-H280": {
@@ -1253,9 +1269,9 @@ export const graph = {
     "path-H220": 8,
     "stairsH2": 10
   },
-  "VL2stairs1": {
-    "VL1stairs": 2,
-    "path-VL2stairs": 31
+  "VL2stairs": {
+    "path-VL2stairs": 31,
+    "VL1stairs": 30
   },
   "path-H927.1": {
     "H927.1": 20,
@@ -1278,9 +1294,8 @@ export const graph = {
     "path-H899.51-H831": 5
   },
   "path-VL103": {
-    "path-VL104": 24,
-    "VL103": 3,
-    "path-VL103-56": 9
+    "path-VL103.1": 13,
+    "VL103": 3
   },
   "stairs2H1": {
     "path-H1stairs2": 9,
@@ -1325,8 +1340,8 @@ export const graph = {
   "path-VL2stairs": {
     "VL2stairs2": 2,
     "path-VL219": 17,
-    "VL2stairs1": 31,
-    "path-VL2elevator": 39,
+    "VL2stairs": 31,
+    "path-VL2.1elevator": 36,
     "path-VL2mbath": 2,
     "path-VL2wbath": 2
   },
@@ -1398,12 +1413,10 @@ export const graph = {
     "path-VL129": 4,
     "VL125": 2
   },
-  "path-VL154": {
-    "VL154": 3,
-    "VL152": 9,
-    "path-VL150": 10,
-    "path-VL155": 4,
-    "path-VE153": 3
+  "path-VL152": {
+    "path-VL153": 5,
+    "VL152": 3,
+    "path-VL150.1": 1
   },
   "path-MB1.108": {
     "MB1.108": 1,
@@ -1420,6 +1433,10 @@ export const graph = {
     "VL116": 4,
     "path-VL115": 3,
     "path-VL117": 1
+  },
+  "path-VL150.1": {
+    "path-VL150": 1,
+    "path-VL152": 1
   },
   "path-elevator1": {
     "path-CC107-CC109": 3,
@@ -1445,7 +1462,8 @@ export const graph = {
   "path-VL105": {
     "path-VL104": 4,
     "VL105": 4,
-    "path-VL107": 14
+    "path-VL105.1": 5,
+    "path-VL105": 0
   },
   "path-H961.3": {
     "H961.3": 1,
@@ -1482,6 +1500,11 @@ export const graph = {
     "path-VE2mbath": 8,
     "path-VE2wbath": 8
   },
+  "path-VL154": {
+    "VL154": 3,
+    "path-VL155": 4,
+    "path-VL153": 4
+  },
   "path-H825": {
     "path-H823": 7,
     "H825": 3,
@@ -1513,7 +1536,7 @@ export const graph = {
   "UpH8escalator": {
     "path-UpH8escalator": 8,
     "UpH9escalator": 4,
-    "escalator-up2H2": 4
+    "escalator-up2H2": 6
   },
   "path-H815": {
     "H815": 2,
@@ -1598,9 +1621,9 @@ export const graph = {
     "path-VE217": 5
   },
   "path-VL1elevator": {
-    "path-VL149": 10,
     "path-VL145": 4,
-    "VL1stairs": 6,
+    "VL1stairs": 32,
+    "path-VL1.1elevator": 8,
     "VL1elevator": 3
   },
   "H9wbath": {
@@ -1621,6 +1644,11 @@ export const graph = {
     "H961.97": 1,
     "path-H961.6": 3
   },
+  "path-VL114": {
+    "VL114": 3,
+    "path-VL114.1": 5,
+    "path-VL115": 4,
+  },
   "path-VL218": {
     "path-VL217": 6,
     "path-VL2mbath": 10,
@@ -1636,8 +1664,8 @@ export const graph = {
   "H941": {
     "H929.25": 10
   },
-  "path2-stairs1MB1": {
-    "path3-stairs1MB1": 26,
+  "path-stairs1MB1.2": {
+    "path-stairs1MB1.3": 26,
     "path-stairs1MB1": 2
   },
   "MBS2.108": {
@@ -1650,7 +1678,7 @@ export const graph = {
   },
   "H9stairs4": {
     "path-H9stairs4": 1,
-    "H8stairs1": 4
+    "H8stairs1": 6
   },
   "VL139": {
     "path-VL139": 2
@@ -1674,14 +1702,18 @@ export const graph = {
   },
   "escalator-up2H2": {
     "path-escalatorup1H2": 7,
-    "UpH8escalator": 4
+    "UpH8escalator": 6
   },
   "MBS2Stairs2": {
-    "stairs1MB1": 24,
+    "stairs1MB1": 23,
     "path_MBS2Stairs2": 3
   },
   "VL110": {
     "path-VL110": 1
+  },
+  "path-VL107.2": {
+    "path-VL110.2": 9,
+    "path-VL107": 6
   },
   "path-H945": {
     "path-H961.41": 7,
@@ -1699,7 +1731,7 @@ export const graph = {
   "path-escalatordownH2": {
     "path-escalatorup1H2": 10,
     "escalator-down2H2": 8,
-    "escalator-downH1": 9
+    "escalator-downH1": 10
   },
   "path-H833": {
     "path-H899.51-H831": 2,
@@ -1772,11 +1804,6 @@ export const graph = {
   "CCElevator1": {
     "path-elevator1": 3
   },
-  "path-VL114": {
-    "path-VL110": 15,
-    "VL114": 0,
-    "path-VL115": 4
-  },
   "VE211": {
     "path-VE211": 1
   },
@@ -1785,6 +1812,10 @@ export const graph = {
   },
   "H964": {
     "path-H964": 2
+  },
+  "path-VL2.1elevator": {
+    "path-VL2stairs": 36,
+    "path-VL2elevator": 4
   },
   "H962.1": {
     "path-H962.1": 4
@@ -1795,10 +1826,9 @@ export const graph = {
     "path-H847": 4
   },
   "path-VL107": {
-    "path-VL112-09-13-08": 11,
-    "path-VL105": 14,
+    "path-VL105.1": 12,
     "VL107": 4,
-    "path-VL104": 16
+    "path-VL107.2": 6
   },
   "stairs1H1": {
     "path-H102-3": 11,
@@ -1811,6 +1841,10 @@ export const graph = {
     "path-H815": 6,
     "path-H8stairs1": 1,
     "H813": 2
+  },
+  "path-VL110.3": {
+    "path-VL114.1": 8,
+    "path-VL110.2": 3
   },
   "path-MBS2.133": {
     "MBS2.132": 4,
@@ -1834,7 +1868,7 @@ export const graph = {
     "H937": 2
   },
   "path-MB1.129": {
-    "path2-MB1.128": 10,
+    "path-MB1.128.2": 10,
     "MB1.129": 2,
     "path-MB1.117": 4
   },
@@ -1868,6 +1902,11 @@ export const graph = {
     "path-MBS2.114": 3,
     "stairs2MB": 7
   },
+  "path-VL1stairs1": {
+    "VL1stairs1": 2,
+    "path-VL144": 8,
+    "path-VL145": 0
+  },
   "path-H933": {
     "path-H929": 3,
     "H933": 2,
@@ -1895,15 +1934,16 @@ export const graph = {
   },
   "DownH8escalator": {
     "path-DownH8escalator": 8,
-    "DownH9escalator": 5,
-    "escalator-down2H2": 5
+    "DownH9escalator": 4,
+    "escalator-down2H2": 6
   },
   "H980": {
     "path-H980": 2
   },
-  "path-VE153": {
-    "path-VL154": 3,
-    "VL153": 3
+  "path-VL153": {
+    "VL153": 3,
+    "path-VL152": 5,
+    "path-VL154": 4
   },
   "VL108": {
     "path-VL112-09-13-08": 2
@@ -1913,17 +1953,21 @@ export const graph = {
   },
   "path-VL2elevator": {
     "VL2elevator": 1,
-    "path-VL2stairs": 39,
+    "path-VL2.1elevator": 4,
     "path-VL212": 5
   },
   "escalator-down2H2": {
     "path-escalatordownH2": 8,
-    "DownH8escalator": 5
+    "DownH8escalator": 6
   },
   "path-H819": {
     "H819": 3,
     "path-H817": 2,
     "path-H821": 7
+  },
+  "path-VL1.1elevator": {
+    "path-VL149": 5,
+    "path-VL1elevator": 8
   },
   "H833": {
     "path-H833": 3
@@ -1946,7 +1990,7 @@ export const graph = {
   },
   "path-H8stairs2": {
     "H9stairs1": 4,
-    "stairsH2": 22,
+    "stairsH2": 23,
     "path-H835": 3,
     "path-H8stairs2": 0,
     "path-H837": 7
@@ -1991,8 +2035,8 @@ export const graph = {
   },
   "path-VL1wbath": {
     "VL1wbath": 2,
-    "path-VL1stairs": 31,
-    "path-VL118": 9
+    "path-VL1stairs": 2,
+    "path-VL118.1": 5
   },
   "path-H841-H837": {
     "path-DownH8escalator": 11,
@@ -2002,7 +2046,8 @@ export const graph = {
   "path-VL145": {
     "VL145": 3,
     "path-VL1elevator": 4,
-    "path-VL1stairs": 0
+    "path-VL1stairs1": 0,
+    "path-VL1stairs": 31
   },
   "VL155": {
     "path-VL155": 3
@@ -2017,7 +2062,7 @@ export const graph = {
     "H909": 2
   },
   "H9stairs2": {
-    "H8stairs3": 6,
+    "H8stairs3": 4,
     "path-H9stairs2": 1
   },
   "H933": {
@@ -2030,11 +2075,11 @@ export const graph = {
     "path-H907": 2
   },
   "path-VL103-56": {
-    "path-VL156": 8,
-    "path-VL103": 9
+    "path-VL103.1": 17,
+    "path-VL156": 8
   },
   "VL152": {
-    "path-VL154": 9
+    "path-VL152": 3
   },
   "path-H992": {
     "path-H914": 4,
@@ -2115,7 +2160,7 @@ export const graph = {
     "path-stairs1": 2
   },
   "escalator-upH1": {
-    "escalator-up1H2": 12,
+    "escalator-up1H2": 13,
     "path-escalatorH1": 2
   },
   "VL125": {
@@ -2240,7 +2285,7 @@ export const graph = {
     "path-H823": 3
   },
   "escalator-downH1": {
-    "path-escalatordownH2": 9,
+    "path-escalatordownH2": 10,
     "path-escalatorH1": 2
   },
   "path-H963": {
@@ -2255,7 +2300,7 @@ export const graph = {
     "path-H998": 1
   },
   "VL1elevator": {
-    "VL2elevator": 3,
+    "VL2elevator": 2,
     "path-VL1elevator": 3
   },
   "H911": {
@@ -2284,6 +2329,10 @@ export const graph = {
   },
   "H937.1": {
     "path-H937.1": 5
+  },
+  "path-VL118.1": {
+    "path-VL118": 8,
+    "path-VL1wbath": 5
   },
   "VL115": {
     "path-VL115": 3
@@ -2359,7 +2408,7 @@ export const graph = {
     "path-MBS2.113": 5
   },
   "path-MB1.128": {
-    "path2-MB1.128": 2,
+    "path-MB1.128.2": 2,
     "MB1.128": 2,
     "path-MB1.126": 3
   },
@@ -2403,17 +2452,17 @@ export const graph = {
 export const nodeCoordinates = {
   "path-H961.33": {
     "coordinates": [
-      -73.57869,
-      45.497063
+      -73.578683,
+      45.497046
     ],
     "floor": 9
   },
   "path-MBS2.113": {
     "coordinates": [
-      -73.579067,
-      45.495206
+      -73.579079,
+      45.495205
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-VE225": {
     "coordinates": [
@@ -2425,7 +2474,7 @@ export const nodeCoordinates = {
   "VL109": {
     "coordinates": [
       -73.638656,
-      45.459261
+      45.459258
     ],
     "floor": 1
   },
@@ -2433,6 +2482,13 @@ export const nodeCoordinates = {
     "coordinates": [
       -73.579231,
       45.495372
+    ],
+    "floor": 1
+  },
+  "path-VL103.1": {
+    "coordinates": [
+      -73.638133,
+      45.459083
     ],
     "floor": 1
   },
@@ -2445,8 +2501,8 @@ export const nodeCoordinates = {
   },
   "path-H937.1": {
     "coordinates": [
-      -73.578765,
-      45.497242
+      -73.578758,
+      45.497225
     ],
     "floor": 9
   },
@@ -2480,29 +2536,29 @@ export const nodeCoordinates = {
   },
   "H927.1": {
     "coordinates": [
-      -73.578549,
-      45.497476
+      -73.578542,
+      45.497459
     ],
     "floor": 9
   },
   "H966": {
     "coordinates": [
-      -73.578893,
-      45.497128
+      -73.578886,
+      45.497111
     ],
     "floor": 9
   },
   "path-VL104": {
     "coordinates": [
       -73.638372,
-      45.459175
+      45.459172
     ],
     "floor": 1
   },
   "path-VL149": {
     "coordinates": [
-      -73.638179,
-      45.458991
+      -73.63818,
+      45.458988
     ],
     "floor": 1
   },
@@ -2515,8 +2571,8 @@ export const nodeCoordinates = {
   },
   "path_hivecafe": {
     "coordinates": [
-      -73.579063,
-      45.4974
+      -73.579057,
+      45.497414
     ],
     "floor": 0
   },
@@ -2529,8 +2585,8 @@ export const nodeCoordinates = {
   },
   "H280": {
     "coordinates": [
-      -73.578824,
-      45.497543
+      -73.578818,
+      45.497557
     ],
     "floor": 2
   },
@@ -2543,10 +2599,10 @@ export const nodeCoordinates = {
   },
   "path-MBS2.104": {
     "coordinates": [
-      -73.578761,
-      45.495076
+      -73.578773,
+      45.495075
     ],
-    "floor": 2
+    "floor": -2
   },
   "H841": {
     "coordinates": [
@@ -2557,8 +2613,8 @@ export const nodeCoordinates = {
   },
   "path-H933.11": {
     "coordinates": [
-      -73.578541,
-      45.497239
+      -73.578534,
+      45.497222
     ],
     "floor": 9
   },
@@ -2578,22 +2634,22 @@ export const nodeCoordinates = {
   },
   "path-H961.27": {
     "coordinates": [
-      -73.578772,
-      45.496982
+      -73.578765,
+      45.496965
     ],
     "floor": 9
   },
   "path-H1stairs2": {
     "coordinates": [
       -73.578606,
-      45.497407
+      45.497412
     ],
     "floor": 1
   },
   "VL1stairs": {
     "coordinates": [
-      -73.638329,
-      45.4589
+      -73.638687,
+      45.458896
     ],
     "floor": 1
   },
@@ -2606,15 +2662,15 @@ export const nodeCoordinates = {
   },
   "MBS2.129": {
     "coordinates": [
-      -73.579407,
-      45.495304
+      -73.579419,
+      45.495303
     ],
-    "floor": 2
+    "floor": -2
   },
   "H961.3": {
     "coordinates": [
-      -73.579079,
-      45.497011
+      -73.579072,
+      45.496994
     ],
     "floor": 9
   },
@@ -2641,36 +2697,36 @@ export const nodeCoordinates = {
   },
   "path-H927": {
     "coordinates": [
-      -73.578553,
-      45.497339
+      -73.578546,
+      45.497322
     ],
     "floor": 9
   },
   "H964.2": {
     "coordinates": [
-      -73.579071,
-      45.497129
+      -73.579064,
+      45.497112
     ],
     "floor": 9
   },
   "MBS2.127": {
     "coordinates": [
-      -73.579388,
-      45.495226
+      -73.5794,
+      45.495225
     ],
-    "floor": 2
+    "floor": -2
   },
   "H915": {
     "coordinates": [
-      -73.579024,
-      45.497515
+      -73.579017,
+      45.497498
     ],
     "floor": 9
   },
   "H990": {
     "coordinates": [
-      -73.578987,
-      45.49748
+      -73.57898,
+      45.497463
     ],
     "floor": 9
   },
@@ -2683,8 +2739,8 @@ export const nodeCoordinates = {
   },
   "path-H961.13": {
     "coordinates": [
-      -73.578924,
-      45.496945
+      -73.578917,
+      45.496928
     ],
     "floor": 9
   },
@@ -2726,14 +2782,14 @@ export const nodeCoordinates = {
   "path-VE103": {
     "coordinates": [
       -73.638868,
-      45.458874
+      45.458871
     ],
     "floor": 1
   },
   "H967": {
     "coordinates": [
-      -73.579265,
-      45.497204
+      -73.579258,
+      45.497187
     ],
     "floor": 9
   },
@@ -2747,21 +2803,21 @@ export const nodeCoordinates = {
   "VL1wbath": {
     "coordinates": [
       -73.638739,
-      45.458898
+      45.458895
     ],
     "floor": 1
   },
   "path-principalEntrance": {
     "coordinates": [
       -73.578587,
-      45.497199
+      45.497204
     ],
     "floor": 0
   },
   "path-H928": {
     "coordinates": [
-      -73.578515,
-      45.49732
+      -73.578508,
+      45.497303
     ],
     "floor": 9
   },
@@ -2774,8 +2830,8 @@ export const nodeCoordinates = {
   },
   "path-H925.1": {
     "coordinates": [
-      -73.578728,
-      45.497425
+      -73.578721,
+      45.497408
     ],
     "floor": 9
   },
@@ -2802,29 +2858,29 @@ export const nodeCoordinates = {
   },
   "path-H925.2": {
     "coordinates": [
-      -73.578758,
-      45.49744
+      -73.578751,
+      45.497423
     ],
     "floor": 9
   },
   "H906": {
     "coordinates": [
-      -73.579097,
-      45.497361
+      -73.57909,
+      45.497344
     ],
     "floor": 9
   },
   "H961.6": {
     "coordinates": [
-      -73.57906,
-      45.497021
+      -73.579053,
+      45.497004
     ],
     "floor": 9
   },
   "H902": {
     "coordinates": [
-      -73.579178,
-      45.497288
+      -73.579171,
+      45.497271
     ],
     "floor": 9
   },
@@ -2851,24 +2907,24 @@ export const nodeCoordinates = {
   },
   "path-H9stairs4": {
     "coordinates": [
-      -73.57902,
-      45.497469
+      -73.579013,
+      45.497452
     ],
     "floor": 9
   },
   "path-H961.7": {
     "coordinates": [
-      -73.579026,
-      45.496995
+      -73.579019,
+      45.496978
     ],
     "floor": 9
   },
   "MBS2.107": {
     "coordinates": [
-      -73.578806,
-      45.495074
+      -73.578818,
+      45.495073
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-CC150": {
     "coordinates": [
@@ -2879,15 +2935,15 @@ export const nodeCoordinates = {
   },
   "H919": {
     "coordinates": [
-      -73.578924,
-      45.497544
+      -73.578917,
+      45.497527
     ],
     "floor": 9
   },
   "path-VL1stairs": {
     "coordinates": [
-      -73.638317,
-      45.45892
+      -73.638703,
+      45.458903
     ],
     "floor": 1
   },
@@ -2914,24 +2970,24 @@ export const nodeCoordinates = {
   },
   "path-H964": {
     "coordinates": [
-      -73.579094,
-      45.49719
+      -73.579087,
+      45.497173
     ],
     "floor": 9
   },
   "VE1stairs": {
     "coordinates": [
       -73.638871,
-      45.458904
+      45.458901
     ],
     "floor": 1
   },
   "elevator1MBS2": {
     "coordinates": [
-      -73.579045,
-      45.495267
+      -73.579057,
+      45.495266
     ],
-    "floor": 1
+    "floor": -2
   },
   "VE2wbath": {
     "coordinates": [
@@ -2942,15 +2998,15 @@ export const nodeCoordinates = {
   },
   "escalator-up1H2": {
     "coordinates": [
-      -73.578746,
-      45.497369
+      -73.57874,
+      45.497383
     ],
     "floor": 1
   },
   "path-H961.23": {
     "coordinates": [
-      -73.578823,
-      45.496931
+      -73.578816,
+      45.496914
     ],
     "floor": 9
   },
@@ -2964,7 +3020,7 @@ export const nodeCoordinates = {
   "path-VL111": {
     "coordinates": [
       -73.638656,
-      45.459208
+      45.459205
     ],
     "floor": 1
   },
@@ -2985,7 +3041,7 @@ export const nodeCoordinates = {
   "VL156": {
     "coordinates": [
       -73.63796,
-      45.459086
+      45.459083
     ],
     "floor": 1
   },
@@ -2998,8 +3054,8 @@ export const nodeCoordinates = {
   },
   "path-H961.41": {
     "coordinates": [
-      -73.578684,
-      45.497084
+      -73.578677,
+      45.497067
     ],
     "floor": 9
   },
@@ -3013,14 +3069,14 @@ export const nodeCoordinates = {
   "VL130": {
     "coordinates": [
       -73.638539,
-      45.458898
+      45.458895
     ],
     "floor": 1
   },
   "H945": {
     "coordinates": [
-      -73.578737,
-      45.497128
+      -73.57873,
+      45.497111
     ],
     "floor": 9
   },
@@ -3033,15 +3089,15 @@ export const nodeCoordinates = {
   },
   "path-H961.11": {
     "coordinates": [
-      -73.57896,
-      45.496963
+      -73.578953,
+      45.496946
     ],
     "floor": 9
   },
   "H961.11": {
     "coordinates": [
-      -73.579134,
-      45.497037
+      -73.579127,
+      45.49702
     ],
     "floor": 9
   },
@@ -3054,8 +3110,8 @@ export const nodeCoordinates = {
   },
   "path-H960": {
     "coordinates": [
-      -73.578914,
-      45.497284
+      -73.578907,
+      45.497267
     ],
     "floor": 9
   },
@@ -3075,15 +3131,15 @@ export const nodeCoordinates = {
   },
   "path-H943": {
     "coordinates": [
-      -73.578701,
-      45.497052
+      -73.578694,
+      45.497035
     ],
     "floor": 9
   },
   "path-H9wbath": {
     "coordinates": [
-      -73.579182,
-      45.497308
+      -73.579175,
+      45.497291
     ],
     "floor": 9
   },
@@ -3104,16 +3160,16 @@ export const nodeCoordinates = {
   "VL104": {
     "coordinates": [
       -73.638412,
-      45.45919
+      45.459187
     ],
     "floor": 1
   },
-  "path2-MB1.128": {
+  "path-MB1.128.2": {
     "coordinates": [
       -73.579236,
       45.495435
     ],
-    "floor": 2
+    "floor": 1
   },
   "H8stairs4": {
     "coordinates": [
@@ -3125,7 +3181,7 @@ export const nodeCoordinates = {
   "path-VL110": {
     "coordinates": [
       -73.63868,
-      45.459177
+      45.459174
     ],
     "floor": 1
   },
@@ -3138,15 +3194,15 @@ export const nodeCoordinates = {
   },
   "914": {
     "coordinates": [
-      -73.579008,
-      45.497297
+      -73.579001,
+      45.49728
     ],
     "floor": 9
   },
   "H933.11": {
     "coordinates": [
-      -73.578528,
-      45.497233
+      -73.578521,
+      45.497216
     ],
     "floor": 9
   },
@@ -3166,10 +3222,10 @@ export const nodeCoordinates = {
   },
   "path-MBS2.106": {
     "coordinates": [
-      -73.578793,
-      45.495051
+      -73.578805,
+      45.49505
     ],
-    "floor": 2
+    "floor": -2
   },
   "CC106": {
     "coordinates": [
@@ -3181,28 +3237,28 @@ export const nodeCoordinates = {
   "VL116": {
     "coordinates": [
       -73.638767,
-      45.458996
+      45.458993
     ],
     "floor": 1
   },
   "path-H990": {
     "coordinates": [
-      -73.579002,
-      45.497487
+      -73.578995,
+      45.49747
     ],
     "floor": 9
   },
   "path-MBS2.125": {
     "coordinates": [
-      -73.579358,
-      45.495251
+      -73.57937,
+      45.49525
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-H961.12": {
     "coordinates": [
-      -73.578967,
-      45.496966
+      -73.57896,
+      45.496949
     ],
     "floor": 9
   },
@@ -3236,8 +3292,8 @@ export const nodeCoordinates = {
   },
   "H961.30": {
     "coordinates": [
-      -73.578751,
-      45.497025
+      -73.578744,
+      45.497008
     ],
     "floor": 9
   },
@@ -3250,24 +3306,24 @@ export const nodeCoordinates = {
   },
   "VL114": {
     "coordinates": [
-      -73.638668,
-      45.45904
+      -73.638697,
+      45.459047
     ],
     "floor": 1
   },
   "H961.4": {
     "coordinates": [
-      -73.579091,
-      45.497035
+      -73.579084,
+      45.497018
     ],
     "floor": 9
   },
   "path-MBS2.114": {
     "coordinates": [
-      -73.579098,
-      45.495181
+      -73.57911,
+      45.49518
     ],
-    "floor": 2
+    "floor": -2
   },
   "VE202.1": {
     "coordinates": [
@@ -3278,71 +3334,71 @@ export const nodeCoordinates = {
   },
   "escalatorMBS2": {
     "coordinates": [
-      -73.578841,
-      45.495318
+      -73.578853,
+      45.495317
     ],
-    "floor": 2
+    "floor": -2
   },
   "H961.33": {
     "coordinates": [
-      -73.578677,
-      45.497057
+      -73.57867,
+      45.49704
     ],
     "floor": 9
   },
   "path-H925.3": {
     "coordinates": [
-      -73.578696,
-      45.497409
+      -73.578689,
+      45.497392
     ],
     "floor": 9
   },
   "path-H961.19": {
     "coordinates": [
-      -73.578848,
-      45.496907
+      -73.578841,
+      45.49689
     ],
     "floor": 9
   },
   "path-H961.28": {
     "coordinates": [
-      -73.578761,
-      45.496992
+      -73.578754,
+      45.496975
     ],
     "floor": 9
   },
   "path-H923": {
     "coordinates": [
-      -73.578792,
-      45.497456
+      -73.578785,
+      45.497439
     ],
     "floor": 9
   },
   "VL105": {
     "coordinates": [
       -73.638441,
-      45.459156
+      45.459153
     ],
     "floor": 1
   },
-  "path3-stairs1MB1": {
+  "path-stairs1MB1.3": {
     "coordinates": [
       -73.57868,
       45.495181
     ],
-    "floor": 3
+    "floor": 1
   },
   "H927.4": {
     "coordinates": [
-      -73.578631,
-      45.49739
+      -73.578624,
+      45.497373
     ],
     "floor": 9
   },
   "H910": {
     "coordinates": [
-      -73.579052,
-      45.497414
+      -73.579045,
+      45.497397
     ],
     "floor": 9
   },
@@ -3355,15 +3411,15 @@ export const nodeCoordinates = {
   },
   "path-H986": {
     "coordinates": [
-      -73.578818,
-      45.497469
+      -73.578811,
+      45.497452
     ],
     "floor": 9
   },
   "path-H220": {
     "coordinates": [
-      -73.578844,
-      45.497416
+      -73.578838,
+      45.49743
     ],
     "floor": 2
   },
@@ -3377,14 +3433,14 @@ export const nodeCoordinates = {
   "path-VL1mbath": {
     "coordinates": [
       -73.638689,
-      45.458924
+      45.458921
     ],
     "floor": 1
   },
   "H961.27": {
     "coordinates": [
-      -73.578757,
-      45.496976
+      -73.57875,
+      45.496959
     ],
     "floor": 9
   },
@@ -3397,43 +3453,43 @@ export const nodeCoordinates = {
   },
   "H933.2": {
     "coordinates": [
-      -73.578513,
-      45.497201
+      -73.578506,
+      45.497184
     ],
     "floor": 9
   },
   "H921": {
     "coordinates": [
-      -73.578879,
-      45.497522
+      -73.578872,
+      45.497505
     ],
     "floor": 9
   },
   "H9stairs1": {
     "coordinates": [
-      -73.57867,
-      45.497295
+      -73.578663,
+      45.497278
     ],
     "floor": 9
   },
   "VL133": {
     "coordinates": [
       -73.63875,
-      45.458802
+      45.458799
     ],
     "floor": 1
   },
   "H917": {
     "coordinates": [
-      -73.578982,
-      45.497572
+      -73.578975,
+      45.497555
     ],
     "floor": 9
   },
   "path-VL130-44-17-VL1mbath": {
     "coordinates": [
       -73.638664,
-      45.458954
+      45.458951
     ],
     "floor": 1
   },
@@ -3447,21 +3503,21 @@ export const nodeCoordinates = {
   "VL154": {
     "coordinates": [
       -73.638005,
-      45.459025
+      45.459022
     ],
     "floor": 1
   },
   "DownH9escalator": {
     "coordinates": [
-      -73.578838,
-      45.497224
+      -73.578831,
+      45.497207
     ],
     "floor": 9
   },
   "path-VL112-09-13-08": {
     "coordinates": [
       -73.63863,
-      45.459242
+      45.459239
     ],
     "floor": 1
   },
@@ -3488,15 +3544,15 @@ export const nodeCoordinates = {
   },
   "path-H910": {
     "coordinates": [
-      -73.579069,
-      45.497421
+      -73.579062,
+      45.497404
     ],
     "floor": 9
   },
   "path-VL150": {
     "coordinates": [
-      -73.638111,
-      45.458966
+      -73.63811,
+      45.458961
     ],
     "floor": 1
   },
@@ -3523,10 +3579,10 @@ export const nodeCoordinates = {
   },
   "MBS2.131": {
     "coordinates": [
-      -73.579235,
-      45.495375
+      -73.579247,
+      45.495374
     ],
-    "floor": 2
+    "floor": -2
   },
   "H807": {
     "coordinates": [
@@ -3538,37 +3594,37 @@ export const nodeCoordinates = {
   "path-VL131": {
     "coordinates": [
       -73.638388,
-      45.458848
+      45.458845
     ],
     "floor": 1
   },
   "path-H914": {
     "coordinates": [
-      -73.578995,
-      45.497292
+      -73.578988,
+      45.497275
     ],
     "floor": 9
   },
   "path-VL138": {
     "coordinates": [
       -73.638504,
-      45.458726
+      45.458723
     ],
     "floor": 1
   },
   "path-H980": {
     "coordinates": [
-      -73.578664,
-      45.497393
+      -73.578657,
+      45.497376
     ],
     "floor": 9
   },
   "path-MBS2.108": {
     "coordinates": [
-      -73.578697,
-      45.495126
+      -73.578709,
+      45.495125
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-VL212-05-14": {
     "coordinates": [
@@ -3579,22 +3635,22 @@ export const nodeCoordinates = {
   },
   "H961.1": {
     "coordinates": [
-      -73.57898,
-      45.496982
+      -73.578973,
+      45.496965
     ],
     "floor": 9
   },
   "path-H961.8": {
     "coordinates": [
-      -73.578966,
-      45.497039
+      -73.578959,
+      45.497022
     ],
     "floor": 9
   },
   "path-H915": {
     "coordinates": [
-      -73.57899,
-      45.497499
+      -73.578983,
+      45.497482
     ],
     "floor": 9
   },
@@ -3608,16 +3664,16 @@ export const nodeCoordinates = {
   "VL144": {
     "coordinates": [
       -73.638429,
-      45.458939
+      45.458936
     ],
     "floor": 1
   },
   "MBS2.105": {
     "coordinates": [
-      -73.578754,
-      45.49503
+      -73.578766,
+      45.495029
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-MB1.105": {
     "coordinates": [
@@ -3626,10 +3682,17 @@ export const nodeCoordinates = {
     ],
     "floor": 1
   },
+  "path-VL114.1": {
+    "coordinates": [
+      -73.638635,
+      45.459079
+    ],
+    "floor": 1
+  },
   "H962": {
     "coordinates": [
-      -73.579038,
-      45.497222
+      -73.579031,
+      45.497205
     ],
     "floor": 9
   },
@@ -3649,29 +3712,29 @@ export const nodeCoordinates = {
   },
   "MBS2.114": {
     "coordinates": [
-      -73.579069,
-      45.495164
+      -73.579081,
+      45.495163
     ],
-    "floor": 2
+    "floor": -2
   },
-  "path2-MB1.210": {
+  "path-MB1.210.2": {
     "coordinates": [
       -73.57896,
       45.495302
     ],
-    "floor": 2
+    "floor": 1
   },
   "VL103": {
     "coordinates": [
       -73.638098,
-      45.459203
+      45.4592
     ],
     "floor": 1
   },
   "path-H964.1": {
     "coordinates": [
-      -73.579115,
-      45.497169
+      -73.579108,
+      45.497152
     ],
     "floor": 9
   },
@@ -3685,16 +3748,23 @@ export const nodeCoordinates = {
   "path-VL115": {
     "coordinates": [
       -73.638695,
-      45.459005
+      45.459002
     ],
     "floor": 1
   },
   "H961.2": {
     "coordinates": [
-      -73.579118,
-      45.497048
+      -73.579111,
+      45.497031
     ],
     "floor": 9
+  },
+  "path-VL110.2": {
+    "coordinates": [
+      -73.638707,
+      45.459138
+    ],
+    "floor": 1
   },
   "VE202.2": {
     "coordinates": [
@@ -3705,8 +3775,8 @@ export const nodeCoordinates = {
   },
   "path-H913": {
     "coordinates": [
-      -73.57906,
-      45.497429
+      -73.579053,
+      45.497412
     ],
     "floor": 9
   },
@@ -3720,28 +3790,28 @@ export const nodeCoordinates = {
   "path-VL118": {
     "coordinates": [
       -73.638827,
-      45.458887
+      45.458884
     ],
     "floor": 1
   },
   "VL145": {
     "coordinates": [
       -73.638277,
-      45.458903
+      45.4589
     ],
     "floor": 1
   },
   "path-H968": {
     "coordinates": [
-      -73.578944,
-      45.49706
+      -73.578937,
+      45.497043
     ],
     "floor": 9
   },
   "elevatorH2": {
     "coordinates": [
-      -73.578818,
-      45.497341
+      -73.578812,
+      45.497355
     ],
     "floor": 2
   },
@@ -3775,29 +3845,29 @@ export const nodeCoordinates = {
   },
   "path-H985": {
     "coordinates": [
-      -73.578663,
-      45.49726
+      -73.578656,
+      45.497243
     ],
     "floor": 9
   },
   "hive-cafe": {
     "coordinates": [
-      -73.579133,
-      45.497331
+      -73.579127,
+      45.497345
     ],
     "floor": 0
   },
   "MBS2.125": {
     "coordinates": [
-      -73.579285,
-      45.495209
+      -73.579297,
+      45.495208
     ],
-    "floor": 2
+    "floor": -2
   },
   "H943": {
     "coordinates": [
-      -73.578715,
-      45.497059
+      -73.578708,
+      45.497042
     ],
     "floor": 9
   },
@@ -3824,22 +3894,22 @@ export const nodeCoordinates = {
   },
   "H992": {
     "coordinates": [
-      -73.579036,
-      45.497268
+      -73.579029,
+      45.497251
     ],
     "floor": 9
   },
   "path-H961.26": {
     "coordinates": [
-      -73.578883,
-      45.496924
+      -73.578876,
+      45.496907
     ],
     "floor": 9
   },
   "path-H961.15": {
     "coordinates": [
-      -73.578893,
-      45.496929
+      -73.578886,
+      45.496912
     ],
     "floor": 9
   },
@@ -3852,22 +3922,22 @@ export const nodeCoordinates = {
   },
   "path-escalatorMBS2": {
     "coordinates": [
-      -73.578642,
-      45.495169
+      -73.578654,
+      45.495168
     ],
-    "floor": 2
+    "floor": -2
   },
   "VL111": {
     "coordinates": [
       -73.638669,
-      45.459213
+      45.45921
     ],
     "floor": 1
   },
   "path-H966": {
     "coordinates": [
-      -73.578881,
-      45.497122
+      -73.578874,
+      45.497105
     ],
     "floor": 9
   },
@@ -3901,8 +3971,8 @@ export const nodeCoordinates = {
   },
   "path-H998": {
     "coordinates": [
-      -73.579082,
-      45.497203
+      -73.579075,
+      45.497186
     ],
     "floor": 9
   },
@@ -3929,8 +3999,8 @@ export const nodeCoordinates = {
   },
   "H961.97": {
     "coordinates": [
-      -73.579031,
-      45.497007
+      -73.579024,
+      45.49699
     ],
     "floor": 9
   },
@@ -3943,10 +4013,10 @@ export const nodeCoordinates = {
   },
   "path2-escalatorMBS2": {
     "coordinates": [
-      -73.578619,
-      45.495187
+      -73.578631,
+      45.495186
     ],
-    "floor": 2
+    "floor": -2
   },
   "VE210": {
     "coordinates": [
@@ -3957,8 +4027,8 @@ export const nodeCoordinates = {
   },
   "H927": {
     "coordinates": [
-      -73.578545,
-      45.497348
+      -73.578538,
+      45.497331
     ],
     "floor": 9
   },
@@ -3972,7 +4042,7 @@ export const nodeCoordinates = {
   "path-VL133": {
     "coordinates": [
       -73.638736,
-      45.458819
+      45.458816
     ],
     "floor": 1
   },
@@ -3985,15 +4055,15 @@ export const nodeCoordinates = {
   },
   "H961.7": {
     "coordinates": [
-      -73.579032,
-      45.496988
+      -73.579025,
+      45.496971
     ],
     "floor": 9
   },
   "path-H961.29": {
     "coordinates": [
-      -73.578742,
-      45.497011
+      -73.578735,
+      45.496994
     ],
     "floor": 9
   },
@@ -4020,15 +4090,15 @@ export const nodeCoordinates = {
   },
   "path-H962": {
     "coordinates": [
-      -73.579056,
-      45.49723
+      -73.579049,
+      45.497213
     ],
     "floor": 9
   },
   "path-H102-3": {
     "coordinates": [
       -73.578469,
-      45.497319
+      45.497324
     ],
     "floor": 1
   },
@@ -4042,21 +4112,21 @@ export const nodeCoordinates = {
   "path-VL129": {
     "coordinates": [
       -73.638851,
-      45.458865
+      45.458862
     ],
     "floor": 1
   },
   "H961.12": {
     "coordinates": [
-      -73.578962,
-      45.496973
+      -73.578955,
+      45.496956
     ],
     "floor": 9
   },
   "stairsH2": {
     "coordinates": [
-      -73.578661,
-      45.497498
+      -73.578655,
+      45.497512
     ],
     "floor": 2
   },
@@ -4070,7 +4140,7 @@ export const nodeCoordinates = {
   "path-H1stairs1": {
     "coordinates": [
       -73.57855,
-      45.49738
+      45.497385
     ],
     "floor": 1
   },
@@ -4083,10 +4153,17 @@ export const nodeCoordinates = {
   },
   "H985": {
     "coordinates": [
-      -73.578658,
-      45.497265
+      -73.578651,
+      45.497248
     ],
     "floor": 9
+  },
+  "path-VL144.2": {
+    "coordinates": [
+      -73.638606,
+      45.459027
+    ],
+    "floor": 1
   },
   "path-H859": {
     "coordinates": [
@@ -4097,38 +4174,38 @@ export const nodeCoordinates = {
   },
   "H961.": {
     "coordinates": [
-      -73.578998,
-      45.496973
+      -73.578991,
+      45.496956
     ],
     "floor": 9
   },
   "path-VL156": {
     "coordinates": [
       -73.637993,
-      45.459099
+      45.459096
     ],
     "floor": 1
   },
   "H933.1": {
     "coordinates": [
-      -73.578515,
-      45.497225
+      -73.578508,
+      45.497208
     ],
     "floor": 9
   },
   "path-H961.14": {
     "coordinates": [
-      -73.578934,
-      45.49695
+      -73.578927,
+      45.496933
     ],
     "floor": 9
   },
   "MBS2.132": {
     "coordinates": [
-      -73.579242,
-      45.495464
+      -73.579254,
+      45.495463
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-VL222": {
     "coordinates": [
@@ -4139,15 +4216,15 @@ export const nodeCoordinates = {
   },
   "H929.25": {
     "coordinates": [
-      -73.578587,
-      45.497151
+      -73.57858,
+      45.497134
     ],
     "floor": 9
   },
   "path-H921": {
     "coordinates": [
-      -73.578895,
-      45.497506
+      -73.578888,
+      45.497489
     ],
     "floor": 9
   },
@@ -4167,15 +4244,15 @@ export const nodeCoordinates = {
   },
   "H961.8": {
     "coordinates": [
-      -73.578955,
-      45.497033
+      -73.578948,
+      45.497016
     ],
     "floor": 9
   },
   "path-H962.1": {
     "coordinates": [
-      -73.578884,
-      45.49727
+      -73.578877,
+      45.497253
     ],
     "floor": 9
   },
@@ -4196,16 +4273,23 @@ export const nodeCoordinates = {
   "path-VL132": {
     "coordinates": [
       -73.638479,
-      45.458716
+      45.458713
     ],
     "floor": 1
   },
   "H963": {
     "coordinates": [
-      -73.579137,
-      45.497149
+      -73.57913,
+      45.497132
     ],
     "floor": 9
+  },
+  "VL1stairs1": {
+    "coordinates": [
+      -73.638329,
+      45.458897
+    ],
+    "floor": 1
   },
   "VE217": {
     "coordinates": [
@@ -4217,51 +4301,51 @@ export const nodeCoordinates = {
   "path-VL144": {
     "coordinates": [
       -73.638413,
-      45.458956
+      45.458953
     ],
     "floor": 1
   },
   "path-MBS2.103": {
     "coordinates": [
-      -73.578735,
-      45.495097
+      -73.578747,
+      45.495096
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-H917": {
     "coordinates": [
-      -73.578953,
-      45.497535
+      -73.578946,
+      45.497518
     ],
     "floor": 9
   },
   "VL153": {
     "coordinates": [
       -73.638025,
-      45.458997
+      45.458994
     ],
     "floor": 1
   },
   "H220": {
     "coordinates": [
-      -73.578916,
-      45.497451
+      -73.57891,
+      45.497465
     ],
     "floor": 2
   },
   "path-H907": {
     "coordinates": [
-      -73.579201,
-      45.497287
+      -73.579194,
+      45.49727
     ],
     "floor": 9
   },
   "path-MBS2.128": {
     "coordinates": [
-      -73.579371,
-      45.495241
+      -73.579383,
+      45.49524
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-CC109": {
     "coordinates": [
@@ -4280,14 +4364,14 @@ export const nodeCoordinates = {
   "VL1mbath": {
     "coordinates": [
       -73.63871,
-      45.458931
+      45.458928
     ],
     "floor": 1
   },
   "VL132": {
     "coordinates": [
       -73.638455,
-      45.45874
+      45.458737
     ],
     "floor": 1
   },
@@ -4307,15 +4391,15 @@ export const nodeCoordinates = {
   },
   "path-elevatorMBS2": {
     "coordinates": [
-      -73.579012,
-      45.495249
+      -73.579024,
+      45.495248
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-escalatorup1H2": {
     "coordinates": [
-      -73.578926,
-      45.497335
+      -73.57892,
+      45.497349
     ],
     "floor": 1
   },
@@ -4349,15 +4433,15 @@ export const nodeCoordinates = {
   },
   "path-H960.2": {
     "coordinates": [
-      -73.578853,
-      45.497255
+      -73.578846,
+      45.497238
     ],
     "floor": 9
   },
   "path-H961.6": {
     "coordinates": [
-      -73.579067,
-      45.497014
+      -73.57906,
+      45.496997
     ],
     "floor": 9
   },
@@ -4370,8 +4454,8 @@ export const nodeCoordinates = {
   },
   "H927.3": {
     "coordinates": [
-      -73.578602,
-      45.497469
+      -73.578595,
+      45.497452
     ],
     "floor": 9
   },
@@ -4391,8 +4475,8 @@ export const nodeCoordinates = {
   },
   "path-S2.130": {
     "coordinates": [
-      -73.579284,
-      45.49531
+      -73.579296,
+      45.495309
     ],
     "floor": 2
   },
@@ -4405,8 +4489,8 @@ export const nodeCoordinates = {
   },
   "path-H9mbath": {
     "coordinates": [
-      -73.579042,
-      45.497447
+      -73.579035,
+      45.49743
     ],
     "floor": 9
   },
@@ -4417,6 +4501,13 @@ export const nodeCoordinates = {
     ],
     "floor": 2
   },
+  "path-VL105.1": {
+    "coordinates": [
+      -73.638431,
+      45.459096
+    ],
+    "floor": 1
+  },
   "MB1.103": {
     "coordinates": [
       -73.578844,
@@ -4426,15 +4517,15 @@ export const nodeCoordinates = {
   },
   "H961.19": {
     "coordinates": [
-      -73.578847,
-      45.496893
+      -73.57884,
+      45.496876
     ],
     "floor": 9
   },
   "UpH9escalator": {
     "coordinates": [
-      -73.578964,
-      45.497276
+      -73.578957,
+      45.497259
     ],
     "floor": 9
   },
@@ -4447,19 +4538,19 @@ export const nodeCoordinates = {
   },
   "H9stairs3": {
     "coordinates": [
-      -73.579099,
-      45.497202
+      -73.579092,
+      45.497185
     ],
     "floor": 9
   },
   "path-H280": {
     "coordinates": [
-      -73.578787,
-      45.497472
+      -73.578781,
+      45.497486
     ],
     "floor": 2
   },
-  "VL2stairs1": {
+  "VL2stairs": {
     "coordinates": [
       -73.638301,
       45.458904
@@ -4468,15 +4559,15 @@ export const nodeCoordinates = {
   },
   "path-H927.1": {
     "coordinates": [
-      -73.578485,
-      45.497305
+      -73.578478,
+      45.497288
     ],
     "floor": 9
   },
   "path-H961.31": {
     "coordinates": [
-      -73.578715,
-      45.497038
+      -73.578708,
+      45.497021
     ],
     "floor": 9
   },
@@ -4504,14 +4595,14 @@ export const nodeCoordinates = {
   "path-VL103": {
     "coordinates": [
       -73.638061,
-      45.459189
+      45.459186
     ],
     "floor": 1
   },
   "stairs2H1": {
     "coordinates": [
       -73.578591,
-      45.497485
+      45.49749
     ],
     "floor": 2
   },
@@ -4524,8 +4615,8 @@ export const nodeCoordinates = {
   },
   "path-H906": {
     "coordinates": [
-      -73.579088,
-      45.49737
+      -73.579081,
+      45.497353
     ],
     "floor": 9
   },
@@ -4538,22 +4629,22 @@ export const nodeCoordinates = {
   },
   "H966.1": {
     "coordinates": [
-      -73.578825,
-      45.497205
+      -73.578818,
+      45.497188
     ],
     "floor": 9
   },
   "VL118": {
     "coordinates": [
       -73.638815,
-      45.458913
+      45.45891
     ],
     "floor": 1
   },
   "H937": {
     "coordinates": [
-      -73.578639,
-      45.497228
+      -73.578632,
+      45.497211
     ],
     "floor": 9
   },
@@ -4567,14 +4658,14 @@ export const nodeCoordinates = {
   "path-VL155": {
     "coordinates": [
       -73.638014,
-      45.45907
+      45.459067
     ],
     "floor": 1
   },
   "VL150": {
     "coordinates": [
       -73.638123,
-      45.458947
+      45.458944
     ],
     "floor": 1
   },
@@ -4594,36 +4685,36 @@ export const nodeCoordinates = {
   },
   "path-H961.17": {
     "coordinates": [
-      -73.578861,
-      45.496914
+      -73.578854,
+      45.496897
     ],
     "floor": 9
   },
   "VE101": {
     "coordinates": [
       -73.638916,
-      45.458892
+      45.458889
     ],
     "floor": 1
   },
   "path-MBS2.124": {
     "coordinates": [
-      -73.579261,
-      45.495329
+      -73.579273,
+      45.495328
     ],
-    "floor": 2
+    "floor": -2
   },
   "path2-elevatorMBS2": {
     "coordinates": [
-      -73.578956,
-      45.495295
+      -73.578968,
+      45.495294
     ],
-    "floor": 2
+    "floor": -2
   },
   "H965": {
     "coordinates": [
-      -73.579209,
-      45.497177
+      -73.579202,
+      45.49716
     ],
     "floor": 9
   },
@@ -4643,22 +4734,22 @@ export const nodeCoordinates = {
   },
   "H9elevator": {
     "coordinates": [
-      -73.57906,
-      45.497248
+      -73.579053,
+      45.497231
     ],
     "floor": 9
   },
   "VL129": {
     "coordinates": [
       -73.638876,
-      45.458852
+      45.458849
     ],
     "floor": 1
   },
   "path-H929": {
     "coordinates": [
-      -73.578484,
-      45.497299
+      -73.578477,
+      45.497282
     ],
     "floor": 9
   },
@@ -4671,15 +4762,15 @@ export const nodeCoordinates = {
   },
   "path-DownH9escalator": {
     "coordinates": [
-      -73.578823,
-      45.49724
+      -73.578816,
+      45.497223
     ],
     "floor": 9
   },
   "H9291": {
     "coordinates": [
-      -73.57846,
-      45.497299
+      -73.578453,
+      45.497282
     ],
     "floor": 9
   },
@@ -4700,14 +4791,14 @@ export const nodeCoordinates = {
   "path-VL125": {
     "coordinates": [
       -73.638806,
-      45.458847
+      45.458844
     ],
     "floor": 1
   },
-  "path-VL154": {
+  "path-VL152": {
     "coordinates": [
-      -73.638038,
-      45.459037
+      -73.638088,
+      45.458964
     ],
     "floor": 1
   },
@@ -4735,7 +4826,14 @@ export const nodeCoordinates = {
   "path-VL116": {
     "coordinates": [
       -73.638712,
-      45.458985
+      45.458982
+    ],
+    "floor": 1
+  },
+  "path-VL150.1": {
+    "coordinates": [
+      -73.638095,
+      45.458956
     ],
     "floor": 1
   },
@@ -4748,17 +4846,17 @@ export const nodeCoordinates = {
   },
   "H986": {
     "coordinates": [
-      -73.578826,
-      45.497463
+      -73.578819,
+      45.497446
     ],
     "floor": 9
   },
   "MBS2.106": {
     "coordinates": [
-      -73.578807,
-      45.495039
+      -73.578819,
+      45.495038
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-VL223": {
     "coordinates": [
@@ -4777,14 +4875,14 @@ export const nodeCoordinates = {
   "path-VL105": {
     "coordinates": [
       -73.638398,
-      45.459139
+      45.459136
     ],
     "floor": 1
   },
   "path-H961.3": {
     "coordinates": [
-      -73.579072,
-      45.497017
+      -73.579065,
+      45.497
     ],
     "floor": 9
   },
@@ -4804,15 +4902,15 @@ export const nodeCoordinates = {
   },
   "path-H961.2": {
     "coordinates": [
-      -73.579124,
-      45.497042
+      -73.579117,
+      45.497025
     ],
     "floor": 9
   },
   "path-H975": {
     "coordinates": [
-      -73.578875,
-      45.49713
+      -73.578868,
+      45.497113
     ],
     "floor": 9
   },
@@ -4823,6 +4921,13 @@ export const nodeCoordinates = {
     ],
     "floor": 2
   },
+  "path-VL154": {
+    "coordinates": [
+      -73.638038,
+      45.459034
+    ],
+    "floor": 1
+  },
   "path-H825": {
     "coordinates": [
       -73.578731,
@@ -4832,10 +4937,10 @@ export const nodeCoordinates = {
   },
   "path_MBS2Stairs2": {
     "coordinates": [
-      -73.578664,
-      45.495213
+      -73.578676,
+      45.495212
     ],
-    "floor": 2
+    "floor": -2
   },
   "MB1.107": {
     "coordinates": [
@@ -4846,8 +4951,8 @@ export const nodeCoordinates = {
   },
   "H961.14": {
     "coordinates": [
-      -73.578928,
-      45.496956
+      -73.578921,
+      45.496939
     ],
     "floor": 9
   },
@@ -4860,15 +4965,15 @@ export const nodeCoordinates = {
   },
   "H960": {
     "coordinates": [
-      -73.578944,
-      45.497254
+      -73.578937,
+      45.497237
     ],
     "floor": 9
   },
   "path-H961.30": {
     "coordinates": [
-      -73.578735,
-      45.497018
+      -73.578728,
+      45.497001
     ],
     "floor": 9
   },
@@ -4895,15 +5000,15 @@ export const nodeCoordinates = {
   },
   "path-H966.1": {
     "coordinates": [
-      -73.5788,
-      45.497207
+      -73.578793,
+      45.49719
     ],
     "floor": 9
   },
   "H925.2": {
     "coordinates": [
-      -73.578695,
-      45.497506
+      -73.578688,
+      45.497489
     ],
     "floor": 9
   },
@@ -4916,8 +5021,8 @@ export const nodeCoordinates = {
   },
   "VL149": {
     "coordinates": [
-      -73.638194,
-      45.458975
+      -73.638193,
+      45.45897
     ],
     "floor": 1
   },
@@ -4937,17 +5042,17 @@ export const nodeCoordinates = {
   },
   "H923": {
     "coordinates": [
-      -73.578777,
-      45.497471
+      -73.57877,
+      45.497454
     ],
     "floor": 9
   },
   "path-MBS2.129": {
     "coordinates": [
-      -73.579343,
-      45.495265
+      -73.579355,
+      45.495264
     ],
-    "floor": 2
+    "floor": -2
   },
   "MB1.129": {
     "coordinates": [
@@ -4966,16 +5071,16 @@ export const nodeCoordinates = {
   "VE103": {
     "coordinates": [
       -73.638851,
-      45.458895
+      45.458892
     ],
     "floor": 1
   },
   "path2-MBS2.133": {
     "coordinates": [
-      -73.579157,
-      45.495413
+      -73.579169,
+      45.495412
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-MB1.117": {
     "coordinates": [
@@ -4993,8 +5098,8 @@ export const nodeCoordinates = {
   },
   "path-H961.9": {
     "coordinates": [
-      -73.578992,
-      45.496979
+      -73.578985,
+      45.496962
     ],
     "floor": 9
   },
@@ -5008,21 +5113,21 @@ export const nodeCoordinates = {
   "path-VL1elevator": {
     "coordinates": [
       -73.638287,
-      45.458949
+      45.458946
     ],
     "floor": 1
   },
   "H9wbath": {
     "coordinates": [
-      -73.579166,
-      45.497301
+      -73.579159,
+      45.497284
     ],
     "floor": 9
   },
   "path-VL142": {
     "coordinates": [
       -73.63837,
-      45.458841
+      45.458838
     ],
     "floor": 1
   },
@@ -5042,10 +5147,17 @@ export const nodeCoordinates = {
   },
   "path-H961.97": {
     "coordinates": [
-      -73.579037,
-      45.497
+      -73.57903,
+      45.496983
     ],
     "floor": 9
+  },
+  "path-VL114": {
+    "coordinates": [
+      -73.638668,
+      45.459037
+    ],
+    "floor": 1
   },
   "path-VL218": {
     "coordinates": [
@@ -5070,24 +5182,24 @@ export const nodeCoordinates = {
   },
   "H941": {
     "coordinates": [
-      -73.57867,
-      45.497086
+      -73.578663,
+      45.497069
     ],
     "floor": 9
   },
-  "path2-stairs1MB1": {
+  "path-stairs1MB1.2": {
     "coordinates": [
       -73.578934,
       45.495328
     ],
-    "floor": 2
+    "floor": 1
   },
   "MBS2.108": {
     "coordinates": [
-      -73.57871,
-      45.495133
+      -73.578722,
+      45.495132
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-CC107": {
     "coordinates": [
@@ -5098,36 +5210,36 @@ export const nodeCoordinates = {
   },
   "H9stairs4": {
     "coordinates": [
-      -73.579004,
-      45.497462
+      -73.578997,
+      45.497445
     ],
     "floor": 9
   },
   "VL139": {
     "coordinates": [
       -73.638708,
-      45.458785
+      45.458782
     ],
     "floor": 1
   },
   "H961.25": {
     "coordinates": [
-      -73.578784,
-      45.49695
+      -73.578777,
+      45.496933
     ],
     "floor": 9
   },
   "elevatorH1": {
     "coordinates": [
       -73.578702,
-      45.497318
+      45.497323
     ],
     "floor": 1
   },
   "H102-3": {
     "coordinates": [
       -73.578565,
-      45.497365
+      45.49737
     ],
     "floor": 1
   },
@@ -5141,42 +5253,49 @@ export const nodeCoordinates = {
   "VL107": {
     "coordinates": [
       -73.638547,
-      45.459181
+      45.459178
     ],
     "floor": 1
   },
   "escalator-up2H2": {
     "coordinates": [
-      -73.578983,
-      45.497282
+      -73.578977,
+      45.497296
     ],
     "floor": 2
   },
   "MBS2Stairs2": {
     "coordinates": [
-      -73.578639,
-      45.495233
+      -73.578651,
+      45.495232
     ],
-    "floor": 2
+    "floor": -2
   },
   "VL110": {
     "coordinates": [
       -73.638692,
-      45.459182
+      45.459179
+    ],
+    "floor": 1
+  },
+  "path-VL107.2": {
+    "coordinates": [
+      -73.638608,
+      45.459102
     ],
     "floor": 1
   },
   "path-H945": {
     "coordinates": [
-      -73.578726,
-      45.49714
+      -73.578719,
+      45.497123
     ],
     "floor": 9
   },
   "Path-H9elevator": {
     "coordinates": [
-      -73.579045,
-      45.49724
+      -73.579038,
+      45.497223
     ],
     "floor": 9
   },
@@ -5189,8 +5308,8 @@ export const nodeCoordinates = {
   },
   "path-escalatordownH2": {
     "coordinates": [
-      -73.578824,
-      45.497288
+      -73.578818,
+      45.497302
     ],
     "floor": 2
   },
@@ -5203,22 +5322,22 @@ export const nodeCoordinates = {
   },
   "path-H9stairs3": {
     "coordinates": [
-      -73.579087,
-      45.497197
+      -73.57908,
+      45.49718
     ],
     "floor": 9
   },
   "path-H903": {
     "coordinates": [
-      -73.579273,
-      45.497217
+      -73.579266,
+      45.4972
     ],
     "floor": 9
   },
   "path-H927.4": {
     "coordinates": [
-      -73.57864,
-      45.497381
+      -73.578633,
+      45.497364
     ],
     "floor": 9
   },
@@ -5232,23 +5351,23 @@ export const nodeCoordinates = {
   "path-VL117": {
     "coordinates": [
       -73.638717,
-      45.458978
+      45.458975
     ],
     "floor": 1
   },
   "path-VE1stairs": {
     "coordinates": [
       -73.63889,
-      45.458882
+      45.458879
     ],
     "floor": 1
   },
   "MBS2.133": {
     "coordinates": [
-      -73.579183,
-      45.495453
+      -73.579195,
+      45.495452
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-H861-59": {
     "coordinates": [
@@ -5266,17 +5385,17 @@ export const nodeCoordinates = {
   },
   "path-MBS2.126": {
     "coordinates": [
-      -73.579301,
-      45.495297
+      -73.579313,
+      45.495296
     ],
-    "floor": 2
+    "floor": -2
   },
   "MBS2.124": {
     "coordinates": [
-      -73.579208,
-      45.495298
+      -73.57922,
+      45.495297
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-H821": {
     "coordinates": [
@@ -5287,15 +5406,15 @@ export const nodeCoordinates = {
   },
   "H961.17": {
     "coordinates": [
-      -73.578872,
-      45.496903
+      -73.578865,
+      45.496886
     ],
     "floor": 9
   },
   "H968": {
     "coordinates": [
-      -73.578956,
-      45.497066
+      -73.578949,
+      45.497049
     ],
     "floor": 9
   },
@@ -5313,13 +5432,6 @@ export const nodeCoordinates = {
     ],
     "floor": 1
   },
-  "path-VL114": {
-    "coordinates": [
-      -73.638668,
-      45.45904
-    ],
-    "floor": 1
-  },
   "VE211": {
     "coordinates": [
       -73.638841,
@@ -5329,22 +5441,29 @@ export const nodeCoordinates = {
   },
   "MBS2.126": {
     "coordinates": [
-      -73.579269,
-      45.495281
+      -73.579281,
+      45.49528
     ],
-    "floor": 2
+    "floor": -2
   },
   "H964": {
     "coordinates": [
-      -73.579077,
-      45.497183
+      -73.57907,
+      45.497166
     ],
     "floor": 9
   },
+  "path-VL2.1elevator": {
+    "coordinates": [
+      -73.638259,
+      45.458964
+    ],
+    "floor": 2
+  },
   "H962.1": {
     "coordinates": [
-      -73.578913,
-      45.497239
+      -73.578906,
+      45.497222
     ],
     "floor": 9
   },
@@ -5358,21 +5477,21 @@ export const nodeCoordinates = {
   "path-VL107": {
     "coordinates": [
       -73.638572,
-      45.459152
+      45.459149
     ],
     "floor": 1
   },
   "stairs1H1": {
     "coordinates": [
       -73.57852,
-      45.497413
+      45.497418
     ],
     "floor": 1
   },
   "H964.3": {
     "coordinates": [
-      -73.579042,
-      45.497128
+      -73.579035,
+      45.497111
     ],
     "floor": 9
   },
@@ -5383,31 +5502,38 @@ export const nodeCoordinates = {
     ],
     "floor": 8
   },
+  "path-VL110.3": {
+    "coordinates": [
+      -73.638726,
+      45.459114
+    ],
+    "floor": 1
+  },
   "path-MBS2.133": {
     "coordinates": [
-      -73.5792,
-      45.495438
+      -73.579212,
+      45.495437
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-H911": {
     "coordinates": [
-      -73.579102,
-      45.497388
+      -73.579095,
+      45.497371
     ],
     "floor": 9
   },
   "path-H961.1": {
     "coordinates": [
-      -73.578986,
-      45.496975
+      -73.578979,
+      45.496958
     ],
     "floor": 9
   },
   "path-H937": {
     "coordinates": [
-      -73.578626,
-      45.497242
+      -73.578619,
+      45.497225
     ],
     "floor": 9
   },
@@ -5420,29 +5546,29 @@ export const nodeCoordinates = {
   },
   "path-H961.4": {
     "coordinates": [
-      -73.579097,
-      45.497029
+      -73.57909,
+      45.497012
     ],
     "floor": 9
   },
   "path-H9stairs1": {
     "coordinates": [
-      -73.578696,
-      45.497308
+      -73.578689,
+      45.497291
     ],
     "floor": 9
   },
   "H964.1": {
     "coordinates": [
-      -73.579099,
-      45.497161
+      -73.579092,
+      45.497144
     ],
     "floor": 9
   },
   "H960.2": {
     "coordinates": [
-      -73.578877,
-      45.49723
+      -73.57887,
+      45.497213
     ],
     "floor": 9
   },
@@ -5462,15 +5588,22 @@ export const nodeCoordinates = {
   },
   "MBS2Stairs1": {
     "coordinates": [
-      -73.57914,
-      45.495192
+      -73.579152,
+      45.495191
     ],
-    "floor": 2
+    "floor": -2
+  },
+  "path-VL1stairs1": {
+    "coordinates": [
+      -73.638317,
+      45.458917
+    ],
+    "floor": 1
   },
   "path-H933": {
     "coordinates": [
-      -73.578508,
-      45.497274
+      -73.578501,
+      45.497257
     ],
     "floor": 9
   },
@@ -5490,29 +5623,29 @@ export const nodeCoordinates = {
   },
   "H961.28": {
     "coordinates": [
-      -73.578777,
-      45.496999
+      -73.57877,
+      45.496982
     ],
     "floor": 9
   },
   "path-elevatorH2": {
     "coordinates": [
-      -73.578885,
-      45.497376
+      -73.578879,
+      45.49739
     ],
     "floor": 2
   },
   "MBS2.130": {
     "coordinates": [
-      -73.5793,
-      45.495319
+      -73.579312,
+      45.495318
     ],
-    "floor": 2
+    "floor": -2
   },
   "VL131": {
     "coordinates": [
       -73.638395,
-      45.45884
+      45.458837
     ],
     "floor": 1
   },
@@ -5525,29 +5658,29 @@ export const nodeCoordinates = {
   },
   "H980": {
     "coordinates": [
-      -73.578678,
-      45.497381
+      -73.578671,
+      45.497364
     ],
     "floor": 9
   },
-  "path-VE153": {
+  "path-VL153": {
     "coordinates": [
-      -73.638057,
-      45.459009
+      -73.638058,
+      45.459005
     ],
     "floor": 1
   },
   "VL108": {
     "coordinates": [
       -73.638622,
-      45.459225
+      45.459222
     ],
     "floor": 1
   },
   "VL113": {
     "coordinates": [
       -73.638611,
-      45.459255
+      45.459252
     ],
     "floor": 1
   },
@@ -5560,8 +5693,8 @@ export const nodeCoordinates = {
   },
   "escalator-down2H2": {
     "coordinates": [
-      -73.578878,
-      45.49723
+      -73.578872,
+      45.497244
     ],
     "floor": 2
   },
@@ -5571,6 +5704,13 @@ export const nodeCoordinates = {
       45.497567
     ],
     "floor": 8
+  },
+  "path-VL1.1elevator": {
+    "coordinates": [
+      -73.638235,
+      45.45901
+    ],
+    "floor": 1
   },
   "H833": {
     "coordinates": [
@@ -5588,10 +5728,10 @@ export const nodeCoordinates = {
   },
   "path-MBS2.107": {
     "coordinates": [
-      -73.578781,
-      45.49506
+      -73.578793,
+      45.495059
     ],
-    "floor": 2
+    "floor": -2
   },
   "H843": {
     "coordinates": [
@@ -5603,7 +5743,7 @@ export const nodeCoordinates = {
   "path-VL130": {
     "coordinates": [
       -73.638534,
-      45.458904
+      45.458901
     ],
     "floor": 1
   },
@@ -5623,15 +5763,15 @@ export const nodeCoordinates = {
   },
   "path-H967": {
     "coordinates": [
-      -73.579248,
-      45.497221
+      -73.579241,
+      45.497204
     ],
     "floor": 9
   },
   "path-H902": {
     "coordinates": [
-      -73.579194,
-      45.497295
+      -73.579187,
+      45.497278
     ],
     "floor": 9
   },
@@ -5672,8 +5812,8 @@ export const nodeCoordinates = {
   },
   "path-VL1wbath": {
     "coordinates": [
-      -73.638715,
-      45.45889
+      -73.638716,
+      45.458886
     ],
     "floor": 1
   },
@@ -5687,133 +5827,133 @@ export const nodeCoordinates = {
   "path-VL145": {
     "coordinates": [
       -73.638312,
-      45.458918
+      45.458915
     ],
     "floor": 1
   },
   "VL155": {
     "coordinates": [
       -73.637981,
-      45.459058
+      45.459055
     ],
     "floor": 1
   },
   "VL117": {
     "coordinates": [
       -73.638763,
-      45.458978
+      45.458975
     ],
     "floor": 1
   },
   "path-H909": {
     "coordinates": [
-      -73.579163,
-      45.497326
+      -73.579156,
+      45.497309
     ],
     "floor": 9
   },
   "H9stairs2": {
     "coordinates": [
-      -73.578888,
-      45.497099
+      -73.578881,
+      45.497082
     ],
     "floor": 9
   },
   "H933": {
     "coordinates": [
-      -73.578491,
-      45.497267
+      -73.578484,
+      45.49725
     ],
     "floor": 9
   },
   "MBS2.128": {
     "coordinates": [
-      -73.579405,
-      45.495259
+      -73.579417,
+      45.495258
     ],
-    "floor": 2
+    "floor": -2
   },
   "H907": {
     "coordinates": [
-      -73.579222,
-      45.497298
+      -73.579215,
+      45.497281
     ],
     "floor": 9
   },
   "path-VL103-56": {
     "coordinates": [
-      -73.637945,
-      45.459166
+      -73.637946,
+      45.459162
     ],
     "floor": 1
   },
   "VL152": {
     "coordinates": [
       -73.638054,
-      45.458956
+      45.458953
     ],
     "floor": 1
   },
   "path-H992": {
     "coordinates": [
-      -73.579023,
-      45.497262
+      -73.579016,
+      45.497245
     ],
     "floor": 9
   },
   "H920": {
     "coordinates": [
-      -73.578718,
-      45.497396
+      -73.578711,
+      45.497379
     ],
     "floor": 9
   },
   "VL142": {
     "coordinates": [
-      -73.638365,
-      45.458852
+      -73.638363,
+      45.458848
     ],
     "floor": 1
   },
   "VL112": {
     "coordinates": [
       -73.638652,
-      45.459236
+      45.459233
     ],
     "floor": 1
   },
   "H975": {
     "coordinates": [
-      -73.578865,
-      45.497125
+      -73.578858,
+      45.497108
     ],
     "floor": 9
   },
   "path-H9stairs2": {
     "coordinates": [
-      -73.578899,
-      45.497105
+      -73.578892,
+      45.497088
     ],
     "floor": 9
   },
   "MBS2.103": {
     "coordinates": [
-      -73.578699,
-      45.495073
+      -73.578711,
+      45.495072
     ],
-    "floor": 2
+    "floor": -2
   },
   "H961.26": {
     "coordinates": [
-      -73.578877,
-      45.496931
+      -73.57887,
+      45.496914
     ],
     "floor": 9
   },
   "path-H981": {
     "coordinates": [
-      -73.578755,
-      45.497154
+      -73.578748,
+      45.497137
     ],
     "floor": 9
   },
@@ -5826,15 +5966,15 @@ export const nodeCoordinates = {
   },
   "H925.1": {
     "coordinates": [
-      -73.578712,
-      45.497441
+      -73.578705,
+      45.497424
     ],
     "floor": 9
   },
   "H961.15": {
     "coordinates": [
-      -73.578903,
-      45.496918
+      -73.578896,
+      45.496901
     ],
     "floor": 9
   },
@@ -5861,8 +6001,8 @@ export const nodeCoordinates = {
   },
   "H913": {
     "coordinates": [
-      -73.579094,
-      45.497445
+      -73.579087,
+      45.497428
     ],
     "floor": 9
   },
@@ -5904,14 +6044,14 @@ export const nodeCoordinates = {
   "escalator-upH1": {
     "coordinates": [
       -73.5787,
-      45.497269
+      45.497274
     ],
     "floor": 1
   },
   "VL125": {
     "coordinates": [
       -73.638822,
-      45.458831
+      45.458828
     ],
     "floor": 1
   },
@@ -5924,8 +6064,8 @@ export const nodeCoordinates = {
   },
   "H983": {
     "coordinates": [
-      -73.578727,
-      45.497153
+      -73.57872,
+      45.497136
     ],
     "floor": 9
   },
@@ -5938,8 +6078,8 @@ export const nodeCoordinates = {
   },
   "H928": {
     "coordinates": [
-      -73.578524,
-      45.497311
+      -73.578517,
+      45.497294
     ],
     "floor": 9
   },
@@ -5987,22 +6127,22 @@ export const nodeCoordinates = {
   },
   "H961.13": {
     "coordinates": [
-      -73.578935,
-      45.496934
+      -73.578928,
+      45.496917
     ],
     "floor": 9
   },
   "H981": {
     "coordinates": [
-      -73.578767,
-      45.497143
+      -73.57876,
+      45.497126
     ],
     "floor": 9
   },
   "path-H932": {
     "coordinates": [
-      -73.578526,
-      45.497254
+      -73.578519,
+      45.497237
     ],
     "floor": 9
   },
@@ -6022,15 +6162,15 @@ export const nodeCoordinates = {
   },
   "H961.21": {
     "coordinates": [
-      -73.578829,
-      45.496904
+      -73.578822,
+      45.496887
     ],
     "floor": 9
   },
   "H110": {
     "coordinates": [
       -73.578834,
-      45.496943
+      45.496948
     ],
     "floor": 1
   },
@@ -6043,8 +6183,8 @@ export const nodeCoordinates = {
   },
   "H961.29": {
     "coordinates": [
-      -73.578729,
-      45.497005
+      -73.578722,
+      45.496988
     ],
     "floor": 9
   },
@@ -6072,7 +6212,7 @@ export const nodeCoordinates = {
   "VL138": {
     "coordinates": [
       -73.638516,
-      45.458712
+      45.458709
     ],
     "floor": 1
   },
@@ -6113,8 +6253,8 @@ export const nodeCoordinates = {
   },
   "path-H961.21": {
     "coordinates": [
-      -73.578844,
-      45.496911
+      -73.578837,
+      45.496894
     ],
     "floor": 9
   },
@@ -6128,70 +6268,70 @@ export const nodeCoordinates = {
   "escalator-downH1": {
     "coordinates": [
       -73.57872,
-      45.497246
+      45.497251
     ],
     "floor": 1
   },
   "path-H963": {
     "coordinates": [
-      -73.579124,
-      45.497162
+      -73.579117,
+      45.497145
     ],
     "floor": 9
   },
   "H961.31": {
     "coordinates": [
-      -73.578702,
-      45.497032
+      -73.578695,
+      45.497015
     ],
     "floor": 9
   },
   "H998": {
     "coordinates": [
-      -73.579093,
-      45.497209
+      -73.579086,
+      45.497192
     ],
     "floor": 9
   },
   "VL1elevator": {
     "coordinates": [
       -73.638253,
-      45.458939
+      45.458936
     ],
     "floor": 1
   },
   "H911": {
     "coordinates": [
-      -73.579136,
-      45.497403
+      -73.579129,
+      45.497386
     ],
     "floor": 9
   },
   "path-VL139": {
     "coordinates": [
       -73.638692,
-      45.458801
+      45.458798
     ],
     "floor": 1
   },
   "path-MBS2.131": {
     "coordinates": [
-      -73.579218,
-      45.495363
+      -73.57923,
+      45.495362
     ],
-    "floor": 2
+    "floor": -2
   },
   "H903": {
     "coordinates": [
-      -73.579329,
-      45.497245
+      -73.579322,
+      45.497228
     ],
     "floor": 9
   },
   "path-H965": {
     "coordinates": [
-      -73.579191,
-      45.497194
+      -73.579184,
+      45.497177
     ],
     "floor": 9
   },
@@ -6204,15 +6344,22 @@ export const nodeCoordinates = {
   },
   "H937.1": {
     "coordinates": [
-      -73.57871,
-      45.497215
+      -73.578703,
+      45.497198
     ],
     "floor": 9
+  },
+  "path-VL118.1": {
+    "coordinates": [
+      -73.638742,
+      45.458849
+    ],
+    "floor": 1
   },
   "VL115": {
     "coordinates": [
       -73.638729,
-      45.459018
+      45.459015
     ],
     "floor": 1
   },
@@ -6239,8 +6386,8 @@ export const nodeCoordinates = {
   },
   "H961.23": {
     "coordinates": [
-      -73.578809,
-      45.496924
+      -73.578802,
+      45.496907
     ],
     "floor": 9
   },
@@ -6253,57 +6400,57 @@ export const nodeCoordinates = {
   },
   "path-H961.25": {
     "coordinates": [
-      -73.578798,
-      45.496956
+      -73.578791,
+      45.496939
     ],
     "floor": 9
   },
   "path-H920": {
     "coordinates": [
-      -73.578701,
-      45.497412
+      -73.578694,
+      45.497395
     ],
     "floor": 9
   },
   "H925.3": {
     "coordinates": [
-      -73.578681,
-      45.497425
+      -73.578674,
+      45.497408
     ],
     "floor": 9
   },
   "path-VE101": {
     "coordinates": [
       -73.638911,
-      45.458889
+      45.458886
     ],
     "floor": 1
   },
   "path-UpH9escalator": {
     "coordinates": [
-      -73.578941,
-      45.497298
+      -73.578934,
+      45.497281
     ],
     "floor": 9
   },
   "H9mbath": {
     "coordinates": [
-      -73.579025,
-      45.497439
+      -73.579018,
+      45.497422
     ],
     "floor": 9
   },
   "path3-elevatorMBS2": {
     "coordinates": [
-      -73.57891,
-      45.495329
+      -73.578922,
+      45.495328
     ],
-    "floor": 3
+    "floor": -2
   },
   "Hall-principal-entrance": {
     "coordinates": [
       -73.578666,
-      45.496985
+      45.49699
     ],
     "floor": 0
   },
@@ -6316,15 +6463,15 @@ export const nodeCoordinates = {
   },
   "H932": {
     "coordinates": [
-      -73.578536,
-      45.497258
+      -73.578529,
+      45.497241
     ],
     "floor": 9
   },
   "path-escalatorH1": {
     "coordinates": [
       -73.578695,
-      45.497248
+      45.497253
     ],
     "floor": 1
   },
@@ -6337,10 +6484,10 @@ export const nodeCoordinates = {
   },
   "MBS2.113": {
     "coordinates": [
-      -73.579019,
-      45.495176
+      -73.579031,
+      45.495175
     ],
-    "floor": 2
+    "floor": -2
   },
   "path-MB1.128": {
     "coordinates": [
@@ -6351,8 +6498,8 @@ export const nodeCoordinates = {
   },
   "path-H919": {
     "coordinates": [
-      -73.578939,
-      45.497528
+      -73.578932,
+      45.497511
     ],
     "floor": 9
   },
@@ -6379,17 +6526,17 @@ export const nodeCoordinates = {
   },
   "path-H983": {
     "coordinates": [
-      -73.578735,
-      45.497144
+      -73.578728,
+      45.497127
     ],
     "floor": 9
   },
   "MBS2.104": {
     "coordinates": [
-      -73.578726,
-      45.495053
+      -73.578738,
+      45.495052
     ],
-    "floor": 2
+    "floor": -2
   },
   "H8elevator": {
     "coordinates": [
@@ -6400,8 +6547,8 @@ export const nodeCoordinates = {
   },
   "H909": {
     "coordinates": [
-      -73.579184,
-      45.497336
+      -73.579177,
+      45.497319
     ],
     "floor": 9
   }
