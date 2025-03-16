@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+    "@mapbox/polyline": "^1.2.1",
     "@react-google-maps/api": "^2.20.5",
     "@react-native-community/geolocation": "^3.4.0",
     "@react-native-community/slider": "^4.5.6",
