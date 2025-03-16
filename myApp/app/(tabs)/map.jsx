@@ -24,8 +24,7 @@ import IndoorMap from "../components/IndoorMap/IndoorMap";
 import FloorNavigation from "../components/FloorNavigation";
 import MapDirections from "../components/MapDirections";
 import ShortestPathMap from "../components/IndoorMap/ShortestPathMap";
-import { nodeCoordinates } from "../components/IndoorMap/Coordinates/hCoordinates";
-import { graph } from "../components/IndoorMap/Graphs/hGraph";
+import { graph, nodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/GraphAndCoordinates";
 import {
   handleIndoorBuildingSelect,
   handleClearIndoorMap,
