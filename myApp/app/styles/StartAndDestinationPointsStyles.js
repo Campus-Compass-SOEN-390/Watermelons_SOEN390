@@ -116,8 +116,15 @@ export default StyleSheet.create({
   },
   footerContainer: {
     position: "absolute",
-    bottom:
-      Dimensions.get("window").height > 945 ? -665 : height > 870 ? -635 : -560,
+    bottom: (() => {
+      if (Dimensions.get("window").height > 930) {
+        return -640;
+      } else if (height > 870) {
+        return -585;
+      } else {
+        return -560;
+      }
+    })(),
     left: -30,
     right: 0,
     height: 120,
