@@ -33,6 +33,7 @@ const InterestPoints = () => {
 
   // Filter states
   const [distance, setDistance] = useState(40); // Changed from 2 to 40 km
+  const [useDistance, setUseDistance] = useState(false);
   const [showCafes, setShowCafes] = useState(true);
   const [showRestaurants, setShowRestaurants] = useState(true);
   const [showActivities, setShowActivities] = useState(true);
@@ -202,15 +203,35 @@ const InterestPoints = () => {
       allPOIs = [...allPOIs, ...poiData.activities.map(poi => ({ ...poi, category: 'activity' }))]
     }
 
-    return allPOIs.filter(poi => {
-      const poiDistance = calculateDistance(
-        userLocation.latitude,
-        userLocation.longitude,
-        poi.geometry?.location?.lat,
-        poi.geometry?.location?.lng
-      );
-      return poiDistance !== null && poiDistance <= distance;
-    }).sort((a, b) => {
+    // Only filter by distance if useDistance is true
+    if (useDistance) {
+      return allPOIs.filter(poi => {
+        const poiDistance = calculateDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          poi.geometry?.location?.lat,
+          poi.geometry?.location?.lng
+        );
+        return poiDistance !== null && poiDistance <= distance;
+      }).sort((a, b) => {
+        const distA = calculateDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          a.geometry?.location?.lat,
+          a.geometry?.location?.lng
+        );
+        const distB = calculateDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          b.geometry?.location?.lat,
+          b.geometry?.location?.lng
+        );
+        return distA - distB;
+      });
+    }
+
+    // If useDistance is false, return all POIs, still sorted by distance
+    return allPOIs.sort((a, b) => {
       const distA = calculateDistance(
         userLocation.latitude,
         userLocation.longitude,
@@ -264,6 +285,8 @@ const InterestPoints = () => {
         setShowRestaurants={setShowRestaurants}
         showActivities={showActivities}
         setShowActivities={setShowActivities}
+        useDistance={useDistance}
+        setUseDistance={setUseDistance}
       />
     </SafeAreaView>
   );

@@ -102,6 +102,7 @@ export default function MapView() {
   const [showUpdateButton, setShowUpdateButton] = useState(false);
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
   const [distance, setDistance] = useState(40); 
+  const [useDistance, setUseDistance] = useState(true);
   const [showCafes, setShowCafes] = useState(true);
   const [showRestaurants, setShowRestaurants] = useState(true);
   const [showActivities, setShowActivities] = useState(true);
@@ -1038,6 +1039,8 @@ export default function MapView() {
         setShowRestaurants={setShowRestaurants}
         showActivities={showActivities}
         setShowActivities={setShowActivities}
+        useDistance={useDistance}
+        setUseDistance={setUseDistance}
       />
 
       {/* Floating Buttons */}

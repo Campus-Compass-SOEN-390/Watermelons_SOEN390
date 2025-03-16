@@ -79,17 +79,6 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  filterOption: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "90%",
-    marginVertical: 10,
-    padding: 10,
-    backgroundColor: "#f2f2f2",
-    borderRadius: 10,
-  },
-
   // Enhanced Filter Modal Styles
   filterModalContainer: {
     flex: 1,
@@ -194,5 +183,19 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: "#555",
+  },
+  distanceSliderContainer: {
+    marginTop: 10,
+    backgroundColor: '#f8f8f8',
+    padding: 15,
+    borderRadius: 10,
+    width: '100%',
+  },
+  distanceRangeLabel: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#555",
+    marginBottom: 10,
+    textAlign: "center",
   },
 });

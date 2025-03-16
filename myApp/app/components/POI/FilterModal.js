@@ -16,6 +16,8 @@ const FilterModal = ({
   setShowRestaurants,
   showActivities,
   setShowActivities,
+  useDistance,
+  setUseDistance,
 }) => {
   return (
     <Modal
@@ -37,19 +39,35 @@ const FilterModal = ({
 
             {/* Distance Section */}
             <View style={styles.filterSection}>
-              <Text style={styles.filterSectionTitle}>Distance Range</Text>
-              <Slider
-                style={styles.customSlider}
-                minimumValue={0.5}
-                maximumValue={10}
-                step={0.5}
-                value={distance}
-                onValueChange={setDistance}
-                minimumTrackTintColor="#922338"
-                maximumTrackTintColor="#e0e0e0"
-                thumbTintColor="#922338"
-              />
-              <Text style={styles.distanceValue}>{distance} kilometers</Text>
+              <Text style={styles.filterSectionTitle}>Distance Filter</Text>
+              
+              <View style={styles.filterOption}>
+                <Text style={styles.filterOptionText}>Enable distance filtering</Text>
+                <Switch 
+                  value={useDistance} 
+                  onValueChange={setUseDistance} 
+                  trackColor={{ false: "#e0e0e0", true: "#d6909a" }}
+                  thumbColor={useDistance ? "#922338" : "#f4f3f4"}
+                  ios_backgroundColor="#e0e0e0"
+                />
+              </View>
+              
+              {useDistance && (
+                <View style={styles.distanceSliderContainer}>
+                  <Text style={styles.distanceRangeLabel}>Maximum distance: {distance} kilometers</Text>
+                  <Slider
+                    style={styles.customSlider}
+                    minimumValue={0.5}
+                    maximumValue={10}
+                    step={0.5}
+                    value={distance}
+                    onValueChange={setDistance}
+                    minimumTrackTintColor="#922338"
+                    maximumTrackTintColor="#e0e0e0"
+                    thumbTintColor="#922338"
+                  />
+                </View>
+              )}
             </View>
 
             {/* Categories Section */}
@@ -57,9 +75,7 @@ const FilterModal = ({
               <Text style={styles.filterSectionTitle}>Categories</Text>
               
               <View style={styles.filterOption}>
-                <View style={styles.categoryContainer}>
-                  <Text style={styles.filterOptionText}>Cafes</Text>
-                </View>
+                <Text style={styles.filterOptionText}>Cafes</Text>
                 <Switch 
                   value={showCafes} 
                   onValueChange={setShowCafes} 
@@ -70,9 +86,7 @@ const FilterModal = ({
               </View>
               
               <View style={styles.filterOption}>
-                <View style={styles.categoryContainer}>
-                  <Text style={styles.filterOptionText}>Restaurants</Text>
-                </View>
+                <Text style={styles.filterOptionText}>Restaurants</Text>
                 <Switch 
                   value={showRestaurants} 
                   onValueChange={setShowRestaurants}
@@ -83,9 +97,7 @@ const FilterModal = ({
               </View>
               
               <View style={styles.filterOption}>
-                <View style={styles.categoryContainer}>
-                  <Text style={styles.filterOptionText}>Activities</Text>
-                </View>
+                <Text style={styles.filterOptionText}>Activities</Text>
                 <Switch 
                   value={showActivities} 
                   onValueChange={setShowActivities}
@@ -118,6 +130,8 @@ FilterModal.propTypes = {
   setShowRestaurants: PropTypes.func.isRequired,
   showActivities: PropTypes.bool.isRequired,
   setShowActivities: PropTypes.func.isRequired,
+  useDistance: PropTypes.bool.isRequired,
+  setUseDistance: PropTypes.func.isRequired,
 };
 
 export default FilterModal;
