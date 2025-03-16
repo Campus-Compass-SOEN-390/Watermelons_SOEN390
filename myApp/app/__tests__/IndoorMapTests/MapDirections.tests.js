@@ -10,6 +10,10 @@ jest.mock("@rnmapbox/maps", () => ({
   LineLayer: jest.fn(() => null),
 }));
 
+jest.mock('@mapbox/polyline', () => ({
+  decode: jest.fn(() => [[-73.6, 45.5], [-73.7, 45.6]]), // Mock the decode function as needed
+}));
+
 global.fetch = jest.fn();
 
 beforeEach(() => {
@@ -50,7 +54,7 @@ describe("MapDirections Component", () => {
 
     render(<MapDirections origin={origin} destination={destination} travelMode="walking" mapRef={mapRef} />);
 
-    await waitFor(() => expect(console.error).toHaveBeenCalledWith("Error fetching route:", expect.any(Error)));
+    await waitFor(() => expect(console.error).toHaveBeenCalledWith("Error fetching Google Maps routes:", expect.any(Error)));
   });
 
   it("does not update state if unmounted", async () => {
