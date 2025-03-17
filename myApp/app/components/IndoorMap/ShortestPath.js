@@ -28,7 +28,7 @@ export function dijkstra(graph, startNode, endNode, isDisabled) {
     // Stop if we reach the end node
     if (currentNode === endNode) break;
 
-    // for each neighbour of our current node, check if going through currentNode provides a shorter path
+    // for each neighbour of our current node (connected_tos), check if going through currentNode provides a shorter path
     for (let neighbor in graph[currentNode]) {
       if (
         isDisabled && 
