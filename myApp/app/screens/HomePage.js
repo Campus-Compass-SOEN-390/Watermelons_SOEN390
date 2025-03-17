@@ -82,23 +82,16 @@ export default function HomePage() {
                 <Text style={styles.title}>Link your account</Text>
                  <View style={styles.buttonContainer}>
                     <TouchableOpacity 
-                    style={styles.buttonOrange}
+                    style={styles.googleButton}
                     testID="calendarfetchbutton"
-                    onPress={() => router.push('screens/calendar-fetching')}
+                    onPress={() => router.push('/screens/CalendarFetching')}
                     >
+                        <Image source={require('../../assets/images/google_logo.png')} style={styles.icon} />
+
                         <Text style={styles.buttonText}>Fetch Calendars</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.buttonContainer}>
-                     <TouchableOpacity 
-                        style={styles.googleButton}
-                        testID="googleButton"
-                        onPress={() => promptAsync()}
-                    >
-                        <Image source={require('../../assets/images/google_logo.png')} style={styles.icon} />
-                        <Text style={styles.googleButtonText}>Connect Google Calendar</Text>
-                    </TouchableOpacity>
-                </View>
+               
                
             </View>
         </View>
