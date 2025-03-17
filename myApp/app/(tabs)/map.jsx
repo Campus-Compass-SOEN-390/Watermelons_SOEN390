@@ -70,6 +70,9 @@ export default function MapView() {
   const [activeCampus, setActiveCampus] = useState(type);
   const mapRef = useRef(null);
 
+  // Disabled on or off
+  const [isDisabled, setIsDisabled] = useState(false);
+
   // Location & permissions
   const { location, hasPermission } = useLocation();
   const [showPermissionPopup, setShowPermissionPopup] =
@@ -849,6 +852,7 @@ export default function MapView() {
             startNode={originText}
             endNode={destinationText}
             currentFloor={selectedFloor}
+            isDisabled={isDisabled}
           />
 
           {/* POI Markers */}
