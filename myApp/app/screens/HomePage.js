@@ -80,6 +80,15 @@ export default function HomePage() {
             </View>
             <View style={styles.buttonsContainer}>
                 <Text style={styles.title}>Link your account</Text>
+                 <View style={styles.buttonContainer}>
+                    <TouchableOpacity 
+                    style={styles.buttonOrange}
+                    testID="calendarfetchbutton"
+                    onPress={() => router.push('screens/calendar-fetching')}
+                    >
+                        <Text style={styles.buttonText}>Fetch Calendars</Text>
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.buttonContainer}>
                      <TouchableOpacity 
                         style={styles.googleButton}
@@ -90,6 +99,7 @@ export default function HomePage() {
                         <Text style={styles.googleButtonText}>Connect Google Calendar</Text>
                     </TouchableOpacity>
                 </View>
+               
             </View>
         </View>
     );

@@ -16,6 +16,9 @@ export default function RootLayout() {
       <Stack.Screen 
         name="(tabs)" 
       />
+      <Stack.Screen name="(tabs)/calendar-fetching" />
+
     </Stack>
+    
   );
 }
