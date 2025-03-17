@@ -53,8 +53,9 @@ export default function HomePage() {
                     <TouchableOpacity 
                     style={styles.buttonOrange}
                     testID="directionButton"
+                    onPress={() => router.push('screens/CalendarSchedulePage')}
                     >
-                        <Text style={styles.buttonText}>Directions to my next class</Text>
+                        <Text style={styles.buttonText}>Next on Schedule</Text>
                     </TouchableOpacity>
                 </View>
             </View>
