@@ -1,6 +1,11 @@
 import React from "react";
 import { render, waitFor } from "@testing-library/react-native";
 import MapDirections from "../../components/MapDirections";
+import polyline from '@mapbox/polyline';
+
+jest.mock('@mapbox/polyline', () => ({
+  decode: jest.fn(() => [[-73.6, 45.5], [-73.7, 45.6]]),
+}));
 
 jest.mock("@rnmapbox/maps", () => ({
   setAccessToken: jest.fn(),
@@ -50,7 +55,7 @@ describe("MapDirections Component", () => {
 
     render(<MapDirections origin={origin} destination={destination} travelMode="walking" mapRef={mapRef} />);
 
-    await waitFor(() => expect(console.error).toHaveBeenCalledWith("Error fetching route:", expect.any(Error)));
+    await waitFor(() => expect(console.error).toHaveBeenCalledWith("Error fetching Google Maps routes:", expect.any(Error)));
   });
 
   it("does not update state if unmounted", async () => {

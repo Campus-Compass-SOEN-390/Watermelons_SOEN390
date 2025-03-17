@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import Mapbox from "@rnmapbox/maps";
-import { View } from "react-native";
+import { View, Button } from "react-native";
 import Constants from "expo-constants";
+import polyline from "@mapbox/polyline";
 
 // const MAPBOX_API_KEY = Constants.expoConfig?.extra?.mapbox;
 const MAPBOX_API_KEY = "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw";
 Mapbox.setAccessToken(MAPBOX_API_KEY);
+const GOOGLE_MAPS_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
 interface Props {
   origin: { latitude: number; longitude: number } | null;
@@ -20,7 +22,10 @@ const MapDirections: React.FC<Props> = ({
   mapRef,
   travelMode,
 }) => {
-  const [route, setRoute] = useState<GeoJSON.FeatureCollection | null>(null);
+  //stores all routes rather than just 1
+  const [routes, setRoutes] = useState<GeoJSON.FeatureCollection[]>([]);
+  //To be used when options of routes are added
+  const [selectedRouteIndex, setSelectedRouteIndex] = useState<number>(0);
   const cameraRef = useRef<Mapbox.Camera | null>(null);
 
   useEffect(() => {
@@ -29,7 +34,7 @@ const MapDirections: React.FC<Props> = ({
     const fetchData = async () => {
       try {
         if (origin && destination && travelMode) {
-          await fetchRoute(travelMode, isMounted);
+          await fetchRoutes(travelMode, isMounted);
         }
       } catch (error) {
         console.log("Error in fetchData:", error);
@@ -40,50 +45,40 @@ const MapDirections: React.FC<Props> = ({
 
     return () => {
       isMounted = false;
-      console.log("🧹 Cleaning up...");
     };
   }, [travelMode, origin, destination]);
 
-  const fetchRoute = async (mode: string, isMounted: boolean) => {
+  useEffect(() => {
+    if (routes.length > 0 && routes[selectedRouteIndex]) {
+      const coordinates = (routes[selectedRouteIndex].features[0].geometry as GeoJSON.LineString).coordinates;
+      fitToRoute(coordinates);
+    }
+  }, [selectedRouteIndex, routes]);
+
+  const fetchRoutes = async (mode: string, isMounted: boolean) => {
     if (!origin || !destination) return;
 
-    let apiMode = mode.toLowerCase(); // Ensure mode is in the correct format
-    console.log(`Fetching route with mode: ${apiMode}`);
+    console.log(`Fetching routes from Google Maps with mode: ${mode}`);
 
-    let url = `https://api.mapbox.com/directions/v5/mapbox/${apiMode}/${origin.longitude},${origin.latitude};${destination.longitude},${destination.latitude}?geometries=geojson&steps=true&access_token=${MAPBOX_API_KEY}`;
+    //By setting alternatives to true in url, now get all routes rather than just 1
+    let url = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&mode=${mode}&alternatives=true&key=${GOOGLE_MAPS_API_KEY}`;
 
     try {
       const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
-
-      if (!isMounted) return; // Prevent state update if unmounted
-
+      if (!isMounted) return;
       if (data.routes && data.routes.length > 0) {
-        const geometry = data.routes[0].geometry;
-        if (geometry?.coordinates?.length > 0) {
-          setRoute({
-            type: "FeatureCollection",
-            features: [
-              {
-                type: "Feature",
-                geometry: geometry,
-                properties: {},
-              },
-            ],
-          });
-
-          fitToRoute(geometry.coordinates);
-        } else {
-          console.error("Invalid geometry received:", geometry);
-        }
+        setRoutes(parseGoogleMapsResponse(data));
       } else {
-        console.warn(`No route found for mode: ${apiMode}.`);
+        console.warn("No routes found in Google Maps API response.");
       }
     } catch (error) {
-      console.error("Error fetching route:", error);
+      console.error("Error fetching Google Maps routes:", error);
     }
   };
-
 
   const fitToRoute = (coordinates: number[][]) => {
     if (cameraRef.current && coordinates.length > 1) {
@@ -97,29 +92,60 @@ const MapDirections: React.FC<Props> = ({
 
       const center = [(minLng + maxLng) / 2, (minLat + maxLat) / 2];
 
+      const latDiff = maxLat - minLat;
+      const lngDiff = maxLng - minLng;
+      const zoom = Math.max(10, 15 - Math.max(latDiff, lngDiff) * 50);
+
       cameraRef.current.setCamera({
         centerCoordinate: center,
-        zoomLevel: 12,
+        zoomLevel: zoom,
         animationDuration: 1000,
       });
     }
   };
 
-  if (!origin || !destination || !route) return null;
-  if (!origin || !destination || !route) return null;
+  const parseGoogleMapsResponse = (data: any): GeoJSON.FeatureCollection[] => {
+    return data.routes.map((route: any) => {
+      const encodedPolyline = route.overview_polyline.points;
+      const decodedCoordinates = polyline.decode(encodedPolyline);
+      const geoJsonCoordinates = decodedCoordinates.map(([lat, lng]) => [lng, lat]);
+      return {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            geometry: {
+              type: "LineString",
+              coordinates: geoJsonCoordinates,
+            },
+            properties: {},
+          },
+        ],
+      };
+    });
+  };
+
+  if (!origin || !destination || routes.length === 0) return null;
 
   return (
     <View style={{ flex: 1 }}>
-      <Mapbox.Camera ref={(ref) => (cameraRef.current = ref)} />
-      <Mapbox.ShapeSource id="routeSource" shape={route}>
-        <Mapbox.LineLayer
-          id="routeLine"
-          style={{
-            lineColor: "black",
-            lineWidth: 5,
-          }}
-        />
-      </Mapbox.ShapeSource>
+      <Mapbox.Camera ref={cameraRef} />
+      
+      {/*Render all route options, alternatives are displayed more transparently*/}
+      {routes.map((routeData, index) => (
+        <Mapbox.ShapeSource key={`route-${index}`} id={`routeSource-${index}`} shape={routeData}>
+          <Mapbox.LineLayer
+            id={`routeLine-${index}`}
+            style={{
+              lineColor: index === selectedRouteIndex ? "black" : "gray",
+              lineWidth: index === selectedRouteIndex ? 5 : 3,
+              lineOpacity: index === selectedRouteIndex ? 1 : 0.5,
+              lineCap: "round",
+              lineJoin: "round",
+            }}
+          />
+        </Mapbox.ShapeSource>
+      ))}
     </View>
   );
 };
