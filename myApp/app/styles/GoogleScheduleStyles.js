@@ -1,3 +1,5 @@
+import { StyleSheet } from "react-native";
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -15,9 +17,10 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: "#909090",
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
         justifyContent: "center",
         alignItems: "center",
+        zIndex: 100,
     },
     logoutButton: {
         backgroundColor: "#d3d3d3",
@@ -98,3 +101,5 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
 });
+
+export default styles;
