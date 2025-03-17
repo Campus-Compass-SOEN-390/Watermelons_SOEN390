@@ -64,30 +64,13 @@ const MapDirections: React.FC<Props> = ({
 
     try {
       const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
-      console.log("Google Maps API Response:", JSON.stringify(data, null, 2));
       if (!isMounted) return;
       if (data.routes && data.routes.length > 0) {
-        //iterate and store all route options
-        const routeOptions: GeoJSON.FeatureCollection[] = data.routes.map((route: any) => {
-          const encodedPolyline = route.overview_polyline.points;
-          const decodedCoordinates = polyline.decode(encodedPolyline);
-          const geoJsonCoordinates = decodedCoordinates.map(([lat, lng]) => [lng, lat]);
-          return {
-            type: "FeatureCollection",
-            features: [
-              {
-                type: "Feature",
-                geometry: {
-                  type: "LineString",
-                  coordinates: geoJsonCoordinates,
-                },
-                properties: {},
-              },
-            ],
-          };
-        });
-        setRoutes(routeOptions);
+        setRoutes(parseGoogleMapsResponse(data));
       } else {
         console.warn("No routes found in Google Maps API response.");
       }
@@ -118,6 +101,27 @@ const MapDirections: React.FC<Props> = ({
         animationDuration: 1000,
       });
     }
+  };
+
+  const parseGoogleMapsResponse = (data: any): GeoJSON.FeatureCollection[] => {
+    return data.routes.map((route: any) => {
+      const encodedPolyline = route.overview_polyline.points;
+      const decodedCoordinates = polyline.decode(encodedPolyline);
+      const geoJsonCoordinates = decodedCoordinates.map(([lat, lng]) => [lng, lat]);
+      return {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            geometry: {
+              type: "LineString",
+              coordinates: geoJsonCoordinates,
+            },
+            properties: {},
+          },
+        ],
+      };
+    });
   };
 
   if (!origin || !destination || routes.length === 0) return null;
