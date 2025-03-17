@@ -7,24 +7,25 @@ import styles from "../styles/IndoorMapStyles";
 const FloorNavigation = ({ selectedBuilding, selectedFloor, onChangeFloor }) => {
   if (!selectedBuilding?.floors || selectedBuilding.floors.length === 0) return null;
 
-  // Sort floors numerically
-  const floors = [...selectedBuilding.floors].sort((a, b) => Number(a) - Number(b));
+  const floors = [...selectedBuilding.floors]
+    .map(floor => Number(floor)) 
+    .filter(floor => !isNaN(floor)) 
+    .sort((a, b) => a - b); 
 
-  // Ensure default floor is "1" if it exists, otherwise use the lowest floor
-  const defaultFloor = floors.includes("1") ? "1" : floors[0];
-  const currentIndex = floors.indexOf(selectedFloor || defaultFloor);
+  const defaultFloor = floors.includes(1) ? 1 : floors[0];
+  const currentIndex = floors.indexOf(Number(selectedFloor) || defaultFloor);
 
   const handleChangeFloor = (direction) => {
     if (direction === "up" && currentIndex < floors.length - 1) {
-      onChangeFloor(floors[currentIndex + 1]);
+      onChangeFloor(String(floors[currentIndex + 1])); 
     } else if (direction === "down" && currentIndex > 0) {
-      onChangeFloor(floors[currentIndex - 1]);
+      onChangeFloor(String(floors[currentIndex - 1])); 
     }
   };
 
   const formatFloorName = (floor) => {
-    if (floor === "-2") return "S2";
-    return floor;
+    if (Number(floor) === -2) return "S2"; 
+    return String(floor);
   };
 
   return (
@@ -54,10 +55,10 @@ const FloorNavigation = ({ selectedBuilding, selectedFloor, onChangeFloor }) => 
 
 FloorNavigation.propTypes = {
   selectedBuilding: PropTypes.shape({
-    floors: PropTypes.array
+    floors: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])), 
   }),
-  selectedFloor: PropTypes.string,
-  onChangeFloor: PropTypes.func.isRequired
+  selectedFloor: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  onChangeFloor: PropTypes.func.isRequired,
 };
 
 export default FloorNavigation;

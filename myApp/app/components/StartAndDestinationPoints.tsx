@@ -16,6 +16,8 @@ import styles from "../styles/StartAndDestinationPointsStyles";
 import useLocation from "../hooks/useLocation";
 import Icon from "react-native-vector-icons/Foundation";
 import { useLocationContext } from "../context/LocationContext";
+import { useIndoorMapContext } from "../context/IndoorMapContext";
+import { buildings } from "../api/buildingData";
 import { getTravelTimes } from "../api/googleMapsApi";
 
 interface Step {
@@ -41,13 +43,17 @@ const StartAndDestinationPoints = ({}) => {
     renderMap,
     travelMode,
   } = useLocationContext();
+  const { updateSelectedFloor, updateSelectedIndoorBuilding } =
+    useIndoorMapContext();
   const { location } = useLocation();
   const originRef = useRef<any>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showMyLocButton, setShowMyLocButton] = useState(true);
   const [showSteps, setShowSteps] = useState(false);
   const [routeSteps, setRouteSteps] = useState<Step[]>([]);
-  const [travelTimes, setTravelTimes] = useState<{ [key: string]: number | null }>({});
+  const [travelTimes, setTravelTimes] = useState<{
+    [key: string]: number | null;
+  }>({});
   const [loading, setLoading] = useState(false);
 
   // Fetch travel times when origin or destination changes
@@ -241,6 +247,31 @@ const StartAndDestinationPoints = ({}) => {
             style={styles.button}
             onPress={() => {
               if (origin && destination) {
+                const classroomRegex = /^([A-Z]+)(\d{1,3})/i;
+                const match = originText.match(classroomRegex);
+
+                if (match) {
+                  let buildingName = match[1];
+                  let floor = parseInt(match[2][0], 10);
+
+                  // Special case for MB building
+                  if (originText.startsWith("MB")) {
+                    buildingName = "MB"; 
+                    if (originText.includes("S2")) {
+                      floor = -2; // Convert "S2" to -2
+                    }
+                  }
+
+                  const matchedBuilding = buildings.find(
+                    (b) => b.name === buildingName
+                  );
+
+                  if (matchedBuilding) {
+                    updateSelectedIndoorBuilding(matchedBuilding);
+                    updateSelectedFloor(Number(floor));
+                  }
+                }
+
                 updateShowTransportation(true);
               }
             }}
@@ -302,7 +333,10 @@ const StartAndDestinationPoints = ({}) => {
           <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
             <Text style={styles.footerButtonText}>GO</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.stepsButton} onPress={handleStepsClick}>
+          <TouchableOpacity
+            style={styles.stepsButton}
+            onPress={handleStepsClick}
+          >
             <Text style={styles.footerButtonText}>Steps</Text>
           </TouchableOpacity>
           {/* "X" Button as a red cancel */}
@@ -311,6 +345,10 @@ const StartAndDestinationPoints = ({}) => {
             onPress={() => {
               updateShowTransportation(false);
               updateRenderMap(false);
+              updateSelectedFloor(null);
+              updateSelectedIndoorBuilding(null);
+              updateOrigin(null, "");
+              updateDestination(null, "");
             }}
           >
             <Text style={[styles.footerButtonText, { color: "red" }]}>X</Text>

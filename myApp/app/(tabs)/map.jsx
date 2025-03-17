@@ -1,4 +1,11 @@
-import { Text, TouchableOpacity, View, Modal, Image, ActivityIndicator } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  Modal,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import React, {
   useState,
   useRef,
@@ -24,7 +31,11 @@ import IndoorMap from "../components/IndoorMap/IndoorMap";
 import FloorNavigation from "../components/FloorNavigation";
 import MapDirections from "../components/MapDirections";
 import ShortestPathMap from "../components/IndoorMap/ShortestPathMap";
-import { graph, nodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/GraphAndCoordinates";
+import {
+  graph,
+  nodeCoordinates,
+  indoorCoordinatesMap,
+} from "../components/IndoorMap/GraphAndCoordinates/GraphAndCoordinates";
 import {
   handleIndoorBuildingSelect,
   handleClearIndoorMap,
@@ -49,20 +60,17 @@ import { styles as poiStyles } from "../styles/poiStyles";
 import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
 import { estimateShuttleFromButton } from "../utils/shuttleUtils";
 
-const MAPBOX_API = "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw";
-// const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
+const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API);
-
 
 // Constants for POI functionality
 const REGION_CHANGE_THRESHOLD = 0.005;
 
 export default function MapView() {
-
   //get Campus type from homePage
   const { type } = useLocalSearchParams();
 
-  //get coordinates and name from POI page 
+  //get coordinates and name from POI page
   const { name, lat, lng } = useLocalSearchParams();
 
   console.log(name, lat, lng);
@@ -72,8 +80,9 @@ export default function MapView() {
 
   // Location & permissions
   const { location, hasPermission } = useLocation();
-  const [showPermissionPopup, setShowPermissionPopup] =
-    useState(!hasPermission);
+  const [showPermissionPopup, setShowPermissionPopup] = useState(
+    !hasPermission
+  );
 
   // Building popup
   const [selectedBuilding, setSelectedBuilding] = useState(null);
@@ -96,7 +105,9 @@ export default function MapView() {
   const [restaurants, setRestaurants] = useState([]);
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [region, setRegion] = useState(activeCampus === "sgw" ? sgwRegion : loyolaRegion);
+  const [region, setRegion] = useState(
+    activeCampus === "sgw" ? sgwRegion : loyolaRegion
+  );
   const [lastFetchedRegion, setLastFetchedRegion] = useState(null);
   const [showUpdateButton, setShowUpdateButton] = useState(false);
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
@@ -120,11 +131,8 @@ export default function MapView() {
     "SGW Campus": { latitude: 45.4962, longitude: -73.578 },
     "Loyola Campus": { latitude: 45.4582, longitude: -73.6405 },
     "Montreal Downtown": { latitude: 45.5017, longitude: -73.5673 },
+    ...indoorCoordinatesMap,
   };
-
-  // Track selected floor
-  const [selectedFloor, setSelectedFloor] = useState(null);
-
 
   // Handle clearing indoor mode when "Outdoor" is pressed
   const clearIndoorMap = () => {
@@ -133,7 +141,7 @@ export default function MapView() {
       updateIsExpanded,
       mapRef,
       activeCampus,
-      setSelectedFloor,
+      updateSelectedFloor
     );
   };
 
@@ -152,15 +160,17 @@ export default function MapView() {
     renderMap,
     showShuttleRoute,
     travelMode,
-    showTransportation
+    showTransportation,
   } = useLocationContext();
 
   //Global constants to manage indoor-maps
   const {
     isExpanded,
     selectedIndoorBuilding,
+    selectedFloor,
     updateIsExpanded,
     updateSelectedIndoorBuilding,
+    updateSelectedFloor,
   } = useIndoorMapContext();
 
   // Animate map to correct campus
@@ -189,7 +199,7 @@ export default function MapView() {
       if (location) {
         let found = false;
         for (const building of buildings.filter(
-          (b) => b.coordinates && b.coordinates.length > 0,
+          (b) => b.coordinates && b.coordinates.length > 0
         )) {
           if (isPointInPolygon(location, building.coordinates)) {
             setHighlightedBuilding(building.name);
@@ -207,45 +217,54 @@ export default function MapView() {
     }
   }, [location, hasPermission]);
 
-  //This useEffect manages orgin, destination and the footer appearing when any of the dependcies change
+  // This useEffect manages origin, destination, and the footer appearing when dependencies change
   useEffect(() => {
     try {
       console.log("IN MAP:", destinationText, renderMap);
-      updateOrigin(origin, originText);
-      updateDestination(destination, destinationText);
-      //these two things above are not what is crashing the app
-      if (
-        originText == "My Location" &&
-        (destinationText == "Loyola Campus, Shuttle Stop" ||
-          destinationText == "SGW Campus, Shuttle Stop") &&
-        renderMap
-      ) {
-        updateShowShuttleRoute(true);
-      } else {
-        updateShowShuttleRoute(false);
+  
+      // Ensure "My Position" is dynamically updated from location
+      coordinatesMap["My Position"] = location?.latitude
+        ? { latitude: location.latitude, longitude: location.longitude }
+        : undefined;
+  
+      const newOrigin = coordinatesMap[originText] || origin;
+      const newDestination = coordinatesMap[destinationText] || destination;
+  
+      if (JSON.stringify(newOrigin) !== JSON.stringify(origin)) {
+        updateOrigin(newOrigin, originText);
       }
-      if (renderMap) {
-        navigation.setOptions({
-          tabBarStyle: { display: "none" },
-        });
+  
+      if (JSON.stringify(newDestination) !== JSON.stringify(destination)) {
+        updateDestination(newDestination, destinationText);
       }
-      if (!renderMap) {
-        navigation.setOptions({
-          tabBarStyle: tabStyles.tabBarStyle,
-        });
-      }
-    } catch {
-      console.log("Crashed 3");
+  
+      // Manage shuttle route visibility
+      updateShowShuttleRoute(
+        originText === "My Location" &&
+          (destinationText === "Loyola Campus, Shuttle Stop" ||
+            destinationText === "SGW Campus, Shuttle Stop") &&
+          renderMap
+      );
+  
+      // Manage navigation bar visibility
+      navigation.setOptions({
+        tabBarStyle: renderMap ? { display: "none" } : tabStyles.tabBarStyle,
+      });
+    } catch (error) {
+      console.log("Crashed in useEffect:", error);
     }
   }, [
-    origin,
-    destination,
+    location?.latitude,
+    location?.longitude,
+    originText,
+    destinationText,
     activeCampus,
     travelMode,
     popupVisible,
     showShuttleRoute,
-    showTransportation
+    showTransportation,
   ]);
+  
 
   // POI distance calculation function
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -296,7 +315,7 @@ export default function MapView() {
     const latDiff = Math.abs(region.latitude - lastFetchedRegion.latitude);
     const lngDiff = Math.abs(region.longitude - lastFetchedRegion.longitude);
     setShowUpdateButton(
-      latDiff > REGION_CHANGE_THRESHOLD || lngDiff > REGION_CHANGE_THRESHOLD,
+      latDiff > REGION_CHANGE_THRESHOLD || lngDiff > REGION_CHANGE_THRESHOLD
     );
   }, [region, lastFetchedRegion, showPOI]);
 
@@ -351,38 +370,45 @@ export default function MapView() {
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
           };
-          console.log("Using camera position as region fallback:", currentRegion);
+          console.log(
+            "Using camera position as region fallback:",
+            currentRegion
+          );
         }
       } catch (error) {
         console.error("Error getting camera position:", error);
       }
     }
-    
+
     if (!currentRegion) {
-      console.error("Cannot fetch POIs: No region provided and couldn't get camera position");
+      console.error(
+        "Cannot fetch POIs: No region provided and couldn't get camera position"
+      );
       return;
     }
-    
+
     if (isFetchingRef.current) {
       console.log("Fetch already in progress, skipping");
       return;
     }
-    
+
     console.log("Starting POI fetch for region:", currentRegion);
     setLoading(true);
     isFetchingRef.current = true;
-    
+
     const controller = new AbortController();
     activeRequestRef.current = controller;
-    
+
     try {
       console.log("Calling POI API...");
       const { coffee, resto, act } = await fetchPOIData(
         currentRegion,
-        controller.signal,
+        controller.signal
       );
-      
-      console.log(`POI data received: ${coffee.length} coffee shops, ${resto.length} restaurants, ${act.length} activities`);
+
+      console.log(
+        `POI data received: ${coffee.length} coffee shops, ${resto.length} restaurants, ${act.length} activities`
+      );
       setCoffeeShops(coffee);
       setRestaurants(resto);
       setActivities(act);
@@ -484,11 +510,10 @@ export default function MapView() {
     const buildingFullName = `${building.name}, ${building.longName}`;
     updateOrigin(building.entranceCoordinates, buildingFullName);
   };
-  
 
   const handleShuttleButton = async () => {
     console.log("Shuttle button click");
-  
+
     // Update origin & destination as before
     updateOrigin(coordinatesMap["My Position"], "My Location");
     if (activeCampus === "sgw") {
@@ -502,11 +527,11 @@ export default function MapView() {
         "SGW Campus, Shuttle Stop"
       );
     }
-  
+
     try {
       const currentStop = activeCampus === "sgw" ? "SGW" : "LOY";
       const shuttleResult = await estimateShuttleFromButton(currentStop);
-  
+
       // If the utility returned an object with "error", store it directly.
       if (shuttleResult?.error) {
         setShuttleDetails({ error: shuttleResult.error });
@@ -522,15 +547,13 @@ export default function MapView() {
       console.warn("Error estimating shuttle time:", error);
       setShuttleDetails({ error: error.message });
     }
-  
+
     // Show the popup
     setShuttlePopupVisible(true);
-  };  
-  
+  };
 
   // Center on campus
   const centerMapOnCampus = () => {
-    
     if (mapRef.current) {
       const currentRegion = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
       mapRef.current.setCamera({
@@ -581,26 +604,29 @@ export default function MapView() {
   const togglePOI = () => {
     // First get the new value we're about to set
     const willShowPOI = !showPOI;
-    
+
     // Update the state
     setShowPOI(willShowPOI);
-    
+
     // If we're turning POIs ON, fetch the data
     if (willShowPOI) {
       console.log("POI toggle: Showing POIs, fetching data if needed");
-      
-      if (coffeeShops.length > 0 || restaurants.length > 0 || activities.length > 0) {
+
+      if (
+        coffeeShops.length > 0 ||
+        restaurants.length > 0 ||
+        activities.length > 0
+      ) {
         console.log("POI toggle: Using cached POI data");
         return;
       }
-      
+
       // Try to use region, if not available, handleFetchPlaces will try to use camera position
       handleFetchPlaces();
     } else {
       console.log("POI toggle: Hiding POIs");
     }
   };
-
 
   //fetch shuttle live data
   useEffect(() => {
@@ -620,8 +646,6 @@ export default function MapView() {
     return () => clearInterval(interval);
   }, []);
 
-
-
   // Handle POI marker press
   const handlePOIPress = (poi) => {
     setSelectedPOI(selectedPOI?.place_id === poi.place_id ? null : poi);
@@ -639,21 +663,26 @@ export default function MapView() {
     return calculateDistance(lat1, lon1, lat2, lon2);
   };
 
-
   // Handle "Get Directions" button press
   const handlePOIGetDirections = (poi) => {
     if (!poi?.geometry?.location) return;
     updateOrigin(coordinatesMap["My Position"], "My Location");
-    updateDestination({latitude: poi.geometry.location.lat, longitude: poi.geometry.location.lng }, poi.name);
+    updateDestination(
+      {
+        latitude: poi.geometry.location.lat,
+        longitude: poi.geometry.location.lng,
+      },
+      poi.name
+    );
     updateShowTransportation(true);
-  }
+  };
 
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
         <StartAndDestinationPoints />
-        <Mapbox.MapView 
-          style={styles.map} 
+        <Mapbox.MapView
+          style={styles.map}
           styleURL={Mapbox.StyleURL.Light}
           onRegionDidChange={(feature) => handleRegionChange(feature)}
         >
@@ -666,7 +695,7 @@ export default function MapView() {
                   convertCoordinates(selectedIndoorBuilding.coordinates)
                 );
               } else {
-                return activeCampus === "sgw" 
+                return activeCampus === "sgw"
                   ? [-73.5792229, 45.4951962]
                   : [-73.6417009, 45.4581281];
               }
@@ -691,15 +720,8 @@ export default function MapView() {
             </Mapbox.ShapeSource>
           )}
           {/* Render Direction Route */}
-          {origin && destination && renderMap (
-            <MapDirections
-              origin={origin}
-              destination={destination}
-              mapRef={mapRef}
-              travelMode={travelMode}
-            />
-          )}
-          
+          {indoorCoordinatesMap[originText] &&
+          indoorCoordinatesMap[destinationText] && renderMap ? (
             <ShortestPathMap
               graph={graph}
               nodeCoordinates={nodeCoordinates}
@@ -707,6 +729,18 @@ export default function MapView() {
               endNode={destinationText}
               currentFloor={selectedFloor}
             />
+          ) : (
+            origin &&
+            destination &&
+            renderMap && (
+              <MapDirections
+                origin={origin}
+                destination={destination}
+                mapRef={mapRef}
+                travelMode={travelMode}
+              />
+            )
+          )}
 
           {/* Render building polygons */}
           {buildings
@@ -854,7 +888,7 @@ export default function MapView() {
         <FloorNavigation
           selectedBuilding={selectedIndoorBuilding}
           selectedFloor={selectedFloor}
-          onChangeFloor={setSelectedFloor}
+          onChangeFloor={updateSelectedFloor}
         />
       )}
 
@@ -892,7 +926,7 @@ export default function MapView() {
               .filter(
                 (building) =>
                   building.campus.toLowerCase() ===
-                    activeCampus.toLowerCase() && building.hasIndoor === true,
+                    activeCampus.toLowerCase() && building.hasIndoor === true
               )
               .map((building) => (
                 <TouchableOpacity
@@ -904,8 +938,8 @@ export default function MapView() {
                       selectedIndoorBuilding,
                       updateIsExpanded,
                       updateSelectedIndoorBuilding,
-                      setSelectedFloor,
-                      mapRef,
+                      updateSelectedFloor,
+                      mapRef
                     )
                   }
                 >
@@ -1051,7 +1085,11 @@ export default function MapView() {
               distance={getDistanceToPOI(selectedPOI)}
               onClose={() => setSelectedPOI(null)}
               onGetDirections={() => {
-                console.log(`Get directions for address: ${selectedPOI.vicinity || "unknown"}`);
+                console.log(
+                  `Get directions for address: ${
+                    selectedPOI.vicinity || "unknown"
+                  }`
+                );
                 handlePOIGetDirections(selectedPOI);
                 setSelectedPOI(null);
               }}

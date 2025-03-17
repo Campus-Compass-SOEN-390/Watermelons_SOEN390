@@ -1,31 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Mapbox from "@rnmapbox/maps";
 import Constants from "expo-constants";
 import PropTypes from "prop-types";
+import finalMapData from "../../../assets/floorplans/finalMap.json";
 
 const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
   const [geoJsonData, setGeoJsonData] = useState(null);
-  const MAPBOX_ACCESS_TOKEN = Constants.expoConfig?.extra?.mapbox;
-  const DATASET_ID = "cm89krqo60fhu1po3mqktwsjd";
 
+  const MAPBOX_ACCESS_TOKEN = Constants.expoConfig?.extra?.mapbox;
   Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
 
   useEffect(() => {
-    const fetchGeoJson = async () => {
-      try {
-        const response = await fetch(
-          `https://api.mapbox.com/datasets/v1/7anine/${DATASET_ID}/features?access_token=${MAPBOX_ACCESS_TOKEN}`
-        );
-        if (!response.ok)
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        const data = await response.json();
-        setGeoJsonData(data);
-      } catch (error) {
-        console.error("Error fetching GeoJSON:", error);
-      }
-    };
-
-    fetchGeoJson();
+    // Load the local GeoJSON data
+    setGeoJsonData(finalMapData);
   }, []);
 
   if (!geoJsonData) return null;
@@ -50,7 +37,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
 
   return (
     <Mapbox.ShapeSource id="indoor-map" shape={filteredGeoJson}>
-      {/* Room Fill Layer (Polygon & MultiPolygon) */}
+      {/* Room Fill Layer */}
       <Mapbox.FillLayer
         id="room-fill-layer"
         sourceID="indoor-map"
@@ -83,7 +70,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         minZoomLevel={18}
       />
 
-      {/* Pathways (LineString & MultiLineString) */}
+      {/* Pathways */}
       <Mapbox.LineLayer
         id="path-line-layer"
         sourceID="indoor-map"
@@ -94,14 +81,12 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         }}
         filter={[
           "any",
-          ["==", ["geometry-type"], "LineString"],
-          ["==", ["geometry-type"], "MultiLineString"],
           ["==", ["get", "type"], "Paths"],
         ]}
         minZoomLevel={18}
       />
 
-      {/* Walls (LineString & MultiLineString) */}
+      {/* Walls */}
       <Mapbox.LineLayer
         id="wall-line-layer"
         sourceID="indoor-map"
@@ -112,14 +97,12 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         }}
         filter={[
           "any",
-          ["==", ["geometry-type"], "LineString"],
-          ["==", ["geometry-type"], "MultiLineString"],
           ["==", ["get", "type"], "Walls"],
         ]}
         minZoomLevel={18}
       />
 
-      {/* Labels for Doors*/}
+      {/* Labels for Doors */}
       <Mapbox.SymbolLayer
         id="door-text-layer"
         sourceID="indoor-map"
@@ -130,33 +113,15 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
           textHaloColor: "white",
           textHaloWidth: 1,
         }}
-        filter={
-          selectedBuilding
-            ? [
-                "all",
-                ["==", ["geometry-type"], "Point"],
-                [
-                  "any",
-                  ["==", ["get", "type"], "Door"],
-                  ["==", ["get", "type"], "Doors"],
-                ],
-                ["==", ["get", "floor"], Number(selectedFloor)],
-              ]
-            : [
-                "all",
-                ["==", ["geometry-type"], "Point"],
-                [
-                  "any",
-                  ["==", ["get", "type"], "Door"],
-                  ["==", ["get", "type"], "Doors"],
-                ],
-                ["==", ["get", "floor"], 1],
-              ]
-        }
+        filter={[
+          "any",
+          ["==", ["get", "type"], "Door"],
+          ["==", ["get", "type"], "Doors"],
+        ]}
         minZoomLevel={18}
       />
 
-      {/* Labels for POIs*/}
+      {/* Labels for POIs */}
       <Mapbox.SymbolLayer
         id="poi-text-layer"
         sourceID="indoor-map"
@@ -167,34 +132,17 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
           textHaloColor: "white",
           textHaloWidth: 1,
         }}
-        filter={
-          selectedBuilding
-            ? [
-                "all",
-                ["==", ["geometry-type"], "Point"],
-                [
-                  "any",
-                  ["==", ["get", "type"], "Point of Interest"],
-                  ["==", ["get", "type"], "Points of Interest"],
-                ],
-                ["==", ["get", "floor"], Number(selectedFloor)],
-              ]
-            : [
-                "all",
-                ["==", ["geometry-type"], "Point"],
-                [
-                  "any",
-                  ["==", ["get", "type"], "Point of Interest"],
-                  ["==", ["get", "type"], "Points of Interest"],
-                ],
-                ["==", ["get", "floor"], 1],
-              ]
-        }
+        filter={[
+          "any",
+          ["==", ["get", "type"], "Point of Interest"],
+          ["==", ["get", "type"], "Points of Interest"],
+        ]}
         minZoomLevel={18}
       />
     </Mapbox.ShapeSource>
   );
 };
+
 IndoorMap.propTypes = {
   selectedBuilding: PropTypes.shape({
     name: PropTypes.string.isRequired,

@@ -5,17 +5,19 @@ import React, { createContext, useContext, useState, ReactNode, useMemo } from '
 interface Building {
   id: string;
   name: string;
-  coordinates: { latitude: number; longitude: number }[];
+  coordinates?: { latitude: number; longitude: number }[];
   campus: string;
-  hasIndoor: boolean;
+  hasIndoor?: boolean;
 }
 
 // Interface for the context
 interface IndoorMapContextType {
   isExpanded: boolean;
   selectedIndoorBuilding: Building | null;
+  selectedFloor: number | null;
   updateIsExpanded: (setting: boolean) => void;
   updateSelectedIndoorBuilding: (building: Building | null) => void;
+  updateSelectedFloor: (floor: number | null) => void;
 }
 
 const IndoorMapContext = createContext<IndoorMapContextType | null>(null);
@@ -23,6 +25,7 @@ const IndoorMapContext = createContext<IndoorMapContextType | null>(null);
 export const IndoorMapProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedIndoorBuilding, setSelectedIndoorBuilding] = useState<Building | null>(null); 
+  const [selectedFloor, setSelectedFloor] = useState<number | null>(null);
 
   const updateIsExpanded = (setting: boolean) => {
     console.log("isExpanded updated to:", setting);
@@ -34,12 +37,19 @@ export const IndoorMapProvider: React.FC<{ children: ReactNode }> = ({ children 
     setSelectedIndoorBuilding(building);
   }
 
+  const updateSelectedFloor = (floor: number | null) => {
+    console.log("selectedFloor updated to:", floor);
+    setSelectedFloor(floor);
+  }
+
   const value = useMemo(() => ({ 
     isExpanded, 
-    selectedIndoorBuilding, 
+    selectedIndoorBuilding,
+    selectedFloor, 
     updateIsExpanded,
-    updateSelectedIndoorBuilding 
-  }), [isExpanded, selectedIndoorBuilding, updateIsExpanded, updateSelectedIndoorBuilding]);
+    updateSelectedIndoorBuilding,
+    updateSelectedFloor
+  }), [isExpanded, selectedIndoorBuilding, selectedFloor]);
 
   return (
     <IndoorMapContext.Provider value={value}>
