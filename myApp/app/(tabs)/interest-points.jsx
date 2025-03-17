@@ -8,11 +8,17 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
-import { fetchPOIData } from '../api/poiApi';
+import { fetchPOIData, poiDataSubject } from '../api/poiApi';
 import FilterModal from '../components/POI/FilterModal';
 import POIList from '../components/POI/POIList';
 import { styles } from '../styles/POIListStyle';
 
+/**
+ * InterestPoints component - Displays a list of POIs
+ * 
+ * This component implements the Observer pattern by subscribing to
+ * the poiDataSubject and updating its state when the data changes.
+ */
 const InterestPoints = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -26,10 +32,33 @@ const InterestPoints = () => {
   const [filterModalVisible, setFilterModalVisible] = useState(false);
 
   // Filter states
-  const [distance, setDistance] = useState(2);
+  const [distance, setDistance] = useState(40); // Changed from 2 to 40 km
+  const [useDistance, setUseDistance] = useState(false);
   const [showCafes, setShowCafes] = useState(true);
   const [showRestaurants, setShowRestaurants] = useState(true);
   const [showActivities, setShowActivities] = useState(true);
+
+  /**
+   * Subscribe to POI data changes (Observer pattern)
+   * This makes the POIList component an observer of POIDataSubject
+   */
+  useEffect(() => {
+    // Observer callback function that will be called when data changes
+    const updatePOIData = (data, isLoading) => {
+      setPoiData({
+        coffeeShops: data.coffeeShops,
+        restaurants: data.restaurants,
+        activities: data.activities,
+      });
+      setIsLoading(isLoading);
+    };
+    
+    // Subscribe this component as an observer
+    const unsubscribe = poiDataSubject.subscribe(updatePOIData);
+    
+    // Cleanup subscription when component unmounts
+    return () => unsubscribe();
+  }, []);
 
   // Get user location and load POI data
   useEffect(() => {
@@ -102,19 +131,16 @@ const InterestPoints = () => {
         longitudeDelta: 0.01,
       };
 
-      const result = await fetchPOIData(region, abortController.signal);
-      console.log(`POI data fetched: ${result.coffee?.length || 0} cafes, ${result.resto?.length || 0} restaurants, ${result.act?.length || 0} activities`);
-
-      setPoiData({
-        coffeeShops: result.coffee || [],
-        restaurants: result.resto || [],
-        activities: result.act || [],
-      });
+      // This will update the POIDataSubject which will notify all observers
+      await fetchPOIData(region, abortController.signal);
+      console.log("POI data fetched and observers notified");
+      
+      // Error state is reset as data has loaded successfully
+      setError(null);
     } catch (err) {
       console.error("Error fetching POI data:", err);
       setError('Failed to load places of interest. Pull down to refresh.');
     } finally {
-      setIsLoading(false);
       setRefreshing(false);
     }
   };
@@ -177,15 +203,35 @@ const InterestPoints = () => {
       allPOIs = [...allPOIs, ...poiData.activities.map(poi => ({ ...poi, category: 'activity' }))]
     }
 
-    return allPOIs.filter(poi => {
-      const poiDistance = calculateDistance(
-        userLocation.latitude,
-        userLocation.longitude,
-        poi.geometry?.location?.lat,
-        poi.geometry?.location?.lng
-      );
-      return poiDistance !== null && poiDistance <= distance;
-    }).sort((a, b) => {
+    // Only filter by distance if useDistance is true
+    if (useDistance) {
+      return allPOIs.filter(poi => {
+        const poiDistance = calculateDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          poi.geometry?.location?.lat,
+          poi.geometry?.location?.lng
+        );
+        return poiDistance !== null && poiDistance <= distance;
+      }).sort((a, b) => {
+        const distA = calculateDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          a.geometry?.location?.lat,
+          a.geometry?.location?.lng
+        );
+        const distB = calculateDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          b.geometry?.location?.lat,
+          b.geometry?.location?.lng
+        );
+        return distA - distB;
+      });
+    }
+
+    // If useDistance is false, return all POIs, still sorted by distance
+    return allPOIs.sort((a, b) => {
       const distA = calculateDistance(
         userLocation.latitude,
         userLocation.longitude,
@@ -239,6 +285,8 @@ const InterestPoints = () => {
         setShowRestaurants={setShowRestaurants}
         showActivities={showActivities}
         setShowActivities={setShowActivities}
+        useDistance={useDistance}
+        setUseDistance={setUseDistance}
       />
     </SafeAreaView>
   );

@@ -1,7 +1,6 @@
-import React from "react";
-import { getGoogleTravelTime, getTravelTimes } from "../api/googleMapsApi";
-import { findNearestLocation, haversineDistance } from "./distanceShuttle";
-import { fetchShuttleInfo, fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
+import { getTravelTimes } from "../api/googleMapsApi";
+import { haversineDistance } from "./distanceShuttle";
+import { fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
 import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
 
 /**
@@ -110,7 +109,6 @@ export const estimateShuttleFromButton = async (currentStop) => {
 
   // Determine the next available shuttle departure time
   const stopKey = currentStop === "SGW" ? "SGW" : "LOY";
-  const destination = currentStop === "SGW" ? "LOY" : "SGW";
 
   const stopSchedule = schedule[stopKey]?.map((time) => {
     const [hours, minutes] = time.split(":").map(Number);

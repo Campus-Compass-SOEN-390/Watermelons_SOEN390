@@ -55,7 +55,7 @@ import {
   ActivityMarker,
 } from "../components/POI/Markers";
 import POIPopup from "../components/POI/POIPopup"; // Import the new component
-import { fetchPOIData, updatePOICache, getCachedPOIData } from "../api/poiApi";
+import { fetchPOIData, poiDataSubject, getCachedPOIData } from "../api/poiApi";
 import { styles as poiStyles } from "../styles/poiStyles";
 import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
 import { estimateShuttleFromButton } from "../utils/shuttleUtils";
@@ -111,7 +111,8 @@ export default function MapView() {
   const [lastFetchedRegion, setLastFetchedRegion] = useState(null);
   const [showUpdateButton, setShowUpdateButton] = useState(false);
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
-  const [distance, setDistance] = useState(10);
+  const [distance, setDistance] = useState(40); 
+  const [useDistance, setUseDistance] = useState(true);
   const [showCafes, setShowCafes] = useState(true);
   const [showRestaurants, setShowRestaurants] = useState(true);
   const [showActivities, setShowActivities] = useState(true);
@@ -283,29 +284,33 @@ export default function MapView() {
   useEffect(() => {
     if (!showPOI) return;
 
-    const cachedData = getCachedPOIData();
-    if (
-      cachedData.coffeeShops.length > 0 ||
-      cachedData.restaurants.length > 0 ||
-      cachedData.activities.length > 0
-    ) {
-      setCoffeeShops(cachedData.coffeeShops);
-      setRestaurants(cachedData.restaurants);
-      setActivities(cachedData.activities);
-      if (cachedData.lastRegion) {
-        setLastFetchedRegion(cachedData.lastRegion);
-      }
-      const now = Date.now();
+    try {
+      const cachedData = getCachedPOIData();
       if (
-        now - cachedData.lastFetchTime > 10 * 60 * 1000 &&
-        location &&
-        region
+        cachedData.coffeeShops.length > 0 ||
+        cachedData.restaurants.length > 0 ||
+        cachedData.activities.length > 0
       ) {
-        console.log("Cache is stale, fetching new POI data");
-        handleFetchPlaces();
-      } else {
-        console.log("Using cached POI data");
+        setCoffeeShops(cachedData.coffeeShops);
+        setRestaurants(cachedData.restaurants);
+        setActivities(cachedData.activities);
+        if (cachedData.lastRegion) {
+          setLastFetchedRegion(cachedData.lastRegion);
+        }
+        const now = Date.now();
+        if (
+          now - cachedData.lastFetchTime > 10 * 60 * 1000 &&
+          location &&
+          region
+        ) {
+          console.log("Cache is stale, fetching new POI data");
+          handleFetchPlaces();
+        } else {
+          console.log("Using cached POI data");
+        }
       }
+    } catch (error) {
+      console.error("Error loading cached POI data:", error);
     }
   }, [showPOI]);
 
@@ -358,6 +363,57 @@ export default function MapView() {
     setRegion(currentRegion);
   }, []);
 
+  /**
+   * Subscribe to POI data changes through Observer pattern
+   * This makes the map component an observer of POIDataSubject
+   */
+  useEffect(() => {
+    if (!showPOI) return;
+    
+    // Observer function that will be called when data changes
+    const updatePOIData = (data, isLoading) => {
+      setCoffeeShops(data.coffeeShops);
+      setRestaurants(data.restaurants);
+      setActivities(data.activities);
+      setLastFetchedRegion(data.lastRegion);
+      setLoading(isLoading);
+      
+      // Show update button if region has changed significantly 
+      setShowUpdateButton(poiDataSubject.hasRegionChanged(region));
+    };
+    
+    // Subscribe to data changes
+    const unsubscribe = poiDataSubject.subscribe(updatePOIData);
+    
+    // Initial fetch ONLY when POI display is first enabled
+    if (showPOI && 
+        coffeeShops.length === 0 && 
+        restaurants.length === 0 && 
+        activities.length === 0 && 
+        !isFetchingRef.current) {
+      console.log("Initial data fetch triggered by POI being enabled");
+      handleFetchPlaces();
+    }
+    
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, [showPOI]); // Removed region from dependencies to prevent auto-fetches on map drag
+
+  // Show update button when region has shifted
+  useEffect(() => {
+    if (!lastFetchedRegion || !region || !showPOI) return;
+    
+    const latDiff = Math.abs(region.latitude - lastFetchedRegion.latitude);
+    const lngDiff = Math.abs(region.longitude - lastFetchedRegion.longitude);
+    
+    // Only update the button visibility when the region changes significantly
+    if (latDiff > REGION_CHANGE_THRESHOLD || lngDiff > REGION_CHANGE_THRESHOLD) {
+      setShowUpdateButton(true);
+    } else {
+      setShowUpdateButton(false);
+    }
+  }, [region, lastFetchedRegion, showPOI]);
+
   const handleFetchPlaces = async (currentRegion = region) => {
     // If no region provided, try to use current camera position
     if (!currentRegion && mapRef.current) {
@@ -393,36 +449,23 @@ export default function MapView() {
     }
 
     console.log("Starting POI fetch for region:", currentRegion);
-    setLoading(true);
     isFetchingRef.current = true;
 
     const controller = new AbortController();
     activeRequestRef.current = controller;
 
     try {
-      console.log("Calling POI API...");
-      const { coffee, resto, act } = await fetchPOIData(
-        currentRegion,
-        controller.signal
-      );
-
-      console.log(
-        `POI data received: ${coffee.length} coffee shops, ${resto.length} restaurants, ${act.length} activities`
-      );
-      setCoffeeShops(coffee);
-      setRestaurants(resto);
-      setActivities(act);
-      updatePOICache(coffee, resto, act, currentRegion);
-      setLastFetchedRegion(currentRegion);
+      // Using the Observer pattern through the fetchPOIData
+      // This will update the subject which notifies all observers
+      await fetchPOIData(currentRegion, controller.signal);
       setShowUpdateButton(false);
     } catch (error) {
       if (error.name === "AbortError") {
-        console.log("Fetch aborted");
+        console.log("Fetch aborted - this is normal during unmount or when starting a new request");
       } else {
         console.error("Error fetching places:", error);
       }
     } finally {
-      setLoading(false);
       isFetchingRef.current = false;
       activeRequestRef.current = null;
     }
@@ -461,12 +504,22 @@ export default function MapView() {
 
       // Update region state with current map center
       setRegion(newRegion);
+      
+      // Don't automatically fetch - just check if button should be shown
+      if (showPOI && lastFetchedRegion) {
+        const latDiff = Math.abs(newRegion.latitude - lastFetchedRegion.latitude);
+        const lngDiff = Math.abs(newRegion.longitude - lastFetchedRegion.longitude);
+        
+        if (latDiff > REGION_CHANGE_THRESHOLD || lngDiff > REGION_CHANGE_THRESHOLD) {
+          setShowUpdateButton(true);
+        }
+      }
 
       console.log("Map region updated:", newRegion);
     } catch (error) {
       console.error("Error in handleRegionChange:", error);
     }
-  }, []);
+  }, [showPOI, lastFetchedRegion]);
 
   //This useEffect ensures the map is no longer rendered and the travel mode is set back to nothing when origin or location changes
   useEffect(() => {
@@ -1017,6 +1070,8 @@ export default function MapView() {
         setShowRestaurants={setShowRestaurants}
         showActivities={showActivities}
         setShowActivities={setShowActivities}
+        useDistance={useDistance}
+        setUseDistance={setUseDistance}
       />
 
       {/* Floating Buttons */}
