@@ -30,6 +30,8 @@ export function dijkstra(graph, startNode, endNode, isDisabled) {
 
     // for each neighbour of our current node (connected_tos), check if going through currentNode provides a shorter path
     for (let neighbor in graph[currentNode]) {
+      // conditional only skips node if it continues stair or escalator without including path or elevator in its id
+      // this is because some of our nodes that lead to elevator might also lead to stairs or escalators
       if (
         isDisabled && 
         (neighbor.includes("stair") || neighbor.includes("escalator")) && 
