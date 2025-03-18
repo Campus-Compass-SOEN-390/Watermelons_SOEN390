@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function CalendarFetching() {
   const navigation = useNavigation();
 
-  // 1) Declare all state variables
+  // Declare all state variables
   const [calendarId, setCalendarId] = useState("");
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ export default function CalendarFetching() {
 
   const API_KEY = process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
 
-  // 2) Fetch events
+  // Fetch events
   const fetchCalendarEvents = useCallback(async () => {
     if (!calendarId.trim()) {
       Alert.alert("Invalid", "Please enter a valid Calendar ID");
@@ -57,7 +57,7 @@ export default function CalendarFetching() {
     setLoading(false);
   }, [calendarId, API_KEY]);
 
-  // 4) Navigate after success
+  // Navigate after success
   useEffect(() => {
     if (showSuccessScreen) {
       const timer = setTimeout(() => {
@@ -90,7 +90,7 @@ export default function CalendarFetching() {
     );
   }
 
-  // 6) Default screen rendering
+  // Default screen rendering
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={20}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -114,45 +114,6 @@ export default function CalendarFetching() {
                   {loading ? "Connecting..." : "Connect"}
                 </Text>
               </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.connectButton}
-                onPress={() => setModalVisible(true)}
-              >
-                <Text style={styles.buttonText}>View Events</Text>
-              </TouchableOpacity>
-
-              {/* Modal for Events */}
-              <Modal
-                visible={modalVisible}
-                animationType="slide"
-                transparent={true}
-                onRequestClose={() => setModalVisible(false)}
-              >
-                <View style={styles.modalContainer}>
-                  <View style={styles.modalContent}>
-                    <Text style={styles.eventsTitle}>Upcoming Events</Text>
-                    <FlatList
-                      data={events}
-                      keyExtractor={(item) => item.id}
-                      renderItem={({ item }) => (
-                        <View style={styles.eventItem}>
-                          <Text style={styles.eventTitle}>{item.summary}</Text>
-                          <Text style={styles.eventDate}>
-                            {item.start?.dateTime || item.start?.date}
-                          </Text>
-                        </View>
-                      )}
-                    />
-                    <TouchableOpacity
-                      style={styles.closeButton}
-                      onPress={() => setModalVisible(false)}
-                    >
-                      <Text style={styles.buttonText}>Close</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </Modal>
             </View>
           </View>
         </View>
