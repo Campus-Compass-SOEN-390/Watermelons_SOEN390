@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { View, Text, TextInput, TouchableOpacity, FlatList, Alert , Modal} from "react-native";
 import Constants from "expo-constants";
 import { KeyboardAvoidingView, ScrollView } from "react-native";
@@ -13,11 +13,11 @@ export default function CalendarFetching() {
 
     const API_KEY = process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
     
-    const fetchCalendarEvents = async () => {
-      if (!calendarId.trim()) {
-          alert("Please enter a valid Calendar ID");
-          return;
-      }
+    const fetchCalendarEvents = useCallback(async () => {
+        if (!calendarId.trim()) {
+            alert("Please enter a valid Calendar ID");
+            return;
+        }
 
         setLoading(true);
         const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${API_KEY}`;
@@ -46,7 +46,7 @@ export default function CalendarFetching() {
         }
 
         setLoading(false);
-    };
+    }, [calendarId, API_KEY]);
 
     return (
       <KeyboardAvoidingView
