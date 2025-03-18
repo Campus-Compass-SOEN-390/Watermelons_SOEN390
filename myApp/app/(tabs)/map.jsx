@@ -74,7 +74,7 @@ export default function MapView() {
   const mapRef = useRef(null);
 
   // Disabled on or off
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   // Location & permissions
   const { location, hasPermission } = useLocation();

@@ -6,6 +6,19 @@ export function dijkstra(graph, startNode, endNode, isDisabled) {
   // keeps track of nodes that have not been visited yet. initialised with all nodes in the graph
   let unvisitedNodes = new Set(Object.keys(graph));
 
+  // check to see if user requires disabled friendly directions (no stairs, no escalators, only elevators)
+  const shouldSkipNeighbour = (disabled, neighbouringNode) => {
+    if(disabled && 
+      (neighbouringNode.includes("stair") || neighbouringNode.includes("escalator")) && 
+      !(neighbouringNode.includes("path") || neighbouringNode.includes("elevator")))
+      {
+        return true;
+      }
+    else{
+      return false;
+    }
+  }
+
   // Initialize distances and previous nodes
   for (let node of unvisitedNodes) {
     // initially, all nodes have a distance of infinity
@@ -29,25 +42,21 @@ export function dijkstra(graph, startNode, endNode, isDisabled) {
     if (currentNode === endNode) break;
 
     // for each neighbour of our current node (connected_tos), check if going through currentNode provides a shorter path
-    for (let neighbor in graph[currentNode]) {
+    for (let neighbour in graph[currentNode]) {
       // conditional only skips node if it continues stair or escalator without including path or elevator in its id
       // this is because some of our nodes that lead to elevator might also lead to stairs or escalators
-      if (
-        isDisabled && 
-        (neighbor.includes("stair") || neighbor.includes("escalator")) && 
-        !(neighbor.includes("path") || neighbor.includes("elevator"))
-      ) {
-        console.log(neighbor)
-        continue; // Skip this neighbor
+      if (shouldSkipNeighbour(isDisabled, neighbour)) {
+        console.log(neighbour)
+        continue; // Skip this neighbour
       }
-      let weight = graph[currentNode][neighbor];
+      let weight = graph[currentNode][neighbour];
       let newDistance = distances[currentNode] + weight;
 
       // if new distance is shorter than existing record, replace it. 
       // new distance is from startNode -> currentNode -> neighbour
-      if (newDistance < distances[neighbor]) {
-        distances[neighbor] = newDistance;
-        previousNodes[neighbor] = currentNode;
+      if (newDistance < distances[neighbour]) {
+        distances[neighbour] = newDistance;
+        previousNodes[neighbour] = currentNode;
       }
     }
   }
