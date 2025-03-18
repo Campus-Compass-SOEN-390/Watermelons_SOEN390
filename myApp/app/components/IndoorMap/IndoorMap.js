@@ -6,7 +6,9 @@ import PropTypes from 'prop-types';
 const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
   const [geoJsonData, setGeoJsonData] = useState(null);
   const MAPBOX_ACCESS_TOKEN = Constants.expoConfig?.extra?.mapbox;
-  const DATASET_ID = "cm7qjtnoy2d3o1qmmngcrv0jl";
+  const DATASET_ID = "cm89krqo60fhu1po3mqktwsjd";
+
+  Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
 
   useEffect(() => {
     const fetchGeoJson = async () => {

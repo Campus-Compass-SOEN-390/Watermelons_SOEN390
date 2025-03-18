@@ -3,6 +3,7 @@ import { render, waitFor } from "@testing-library/react-native";
 import IndoorMap from "../../components/IndoorMap/IndoorMap";
 
 jest.mock("@rnmapbox/maps", () => ({
+  setAccessToken: jest.fn(),
   ShapeSource: jest.fn(() => null),
   FillLayer: jest.fn(() => null),
   LineLayer: jest.fn(() => null),

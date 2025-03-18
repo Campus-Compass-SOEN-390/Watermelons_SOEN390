@@ -37,7 +37,7 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [showShuttleRoute, setShowShuttleRoute] = useState(false);
 
 
-  const [POIlocationData, setPOILocationData] = useState<{ name: string; lat: number; lng: number } | null>(null);
+  const [POILocationData, setPOILocationData] = useState<{ name: string; lat: number; lng: number } | null>(null);
 
   const updatePOILocationData = (name: string, lat: number, lng: number) => {
     console.log("LOC CONTEXT", name, lat,)
@@ -57,10 +57,10 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   // useEffect to update origin and destination if locationData is not null
   useEffect(() => {
-    if (POIlocationData) {
-      updateDestination({ latitude: POIlocationData.lat, longitude: POIlocationData.lng }, POIlocationData.name);
+    if (POILocationData) {
+      updateDestination({ latitude: POILocationData.lat, longitude: POILocationData.lng }, POILocationData.name);
     }
-  }, [POIlocationData]); // This effect runs whenever locationData changes
+  }, [POILocationData]); // This effect runs whenever locationData changes
 
   const updateShowTransportation = (setting: boolean) => {
     setShowTransportation(setting);
@@ -83,8 +83,6 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
   }
 
   useEffect(() => {
-    //const { name, lat, lng } = useLocalSearchParams();
-
     console.log("FROM LOCATION CONTEXT", lat, lng, name)
   }, []);
 
