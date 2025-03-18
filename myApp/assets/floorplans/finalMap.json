@@ -100,7 +100,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -3808,7 +3808,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "Points of Interest",
+        "type": "Rooms",
         "floor": 2,
         "building": "VL"
       },
@@ -4423,7 +4423,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -4459,7 +4459,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -4962,7 +4962,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -6243,7 +6243,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -7418,7 +7418,7 @@
       "type": "Feature",
       "properties": {
         "building": "VL",
-        "type": "Points of Interest",
+        "type": "Rooms",
         "floor": 1
       },
       "geometry": {
@@ -7552,7 +7552,7 @@
       "type": "Feature",
       "properties": {
         "building": "VL",
-        "type": "Points of Interest",
+        "type": "Rooms",
         "floor": 1
       },
       "geometry": {
@@ -8607,7 +8607,7 @@
       "properties": {
         "type": "Walls",
         "floor": 2,
-        "building": "H"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -8882,7 +8882,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "Points of Interest",
+        "type": "Rooms",
         "name": "Bathroom Men",
         "floor": 1,
         "id": "MB1.121",
@@ -9006,7 +9006,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "Points of Interest",
+        "type": "Rooms",
         "building": "VE",
         "floor": 2
       },
@@ -9731,7 +9731,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -9868,7 +9868,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -10108,130 +10108,6 @@
         "type": "LineString"
       },
       "id": "494802dcf3f45e259f2bc731cade5bf6"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "type": "Rooms",
-        "floor": 2,
-        "building": "VE"
-      },
-      "geometry": {
-        "coordinates": [
-          [
-            [
-              -73.638445,
-              45.458608
-            ],
-            [
-              -73.639001,
-              45.458825
-            ],
-            [
-              -73.638955,
-              45.458884
-            ],
-            [
-              -73.63897,
-              45.458888
-            ],
-            [
-              -73.638989,
-              45.458891
-            ],
-            [
-              -73.638893,
-              45.459013
-            ],
-            [
-              -73.638872,
-              45.459006
-            ],
-            [
-              -73.63892,
-              45.45894
-            ],
-            [
-              -73.638924,
-              45.458935
-            ],
-            [
-              -73.638907,
-              45.458931
-            ],
-            [
-              -73.638915,
-              45.458921
-            ],
-            [
-              -73.638894,
-              45.458915
-            ],
-            [
-              -73.638855,
-              45.4589
-            ],
-            [
-              -73.638797,
-              45.458979
-            ],
-            [
-              -73.638744,
-              45.458956
-            ],
-            [
-              -73.638781,
-              45.458909
-            ],
-            [
-              -73.638804,
-              45.458884
-            ],
-            [
-              -73.638794,
-              45.45888
-            ],
-            [
-              -73.638804,
-              45.458865
-            ],
-            [
-              -73.638804,
-              45.458864
-            ],
-            [
-              -73.638714,
-              45.458829
-            ],
-            [
-              -73.638706,
-              45.458841
-            ],
-            [
-              -73.638599,
-              45.458806
-            ],
-            [
-              -73.63855,
-              45.458875
-            ],
-            [
-              -73.638304,
-              45.458781
-            ],
-            [
-              -73.638384,
-              45.45868
-            ],
-            [
-              -73.638445,
-              45.458608
-            ]
-          ]
-        ],
-        "type": "Polygon"
-      },
-      "id": "4954022a34e074715749fed898387ab9"
     },
     {
       "type": "Feature",
@@ -11670,7 +11546,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "Points of Interest",
+        "type": "Rooms",
         "floor": 1,
         "buidling": "VE"
       },
@@ -11868,7 +11744,7 @@
       "type": "Feature",
       "properties": {
         "name": "Elevator",
-        "type": "Points of Interest",
+        "type": "Rooms",
         "floor": 1,
         "building": "VL"
       },
@@ -12190,7 +12066,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -12632,7 +12508,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -12882,7 +12758,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -12969,7 +12845,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "Points of Interest",
+        "type": "Rooms",
         "building": "VE",
         "floor": 2
       },
@@ -13140,7 +13016,7 @@
       "type": "Feature",
       "properties": {
         "building": "VL",
-        "type": "Points of Interest",
+        "type": "Rooms",
         "floor": 1
       },
       "geometry": {
@@ -13198,7 +13074,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -16104,7 +15980,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "Points of Interest",
+        "type": "Rooms",
         "building": "VE",
         "floor": 2
       },
@@ -16824,7 +16700,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "Points of Interest",
+        "type": "Rooms",
         "floor": 2,
         "building": "VL"
       },
@@ -17190,7 +17066,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -19902,7 +19778,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -21254,7 +21130,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -24302,7 +24178,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "Points of Interest",
+        "type": "Rooms",
         "name": "Bathroom Women",
         "floor": 1,
         "building": "MB",
@@ -24465,7 +24341,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "Points of Interest",
+        "type": "Rooms",
         "floor": 2,
         "building": "VL"
       },
@@ -25992,7 +25868,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -26148,7 +26024,7 @@
     {
       "type": "Feature",
       "properties": {
-        "type": "Points of Interest",
+        "type": "Rooms",
         "floor": 2,
         "building": "VL"
       },
@@ -27403,7 +27279,7 @@
       "properties": {
         "building": "VE",
         "floor": 2,
-        "type": "Doors"
+        "type": "Rooms"
       },
       "geometry": {
         "coordinates": [
@@ -32144,7 +32020,7 @@
       "type": "Feature",
       "properties": {
         "building": "VL",
-        "type": "Points of Interest",
+        "type": "Rooms",
         "floor": 1
       },
       "geometry": {
