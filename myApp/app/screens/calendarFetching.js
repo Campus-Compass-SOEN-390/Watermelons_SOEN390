@@ -5,26 +5,29 @@ import {
 } from "react-native";
 import Constants from "expo-constants";
 import { KeyboardAvoidingView, ScrollView } from "react-native";
-import { calendarFetchingStyles as styles } from "../styles/CalendarFetchingStyles.js";;
-
-// Import navigation hook
+import { calendarFetchingStyles as styles } from "../styles/CalendarFetchingStyles.js";
 import { useNavigation } from "@react-navigation/native";
 
 export default function CalendarFetching() {
   const navigation = useNavigation();
 
+  // 1) Declare all state variables
   const [calendarId, setCalendarId] = useState("");
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-    const API_KEY = process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
-    
-    const fetchCalendarEvents = useCallback(async () => {
-        if (!calendarId.trim()) {
-            alert("Please enter a valid Calendar ID");
-            return;
-        }
+  // **Add showSuccessScreen here**:
+  const [showSuccessScreen, setShowSuccessScreen] = useState(false);
+
+  const API_KEY = process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
+
+  // 2) Fetch events
+  const fetchCalendarEvents = useCallback(async () => {
+    if (!calendarId.trim()) {
+      Alert.alert("Invalid", "Please enter a valid Calendar ID");
+      return;
+    }
 
     setLoading(true);
 
@@ -38,7 +41,7 @@ export default function CalendarFetching() {
       } else {
         if (data.items) {
           setEvents(data.items);
-          // Instead of alerting success, show the success screen
+          // 3) Trigger success screen
           setShowSuccessScreen(true);
         } else {
           setEvents([]);
@@ -51,23 +54,22 @@ export default function CalendarFetching() {
       Alert.alert("Error", "Something went wrong while fetching the events.");
     }
 
-        setLoading(false);
-    }, [calendarId, API_KEY]);
+    setLoading(false);
+  }, [calendarId, API_KEY]);
 
-  // When showSuccessScreen is true, wait 5 seconds, then navigate to Events Page
+  // 4) Navigate after success
   useEffect(() => {
     if (showSuccessScreen) {
       const timer = setTimeout(() => {
-        // Navigate to Events after 5 seconds
-        navigation.navigate("");
+        // Navigate to the desired screen after 5 seconds
+        navigation.navigate("Events");
       }, 5000);
 
-      // Cleanup timer on unmount or if showSuccessScreen changes
       return () => clearTimeout(timer);
     }
-  }, [showSuccessScreen]);
+  }, [showSuccessScreen, navigation]);
 
-  // If we are showing the success screen, return that UI immediately
+  // 5) Conditional rendering for success screen
   if (showSuccessScreen) {
     return (
       <View style={styles.successContainer}>
@@ -88,6 +90,7 @@ export default function CalendarFetching() {
     );
   }
 
+  // 6) Default screen rendering
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={20}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
