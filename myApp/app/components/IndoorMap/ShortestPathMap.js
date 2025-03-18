@@ -7,14 +7,14 @@ import PropTypes from 'prop-types';
 Mapbox.setAccessToken("sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw");
 
 //Algorithm only renders the floor that you are currently on. Splits paths into different floors.
-const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode, currentFloor }) => {
+const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode, currentFloor, isDisabled }) => {
   const [floorPaths, setFloorPaths] = useState({}); // Store paths for multiple floors
 
   useEffect(() => {
     if (!startNode || !endNode || !nodeCoordinates) return;
 
     // Find shortest path using Dijkstra's algorithm
-    const shortestPathNodes = dijkstra(graph, startNode, endNode);
+    const shortestPathNodes = dijkstra(graph, startNode, endNode, isDisabled);
 
     if (shortestPathNodes) {
       const pathsByFloor = {}; // Store paths for each floor

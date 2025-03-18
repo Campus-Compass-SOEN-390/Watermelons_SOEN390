@@ -24,7 +24,10 @@ import IndoorMap from "../components/IndoorMap/IndoorMap";
 import FloorNavigation from "../components/FloorNavigation";
 import MapDirections from "../components/MapDirections";
 import ShortestPathMap from "../components/IndoorMap/ShortestPathMap";
-import { graph, nodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/GraphAndCoordinates";
+import { hGraph, hNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/Hall";
+import { ccGraph, ccNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/CC";
+import { loyolaGraph, loyolaNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/Loyola";
+import { mbGraph, mbNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/MB";
 import {
   handleIndoorBuildingSelect,
   handleClearIndoorMap,
@@ -69,6 +72,9 @@ export default function MapView() {
   // Campus switching
   const [activeCampus, setActiveCampus] = useState(type);
   const mapRef = useRef(null);
+
+  // Disabled on or off
+  const [isDisabled, setIsDisabled] = useState(false);
 
   // Location & permissions
   const { location, hasPermission } = useLocation();
@@ -122,6 +128,10 @@ export default function MapView() {
     "Loyola Campus": { latitude: 45.4582, longitude: -73.6405 },
     "Montreal Downtown": { latitude: 45.5017, longitude: -73.5673 },
   };
+
+  // Combine Graphs and Coordinates
+  const graph = { ...hGraph, ...mbGraph, ...ccGraph, ...loyolaGraph};
+  const nodeCoordinates = { ...hNodeCoordinates, ...mbNodeCoordinates, ...ccNodeCoordinates, ...loyolaNodeCoordinates};
 
   // Track selected floor
   const [selectedFloor, setSelectedFloor] = useState(null);
@@ -849,6 +859,7 @@ export default function MapView() {
             startNode={originText}
             endNode={destinationText}
             currentFloor={selectedFloor}
+            isDisabled={isDisabled}
           />
 
           {/* POI Markers */}
