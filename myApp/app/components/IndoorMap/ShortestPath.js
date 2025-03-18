@@ -1,13 +1,7 @@
 export function dijkstra(graph, startNode, endNode, isDisabled) {
-  // this keeps of the distance from the start node to every other node 
-  let distances = {};
-  // stores the previous node leading to the shortest path
-  let previousNodes = {};
-  // keeps track of nodes that have not been visited yet. initialised with all nodes in the graph
-  let unvisitedNodes = new Set(Object.keys(graph));
 
   // check to see if user requires disabled friendly directions (no stairs, no escalators, only elevators)
-  const shouldSkipNeighbour = (disabled, neighbouringNode) => {
+  const shouldSkipNode = (disabled, neighbouringNode) => {
     if(disabled && 
       (neighbouringNode.includes("stair") || neighbouringNode.includes("escalator")) && 
       !(neighbouringNode.includes("path") || neighbouringNode.includes("elevator")))
@@ -18,6 +12,28 @@ export function dijkstra(graph, startNode, endNode, isDisabled) {
       return false;
     }
   }
+
+  // check to see if start or end node is inacessible for someone who is disabled
+  const startOrEndNodeInaccessible = (startNode, endNode, disabled) => {
+    if (shouldSkipNode(disabled, startNode)){
+      return true;
+    }
+    else if (shouldSkipNode(disabled, endNode)){
+      return true;
+    }
+    else return false;
+  }
+
+  if (startOrEndNodeInaccessible(startNode, endNode, isDisabled)){
+    return null;
+  }
+
+  // this keeps of the distance from the start node to every other node 
+  let distances = {};
+  // stores the previous node leading to the shortest path
+  let previousNodes = {};
+  // keeps track of nodes that have not been visited yet. initialised with all nodes in the graph
+  let unvisitedNodes = new Set(Object.keys(graph));
 
   // Initialize distances and previous nodes
   for (let node of unvisitedNodes) {
@@ -45,7 +61,7 @@ export function dijkstra(graph, startNode, endNode, isDisabled) {
     for (let neighbour in graph[currentNode]) {
       // conditional only skips node if it continues stair or escalator without including path or elevator in its id
       // this is because some of our nodes that lead to elevator might also lead to stairs or escalators
-      if (shouldSkipNeighbour(isDisabled, neighbour)) {
+      if (shouldSkipNode(isDisabled, neighbour)) {
         console.log(neighbour)
         continue; // Skip this neighbour
       }
