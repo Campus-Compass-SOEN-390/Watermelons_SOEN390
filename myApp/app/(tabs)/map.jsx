@@ -891,15 +891,6 @@ export default function MapView() {
               </Mapbox.ShapeSource>
             ))}
 
-          <ShortestPathMap
-            graph={graph}
-            nodeCoordinates={nodeCoordinates}
-            startNode={originText}
-            endNode={destinationText}
-            currentFloor={selectedFloor}
-            isDisabled={isDisabled}
-          />
-
           {/* POI Markers */}
           {showPOI && (
             <>
