@@ -17,6 +17,7 @@ import useLocation from "../hooks/useLocation";
 import Icon from "react-native-vector-icons/Foundation";
 import { useLocationContext } from "../context/LocationContext";
 import { useIndoorMapContext } from "../context/IndoorMapContext";
+import { parseClassroomLocation } from "../utils/IndoorMapUtils";
 import { buildings } from "../api/buildingData";
 import { getTravelTimes } from "../api/googleMapsApi";
 
@@ -247,20 +248,10 @@ const StartAndDestinationPoints = ({}) => {
             style={styles.button}
             onPress={() => {
               if (origin && destination) {
-                const classroomRegex = /^([A-Z]+)(\d{1,3})/i;
-                const match = originText.match(classroomRegex);
+                const parsedLocation = parseClassroomLocation(originText);
 
-                if (match) {
-                  let buildingName = match[1];
-                  let floor = parseInt(match[2][0], 10);
-
-                  // Special case for MB building
-                  if (originText.startsWith("MB")) {
-                    buildingName = "MB"; 
-                    if (originText.includes("S2")) {
-                      floor = -2; // Convert "S2" to -2
-                    }
-                  }
+                if (parsedLocation) {
+                  const { buildingName, floor } = parsedLocation;
 
                   const matchedBuilding = buildings.find(
                     (b) => b.name === buildingName

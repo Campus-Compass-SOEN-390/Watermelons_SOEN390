@@ -101,3 +101,22 @@ export const selectBuildingFromClassroom = (classroom, buildings, updateSelected
   }
 };
 
+export const parseClassroomLocation = (classroomText) => {
+  const classroomRegex = /^([A-Z]+)(\d{1,3})/i;
+  const match = classroomText.match(classroomRegex);
+
+  if (!match) return null;
+
+  let buildingName = match[1];
+  let floor = parseInt(match[2][0], 10);
+
+  // Special case for MB building
+  if (classroomText.startsWith("MB")) {
+    buildingName = "MB";
+    if (classroomText.includes("S2")) {
+      floor = -2; // Convert "S2" to -2
+    }
+  }
+
+  return { buildingName, floor };
+}
