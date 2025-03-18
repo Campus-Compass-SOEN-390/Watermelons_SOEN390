@@ -5,17 +5,19 @@ import PropTypes from "prop-types";
 import finalMapData from "../../../assets/floorplans/finalMap.json";
 
 const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
-  const [geoJsonData, setGeoJsonData] = useState(null);
-
-  const MAPBOX_ACCESS_TOKEN = Constants.expoConfig?.extra?.mapbox;
-  Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
+  const [geoJsonData, setGeoJsonData] = useState({
+    type: "FeatureCollection",
+    features: [],
+  });
 
   useEffect(() => {
-    // Load the local GeoJSON data
+    Mapbox.setAccessToken(Constants.expoConfig?.extra?.mapbox);
     setGeoJsonData(finalMapData);
   }, []);
 
-  if (!geoJsonData) return null;
+  if (!geoJsonData.features.length) {
+    return <Mapbox.ShapeSource id="indoor-map" testID="indoor-map" shape={{ type: "FeatureCollection", features: [] }} />;
+  }  
 
   // Filter features: selected floor for the selected building + first floors of other buildings
   const filteredGeoJson = {
@@ -36,10 +38,11 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
   };
 
   return (
-    <Mapbox.ShapeSource id="indoor-map" shape={filteredGeoJson}>
+    <Mapbox.ShapeSource id="indoor-map" testID="indoor-map" shape={filteredGeoJson}>
       {/* Room Fill Layer */}
       <Mapbox.FillLayer
         id="room-fill-layer"
+        testID="room-fill-layer"
         sourceID="indoor-map"
         style={{
           fillColor: "red",
@@ -56,6 +59,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
       {/* Room Outline */}
       <Mapbox.LineLayer
         id="room-line-layer"
+        testID="room-line-layer"
         sourceID="indoor-map"
         style={{
           lineColor: "red",
@@ -73,6 +77,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
       {/* Pathways */}
       <Mapbox.LineLayer
         id="path-line-layer"
+        testID="path-line-layer"
         sourceID="indoor-map"
         style={{
           lineColor: "black",
@@ -89,6 +94,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
       {/* Walls */}
       <Mapbox.LineLayer
         id="wall-line-layer"
+        testID="wall-line-layer"
         sourceID="indoor-map"
         style={{
           lineColor: "red",
@@ -105,6 +111,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
       {/* Labels for Doors */}
       <Mapbox.SymbolLayer
         id="door-text-layer"
+        testID="door-text-layer"
         sourceID="indoor-map"
         style={{
           textField: ["coalesce", ["get", "id"], "Unnamed"],
@@ -124,6 +131,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
       {/* Labels for POIs */}
       <Mapbox.SymbolLayer
         id="poi-text-layer"
+        testID="poi-text-layer"
         sourceID="indoor-map"
         style={{
           textField: ["coalesce", ["get", "name"], "Unnamed"],
