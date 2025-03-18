@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, FlatList, Alert, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, FlatList, Alert, StyleSheet , Modal} from "react-native";
 import Constants from "expo-constants";
+import { KeyboardAvoidingView, ScrollView } from "react-native";
+import { calendarFetchingStyles as styles } from '../styles/CalendarFetchingStyles.js'
+
 
 export default function CalendarFetching() {
     const [calendarId, setCalendarId] = useState("");
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const API_KEY = process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
-
-
-
-
     const fetchCalendarEvents = async () => {
         if (!calendarId.trim()) {
             alert("Please enter a valid Calendar ID");
@@ -48,6 +48,15 @@ export default function CalendarFetching() {
     };
 
     return (
+      <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior="padding"
+      keyboardVerticalOffset={20} 
+  >
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={styles.container}>
+             
+     
       <View style={styles.container}>
           <View style={styles.redContainer}>
               <View style={styles.whiteContainer}>
@@ -70,112 +79,53 @@ export default function CalendarFetching() {
                           {loading ? "Connecting..." : "Connect"}
                       </Text>
                   </TouchableOpacity>
+                  <TouchableOpacity
+                      style={styles.connectButton}
+                      onPress={() => {
+                          console.log("Opening modal");
+                          setModalVisible(true);
+                      }}
+                  >
+                      <Text style={styles.buttonText}>View Events</Text>
+                  </TouchableOpacity>
 
-                  {events.length > 0 && (
-                      <View style={styles.eventsContainer}>
-                          <Text style={styles.eventsTitle}>Upcoming Events</Text>
-                          <FlatList
-                              data={events}
-                              keyExtractor={(item) => item.id}
-                              renderItem={({ item }) => (
-                                  <View style={styles.eventItem}>
-                                      <Text style={styles.eventTitle}>{item.summary}</Text>
-                                      <Text style={styles.eventDate}>
-                                          {item.start?.dateTime || item.start?.date}
-                                      </Text>
-                                  </View>
-                              )}
-                          />
-                      </View>
-                  )}
+                     {/* Modal for Events */}
+                <Modal
+                    visible={modalVisible}
+                    animationType="slide"
+                    transparent={true}
+                    onRequestClose={() => setModalVisible(false)}
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.eventsTitle}>Upcoming Events</Text>
+                            <FlatList
+                                data={events}
+                                keyExtractor={(item) => item.id}
+                                renderItem={({ item }) => (
+                                    <View style={styles.eventItem}>
+                                        <Text style={styles.eventTitle}>{item.summary}</Text>
+                                        <Text style={styles.eventDate}>
+                                            {item.start?.dateTime || item.start?.date}
+                                        </Text>
+                                    </View>
+                                )}
+                            />
+                            <TouchableOpacity
+                                style={styles.closeButton}
+                                onPress={() => setModalVisible(false)}
+                            >
+                                <Text style={styles.buttonText}>Close</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
               </View>
           </View>
       </View>
+      </View>
+      </ScrollView>
+  </KeyboardAvoidingView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-      flex: 1,
-      backgroundColor: '#f5f5f5',
-      height:'90%',
-      paddingTop:'40%',
-      paddingBottom:'60%',
-  },
-  redContainer: {
-      flex: 1,
-      backgroundColor: '#922338',
-      margin: 20,
-      padding:10,
-      borderRadius: 10,
-      justifyContent: 'center',
-      alignItems: 'center',
-  },
-  whiteContainer: {
-      backgroundColor: '#FFFFFF',
-      width: '90%',
-      height:'90%',
-      padding: 20,
-      borderRadius: 8,
-      elevation: 4,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-  },
-  title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 20,
-      textAlign: 'center',
-      color: '#333',
-  },
-  input: {
-      height: 50,
-      borderColor: '#ddd',
-      borderWidth: 1,
-      borderRadius: 8,
-      paddingHorizontal: 15,
-      marginBottom: 20,
-      fontSize: 16,
-      backgroundColor: '#f9f9f9',
-  },
-  connectButton: {
-      backgroundColor: '#922338',
-      padding: 15,
-      borderRadius: 8,
-      alignItems: 'center',
-      marginBottom: 20,
-      width:100,
-      alignSelf:'center',
-  },
-  buttonText: {
-      color: 'white',
-      fontSize: 18,
-      fontWeight: 'bold',
-  },
-  eventsContainer: {
-      marginTop: 20,
-  },
-  eventsTitle: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      marginBottom: 10,
-      color: '#333',
-  },
-  eventItem: {
-      padding: 15,
-      borderBottomWidth: 1,
-      borderBottomColor: '#eee',
-  },
-  eventTitle: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: '#333',
-  },
-  eventDate: {
-      fontSize: 14,
-      color: '#666',
-      marginTop: 5,
-  },
-});
