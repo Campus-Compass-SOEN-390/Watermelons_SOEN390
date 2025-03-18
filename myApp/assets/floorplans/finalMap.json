@@ -98,7 +98,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -208,6 +208,7 @@
         "type": "Door",
         "id": "VL109",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL112-09-13-08"
         ]
@@ -324,7 +325,7 @@
         "type": "Points of Interest",
         "id": "VE2mbath",
         "floor": 2,
-        "building": "VE",
+        "building": "VL",
         "connected_to": [
           "path-VE2mbath"
         ]
@@ -657,7 +658,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -703,7 +704,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -1108,7 +1109,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -1575,7 +1576,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -1963,7 +1964,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -4421,7 +4422,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -4457,7 +4458,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -4769,7 +4770,7 @@
       "properties": {
         "type": "Rooms",
         "floor": 1,
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -4867,7 +4868,7 @@
         "type": "Points of Interest",
         "id": "VE1stairs",
         "floor": 1,
-        "building": "VE",
+        "building": "VL",
         "connected_to": [
           "path-VE1stairs"
         ]
@@ -4960,7 +4961,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -5008,7 +5009,7 @@
         "type": "Points of Interest",
         "id": "VE2wbath",
         "floor": 2,
-        "building": "VE",
+        "building": "VL",
         "connected_to": [
           "path-VE2wbath"
         ]
@@ -5479,6 +5480,7 @@
         "type": "Door",
         "id": "VL156",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL156"
         ]
@@ -5496,7 +5498,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -5857,6 +5859,7 @@
         "type": "Door",
         "id": "VL130",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL130"
         ]
@@ -6241,7 +6244,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -6479,6 +6482,7 @@
         "type": "Door",
         "id": "VL104",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL104"
         ]
@@ -6942,6 +6946,7 @@
         "type": "Door",
         "id": "VL116",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL116"
         ]
@@ -7535,6 +7540,7 @@
         "type": "Door",
         "id": "VL114",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL114"
         ]
@@ -7692,7 +7698,7 @@
         "connected_to": [
           "path-VE201-02.1-02.2-03-04-05"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -8093,6 +8099,7 @@
         "type": "Door",
         "id": "VL105",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL105"
         ]
@@ -9007,7 +9014,7 @@
       "type": "Feature",
       "properties": {
         "type": "Rooms",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -9090,6 +9097,7 @@
         "type": "Door",
         "id": "VL133",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL133"
         ]
@@ -9209,6 +9217,7 @@
         "type": "Door",
         "id": "VL154",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL154"
         ]
@@ -9600,7 +9609,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -9729,7 +9738,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -9866,7 +9875,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -10629,6 +10638,7 @@
         "type": "Door",
         "id": "VL144",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL144"
         ]
@@ -10786,7 +10796,7 @@
         "connected_to": [
           "path-VE201-02.1-02.2-03-04-05"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -10963,6 +10973,7 @@
         "type": "Door",
         "id": "VL103",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL103"
         ]
@@ -11185,7 +11196,7 @@
         "connected_to": [
           "path-VE201-02.1-02.2-03-04-05"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -11452,6 +11463,7 @@
         "type": "Door",
         "id": "VL145",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL145"
         ]
@@ -11787,7 +11799,7 @@
         "connected_to": [
           "path-VE213"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -12064,7 +12076,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -12349,7 +12361,7 @@
         "connected_to": [
           "path-VE201-02.1-02.2-03-04-05"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -12506,7 +12518,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -12682,7 +12694,7 @@
         "connected_to": [
           "path-VE2stairs-212.1-15-16"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -12756,7 +12768,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -12846,7 +12858,7 @@
       "type": "Feature",
       "properties": {
         "type": "Rooms",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -12922,6 +12934,7 @@
         "type": "Door",
         "id": "VL111",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL111"
         ]
@@ -13058,7 +13071,7 @@
         "connected_to": [
           "path-VE230"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -13072,7 +13085,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -13755,7 +13768,7 @@
         "connected_to": [
           "path-VE210"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -15125,7 +15138,7 @@
       "properties": {
         "type": "Paths",
         "floor": 1,
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -15228,7 +15241,7 @@
         "type": "Points of Interest",
         "id": "VE2stairs",
         "floor": 2,
-        "building": "VE",
+        "building": "VL",
         "connected_to": [
           "path-VE2stairs",
           "path-VE1stairs"
@@ -15591,7 +15604,7 @@
         "connected_to": [
           "path-VE217"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -15807,6 +15820,7 @@
         "type": "Door",
         "id": "VL153",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL153"
         ]
@@ -15917,7 +15931,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -15981,7 +15995,7 @@
       "type": "Feature",
       "properties": {
         "type": "Rooms",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -16255,6 +16269,7 @@
         "type": "Door",
         "id": "VL132",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL132"
         ]
@@ -16606,7 +16621,7 @@
         "connected_to": [
           "path-VE2stairs-212.1-15-16"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -16940,7 +16955,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -16968,7 +16983,7 @@
         "connected_to": [
           "path-VE201-02.1-02.2-03-04-05"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -17064,7 +17079,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -17225,7 +17240,7 @@
         "connected_to": [
           "path-VE224"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -17491,7 +17506,7 @@
         "connected_to": [
           "path-VE212"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -17512,7 +17527,7 @@
         "connected_to": [
           "path-VE225"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -17898,6 +17913,7 @@
         "type": "Door",
         "id": "VL118",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL118"
         ]
@@ -18099,6 +18115,7 @@
         "type": "Door",
         "id": "VL150",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL150"
         ]
@@ -18328,7 +18345,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -18463,7 +18480,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -18650,6 +18667,7 @@
         "type": "Door",
         "id": "VL129",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL129"
         ]
@@ -19776,7 +19794,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -20277,7 +20295,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -20755,6 +20773,7 @@
         "type": "Door",
         "id": "VL149",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL149"
         ]
@@ -21128,7 +21147,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -21465,7 +21484,7 @@
         "connected_to": [
           "path-VE201-02.1-02.2-03-04-05"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -21810,6 +21829,7 @@
         "type": "Door",
         "id": "VL139",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL139"
         ]
@@ -21847,7 +21867,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Doors"
       },
@@ -22094,6 +22114,7 @@
         "type": "Door",
         "id": "VL107",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL107"
         ]
@@ -22396,6 +22417,7 @@
         "type": "Door",
         "id": "VL110",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL110"
         ]
@@ -22875,7 +22897,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -23175,7 +23197,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -23249,7 +23271,7 @@
         "connected_to": [
           "path-VE229"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -23843,7 +23865,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Doors"
       },
@@ -23941,7 +23963,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -24384,7 +24406,7 @@
         "connected_to": [
           "path-VE211"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -24768,7 +24790,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -24863,7 +24885,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -25141,7 +25163,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -25740,6 +25762,7 @@
         "type": "Door",
         "id": "VL131",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL131"
         ]
@@ -25866,7 +25889,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -26008,6 +26031,7 @@
         "type": "Door",
         "id": "VL108",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL112-09-13-08"
         ]
@@ -26198,6 +26222,7 @@
         "type": "Door",
         "id": "VL113",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL112-09-13-08"
         ]
@@ -26349,7 +26374,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -27277,7 +27302,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Rooms"
       },
@@ -27455,6 +27480,7 @@
         "type": "Door",
         "id": "VL155",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL155"
         ]
@@ -27475,6 +27501,7 @@
         "type": "Door",
         "id": "VL117",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL117"
         ]
@@ -27793,6 +27820,7 @@
         "type": "Door",
         "id": "VL152",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL152"
         ]
@@ -27973,6 +28001,7 @@
         "type": "Door",
         "id": "VL142",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL142"
         ]
@@ -27993,6 +28022,7 @@
         "type": "Door",
         "id": "VL112",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL112-09-13-08"
         ]
@@ -28418,7 +28448,7 @@
         "connected_to": [
           "path-VE221"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -29006,6 +29036,7 @@
         "type": "Door",
         "id": "VL125",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL125"
         ]
@@ -29564,7 +29595,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -29607,7 +29638,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -29735,6 +29766,7 @@
         "type": "Door",
         "id": "VL138",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL138"
         ]
@@ -31164,7 +31196,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Doors"
       },
@@ -31231,7 +31263,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
@@ -31445,6 +31477,7 @@
         "type": "Door",
         "id": "VL115",
         "floor": 1,
+        "building": "VL",
         "connected_to": [
           "path-VL115"
         ]
@@ -31490,7 +31523,7 @@
         "connected_to": [
           "path-VE218"
         ],
-        "building": "VE"
+        "building": "VL"
       },
       "geometry": {
         "coordinates": [
@@ -32108,7 +32141,7 @@
     {
       "type": "Feature",
       "properties": {
-        "building": "VE",
+        "building": "VL",
         "floor": 2,
         "type": "Doors"
       },
@@ -32973,7 +33006,7 @@
       "type": "Feature",
       "properties": {
         "type": "Paths",
-        "building": "VE",
+        "building": "VL",
         "floor": 2
       },
       "geometry": {
