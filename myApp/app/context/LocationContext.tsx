@@ -56,7 +56,6 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
   const [travelMode, setTravelMode] = useState("");
   const [showShuttleRoute, setShowShuttleRoute] = useState(false);
 
-
   const [POILocationData, setPOILocationData] = useState<{ name: string; lat: number; lng: number } | null>(null);
 
   const updatePOILocationData = (name: string, lat: number, lng: number) => {
@@ -110,6 +109,25 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
     console.log("FROM LOCATION CONTEXT", lat, lng, name)
   }, []);
 
+  const memoDependencies = [
+    origin,
+    destination,
+    originText,
+    destinationText,
+    showTransportation,
+    renderMap,
+    showFooter,
+    travelMode,
+    showShuttleRoute,
+    updateOrigin,
+    updateDestination,
+    updateShowTransportation,
+    updateRenderMap,
+    updateShowFooter,
+    updateTravelMode,
+    updateShowShuttleRoute,
+  ];
+
   const value = React.useMemo(
     () => ({
       origin,
@@ -130,24 +148,7 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
       updateShowShuttleRoute,
       updatePOILocationData, // expose the update function
     }),
-    [
-      origin,
-      destination,
-      originText,
-      destinationText,
-      showTransportation,
-      renderMap,
-      showFooter,
-      travelMode,
-      showShuttleRoute,
-      updateOrigin,
-      updateDestination,
-      updateShowTransportation,
-      updateRenderMap,
-      updateShowFooter,
-      updateTravelMode,
-      updateShowShuttleRoute,
-    ]
+    memoDependencies
   );
 
   return (
