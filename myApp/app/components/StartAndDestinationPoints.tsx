@@ -16,6 +16,9 @@ import styles from "../styles/StartAndDestinationPointsStyles";
 import useLocation from "../hooks/useLocation";
 import Icon from "react-native-vector-icons/Foundation";
 import { useLocationContext } from "../context/LocationContext";
+import { useIndoorMapContext } from "../context/IndoorMapContext";
+import { parseClassroomLocation } from "../utils/IndoorMapUtils";
+import { buildings } from "../api/buildingData";
 import { getTravelTimes } from "../api/googleMapsApi";
 
 interface Step {
@@ -41,6 +44,8 @@ const StartAndDestinationPoints = () => {
     renderMap,
     travelMode,
   } = useLocationContext();
+  const { updateSelectedFloor, updateSelectedIndoorBuilding } =
+    useIndoorMapContext();
   const { location } = useLocation();
   const originRef = useRef<any>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -250,6 +255,21 @@ const StartAndDestinationPoints = () => {
             style={styles.button}
             onPress={() => {
               if (origin && destination) {
+                const parsedLocation = parseClassroomLocation(originText);
+
+                if (parsedLocation) {
+                  const { buildingName, floor } = parsedLocation;
+
+                  const matchedBuilding = buildings.find(
+                    (b) => b.name === buildingName
+                  );
+
+                  if (matchedBuilding) {
+                    updateSelectedIndoorBuilding(matchedBuilding);
+                    updateSelectedFloor(Number(floor));
+                  }
+                }
+
                 updateShowTransportation(true);
               }
             }}
@@ -317,6 +337,10 @@ const StartAndDestinationPoints = () => {
             onPress={() => {
               updateShowTransportation(false);
               updateRenderMap(false);
+              updateSelectedFloor(null);
+              updateSelectedIndoorBuilding(null);
+              updateOrigin(null, "");
+              updateDestination(null, "");
             }}
           >
             <Text style={[styles.footerButtonText, { color: "red" }]}>X</Text>
