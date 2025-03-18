@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { 
   View, Image, Text, TextInput, TouchableOpacity, 
   FlatList, Alert, Modal, ActivityIndicator 
 } from "react-native";
 import Constants from "expo-constants";
 import { KeyboardAvoidingView, ScrollView } from "react-native";
-import { calendarFetchingStyles as styles } from "../styles/CalendarFetchingStyles.js";
+import { calendarFetchingStyles as styles } from "../styles/CalendarFetchingStyles.js";;
 
 // Import navigation hook
 import { useNavigation } from "@react-navigation/native";
@@ -18,17 +18,13 @@ export default function CalendarFetching() {
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-  // New: Track whether we should show the success screen
-  const [showSuccessScreen, setShowSuccessScreen] = useState(false);
-
-  // For demonstration, we’ll pull the API key from either .env or app config
-  const API_KEY = process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
-
-  const fetchCalendarEvents = async () => {
-    if (!calendarId.trim()) {
-      Alert.alert("Invalid ID", "Please enter a valid Calendar ID");
-      return;
-    }
+    const API_KEY = process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
+    
+    const fetchCalendarEvents = useCallback(async () => {
+        if (!calendarId.trim()) {
+            alert("Please enter a valid Calendar ID");
+            return;
+        }
 
     setLoading(true);
 
@@ -55,8 +51,8 @@ export default function CalendarFetching() {
       Alert.alert("Error", "Something went wrong while fetching the events.");
     }
 
-    setLoading(false);
-  };
+        setLoading(false);
+    }, [calendarId, API_KEY]);
 
   // When showSuccessScreen is true, wait 5 seconds, then navigate to Events Page
   useEffect(() => {
