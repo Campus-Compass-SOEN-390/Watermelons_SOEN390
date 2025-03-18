@@ -56,11 +56,14 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
   const [travelMode, setTravelMode] = useState("");
   const [showShuttleRoute, setShowShuttleRoute] = useState(false);
 
+
   const [POILocationData, setPOILocationData] = useState<{
     name: string;
     lat: number;
     lng: number;
   } | null>(null);
+
+
 
   const updatePOILocationData = (name: string, lat: number, lng: number) => {
     console.log("LOC CONTEXT", name, lat);
@@ -87,10 +90,12 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
   // useEffect to update origin and destination if locationData is not null
   useEffect(() => {
     if (POILocationData) {
+
       updateDestination(
         { latitude: POILocationData.lat, longitude: POILocationData.lng },
         POILocationData.name
       );
+
     }
   }, [POILocationData]); // This effect runs whenever locationData changes
 
@@ -115,9 +120,11 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
+
     //this wouuld be am alternative const { name, lat, lng } = useLocalSearchParams();
 
     console.log("FROM LOCATION CONTEXT", lat, lng, name);
+
   }, []);
 
   const value = React.useMemo(
