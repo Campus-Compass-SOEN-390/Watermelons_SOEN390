@@ -29,7 +29,7 @@ interface Step {
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
-const StartAndDestinationPoints = ({}) => {
+const StartAndDestinationPoints = () => {
   const {
     updateOrigin,
     updateDestination,
@@ -136,6 +136,13 @@ const StartAndDestinationPoints = ({}) => {
       console.log("Crashed 4");
     }
   }, [origin, location]);
+
+  const getTravelTimeText = (
+    times: { [key: string]: number | null },
+    mode: string
+  ) => {
+    return times[mode] ? `${times[mode]} min` : "N/A";
+  };
 
   return (
     <View style={styles.container}>
@@ -298,11 +305,7 @@ const StartAndDestinationPoints = ({}) => {
                   color={travelMode === mode ? "white" : "black"}
                 />
                 <Text style={{ fontSize: 14, marginTop: 5 }}>
-                  {loading
-                    ? "..."
-                    : travelTimes[mode]
-                    ? `${travelTimes[mode]} min`
-                    : "N/A"}
+                  {getTravelTimeText(travelTimes, mode)}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -317,9 +320,7 @@ const StartAndDestinationPoints = ({}) => {
             ETA:{" "}
             {loading
               ? "Calculating..."
-              : travelTimes[travelMode]
-              ? `${travelTimes[travelMode]} min`
-              : "N/A"}
+              : getTravelTimeText(travelTimes, travelMode)}
           </Text>
           <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
             <Text style={styles.footerButtonText}>GO</Text>

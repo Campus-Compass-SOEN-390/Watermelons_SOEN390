@@ -56,14 +56,22 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
   const [travelMode, setTravelMode] = useState("");
   const [showShuttleRoute, setShowShuttleRoute] = useState(false);
 
-  const [POILocationData, setPOILocationData] = useState<{ name: string; lat: number; lng: number } | null>(null);
+  const [POILocationData, setPOILocationData] = useState<{
+    name: string;
+    lat: number;
+    lng: number;
+  } | null>(null);
+
+
 
   const updatePOILocationData = (name: string, lat: number, lng: number) => {
     console.log("LOC CONTEXT", name, lat);
     setPOILocationData({ name, lat, lng });
   };
-
-  const updateOrigin = ( location: { latitude: number; longitude: number } | null, text: string) => {
+  const updateOrigin = (
+    location: { latitude: number; longitude: number } | null,
+    text: string
+  ) => {
     console.log("Location updated to:", text, location);
     setOrigin(location);
     setOriginText(text);
@@ -81,12 +89,18 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
   // useEffect to update origin and destination if locationData is not null
   useEffect(() => {
     if (POILocationData) {
-      updateDestination({ latitude: POILocationData.lat, longitude: POILocationData.lng }, POILocationData.name);
+
+      updateDestination(
+        { latitude: POILocationData.lat, longitude: POILocationData.lng },
+        POILocationData.name
+      );
+
     }
   }, [POILocationData]); // This effect runs whenever locationData changes
 
   const updateShowTransportation = (setting: boolean) => {
     setShowTransportation(setting);
+  };
   };
 
   const updateRenderMap = (setting: boolean) => {
@@ -106,7 +120,11 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
-    console.log("FROM LOCATION CONTEXT", lat, lng, name)
+
+    //this wouuld be am alternative const { name, lat, lng } = useLocalSearchParams();
+
+    console.log("FROM LOCATION CONTEXT", lat, lng, name);
+
   }, []);
 
   const memoDependencies = [
@@ -161,6 +179,9 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
 export const useLocationContext = (): LocationContextType => {
   const context = useContext(LocationContext);
   if (context === null) {
+    throw new Error(
+      "useLocationContext must be used within a LocationProvider"
+    );
     throw new Error(
       "useLocationContext must be used within a LocationProvider"
     );

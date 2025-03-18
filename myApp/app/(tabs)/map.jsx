@@ -31,11 +31,10 @@ import IndoorMap from "../components/IndoorMap/IndoorMap";
 import FloorNavigation from "../components/FloorNavigation";
 import MapDirections from "../components/MapDirections";
 import ShortestPathMap from "../components/IndoorMap/ShortestPathMap";
-import {
-  graph,
-  nodeCoordinates,
-  indoorCoordinatesMap,
-} from "../components/IndoorMap/GraphAndCoordinates/GraphAndCoordinates";
+import { hGraph, hNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/Hall";
+import { ccGraph, ccNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/CC";
+import { loyolaGraph, loyolaNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/Loyola";
+import { mbGraph, mbNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/MB";
 import {
   handleIndoorBuildingSelect,
   handleClearIndoorMap,
@@ -77,6 +76,9 @@ export default function MapView() {
   // Campus switching
   const [activeCampus, setActiveCampus] = useState(type);
   const mapRef = useRef(null);
+
+  // Disabled on or off
+  const [isDisabled, setIsDisabled] = useState(false);
 
   // Location & permissions
   const { location, hasPermission } = useLocation();
@@ -134,6 +136,11 @@ export default function MapView() {
     "Montreal Downtown": { latitude: 45.5017, longitude: -73.5673 },
     ...indoorCoordinatesMap,
   };
+
+  // Combine Graphs and Coordinates
+  const graph = { ...hGraph, ...mbGraph, ...ccGraph, ...loyolaGraph};
+  const nodeCoordinates = { ...hNodeCoordinates, ...mbNodeCoordinates, ...ccNodeCoordinates, ...loyolaNodeCoordinates};
+
 
   // Handle clearing indoor mode when "Outdoor" is pressed
   const clearIndoorMap = () => {
@@ -882,6 +889,15 @@ export default function MapView() {
                 />
               </Mapbox.ShapeSource>
             ))}
+
+          <ShortestPathMap
+            graph={graph}
+            nodeCoordinates={nodeCoordinates}
+            startNode={originText}
+            endNode={destinationText}
+            currentFloor={selectedFloor}
+            isDisabled={isDisabled}
+          />
 
           {/* POI Markers */}
           {showPOI && (
