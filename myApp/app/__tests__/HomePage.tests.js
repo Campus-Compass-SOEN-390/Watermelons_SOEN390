@@ -27,7 +27,7 @@ describe('Home page', () => {
         const shuttleScheduleButton = page.getByTestId('shuttleScheduleButton');
         const interestButton = page.getByTestId('interestButton');
         const directionButton = page.getByTestId('directionButton');
-        const googleButton = page.getByTestId('googleButton');
+        const googleButton = page.getByTestId('calendarfetchbutton');
 
         expect(logo).toBeTruthy();
         expect(googleIcon).toBeTruthy();

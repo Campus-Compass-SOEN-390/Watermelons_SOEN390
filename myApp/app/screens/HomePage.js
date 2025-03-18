@@ -2,9 +2,6 @@ import React from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useRouter } from 'expo-router';
 import { homepageStyles as styles } from '../styles/HomePageStyles.js'
-import * as Google from 'expo-auth-session/providers/google';
-import { useEffect } from 'react';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 export default function HomePage() {
    
@@ -68,8 +65,11 @@ export default function HomePage() {
                     testID="calendarfetchbutton"
                     onPress={() => router.push('/screens/CalendarFetching')}
                     >
-                        <Image source={require('../../assets/images/google_logo.png')} style={styles.icon} />
-
+                         <Image
+                            source={require('../../assets/images/google_logo.png')}
+                            style={styles.icon}
+                            testID="googleIcon"
+                        />
                         <Text style={styles.buttonText}>Fetch Calendars</Text>
                     </TouchableOpacity>
                 </View>
