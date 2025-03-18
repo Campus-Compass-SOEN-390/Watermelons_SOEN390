@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react-native';
-import CalendarFetching from '../screens/CalendarFetching';
+import { render } from '@testing-library/react-native';
+import CalendarFetching from "../../app/screens/CalendarFetching";
 
 describe('CalendarFetching', () => {
   it('renders text input and connect button', () => {
