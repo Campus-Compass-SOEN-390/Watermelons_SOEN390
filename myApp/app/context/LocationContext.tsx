@@ -62,8 +62,6 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
     lng: number;
   } | null>(null);
 
-
-
   const updatePOILocationData = (name: string, lat: number, lng: number) => {
     console.log("LOC CONTEXT", name, lat);
     setPOILocationData({ name, lat, lng });
@@ -101,7 +99,6 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
   const updateShowTransportation = (setting: boolean) => {
     setShowTransportation(setting);
   };
-  };
 
   const updateRenderMap = (setting: boolean) => {
     setRenderMap(setting);
@@ -118,14 +115,6 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
   const updateShowShuttleRoute = (setting: boolean) => {
     setShowShuttleRoute(setting);
   };
-
-  useEffect(() => {
-
-    //this wouuld be am alternative const { name, lat, lng } = useLocalSearchParams();
-
-    console.log("FROM LOCATION CONTEXT", lat, lng, name);
-
-  }, []);
 
   const memoDependencies = [
     origin,
@@ -179,9 +168,6 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
 export const useLocationContext = (): LocationContextType => {
   const context = useContext(LocationContext);
   if (context === null) {
-    throw new Error(
-      "useLocationContext must be used within a LocationProvider"
-    );
     throw new Error(
       "useLocationContext must be used within a LocationProvider"
     );
