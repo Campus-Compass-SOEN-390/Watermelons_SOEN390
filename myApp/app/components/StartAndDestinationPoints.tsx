@@ -50,6 +50,32 @@ const StartAndDestinationPoints = ({}) => {
   const [travelTimes, setTravelTimes] = useState<{ [key: string]: number | null }>({});
   const [loading, setLoading] = useState(false);
 
+  const getBuildingCode = (room: string) => {
+    const match = room.match(/^[A-Za-z]+/);
+    return match ? match[0] : null;
+  };
+
+  const buildingCoordinates: Record<string, { latitude: number; longitude: number }> = {
+    "VL": { latitude: 45.459026, longitude: -73.638606 }, // Vanier Library
+    "H": { latitude: 45.497092, longitude: -73.578800 }, // Hall Building
+    "EV": { latitude: 45.495376, longitude: -73.577997}, // Engineering and Visual Arts
+    "MB": { latitude: 45.495304, longitude: -73.579044 }  // John Molson Building
+  };
+
+  const handleDestinationInput = (text: string) => {
+    const buildingCode = getBuildingCode(text);
+    
+    if (buildingCode && buildingCoordinates[buildingCode]) {
+    const coords = buildingCoordinates[buildingCode];
+    updateDestination(coords, text);
+    //destination.current?.setAddressText(text);
+    } 
+    else {
+    updateDestination(null, text);
+    } 
+
+  }
+
   // Fetch travel times when origin or destination changes
   useEffect(() => {
     if (origin && destination) {
@@ -226,7 +252,8 @@ const StartAndDestinationPoints = ({}) => {
             }}
             textInputProps={{
               value: destinationText,
-              onChangeText: (text) => updateDestination(destination, text),
+              onChangeText: handleDestinationInput,
+              //onChangeText: (text) => updateDestination(destination, text),
               style: styles.input,
             }}
             styles={{
