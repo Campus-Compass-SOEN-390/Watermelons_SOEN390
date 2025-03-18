@@ -6,27 +6,9 @@ import * as Google from 'expo-auth-session/providers/google';
 import { useEffect } from 'react';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-
-GoogleSignin.configure({
-  webClientId: "321256625453-8bbjeu3icp553q13d5fr7dv9ssbue5a0.apps.googleusercontent.com.apps.googleusercontent.com", // For Firebase auth, optional
-  androidClientId: "321256625453-4brqk27son279249bf3k5t2uglvjr63b.apps.googleusercontent.com.apps.googleusercontent.com", // Use your Android Client ID
-});
-
 export default function HomePage() {
    
     const router = useRouter();
-    const [request, response, promptAsync] = Google.useAuthRequest({
-        clientId: 'bxnjiho.apps.googleusercontent.com',
-        scopes: ['https://www.googleapis.com/auth/calendar.readonly'],
-    });
-    
-
-    useEffect(() => {
-        if (response?.type === 'success') {
-            const { authentication } = response;
-            console.log('Google Token:', authentication.accessToken);
-        }
-    }, [response]);
 
     return (
         <View style ={{flex:1}}>

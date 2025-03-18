@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, FlatList, Alert, StyleSheet , Modal} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, FlatList, Alert , Modal} from "react-native";
 import Constants from "expo-constants";
 import { KeyboardAvoidingView, ScrollView } from "react-native";
 import { calendarFetchingStyles as styles } from '../styles/CalendarFetchingStyles.js'
@@ -12,11 +12,12 @@ export default function CalendarFetching() {
     const [modalVisible, setModalVisible] = useState(false);
 
     const API_KEY = process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
+    
     const fetchCalendarEvents = async () => {
-        if (!calendarId.trim()) {
-            alert("Please enter a valid Calendar ID");
-            return;
-        }
+      if (!calendarId.trim()) {
+          alert("Please enter a valid Calendar ID");
+          return;
+      }
 
         setLoading(true);
         const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${API_KEY}`;
