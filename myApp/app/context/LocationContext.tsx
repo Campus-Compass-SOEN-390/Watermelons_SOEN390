@@ -68,11 +68,6 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
     console.log("Location updated to:", text, location);
     setOrigin(location);
     setOriginText(text);
-
-    if (!location && text) {
-
-
-    }
   };
 
   const updateDestination = (
