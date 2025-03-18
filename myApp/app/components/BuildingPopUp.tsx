@@ -1,18 +1,23 @@
-
 import React from "react";
 import { View, Text, Modal, TouchableOpacity, ScrollView } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons"; // For icons
-import { buildingPopupStyles as styles } from "../styles/BuildingPopupStyles"  
+import { buildingPopupStyles as styles } from "../styles/BuildingPopupStyles";
 
 export interface BuildingPopupProps {
   visible: boolean;
   onClose: () => void;
   building: any | null; // Replace "any" with your Building type if available
-  onGetDirections(building: any): void
-  setAsStartingPoint(building: any): void
+  onGetDirections(building: any): void;
+  setAsStartingPoint(building: any): void;
 }
 
-export const BuildingPopup: React.FC<BuildingPopupProps> = ({ visible, onClose, building, onGetDirections, setAsStartingPoint }) => {
+export const BuildingPopup: React.FC<BuildingPopupProps> = ({
+  visible,
+  onClose,
+  building,
+  onGetDirections,
+  setAsStartingPoint,
+}) => {
   if (!building) return null; // Don't render if no building is selected
 
   return (
@@ -33,38 +38,45 @@ export const BuildingPopup: React.FC<BuildingPopupProps> = ({ visible, onClose, 
                 🕒 {building.openHours || "Hours not available"}
               </Text>
               <Text style={styles.text}>
-                ♿ Accessibility: {building.wheelchairAccessible ? "✅ Yes" : "❌ No"}
+                ♿ Accessibility:{" "}
+                {building.wheelchairAccessible ? "✅ Yes" : "❌ No"}
               </Text>
               <Text style={styles.text}>
                 🏢 Departments:{" "}
-                {building.departments.length > 0 ? building.departments.join(", ") : "No department info"}
+                {building.departments.length > 0
+                  ? building.departments.join(", ")
+                  : "No department info"}
               </Text>
             </View>
           </ScrollView>
           {/* Buttons */}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={[styles.button, styles.directionButton]} 
-            onPress={() => {
-            onGetDirections(building);
-            onClose();
-            }
-            }>
+            <TouchableOpacity
+              style={[styles.button, styles.directionButton]}
+              onPress={() => {
+                onGetDirections(building);
+                onClose();
+              }}
+            >
               <MaterialIcons name="directions" size={20} color="white" />
               <Text style={styles.buttonText}>Get Directions</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, styles.startPointButton]} 
-            onPress={() => {
-            setAsStartingPoint(building);
-            onClose();
-            }
-            }>
+            <TouchableOpacity
+              style={[styles.button, styles.startPointButton]}
+              onPress={() => {
+                setAsStartingPoint(building);
+                onClose();
+              }}
+            >
               <MaterialIcons name="place" size={20} color="white" />
               <Text style={styles.buttonText}>Use As Starting Point</Text>
             </TouchableOpacity>
-
           </View>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={[styles.button, styles.closeButton]} onPress={onClose}>
+            <TouchableOpacity
+              style={[styles.button, styles.closeButton]}
+              onPress={onClose}
+            >
               <MaterialIcons name="close" size={20} color="white" />
               <Text style={styles.buttonText}>Close</Text>
             </TouchableOpacity>
