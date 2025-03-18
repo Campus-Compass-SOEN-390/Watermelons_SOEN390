@@ -50,7 +50,7 @@ describe('Home page', () => {
         const page = render(<HomePage />);
         const loyolaButton = page.getByTestId('loyolaButton');
         fireEvent.press(loyolaButton);
-        expect(mockPush).toHaveBeenCalledWith('/(tabs)/map?type=loyola');
+        expect(mockPush).toHaveBeenCalledWith('/(tabs)/map?type=loy');
     });
 
     it('should navigate to Shuttle Bus Schedule when shuttle schedule button is pressed', () => {
