@@ -17,6 +17,7 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import CalendarFetching from '../screens/CalendarFetching';
 import { NavigationContainer } from '@react-navigation/native';
 import { Alert } from 'react-native';
+import fetchMock from 'jest-fetch-mock'; // Ensure this is imported
 
 // Helper to render the component wrapped in NavigationContainer
 const renderWithNavigation = (ui) =>
@@ -25,7 +26,7 @@ const renderWithNavigation = (ui) =>
 describe('CalendarFetching', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    global.fetch = jest.fn();
+    fetchMock.resetMocks(); // Reset fetch mocks for each test
   });
 
   it('renders text input and connect button', () => {
@@ -57,7 +58,7 @@ describe('CalendarFetching', () => {
       ],
     };
 
-    global.fetch.mockResolvedValue({
+    fetchMock.mockResolvedValue({
       json: jest.fn().mockResolvedValue(dummyResponse),
     });
 
@@ -78,7 +79,7 @@ describe('CalendarFetching', () => {
       error: { message: 'API Error Message' },
     };
 
-    global.fetch.mockResolvedValue({
+    fetchMock.mockResolvedValue({
       json: jest.fn().mockResolvedValue(dummyErrorResponse),
     });
 
@@ -100,7 +101,7 @@ describe('CalendarFetching', () => {
 
   it('alerts when API returns no events (no items)', async () => {
     const dummyResponse = {}; // No 'items'
-    global.fetch.mockResolvedValue({
+    fetchMock.mockResolvedValue({
       json: jest.fn().mockResolvedValue(dummyResponse),
     });
 
@@ -121,7 +122,7 @@ describe('CalendarFetching', () => {
   });
 
   it('handles fetch error (catch block) by showing an alert', async () => {
-    global.fetch.mockRejectedValue(new Error("Network Error"));
+    fetchMock.mockRejectedValue(new Error("Network Error"));
 
     const alertSpy = jest.spyOn(Alert, 'alert');
     const { getByPlaceholderText, getByText } = renderWithNavigation(
