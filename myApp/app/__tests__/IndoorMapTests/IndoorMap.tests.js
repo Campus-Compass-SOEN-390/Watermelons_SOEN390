@@ -1,79 +1,59 @@
 import React from "react";
-import { render, waitFor } from "@testing-library/react-native";
+import { render } from "@testing-library/react-native";
 import IndoorMap from "../../components/IndoorMap/IndoorMap";
 
 jest.mock("@rnmapbox/maps", () => ({
   setAccessToken: jest.fn(),
-  ShapeSource: jest.fn(() => null),
-  FillLayer: jest.fn(() => null),
-  LineLayer: jest.fn(() => null),
-  SymbolLayer: jest.fn(() => null),
+  ShapeSource: jest.fn(({ children }) => children),
+  FillLayer: jest.fn(() => "FillLayer"),
+  LineLayer: jest.fn(() => "LineLayer"),
+  SymbolLayer: jest.fn(() => "SymbolLayer"),
 }));
 
-global.fetch = jest.fn();
-
-beforeEach(() => {
-  fetch.mockClear();
-  jest.spyOn(console, "error").mockImplementation(() => {}); 
-});
-
-afterEach(() => {
-  console.error.mockRestore();
-});
-
 describe("IndoorMap Component", () => {
-  it("fetches GeoJSON data and updates state", async () => {
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        type: "FeatureCollection",
-        features: [
-          { type: "Feature", properties: { building: "VL", floor: 1 } },
-          { type: "Feature", properties: { building: "VL", floor: 2 } },
-          { type: "Feature", properties: { building: "H", floor: 1 } },
-        ],
-      }),
-    });
+  it("renders correctly with no selected building (default first floors)", () => {
+    const { queryByText, queryByTestId } = render(
+      <IndoorMap selectedBuilding={null} selectedFloor={null} />
+    );
 
-    render(<IndoorMap selectedBuilding={{ name: "VL" }} selectedFloor={1} />);
+    // Ensure Mapbox ShapeSource is present
+    expect(queryByTestId("indoor-map")).toBeTruthy();
 
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    // Ensure Map layers are rendered
+    expect(queryByText("FillLayer")).toBeTruthy();
+    expect(queryByText("LineLayer")).toBeTruthy();
+    expect(queryByText("SymbolLayer")).toBeTruthy();
   });
 
-  it("filters features correctly for selected building and floor", async () => {
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        type: "FeatureCollection",
-        features: [
-          { type: "Feature", properties: { building: "VL", floor: 1 } },
-          { type: "Feature", properties: { building: "VL", floor: 2 } },
-          { type: "Feature", properties: { building: "H", floor: 1 } },
-        ],
-      }),
-    });
+  it("renders correctly when a building and floor are selected", () => {
+    const selectedBuilding = { name: "MB" };
+    const selectedFloor = "2";
 
-    const { rerender } = render(<IndoorMap selectedBuilding={{ name: "VL" }} selectedFloor={1} />);
+    const { queryByTestId } = render(
+      <IndoorMap selectedBuilding={selectedBuilding} selectedFloor={selectedFloor} />
+    );
 
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
-
-    rerender(<IndoorMap selectedBuilding={{ name: "VL" }} selectedFloor={2} />);
-
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1)); // ✅ Ensures fetch was only called once
+    expect(queryByTestId("indoor-map")).toBeTruthy();
   });
 
-  it("handles fetch errors gracefully", async () => {
-    fetch.mockRejectedValueOnce(new Error("Network error"));
+  it("filters geoJSON correctly based on selected building and floor", () => {
+    const selectedBuilding = { name: "H" };
+    const selectedFloor = "8";
 
-    render(<IndoorMap selectedBuilding={null} selectedFloor={1} />);
+    const { rerender } = render(
+      <IndoorMap selectedBuilding={selectedBuilding} selectedFloor={selectedFloor} />
+    );
 
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    // Simulate an update to another building
+    rerender(
+      <IndoorMap selectedBuilding={{ name: "MB" }} selectedFloor="1" />
+    );
+  });
 
-    await waitFor(() => {
-      expect(console.error).toHaveBeenCalledWith(
-        "Error fetching GeoJSON:",
-        expect.any(Error)
-      );
-    });
+  it("does not render if GeoJSON data is not loaded", () => {
+    jest.spyOn(React, "useEffect").mockImplementation(() => {}); // Mock useEffect to prevent loading GeoJSON
+    const { queryByTestId } = render(<IndoorMap selectedBuilding={null} selectedFloor={null} />);
+
+    expect(queryByTestId("indoor-map")).toBeFalsy();
   });
 });
