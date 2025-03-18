@@ -2,7 +2,16 @@ if (typeof setImmediate === 'undefined') {
   global.setImmediate = (callback) => setTimeout(callback, 0);
 }
 
-// For the navigation test below, we’ll override the navigation hook within this file.
+jest.mock('@react-navigation/native', () => {
+  const actualNav = jest.requireActual('@react-navigation/native');
+  return {
+    ...actualNav,
+    useNavigation: () => ({
+      navigate: jest.fn(),
+    }),
+  };
+});
+
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import CalendarFetching from '../screens/CalendarFetching';
@@ -13,14 +22,31 @@ import { Alert } from 'react-native';
 const renderWithNavigation = (ui) =>
   render(<NavigationContainer>{ui}</NavigationContainer>);
 
-describe('CalendarFetching - Coverage for two functions', () => {
+describe('CalendarFetching', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     global.fetch = jest.fn();
   });
 
-  it('fetchCalendarEvents sets success screen on valid API response', async () => {
-    // This dummy response simulates a successful API call with events.
+  it('renders text input and connect button', () => {
+    const { getByPlaceholderText, getByText } = renderWithNavigation(
+      <CalendarFetching />
+    );
+    expect(getByPlaceholderText('Paste Calendar ID here')).toBeTruthy();
+    expect(getByText('Connect')).toBeTruthy();
+  });
+
+  it('alerts when calendar ID is empty and Connect is pressed', () => {
+    const alertSpy = jest.spyOn(Alert, 'alert');
+    const { getByText } = renderWithNavigation(<CalendarFetching />);
+    fireEvent.press(getByText('Connect'));
+    expect(alertSpy).toHaveBeenCalledWith(
+      "Invalid",
+      "Please enter a valid Calendar ID"
+    );
+  });
+
+  it('fetches events and shows success screen on successful API response', async () => {
     const dummyResponse = {
       items: [
         {
@@ -39,20 +65,17 @@ describe('CalendarFetching - Coverage for two functions', () => {
       <CalendarFetching />
     );
 
-    // Simulate entering a valid calendar ID and pressing "Connect"
     fireEvent.changeText(getByPlaceholderText('Paste Calendar ID here'), 'dummy-id');
     fireEvent.press(getByText('Connect'));
 
-    // Wait for the success screen to be rendered (triggered by fetchCalendarEvents)
     await waitFor(() => {
       expect(queryByText(/Successful Connection to Google Calendar ID/)).toBeTruthy();
     });
   });
 
-  it('fetchCalendarEvents handles API error when API returns an error', async () => {
-    // This dummy response simulates an API error.
+  it('handles API error by showing an alert when API returns an error', async () => {
     const dummyErrorResponse = {
-      error: { message: 'Test API error' },
+      error: { message: 'API Error Message' },
     };
 
     global.fetch.mockResolvedValue({
@@ -60,7 +83,9 @@ describe('CalendarFetching - Coverage for two functions', () => {
     });
 
     const alertSpy = jest.spyOn(Alert, 'alert');
-    const { getByPlaceholderText, getByText } = renderWithNavigation(<CalendarFetching />);
+    const { getByPlaceholderText, getByText } = renderWithNavigation(
+      <CalendarFetching />
+    );
 
     fireEvent.changeText(getByPlaceholderText('Paste Calendar ID here'), 'dummy-id');
     fireEvent.press(getByText('Connect'));
@@ -68,7 +93,48 @@ describe('CalendarFetching - Coverage for two functions', () => {
     await waitFor(() => {
       expect(alertSpy).toHaveBeenCalledWith(
         "Error",
-        "API Error: Test API error"
+        "API Error: API Error Message"
+      );
+    });
+  });
+
+  it('alerts when API returns no events (no items)', async () => {
+    const dummyResponse = {}; // No 'items'
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(dummyResponse),
+    });
+
+    const alertSpy = jest.spyOn(Alert, 'alert');
+    const { getByPlaceholderText, getByText } = renderWithNavigation(
+      <CalendarFetching />
+    );
+
+    fireEvent.changeText(getByPlaceholderText('Paste Calendar ID here'), 'dummy-id');
+    fireEvent.press(getByText('Connect'));
+
+    await waitFor(() => {
+      expect(alertSpy).toHaveBeenCalledWith(
+        "No Events",
+        "No upcoming events found."
+      );
+    });
+  });
+
+  it('handles fetch error (catch block) by showing an alert', async () => {
+    global.fetch.mockRejectedValue(new Error("Network Error"));
+
+    const alertSpy = jest.spyOn(Alert, 'alert');
+    const { getByPlaceholderText, getByText } = renderWithNavigation(
+      <CalendarFetching />
+    );
+
+    fireEvent.changeText(getByPlaceholderText('Paste Calendar ID here'), 'dummy-id');
+    fireEvent.press(getByText('Connect'));
+
+    await waitFor(() => {
+      expect(alertSpy).toHaveBeenCalledWith(
+        "Error",
+        "Something went wrong while fetching the events."
       );
     });
   });
