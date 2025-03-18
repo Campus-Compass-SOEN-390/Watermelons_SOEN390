@@ -146,5 +146,6 @@ export const estimateShuttleFromButton = async (currentStop) => {
     waitTime,
     shuttleRideTime,
     totalTime: waitTime + shuttleRideTime,
+    nextShuttleTime,
   };
 };
