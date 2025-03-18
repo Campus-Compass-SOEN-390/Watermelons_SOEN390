@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, FlatList, Alert , Modal} from "react-native";
 import Constants from "expo-constants";
 import { KeyboardAvoidingView, ScrollView } from "react-native";
-import { calendarFetchingStyles as styles } from '../styles/CalendarFetchingStyles.js'
+import { calendarFetchingStyles as styles } from '../styles/CalendarFetchingStyles.js';
 
 
 export default function CalendarFetching() {
