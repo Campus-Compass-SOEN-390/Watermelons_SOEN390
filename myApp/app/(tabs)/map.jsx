@@ -975,7 +975,7 @@ export default function MapView() {
           testID="buildings-button"
         >
           {selectedIndoorBuilding ? (
-            <Text style={styles.text}>{selectedIndoorBuilding.name === "VL" ? "VL&VE" : selectedIndoorBuilding.name}</Text>
+            <Text style={styles.text}>{selectedIndoorBuilding.name === "VL" || selectedIndoorBuilding.name === "VE" ? "VL&VE" : selectedIndoorBuilding.name}</Text>
           ) : (
             <MaterialIcons name="location-city" size={24} color="black" />
           )}

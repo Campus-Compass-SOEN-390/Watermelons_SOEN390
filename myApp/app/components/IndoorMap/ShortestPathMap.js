@@ -81,7 +81,7 @@ ShortestPathMap.propTypes = {
   nodeCoordinates: PropTypes.object.isRequired,
   startNode: PropTypes.string,
   endNode: PropTypes.string,
-  currentFloor: PropTypes.string,
+  currentFloor: PropTypes.number,
 };
 
 export default ShortestPathMap;
