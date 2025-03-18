@@ -1012,6 +1012,7 @@
         "type": "Door",
         "id": "VL209",
         "floor": 2,
+        "building": "VL",
         "connected_to": [
           "path-VL209"
         ]
@@ -5180,7 +5181,7 @@
       "properties": {
         "id": "path-VL111",
         "connected_to": [
-          "VL11",
+          "VL111",
           "path-VL110",
           "VL112-09-13-08"
         ]
