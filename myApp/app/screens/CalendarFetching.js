@@ -94,6 +94,10 @@ export default function CalendarFetching() {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={20}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+         {/* Back Button positioned above the container */}
+         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Text style={styles.backButtonText}>Back</Text>
+        </TouchableOpacity>
         <View style={styles.container}>
           <View style={styles.redContainer}>
             <View style={styles.whiteContainer}>

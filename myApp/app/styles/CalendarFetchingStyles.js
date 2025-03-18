@@ -103,6 +103,19 @@ export const calendarFetchingStyles = StyleSheet.create({
     height: 150,
     marginVertical: 20,
   },
+  // --- Back Button Styles ---
+backButton: {
+    alignSelf: 'flex-start',
+    marginTop: 40,  // Adjust this value to position it a bit lower
+    marginLeft: 20, // Adjust as needed
+    padding: 10,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: '#922338',
+    fontWeight: 'bold',
+  },
+  
 });
 
 export default calendarFetchingStyles;
