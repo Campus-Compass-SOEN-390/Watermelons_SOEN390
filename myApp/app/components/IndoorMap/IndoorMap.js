@@ -45,7 +45,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         testID="room-fill-layer"
         sourceID="indoor-map"
         style={{
-          fillColor: "red",
+          fillColor: "#922338",
           fillOpacity: 0.2,
         }}
         filter={[
@@ -62,7 +62,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         testID="room-line-layer"
         sourceID="indoor-map"
         style={{
-          lineColor: "red",
+          lineColor: "#922338",
           lineWidth: 2,
           lineOpacity: 1.0,
         }}
@@ -97,7 +97,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         testID="wall-line-layer"
         sourceID="indoor-map"
         style={{
-          lineColor: "red",
+          lineColor: "#922338",
           lineWidth: 2,
           lineOpacity: 1.0,
         }}

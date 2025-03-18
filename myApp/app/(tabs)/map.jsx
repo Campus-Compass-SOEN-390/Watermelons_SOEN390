@@ -803,10 +803,10 @@ export default function MapView() {
               const centroid = calculateCentroid(convertedCoords);
               const fillColor =
                 highlightedBuilding === building.name
-                  ? "rgba(0, 0, 255, 0.4)"
-                  : "rgba(255, 0, 0, 0.4)";
+                  ? "#f8b837"
+                  : "#922338";
               const strokeColor =
-                highlightedBuilding === building.name ? "blue" : "red";
+                highlightedBuilding === building.name ? "#f8b837" : "#922338";
 
               return (
                 <Fragment key={building.id}>
@@ -824,7 +824,7 @@ export default function MapView() {
                   >
                     <Mapbox.FillLayer
                       id={`fill-${building.id}`}
-                      style={{ fillColor }}
+                      style={{ fillColor, fillOpacity: 0.5 }}
                       maxZoomLevel={18}
                     />
                     <Mapbox.LineLayer
