@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
 import Mapbox from "@rnmapbox/maps";
 import { dijkstra } from "./ShortestPath";
+import Constants from "expo-constants";
 import PropTypes from 'prop-types';
 
 // Set your Mapbox access token
-Mapbox.setAccessToken("sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw");
+Mapbox.setAccessToken(Constants.expoConfig?.extra?.mapbox);
 
 //Algorithm only renders the floor that you are currently on. Splits paths into different floors.
-const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode, currentFloor }) => {
+const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode, currentFloor, isDisabled }) => {
   const [floorPaths, setFloorPaths] = useState({}); // Store paths for multiple floors
 
   useEffect(() => {
     if (!startNode || !endNode || !nodeCoordinates) return;
 
     // Find shortest path using Dijkstra's algorithm
-    const shortestPathNodes = dijkstra(graph, startNode, endNode);
+    const shortestPathNodes = dijkstra(graph, startNode, endNode, isDisabled);
 
     if (shortestPathNodes) {
       const pathsByFloor = {}; // Store paths for each floor
@@ -69,6 +70,7 @@ const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode, currentFl
           lineJoin: "round",
           lineCap: "round",
         }}
+        minZoomLevel={18}
       />
     </Mapbox.ShapeSource>
   );
@@ -79,7 +81,7 @@ ShortestPathMap.propTypes = {
   nodeCoordinates: PropTypes.object.isRequired,
   startNode: PropTypes.string,
   endNode: PropTypes.string,
-  currentFloor: PropTypes.string,
+  currentFloor: PropTypes.number,
 };
 
 export default ShortestPathMap;

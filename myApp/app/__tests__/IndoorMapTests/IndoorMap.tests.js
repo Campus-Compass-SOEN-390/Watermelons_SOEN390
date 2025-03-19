@@ -1,79 +1,67 @@
 import React from "react";
 import { render, waitFor } from "@testing-library/react-native";
 import IndoorMap from "../../components/IndoorMap/IndoorMap";
+import Mapbox from "@rnmapbox/maps";
+import finalMapData from "../../../assets/floorplans/finalMap.json";
 
 jest.mock("@rnmapbox/maps", () => ({
   setAccessToken: jest.fn(),
-  ShapeSource: jest.fn(() => null),
-  FillLayer: jest.fn(() => null),
-  LineLayer: jest.fn(() => null),
-  SymbolLayer: jest.fn(() => null),
+  ShapeSource: jest.fn(({ children, ...props }) => <div {...props}>{children}</div>),
+  FillLayer: jest.fn(() => <div testID="room-fill-layer" />),
+  LineLayer: jest.fn(({ id }) => <div testID={id} />),
+  SymbolLayer: jest.fn(({ id }) => <div testID={id} />),
 }));
 
-global.fetch = jest.fn();
-
-beforeEach(() => {
-  fetch.mockClear();
-  jest.spyOn(console, "error").mockImplementation(() => {}); 
-});
-
-afterEach(() => {
-  console.error.mockRestore();
-});
+jest.mock("expo-constants", () => ({
+  expoConfig: { extra: { mapbox: "test-access-token" } },
+}));
 
 describe("IndoorMap Component", () => {
-  it("fetches GeoJSON data and updates state", async () => {
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        type: "FeatureCollection",
-        features: [
-          { type: "Feature", properties: { building: "VL", floor: 1 } },
-          { type: "Feature", properties: { building: "VL", floor: 2 } },
-          { type: "Feature", properties: { building: "H", floor: 1 } },
-        ],
-      }),
+  test("renders without crashing", async () => {
+    const { getByTestId } = render(<IndoorMap selectedBuilding={null} selectedFloor={"1"} />);
+    
+    await waitFor(() => {
+      expect(getByTestId("indoor-map")).toBeTruthy();
     });
-
-    render(<IndoorMap selectedBuilding={{ name: "VL" }} selectedFloor={1} />);
-
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
   });
 
-  it("filters features correctly for selected building and floor", async () => {
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        type: "FeatureCollection",
-        features: [
-          { type: "Feature", properties: { building: "VL", floor: 1 } },
-          { type: "Feature", properties: { building: "VL", floor: 2 } },
-          { type: "Feature", properties: { building: "H", floor: 1 } },
-        ],
-      }),
-    });
-
-    const { rerender } = render(<IndoorMap selectedBuilding={{ name: "VL" }} selectedFloor={1} />);
-
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
-
-    rerender(<IndoorMap selectedBuilding={{ name: "VL" }} selectedFloor={2} />);
-
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1)); // ✅ Ensures fetch was only called once
+  test("sets Mapbox access token on mount", () => {
+    render(<IndoorMap selectedBuilding={null} selectedFloor={"1"} />);
+    expect(Mapbox.setAccessToken).toHaveBeenCalledWith("test-access-token");
   });
 
-  it("handles fetch errors gracefully", async () => {
-    fetch.mockRejectedValueOnce(new Error("Network error"));
-
-    render(<IndoorMap selectedBuilding={null} selectedFloor={1} />);
-
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+  test("renders the correct layers", async () => {
+    const { getByTestId } = render(<IndoorMap selectedBuilding={null} selectedFloor={"1"} />);
 
     await waitFor(() => {
-      expect(console.error).toHaveBeenCalledWith(
-        "Error fetching GeoJSON:",
-        expect.any(Error)
-      );
+      expect(getByTestId("room-fill-layer")).toBeTruthy();
+      expect(getByTestId("room-line-layer")).toBeTruthy();
+      expect(getByTestId("path-line-layer")).toBeTruthy();
+      expect(getByTestId("wall-line-layer")).toBeTruthy();
+      expect(getByTestId("door-text-layer")).toBeTruthy();
+      expect(getByTestId("poi-text-layer")).toBeTruthy();
+    });
+  });
+
+  test("filters GeoJSON data correctly when selectedBuilding is provided", async () => {
+    const selectedBuilding = { name: "Building A" };
+    const selectedFloor = "2";
+
+    const { getByTestId } = render(<IndoorMap selectedBuilding={selectedBuilding} selectedFloor={selectedFloor} />);
+
+    await waitFor(() => {
+      const shapeSource = getByTestId("indoor-map");
+
+      const filteredFeatures = finalMapData.features.filter((feature) => {
+        const featureBuilding = feature.properties.building;
+        const featureFloor = feature.properties.floor;
+        return (
+          (featureBuilding === selectedBuilding.name && featureFloor === Number(selectedFloor)) ||
+          (featureBuilding !== selectedBuilding.name && featureFloor === 1)
+        );
+      });
+
+      expect(shapeSource.props.shape.features).toEqual(filteredFeatures);
     });
   });
 });
