@@ -11,6 +11,9 @@ import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { getAlternativeRoutes } from "../api/googleMapsApi";
 import { addShuttleOption } from "../utils/addShuttleOption";
+import { useLocationContext } from "../context/LocationContext";
+import useLocation from "../hooks/useLocation";
+
 
 // Define Types
 type RouteStep = {
@@ -38,19 +41,28 @@ interface DirectionsScreenRouteParams {
 const DirectionsScreen = () => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<{ DirectionsScreen: DirectionsScreenRouteParams }, "DirectionsScreen">>();
-  const { origin, destination, travelMode } = route.params;
+  const { origin, destination, travelMode } = useLocationContext();
 
   const [routes, setRoutes] = useState<RouteData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("DIRECTIONSCREEN Origin:", origin);
+    console.log("Destination:", destination);
+    console.log("Travel Mode:", travelMode);
     if (origin && destination) {
       fetchAllRoutes();
+      console.log("DIRECTION SCREEN")
     }
   }, [origin, destination, travelMode]);
 
   const fetchAllRoutes = async () => {
-    setLoading(true);
+    //setLoading(true);
+
+    if (!origin || !destination) {
+      console.error("Origin or destination is null.");
+      return;
+    }
     try {
       const googleRoutesResponse = (await getAlternativeRoutes(
         origin,
@@ -81,8 +93,8 @@ const DirectionsScreen = () => {
       </View>
 
       <View style={styles.locationContainer}>
-        <Text style={styles.locationText}>From: {origin.name}</Text>
-        <Text style={styles.locationText}>To: {destination.name}</Text>
+        {/* <Text style={styles.locationText}>From: {origin.name}</Text>
+        <Text style={styles.locationText}>To: {destination.name}</Text> */}
       </View>
 
       {loading ? (

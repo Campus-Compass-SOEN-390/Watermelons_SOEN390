@@ -121,7 +121,7 @@ export const getAlternativeRoutes = async (
     });
 
     const results = await Promise.all(routePromises);
-    return Object.fromEntries(results.map((r) => [r?.mode, r?.routes || []]));
+    return results;
 };
 
 /**
