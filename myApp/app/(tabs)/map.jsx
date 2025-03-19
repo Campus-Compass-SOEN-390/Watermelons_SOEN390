@@ -35,6 +35,7 @@ import { hGraph, hNodeCoordinates } from "../components/IndoorMap/GraphAndCoordi
 import { ccGraph, ccNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/CC";
 import { loyolaGraph, loyolaNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/Loyola";
 import { mbGraph, mbNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/MB";
+import { indoorCoordinatesMap } from "../components/IndoorMap/GraphAndCoordinates/GraphAndCoordinates";
 import {
   handleIndoorBuildingSelect,
   handleClearIndoorMap,
@@ -890,15 +891,6 @@ export default function MapView() {
               </Mapbox.ShapeSource>
             ))}
 
-          <ShortestPathMap
-            graph={graph}
-            nodeCoordinates={nodeCoordinates}
-            startNode={originText}
-            endNode={destinationText}
-            currentFloor={selectedFloor}
-            isDisabled={isDisabled}
-          />
-
           {/* POI Markers */}
           {showPOI && (
             <>
@@ -974,7 +966,7 @@ export default function MapView() {
           testID="buildings-button"
         >
           {selectedIndoorBuilding ? (
-            <Text style={styles.text}>{selectedIndoorBuilding.name}</Text>
+            <Text style={styles.text}>{selectedIndoorBuilding.name === "VL" || selectedIndoorBuilding.name === "VE" ? "VL&VE" : selectedIndoorBuilding.name}</Text>
           ) : (
             <MaterialIcons name="location-city" size={24} color="black" />
           )}
@@ -995,7 +987,8 @@ export default function MapView() {
               .filter(
                 (building) =>
                   building.campus.toLowerCase() ===
-                    activeCampus.toLowerCase() && building.hasIndoor === true
+                    activeCampus.toLowerCase() && building.hasIndoor === true &&
+                    building.name.toLowerCase() !== "ve"
               )
               .map((building) => (
                 <TouchableOpacity
@@ -1012,7 +1005,7 @@ export default function MapView() {
                     )
                   }
                 >
-                  <Text style={styles.text}>{building.name}</Text>
+                  <Text style={styles.text}>{building.name === "VL" ? "VL&VE" : building.name}</Text>
                 </TouchableOpacity>
               ))}
           </View>

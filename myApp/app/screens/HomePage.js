@@ -27,7 +27,7 @@ export default function HomePage() {
                     <TouchableOpacity 
                     style={styles.button}
                     testID="loyolaButton"
-                    onPress={() => router.push('/(tabs)/map?type=loyola')}
+                    onPress={() => router.push('/(tabs)/map?type=loy')}
                     >
                         <Text style={styles.buttonText}>Loyola Campus</Text>
                     </TouchableOpacity>
