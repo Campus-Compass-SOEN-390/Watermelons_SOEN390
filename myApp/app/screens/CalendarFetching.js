@@ -7,9 +7,13 @@ import Constants from "expo-constants";
 import { KeyboardAvoidingView, ScrollView } from "react-native";
 import { calendarFetchingStyles as styles } from "../styles/CalendarFetchingStyles.js";
 import { useNavigation } from "@react-navigation/native";
+import { useRouter } from 'expo-router';
+
+
 
 export default function CalendarFetching() {
   const navigation = useNavigation();
+  const router = useRouter();
 
   // Declare all state variables
   const [calendarId, setCalendarId] = useState("");
@@ -57,12 +61,13 @@ export default function CalendarFetching() {
     setLoading(false);
   }, [calendarId, API_KEY]);
 
+
   // Navigate after success
   useEffect(() => {
     if (showSuccessScreen) {
       const timer = setTimeout(() => {
         // Navigate to the desired screen after 5 seconds
-        navigation.navigate("Events");
+        router.push("../screens/CalendarSchedulePage"); 
       }, 5000);
 
       return () => clearTimeout(timer);
