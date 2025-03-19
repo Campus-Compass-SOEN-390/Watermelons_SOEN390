@@ -16,12 +16,7 @@ import styles from "../styles/StartAndDestinationPointsStyles";
 import useLocation from "../hooks/useLocation";
 import Icon from "react-native-vector-icons/Foundation";
 import { useLocationContext } from "../context/LocationContext";
-import { getTravelTimes } from "../api/googleMapsApi";
-
-
-import { getAlternativeRoutes } from "../api/googleMapsApi";
-
-
+import TravelFacade from "../utils/TravelFacade";
 
 // Define Types
 type Route = {
@@ -63,16 +58,15 @@ const StartAndDestinationPoints = ({}) => {
   const [showMyLocButton, setShowMyLocButton] = useState(true);
   const [showSteps, setShowSteps] = useState(false);
   const [routeSteps, setRouteSteps] = useState<Step[]>([]);
-  const [travelTimes, setTravelTimes] = useState<{ [key: string]: number | null }>({});
+  const [travelTimes, setTravelTimes] = useState<{
+    [key: string]: number | null;
+  }>({});
   const [loading, setLoading] = useState(false);
   const [routes, setRoutes] = useState<RouteData[] | null>(null);
-
-
 
   //Fetch alternative routes
 
   useEffect(() => {
-
     const fetchAllRoutes = async () => {
       setLoading(true);
 
@@ -81,23 +75,26 @@ const StartAndDestinationPoints = ({}) => {
         return;
       }
 
-      const fetchedRoutes = await getAlternativeRoutes(origin, destination);
-            setRoutes(Object.values(fetchedRoutes));
-            setLoading(false);
-        };
+      const fetchedRoutes = await TravelFacade.getAlternativeRoutes(
+        origin,
+        destination
+      );
+      setRoutes(Object.values(fetchedRoutes));
+      setLoading(false);
+    };
 
-        if (origin && destination) {
-          fetchAllRoutes();
-      }
+    if (origin && destination) {
+      fetchAllRoutes();
+    }
 
-      console.log("ALL ROUTES: ", routes)
+    console.log("ALL ROUTES: ", routes);
   }, [origin, destination, travelMode]);
 
   // Fetch travel times when origin or destination changes
   useEffect(() => {
     if (origin && destination) {
       setLoading(true);
-      getTravelTimes(origin, destination).then((times) => {
+      TravelFacade.getTravelTimes(origin, destination).then((times) => {
         const timesMap: { [key: string]: number | null } = {};
         times.forEach(({ mode, duration }) => {
           timesMap[mode] = duration;
@@ -334,30 +331,37 @@ const StartAndDestinationPoints = ({}) => {
       {/* FOOTER */}
       {renderMap && (
         <View style={styles.footerContainer}>
-        <TouchableOpacity style={styles.stepsButton} onPress={handleStepsClick}>
-        <Text style={styles.footerButtonText}>Steps</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.stepsButton}
+            onPress={handleStepsClick}
+          >
+            <Text style={styles.footerButtonText}>Steps</Text>
+          </TouchableOpacity>
 
-      {/* Display Alternative Routes */}
-      {routes && routes.length > 0 ? (
-         <View style={styles.routesContainer}>
-         {routes
-            .filter((routeData) => routeData.mode === travelMode) // Filter routes by selected mode
-            .map((routeData, index) => (
-              <View key={index}>
-                {routeData.routes.map((route, i) => (
-                  <TouchableOpacity key={i} style={styles.routeCard} onPress={handleGoClick}>
-                    <Text >{route.duration} min</Text>
-                    <Text >{route.distance}</Text>
-                    <Text >Go</Text>
-                  </TouchableOpacity>
+          {/* Display Alternative Routes */}
+          {routes && routes.length > 0 ? (
+            <View style={styles.routesContainer}>
+              {routes
+                .filter((routeData) => routeData.mode === travelMode) // Filter routes by selected mode
+                .map((routeData, index) => (
+                  <View key={index}>
+                    {routeData.routes.map((route, i) => (
+                      <TouchableOpacity
+                        key={i}
+                        style={styles.routeCard}
+                        onPress={handleGoClick}
+                      >
+                        <Text>{route.duration} min</Text>
+                        <Text>{route.distance}</Text>
+                        <Text>Go</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
                 ))}
-              </View>
-            ))}
-        </View>
-      ) : (
-        <Text>No alternative routes available.</Text>
-      )}
+            </View>
+          ) : (
+            <Text>No alternative routes available.</Text>
+          )}
           {/* ETA Display */}
           {/* <Text style={styles.etaText}>
             ETA:{" "}
@@ -377,7 +381,9 @@ const StartAndDestinationPoints = ({}) => {
               updateRenderMap(false);
             }}
           >
-            <Text style={[styles.footerButtonText, { color: "red" }]}>Cancel</Text>
+            <Text style={[styles.footerButtonText, { color: "red" }]}>
+              Cancel
+            </Text>
           </TouchableOpacity>
         </View>
       )}
