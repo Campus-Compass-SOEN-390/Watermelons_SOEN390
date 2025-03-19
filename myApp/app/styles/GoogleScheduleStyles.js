@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         marginBottom: 4,
     },
     iconContainer: {
-        backgroundColor: "#007AFF",
+        backgroundColor: "#800020",
         padding: 10,
         borderRadius: 12,
         marginLeft: 8,

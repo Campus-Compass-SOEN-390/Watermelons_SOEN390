@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { 
-  View, Image, Text, TextInput, TouchableOpacity, 
-  FlatList, Alert, Modal, ActivityIndicator 
+import {
+  View, Image, Text, TextInput, TouchableOpacity,
+  FlatList, Alert, Modal, ActivityIndicator
 } from "react-native";
 import Constants from "expo-constants";
 import { KeyboardAvoidingView, ScrollView } from "react-native";
 import { calendarFetchingStyles as styles } from "../styles/CalendarFetchingStyles.js";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from 'expo-router';
+import * as FileSystem from 'expo-file-system';
 
 
 
@@ -45,14 +46,23 @@ export default function CalendarFetching() {
       } else {
         if (data.items) {
           setEvents(data.items);
-          // 3) Trigger success screen
+
+          const csvContent = convertEventsToCSV(data.items);
+          const fileUri = FileSystem.documentDirectory + "calendar_events.csv";
+
+          await FileSystem.writeAsStringAsync(fileUri, csvContent);
+          console.log("CSV saved to:", fileUri);
+
           setShowSuccessScreen(true);
+
+          // If no events are found in the google calendar
         } else {
           setEvents([]);
           Alert.alert("No Events", "No upcoming events found.");
         }
       }
-      console.log("API Response:", data); // Debug
+
+      console.log("API Response:", data);
     } catch (error) {
       console.error("Error fetching calendar events:", error);
       Alert.alert("Error", "Something went wrong while fetching the events.");
@@ -67,7 +77,7 @@ export default function CalendarFetching() {
     if (showSuccessScreen) {
       const timer = setTimeout(() => {
         // Navigate to the desired screen after 5 seconds
-        router.push("../screens/CalendarSchedulePage"); 
+        router.push("../screens/CalendarSchedulePage");
       }, 5000);
 
       return () => clearTimeout(timer);
@@ -99,8 +109,8 @@ export default function CalendarFetching() {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={20}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-         {/* Back Button positioned above the container */}
-         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        {/* Back Button positioned above the container */}
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
         <View style={styles.container}>
@@ -130,3 +140,22 @@ export default function CalendarFetching() {
     </KeyboardAvoidingView>
   );
 }
+
+const convertEventsToCSV = (events) => {
+  const headers = ["Title", "Start", "End", "Location", "CalendarID"];
+  const rows = events.map(event => [
+    event.summary || "No Title",
+    event.start?.dateTime || event.start?.date || "",
+    event.end?.dateTime || event.end?.date || "",
+    event.location || "",
+    event.htmlLink || ""
+  ]);
+
+  const csvContent = [
+    headers.join(","),
+    ...rows.map(row => row.join(","))
+  ].join("\n");
+
+  return csvContent;
+
+};
