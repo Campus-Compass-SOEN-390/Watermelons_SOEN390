@@ -6,7 +6,6 @@ import { homepageStyles as styles } from '../styles/HomePageStyles.js';
 export default function HomePage() {
    
     const router = useRouter();
-    
 
     return (
         <View style ={{flex:1}}>
@@ -28,7 +27,7 @@ export default function HomePage() {
                     <TouchableOpacity 
                     style={styles.button}
                     testID="loyolaButton"
-                    onPress={() => router.push('/(tabs)/map?type=loyola')}
+                    onPress={() => router.push('/(tabs)/map?type=loy')}
                     >
                         <Text style={styles.buttonText}>Loyola Campus</Text>
                     </TouchableOpacity>
@@ -61,19 +60,22 @@ export default function HomePage() {
             </View>
             <View style={styles.buttonsContainer}>
                 <Text style={styles.title}>Link your account</Text>
-                <View style={styles.buttonContainer}>
+                 <View style={styles.buttonContainer}>
                     <TouchableOpacity 
                     style={styles.googleButton}
-                    testID="googleButton"
+                    testID="calendarfetchbutton"
+                    onPress={() => router.push('/screens/CalendarFetching')}
                     >
-                        <Image
+                         <Image
                             source={require('../../assets/images/google_logo.png')}
                             style={styles.icon}
                             testID="googleIcon"
                         />
-                        <Text style={styles.googleButtonText}>Connect Google Calendar</Text>
+                        <Text style={styles.buttonText}>Fetch Calendars</Text>
                     </TouchableOpacity>
                 </View>
+               
+               
             </View>
         </View>
     );

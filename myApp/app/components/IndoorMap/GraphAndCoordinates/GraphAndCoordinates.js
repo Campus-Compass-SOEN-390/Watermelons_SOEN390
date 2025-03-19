@@ -6553,3 +6553,10 @@ export const nodeCoordinates = {
     "floor": 9
   }
 }
+
+export const indoorCoordinatesMap = Object.fromEntries(
+  Object.entries(nodeCoordinates).map(([key, value]) => [
+    key, 
+    { latitude: value.coordinates[1], longitude: value.coordinates[0], floor: value.floor }
+  ])
+);

@@ -16,6 +16,9 @@ import styles from "../styles/StartAndDestinationPointsStyles";
 import useLocation from "../hooks/useLocation";
 import Icon from "react-native-vector-icons/Foundation";
 import { useLocationContext } from "../context/LocationContext";
+import { useIndoorMapContext } from "../context/IndoorMapContext";
+import { parseClassroomLocation } from "../utils/IndoorMapUtils";
+import { buildings } from "../api/buildingData";
 import { getTravelTimes } from "../api/googleMapsApi";
 
 interface Step {
@@ -26,7 +29,7 @@ interface Step {
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
-const StartAndDestinationPoints = ({}) => {
+const StartAndDestinationPoints = () => {
   const {
     updateOrigin,
     updateDestination,
@@ -41,13 +44,17 @@ const StartAndDestinationPoints = ({}) => {
     renderMap,
     travelMode,
   } = useLocationContext();
+  const { updateSelectedFloor, updateSelectedIndoorBuilding } =
+    useIndoorMapContext();
   const { location } = useLocation();
   const originRef = useRef<any>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showMyLocButton, setShowMyLocButton] = useState(true);
   const [showSteps, setShowSteps] = useState(false);
   const [routeSteps, setRouteSteps] = useState<Step[]>([]);
-  const [travelTimes, setTravelTimes] = useState<{ [key: string]: number | null }>({});
+  const [travelTimes, setTravelTimes] = useState<{
+    [key: string]: number | null;
+  }>({});
   const [loading, setLoading] = useState(false);
 
   // Fetch travel times when origin or destination changes
@@ -129,6 +136,13 @@ const StartAndDestinationPoints = ({}) => {
       console.log("Crashed 4");
     }
   }, [origin, location]);
+
+  const getTravelTimeText = (
+    times: { [key: string]: number | null },
+    mode: string
+  ) => {
+    return times[mode] ? `${times[mode]} min` : "N/A";
+  };
 
   return (
     <View style={styles.container}>
@@ -241,6 +255,21 @@ const StartAndDestinationPoints = ({}) => {
             style={styles.button}
             onPress={() => {
               if (origin && destination) {
+                const parsedLocation = parseClassroomLocation(originText);
+
+                if (parsedLocation) {
+                  const { buildingName, floor } = parsedLocation;
+
+                  const matchedBuilding = buildings.find(
+                    (b) => b.name === buildingName
+                  );
+
+                  if (matchedBuilding) {
+                    updateSelectedIndoorBuilding(matchedBuilding);
+                    updateSelectedFloor(Number(floor));
+                  }
+                }
+
                 updateShowTransportation(true);
               }
             }}
@@ -276,11 +305,7 @@ const StartAndDestinationPoints = ({}) => {
                   color={travelMode === mode ? "white" : "black"}
                 />
                 <Text style={{ fontSize: 14, marginTop: 5 }}>
-                  {loading
-                    ? "..."
-                    : travelTimes[mode]
-                    ? `${travelTimes[mode]} min`
-                    : "N/A"}
+                  {getTravelTimeText(travelTimes, mode)}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -295,14 +320,15 @@ const StartAndDestinationPoints = ({}) => {
             ETA:{" "}
             {loading
               ? "Calculating..."
-              : travelTimes[travelMode]
-              ? `${travelTimes[travelMode]} min`
-              : "N/A"}
+              : getTravelTimeText(travelTimes, travelMode)}
           </Text>
           <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
             <Text style={styles.footerButtonText}>GO</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.stepsButton} onPress={handleStepsClick}>
+          <TouchableOpacity
+            style={styles.stepsButton}
+            onPress={handleStepsClick}
+          >
             <Text style={styles.footerButtonText}>Steps</Text>
           </TouchableOpacity>
           {/* "X" Button as a red cancel */}
@@ -311,6 +337,10 @@ const StartAndDestinationPoints = ({}) => {
             onPress={() => {
               updateShowTransportation(false);
               updateRenderMap(false);
+              updateSelectedFloor(null);
+              updateSelectedIndoorBuilding(null);
+              updateOrigin(null, "");
+              updateDestination(null, "");
             }}
           >
             <Text style={[styles.footerButtonText, { color: "red" }]}>X</Text>

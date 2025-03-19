@@ -7,15 +7,25 @@ import styles from "../styles/IndoorMapStyles";
 const FloorNavigation = ({ selectedBuilding, selectedFloor, onChangeFloor }) => {
   if (!selectedBuilding?.floors || selectedBuilding.floors.length === 0) return null;
 
-  const floors = selectedBuilding.floors;
-  const currentIndex = floors.indexOf(selectedFloor || floors[0]);
+  const floors = [...selectedBuilding.floors]
+    .map(floor => Number(floor)) 
+    .filter(floor => !isNaN(floor)) 
+    .sort((a, b) => a - b); 
+
+  const defaultFloor = floors.includes(1) ? 1 : floors[0];
+  const currentIndex = floors.indexOf(Number(selectedFloor) || defaultFloor);
 
   const handleChangeFloor = (direction) => {
     if (direction === "up" && currentIndex < floors.length - 1) {
-      onChangeFloor(floors[currentIndex + 1]);
+      onChangeFloor(String(floors[currentIndex + 1])); 
     } else if (direction === "down" && currentIndex > 0) {
-      onChangeFloor(floors[currentIndex - 1]);
+      onChangeFloor(String(floors[currentIndex - 1])); 
     }
+  };
+
+  const formatFloorName = (floor) => {
+    if (Number(floor) === -2) return "S2"; 
+    return String(floor);
   };
 
   return (
@@ -29,7 +39,7 @@ const FloorNavigation = ({ selectedBuilding, selectedFloor, onChangeFloor }) => 
         <MaterialIcons name="keyboard-arrow-up" size={24} color="black" />
       </TouchableOpacity>
 
-      <Text style={styles.text}>{selectedFloor || floors[0]}</Text>
+      <Text style={styles.text}>{formatFloorName(selectedFloor || defaultFloor)}</Text>
 
       <TouchableOpacity
         style={[styles.button, currentIndex === 0 && styles.disabledButton]}
@@ -42,12 +52,13 @@ const FloorNavigation = ({ selectedBuilding, selectedFloor, onChangeFloor }) => 
     </View>
   );
 };
+
 FloorNavigation.propTypes = {
   selectedBuilding: PropTypes.shape({
-    floors: PropTypes.array
+    floors: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])), 
   }),
-  selectedFloor: PropTypes.string,
-  onChangeFloor: PropTypes.func.isRequired
+  selectedFloor: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  onChangeFloor: PropTypes.func.isRequired,
 };
 
 export default FloorNavigation;

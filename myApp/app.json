@@ -4,7 +4,14 @@
     "name": "myApp",
     "slug": "myApp",
     "extra": {
-      "apiKey": ""
+      "apiKey": "AIzaSyBdODoY5Fr_jtGEJ2P-y3ZqxbZA9QMUoT0",
+      "mapbox": "pk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN28yZ3V1ejA3Mnoya3B3OHFuZWJvZ2sifQ.6SOCiju5AqaC_cBBW7eOEw",
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "2cae16b8-394d-4bd2-aad3-030ba714ddff"
+      }
     },
     "version": "1.0.0",
     "sdkVersion": "52.0.0",
@@ -52,7 +59,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true

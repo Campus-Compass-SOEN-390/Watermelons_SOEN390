@@ -1,7 +1,7 @@
-import React from "react";
-import { getGoogleTravelTime, getTravelTimes } from "../api/googleMapsApi";
-import { findNearestLocation, haversineDistance } from "./distanceShuttle";
-import { fetchShuttleInfo, fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
+
+import { getTravelTimes } from "../api/googleMapsApi";
+import { haversineDistance } from "./distanceShuttle";
+import { fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
 import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
 
 /**
@@ -13,7 +13,10 @@ import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
  *    - null: if no shuttle is available
  *    - { error: string }: if it's a weekend or another error scenario you want to handle
  */
-export const estimateShuttleTravelTime = async (userLocation, destinationCampus) => {
+export const estimateShuttleTravelTime = async (
+  userLocation,
+  destinationCampus
+) => {
   const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
   const now = new Date();
   const currentTime = now.getHours() * 60 + now.getMinutes(); // Convert to minutes
@@ -44,23 +47,32 @@ export const estimateShuttleTravelTime = async (userLocation, destinationCampus)
 
   // Get all possible travel times to the stop
   const travelModes = ["walking", "driving", "transit", "bicycling"];
-  const travelOptions = await getTravelTimes(userLocation, departureStop, travelModes);
+  const travelOptions = await getTravelTimes(
+    userLocation,
+    departureStop,
+    travelModes
+  );
   if (!travelOptions.length) {
     return null; // No available transportation
   }
 
-  const validOptions = travelOptions.filter(option => option.duration !== null);
-if (!validOptions.length) return null; // No available transportation
+  const validOptions = travelOptions.filter(
+    (option) => option.duration !== null
+  );
+  if (!validOptions.length) return null; // No available transportation
 
-const travelTimeToStop = Math.min(...validOptions.map(option => option.duration));
- // Shortest travel time
+  const travelTimeToStop = Math.min(
+    ...validOptions.map((option) => option.duration)
+  );
+  // Shortest travel time
 
   // Determine next available shuttle departure time
   const stopKey = destinationCampus === "LOY" ? "SGW" : "LOY";
-  const stopSchedule = schedule[stopKey]?.map((time) => {
-    const [hours, minutes] = time.split(":").map(Number);
-    return hours * 60 + minutes; // Convert time to minutes
-  }) || [];
+  const stopSchedule =
+    schedule[stopKey]?.map((time) => {
+      const [hours, minutes] = time.split(":").map(Number);
+      return hours * 60 + minutes; // Convert time to minutes
+    }) || [];
 
   let nextShuttleTime = stopSchedule.find((time) => time > currentTime);
   if (nextShuttleTime === undefined) {
@@ -110,12 +122,12 @@ export const estimateShuttleFromButton = async (currentStop) => {
 
   // Determine the next available shuttle departure time
   const stopKey = currentStop === "SGW" ? "SGW" : "LOY";
-  const destination = currentStop === "SGW" ? "LOY" : "SGW";
 
-  const stopSchedule = schedule[stopKey]?.map((time) => {
-    const [hours, minutes] = time.split(":").map(Number);
-    return hours * 60 + minutes; // Convert time to minutes
-  }) || [];
+  const stopSchedule =
+    schedule[stopKey]?.map((time) => {
+      const [hours, minutes] = time.split(":").map(Number);
+      return hours * 60 + minutes; // Convert time to minutes
+    }) || [];
 
   let nextShuttleTime = stopSchedule.find((time) => time > currentTime);
   if (nextShuttleTime === undefined) {
