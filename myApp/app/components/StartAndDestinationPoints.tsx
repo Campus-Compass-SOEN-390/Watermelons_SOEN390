@@ -50,6 +50,28 @@ const StartAndDestinationPoints = ({}) => {
   const [travelTimes, setTravelTimes] = useState<{ [key: string]: number | null }>({});
   const [loading, setLoading] = useState(false);
 
+  const navigationType = (origin: any, destination: any) => {
+    const originBuilding = getBuildingCode(origin);
+    const destinationBuilding = getBuildingCode(destination)
+    // Navigation type is indoor, same building navigation
+    if (originBuilding == destinationBuilding){
+      return "indoor";
+    }
+    // indoor to outdoor navigation
+    else if (originBuilding && !destinationBuilding){
+      return "indoor-outdoor";
+    }
+    else if (!originBuilding && destinationBuilding){
+      return "outdoor-indoor";
+    }
+    else if (originBuilding && destinationBuilding && (destinationBuilding != originBuilding)){
+      return "indoor-outdoor-indoor"
+    }
+    else{
+      return "outdoor"
+    }
+  }
+
   const getBuildingCode = (room: string) => {
     const match = room.match(/^[A-Za-z]+/);
     return match ? match[0] : null;
