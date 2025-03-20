@@ -13,7 +13,7 @@ import Mapbox from "@rnmapbox/maps";
 import Constants from "expo-constants";
 import { buildings, getBuildingById } from "../api/buildingData";
 import { isPointInPolygon } from "geolib";
-import useLocation from "../hooks/useLocation";
+import useLocation from "../hooks/useLocation"; 
 import { useLocationContext } from "../context/LocationContext";
 import { useIndoorMapContext } from "../context/IndoorMapContext";
 import { useNavigation } from "@react-navigation/native";
@@ -109,6 +109,7 @@ export default function MapView() {
   const [selectedPOI, setSelectedPOI] = useState(null);
   const isFetchingRef = useRef(false);
   const activeRequestRef = useRef(null);
+  const [showStartAndDestination, setShowStartAndDestination] = useState(true);
 
   const coordinatesMap = {
     "My Position": location?.latitude
@@ -146,6 +147,7 @@ export default function MapView() {
     updateRenderMap,
     updateTravelMode,
     updateShowShuttleRoute,
+    updateNavigationToMap,
     origin,
     destination,
     originText,
@@ -153,7 +155,8 @@ export default function MapView() {
     renderMap,
     showShuttleRoute,
     travelMode,
-    showTransportation
+    showTransportation,
+    navigationToMap
   } = useLocationContext();
 
   //Global constants to manage indoor-maps
@@ -214,6 +217,8 @@ export default function MapView() {
       console.log("IN MAP:", destinationText, renderMap);
       updateOrigin(origin, originText);
       updateDestination(destination, destinationText);
+      updateNavigationToMap(true);
+      
       //these two things above are not what is crashing the app
       if (
         originText == "My Location" &&
@@ -703,10 +708,46 @@ export default function MapView() {
     updateShowTransportation(true);
   }
 
+  
+  useEffect(() =>{
+
+    console.log("SHOW NAVIGATION:", navigationToMap);
+    setShowStartAndDestination(navigationToMap);
+
+
+
+
+
+
+
+  }, [navigationToMap]);
+  
+  
+  const handleNavigation = () => {
+
+
+
+
+
+
+  }
+
+
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
+       
+       
+       
+       {showStartAndDestination &&(
         <StartAndDestinationPoints />
+       )}
+        
+       
+        
+
+
         <Mapbox.MapView 
           style={styles.map} 
           styleURL={Mapbox.StyleURL.Light}

@@ -13,6 +13,7 @@ interface LocationContextType {
   showFooter: boolean;
   travelMode: string;
   showShuttleRoute: boolean;
+  navigationToMap: boolean;
   updateOrigin: (location: { latitude: number; longitude: number } | null, text: string) => void;
   updateDestination: (location: { latitude: number; longitude: number } | null, text: string) => void;
   updateShowTransportation: (setting: boolean) => void;
@@ -20,6 +21,7 @@ interface LocationContextType {
   updateShowFooter: (setting: boolean) => void;
   updateTravelMode: (mode: string) => void;
   updateShowShuttleRoute: (setting: boolean) => void;
+  updateNavigationToMap: (setting: boolean) => void;
 }
 
 const LocationContext = createContext<LocationContextType | null>(null);
@@ -35,6 +37,7 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [showFooter, setShowFooter] = useState(false);
   const [travelMode, setTravelMode] = useState("");
   const [showShuttleRoute, setShowShuttleRoute] = useState(false);
+  const [navigationToMap, setNavigationToMap]= useState(false);
 
 
   const [POILocationData, setPOILocationData] = useState<{ name: string; lat: number; lng: number } | null>(null);
@@ -54,6 +57,11 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
     setDestination(location);
     setDestinationText(text);
   };
+
+  // Method to trigger navigation to the map screen
+  const updateNavigationToMap = (setting: boolean) => {
+    setNavigationToMap(setting);
+  }
 
   // useEffect to update origin and destination if locationData is not null
   useEffect(() => {
@@ -96,6 +104,7 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
     showFooter,
     travelMode,
     showShuttleRoute,
+    navigationToMap,
     updateOrigin, 
     updateDestination, 
     updateShowTransportation, 
@@ -104,7 +113,8 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
     updateTravelMode,
     updateShowShuttleRoute,
     updatePOILocationData, // expose the update function
-   }), [origin, destination, originText, destinationText, showTransportation, renderMap, showFooter, travelMode, showShuttleRoute, updateOrigin, updateDestination, updateShowTransportation, updateRenderMap, updateShowFooter, updateTravelMode, updateShowShuttleRoute]);
+    updateNavigationToMap
+   }), [origin, destination, originText, destinationText, showTransportation, renderMap, showFooter, travelMode, showShuttleRoute, navigationToMap, updateOrigin, updateDestination, updateShowTransportation, updateRenderMap, updateShowFooter, updateTravelMode, updateShowShuttleRoute, updateNavigationToMap]);
   
   return (
     <LocationContext.Provider value={value}>
