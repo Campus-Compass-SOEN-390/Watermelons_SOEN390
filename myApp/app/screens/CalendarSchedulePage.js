@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, ScrollView } from "react-native";
+import { Text, View, TouchableOpacity, ScrollView , Alert} from "react-native";
 import * as Location from 'expo-location';
 import React, { useState, useEffect } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -141,7 +141,7 @@ export default function CalendarSchedulePage() {
       handleGetDirections(upcomingClasses[0].location);
     } else {
       console.log("No upcoming classes found");
-      Alert.alert("No Upcoming Classes", "There are no upcoming classes scheduled.");
+      Alert.alert("No Upcoming Classes", "There are no upcoming classes on your schedule. Please add classes or select a different schedule.");
     }
   };
 
