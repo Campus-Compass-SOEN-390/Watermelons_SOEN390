@@ -101,6 +101,15 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: "center",
     },
+    nextClassDirections: {
+        backgroundColor: "#800020",
+        padding: 10,
+        borderRadius: 20,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        marginVertical: 12,
+    },
 });
 
 export default styles;

@@ -78,6 +78,47 @@ export default function CalendarSchedulePage() {
       }
     });
   };
+  const findNextClass = () => {
+    const now = new Date();
+    const currentTime = now.getTime();
+    
+    // Get all classes for today and future dates
+    const upcomingClasses = schedule.filter(item => {
+      const classDate = new Date(item.date);
+      if (classDate < now && classDate.getDate() !== now.getDate()) {
+        return false;
+      }
+      
+      const [startTime] = item.time.split(' - ');
+      const [hours, minutes] = startTime.split(':');
+      const classTime = new Date(classDate);
+      classTime.setHours(parseInt(hours), parseInt(minutes), 0);
+      
+      return classTime.getTime() >= currentTime;
+    });
+  
+    // Sort by date and time
+    upcomingClasses.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      const [startTimeA] = a.time.split(' - ');
+      const [startTimeB] = b.time.split(' - ');
+      
+      const [hoursA, minutesA] = startTimeA.split(':');
+      const [hoursB, minutesB] = startTimeB.split(':');
+      
+      dateA.setHours(parseInt(hoursA), parseInt(minutesA), 0);
+      dateB.setHours(parseInt(hoursB), parseInt(minutesB), 0);
+      
+      return dateA.getTime() - dateB.getTime();
+    });
+  
+    if (upcomingClasses.length > 0) {
+      handleGetDirections(upcomingClasses[0].location);
+    } else {
+      Alert.alert("No Upcoming Classes", "There are no upcoming classes scheduled.");
+    }
+  };
 
   return (
     <LayoutWrapper>
@@ -105,6 +146,13 @@ export default function CalendarSchedulePage() {
           </Text>
         ))}
       </View>
+      <TouchableOpacity
+       style={styles.nextClassDirections}
+        onPress={findNextClass}
+      >
+        <MaterialIcons name="schedule" size={24} color="white" style={{ marginRight: 8 }} />
+        <Text style={styles.nextClassButtonText}>Get directions to my next class</Text>
+      </TouchableOpacity>
 
       {/* Schedule Header */}
       <Text style={styles.scheduleTitle}>Schedule</Text>
@@ -128,6 +176,7 @@ export default function CalendarSchedulePage() {
       ))}
       </ScrollView>
 
+        
       {/* Bottom Navigation Buttons */}
       <View style={styles.todayButtonContainer}>
         <TouchableOpacity
