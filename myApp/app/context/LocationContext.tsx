@@ -14,6 +14,7 @@ interface LocationContextType {
   travelMode: string;
   showShuttleRoute: boolean;
   navigationToMap: boolean;
+  selectedRouteIndex: number;
   updateOrigin: (location: { latitude: number; longitude: number } | null, text: string) => void;
   updateDestination: (location: { latitude: number; longitude: number } | null, text: string) => void;
   updateShowTransportation: (setting: boolean) => void;
@@ -22,6 +23,7 @@ interface LocationContextType {
   updateTravelMode: (mode: string) => void;
   updateShowShuttleRoute: (setting: boolean) => void;
   updateNavigationToMap: (setting: boolean) => void;
+  updateSelectedRouteIndex: (index: number) => void;
 }
 
 const LocationContext = createContext<LocationContextType | null>(null);
@@ -38,6 +40,7 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [travelMode, setTravelMode] = useState("");
   const [showShuttleRoute, setShowShuttleRoute] = useState(false);
   const [navigationToMap, setNavigationToMap]= useState(false);
+  const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
 
 
   const [POILocationData, setPOILocationData] = useState<{ name: string; lat: number; lng: number } | null>(null);
@@ -90,6 +93,10 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
     setShowShuttleRoute(setting);
   }
 
+  const updateSelectedRouteIndex = (index: number) => {
+    setSelectedRouteIndex(index);
+  }
+
   useEffect(() => {
     console.log("FROM LOCATION CONTEXT", lat, lng, name)
   }, []);
@@ -105,6 +112,7 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
     travelMode,
     showShuttleRoute,
     navigationToMap,
+    selectedRouteIndex,
     updateOrigin, 
     updateDestination, 
     updateShowTransportation, 
@@ -113,8 +121,9 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
     updateTravelMode,
     updateShowShuttleRoute,
     updatePOILocationData, // expose the update function
-    updateNavigationToMap
-   }), [origin, destination, originText, destinationText, showTransportation, renderMap, showFooter, travelMode, showShuttleRoute, navigationToMap, updateOrigin, updateDestination, updateShowTransportation, updateRenderMap, updateShowFooter, updateTravelMode, updateShowShuttleRoute, updateNavigationToMap]);
+    updateNavigationToMap,
+    updateSelectedRouteIndex
+   }), [origin, destination, originText, destinationText, showTransportation, renderMap, showFooter, travelMode, showShuttleRoute, navigationToMap, selectedRouteIndex, updateOrigin, updateDestination, updateShowTransportation, updateRenderMap, updateShowFooter, updateTravelMode, updateShowShuttleRoute, updateNavigationToMap, updateSelectedRouteIndex]);
   
   return (
     <LocationContext.Provider value={value}>

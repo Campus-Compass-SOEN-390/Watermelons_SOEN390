@@ -54,6 +54,7 @@ const StartAndDestinationPoints = ({}) => {
     updateRenderMap,
     updateTravelMode,
     updateNavigationToMap,
+    updateSelectedRouteIndex,
     origin,
     destination,
     originText,
@@ -61,7 +62,8 @@ const StartAndDestinationPoints = ({}) => {
     showTransportation,
     renderMap,
     travelMode,
-    navigationToMap
+    navigationToMap,
+    selectedRouteIndex
   } = useLocationContext();
 
 
@@ -78,6 +80,7 @@ const StartAndDestinationPoints = ({}) => {
   const [routes, setRoutes] = useState<RouteData[] | null>(null);
   const [showFooter, setShowFooter] = useState(false);
   const router = useRouter();
+
 
 
 
@@ -105,14 +108,6 @@ const StartAndDestinationPoints = ({}) => {
       console.log("ALL ROUTES: ", routes)
   }, [origin, destination, travelMode]);
 
-  
-  
-  
-
-
-    
-  
-
   // Fetch travel times when origin or destination changes
   useEffect(() => {
     if (origin && destination) {
@@ -129,14 +124,9 @@ const StartAndDestinationPoints = ({}) => {
   }, [origin, destination]);
 
   // Handle "GO" button click
-  const handleGoClick = () => {
-    // console.log("Navigating...");
-    setShowFooter(false);
-    updateShowTransportation(false);
-    updateNavigationToMap(false);
-    
-
-  
+  const handleGoClick = (index: number) => {
+    updateSelectedRouteIndex(index);
+    // console.log("Navigating...");    
 
   // Navigate to DirectionMap and pass location data if needed
   // router.push({
@@ -384,7 +374,7 @@ const StartAndDestinationPoints = ({}) => {
             .map((routeData, index) => (
               <View key={index}>
                 {routeData.routes.map((route, i) => (
-                  <TouchableOpacity key={i} style={styles.routeCard} onPress={handleGoClick}>
+                  <TouchableOpacity key={i} style={styles.routeCard} onPress={()=>handleGoClick(i)}>
                     <Text >{route.duration} min</Text>
                     <Text >{route.distance}</Text>
                     <Text >Go</Text>
