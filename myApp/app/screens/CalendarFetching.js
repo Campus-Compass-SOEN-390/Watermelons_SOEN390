@@ -109,7 +109,7 @@ export default function CalendarFetching() {
     if (showSuccessScreen) {
       const timer = setTimeout(() => {
         router.push("../screens/CalendarSchedulePage");
-      }, 5000);
+      }, 2000);
 
       return () => clearTimeout(timer);
     }
