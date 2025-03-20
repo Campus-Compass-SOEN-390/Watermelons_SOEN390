@@ -19,7 +19,11 @@ import { useLocationContext } from "../context/LocationContext";
 import { getTravelTimes } from "../api/googleMapsApi";
 
 
+
 import { getAlternativeRoutes } from "../api/googleMapsApi";
+import { useRouter } from 'expo-router';
+
+
 
 
 
@@ -49,6 +53,7 @@ const StartAndDestinationPoints = ({}) => {
     updateShowTransportation,
     updateRenderMap,
     updateTravelMode,
+    updateNavigationToMap,
     origin,
     destination,
     originText,
@@ -56,7 +61,12 @@ const StartAndDestinationPoints = ({}) => {
     showTransportation,
     renderMap,
     travelMode,
+    navigationToMap
   } = useLocationContext();
+
+
+
+
   const { location } = useLocation();
   const originRef = useRef<any>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -66,6 +76,8 @@ const StartAndDestinationPoints = ({}) => {
   const [travelTimes, setTravelTimes] = useState<{ [key: string]: number | null }>({});
   const [loading, setLoading] = useState(false);
   const [routes, setRoutes] = useState<RouteData[] | null>(null);
+  const [showFooter, setShowFooter] = useState(false);
+  const router = useRouter();
 
 
 
@@ -93,6 +105,14 @@ const StartAndDestinationPoints = ({}) => {
       console.log("ALL ROUTES: ", routes)
   }, [origin, destination, travelMode]);
 
+  
+  
+  
+
+
+    
+  
+
   // Fetch travel times when origin or destination changes
   useEffect(() => {
     if (origin && destination) {
@@ -110,7 +130,22 @@ const StartAndDestinationPoints = ({}) => {
 
   // Handle "GO" button click
   const handleGoClick = () => {
-    console.log("Navigating...");
+    // console.log("Navigating...");
+    setShowFooter(false);
+    updateShowTransportation(false);
+    updateNavigationToMap(false);
+    
+
+  
+
+  // Navigate to DirectionMap and pass location data if needed
+  // router.push({
+  //   pathname: "/(tabs)/directionMap", // Use the correct path to your directionMap screen
+  //   // query: {
+  //   //   location: JSON.stringify([-73.5792229, 45.4951962]), // Example location data as a query parameter
+  //   //   zoomLevel: 15,
+  //   // },
+  // });;
   };
 
   // Handle "Steps" button click (show modal)
@@ -306,6 +341,7 @@ const StartAndDestinationPoints = ({}) => {
                     updateRenderMap(true);
                     updateTravelMode(mode);
                     updateShowTransportation(true);
+                    setShowFooter(true);
                   }
                 }}
                 style={[
@@ -330,9 +366,11 @@ const StartAndDestinationPoints = ({}) => {
           </View>
         )}
       </View>
-      {/* Footer with ETA and "X" Button */}
+      
+      
       {/* FOOTER */}
-      {renderMap && (
+      {showFooter && (
+        
         <View style={styles.footerContainer}>
         <TouchableOpacity style={styles.stepsButton} onPress={handleStepsClick}>
         <Text style={styles.footerButtonText}>Steps</Text>
@@ -369,12 +407,18 @@ const StartAndDestinationPoints = ({}) => {
           </Text> */}
           {/* <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
             <Text style={styles.footerButtonText}>GO</Text>
+          </TouchableOpacity> */}
+      
+         
           {/* "X" Button as a red cancel */}
           <TouchableOpacity
             style={styles.cancelButton}
             onPress={() => {
               updateShowTransportation(false);
               updateRenderMap(false);
+              setShowFooter(false);
+              updateDestination(null, "");
+              updateOrigin(null, "");
             }}
           >
             <Text style={[styles.footerButtonText, { color: "red" }]}>Cancel</Text>
