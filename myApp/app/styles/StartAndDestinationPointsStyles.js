@@ -110,21 +110,14 @@ export default StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
+    flexWrap: "wrap",
     justifyContent: "space-between",
     paddingHorizontal: 10,
     marginTop: 10,
   },
   footerContainer: {
     position: "absolute",
-    bottom: (() => {
-      if (Dimensions.get("window").height > 930) {
-        return -640;
-      } else if (height > 870) {
-        return -585;
-      } else {
-        return -560;
-      }
-    })(),
+    bottom: -height * 0.69,
     left: -30,
     right: 0,
     height: 120,

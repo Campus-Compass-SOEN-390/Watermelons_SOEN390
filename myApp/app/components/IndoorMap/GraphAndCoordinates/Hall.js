@@ -782,9 +782,8 @@ export const hGraph = {
   },
   "UpH8escalator": {
     "path-UpH8escalator": 8,
-    "UpH9escalator": 4,
-    "escalator-up2H2": 6
-  },
+    "UpH9escalator": 4
+    },
   "path-H815": {
     "H815": 2,
     "path-H817": 2,
@@ -3354,7 +3353,7 @@ export const hNodeCoordinates = {
       -73.578656,
       45.496995
     ],
-    "floor": 0
+    "floor": 1
   },
   "H932": {
     "coordinates": [

@@ -2,15 +2,16 @@
 export const handleIndoorBuildingSelect = (
   building,
   selectedIndoorBuilding,
+  selectedFloor,
   updateIsExpanded,
   updateSelectedIndoorBuilding,
-  setSelectedFloor,
+  updateSelectedFloor,
   mapRef
 ) => {
   const buildingCenter = calculateCentroid(convertCoordinates(building.coordinates));
 
   // Determine the default floor for the building
-  const defaultFloor = building.floors?.length ? building.floors[0] : selectedIndoorBuilding?.floors?.[0] || null;
+  const defaultFloor = 1;
 
   if (selectedIndoorBuilding?.id === building.id) {
     // If reselecting the same building, just recenter without resetting floor
@@ -22,12 +23,12 @@ export const handleIndoorBuildingSelect = (
     });
 
     updateIsExpanded(false);
-    setSelectedFloor((prevFloor) => prevFloor ?? defaultFloor);
+    updateSelectedFloor(selectedFloor ?? defaultFloor);
   } else {
     // Select a new building and reset to its default first floor
     updateSelectedIndoorBuilding(building);
     updateIsExpanded(false);
-    setSelectedFloor(defaultFloor);
+    updateSelectedFloor(defaultFloor);
 
     // Move camera to the new building
     mapRef.current?.setCamera({

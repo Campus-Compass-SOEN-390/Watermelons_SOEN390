@@ -36,6 +36,7 @@ const StartAndDestinationPoints = () => {
     updateShowTransportation,
     updateRenderMap,
     updateTravelMode,
+    updateNavType,
     origin,
     destination,
     originText,
@@ -43,8 +44,9 @@ const StartAndDestinationPoints = () => {
     showTransportation,
     renderMap,
     travelMode,
+    navType
   } = useLocationContext();
-  const { updateSelectedFloor, updateSelectedIndoorBuilding } =
+  const { selectedFloor, updateSelectedFloor, updateSelectedIndoorBuilding } =
     useIndoorMapContext();
   const { location } = useLocation();
   const originRef = useRef<any>(null);
@@ -57,26 +59,36 @@ const StartAndDestinationPoints = () => {
   }>({});
   const [loading, setLoading] = useState(false);
 
-  const navigationType = (origin: any, destination: any) => {
-    const originBuilding = getBuildingCode(origin);
-    const destinationBuilding = getBuildingCode(destination)
+  const handleNavType = (originText: string, destinationText: string) => {
+    console.log("yo broski");
+    if (!originText || !destinationText){
+      console.log("Hey, youre done");
+      return "";
+    }
+    const originBuilding = getBuildingCode(originText);
+    const destinationBuilding = getBuildingCode(destinationText)
+    console.log("originbuilding is", originBuilding);
+    console.log("destinationbuilding is", destinationBuilding);
+    console.log("buildingCoordinates");
     // Navigation type is indoor, same building navigation
-    if (originBuilding == destinationBuilding){
-      return "indoor";
+    if (originBuilding == destinationBuilding && buildingCoordinates[String(originBuilding)] && buildingCoordinates[String(destinationBuilding)] ){
+      updateNavType("indoor");
     }
     // indoor to outdoor navigation
-    else if (originBuilding && !destinationBuilding){
-      return "indoor-outdoor";
+    else if (originBuilding && buildingCoordinates[String(originBuilding)] && !buildingCoordinates[String(destinationBuilding)]){
+      updateNavType("indoor-outdoor");
     }
-    else if (!originBuilding && destinationBuilding){
-      return "outdoor-indoor";
+    else if (destinationBuilding && buildingCoordinates[String(destinationBuilding)] && !buildingCoordinates[String(originBuilding)]){
+      updateNavType("outdoor-indoor");
     }
-    else if (originBuilding && destinationBuilding && (destinationBuilding != originBuilding)){
-      return "indoor-outdoor-indoor"
+    else if (originBuilding && destinationBuilding && buildingCoordinates[String(originBuilding)] && buildingCoordinates[String(destinationBuilding)] && (destinationBuilding != originBuilding)){
+      updateNavType("indoor-outdoor-indoor");
     }
     else{
-      return "outdoor"
+      updateNavType("outdoor")
     }
+
+    console.log("we got this:", navType);
   }
 
   const getBuildingCode = (room: string) => {
@@ -88,7 +100,8 @@ const StartAndDestinationPoints = () => {
     "VL": { latitude: 45.459026, longitude: -73.638606 }, // Vanier Library
     "H": { latitude: 45.497092, longitude: -73.578800 }, // Hall Building
     "EV": { latitude: 45.495376, longitude: -73.577997}, // Engineering and Visual Arts
-    "MB": { latitude: 45.495304, longitude: -73.579044 }  // John Molson Building
+    "MB": { latitude: 45.495304, longitude: -73.579044 },  // John Molson Building
+    "CC": { latitude: 45.458422, longitude: -73.640747 }
   };
 
   const handleDestinationInput = (text: string) => {
@@ -109,6 +122,7 @@ const StartAndDestinationPoints = () => {
   useEffect(() => {
     if (origin && destination) {
       setLoading(true);
+      handleNavType(originText, destinationText);
       getTravelTimes(origin, destination).then((times) => {
         const timesMap: { [key: string]: number | null } = {};
         times.forEach(({ mode, duration }) => {
@@ -162,6 +176,7 @@ const StartAndDestinationPoints = () => {
 
   useEffect(() => {
     try {
+      handleNavType(originText, destinationText);
       updateOrigin(origin, originText);
       updateDestination(destination, destinationText);
     } catch {
@@ -174,16 +189,17 @@ const StartAndDestinationPoints = () => {
       /*originText, destinationText*/
     },
     showTransportation,
-    showSteps,
+    showSteps, 
   ]);
 
   useEffect(() => {
     try {
+      handleNavType(originText, destinationText);
       updateShowTransportation(false);
     } catch {
       console.log("Crashed 4");
     }
-  }, [origin, location]);
+  }, [origin, location,]);
 
   const getTravelTimeText = (
     times: { [key: string]: number | null },
@@ -346,14 +362,15 @@ const StartAndDestinationPoints = () => {
                 style={[
                   styles.transportButton,
                   travelMode === mode && styles.selectedButton,
+                  { flexDirection: "row", alignItems: "center"}, // Added row layout
                 ]}
               >
                 <MaterialIcons
                   name={icon}
-                  size={24}
+                  size={20}
                   color={travelMode === mode ? "white" : "black"}
                 />
-                <Text style={{ fontSize: 14, marginTop: 5 }}>
+                <Text style={{ fontSize: 12, marginTop: 5 }}>
                   {getTravelTimeText(travelTimes, mode)}
                 </Text>
               </TouchableOpacity>
@@ -386,7 +403,7 @@ const StartAndDestinationPoints = () => {
             onPress={() => {
               updateShowTransportation(false);
               updateRenderMap(false);
-              updateSelectedFloor(null);
+              updateSelectedFloor(1);
               updateSelectedIndoorBuilding(null);
               updateOrigin(null, "");
               updateDestination(null, "");

@@ -116,7 +116,7 @@ export const mbGraph = {
     "path-bathroom": 8,
     "MB1.124": 1
   },
-  "MB1mbath": {
+  "1": {
     "path-bathrrom2": 1
   },
   "MBS2.114": {

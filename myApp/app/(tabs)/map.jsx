@@ -45,6 +45,7 @@ import {
 import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
 import { extractShuttleInfo } from "../api/shuttleLiveData";
 import { useLocalSearchParams } from "expo-router";
+import { Directions } from "../components/Directions";
 
 // Import POI related components
 import MapMarkers from "../components/POI/MapMarkers";
@@ -170,6 +171,7 @@ export default function MapView() {
     showShuttleRoute,
     travelMode,
     showTransportation,
+    navType
   } = useLocationContext();
 
   //Global constants to manage indoor-maps
@@ -262,6 +264,7 @@ export default function MapView() {
     } catch (error) {
       console.log("Crashed in useEffect:", error);
     }
+    console.log("Lock in", navType)
   }, [
     location?.latitude,
     location?.longitude,
@@ -532,7 +535,10 @@ export default function MapView() {
   //This useEffect ensures the map is no longer rendered and the travel mode is set back to nothing when origin or location changes
   useEffect(() => {
     try {
-      updateRenderMap(false);
+      if (!origin || !destination) {
+        updateRenderMap(false);
+        return;
+      }
       updateTravelMode("");
     } catch {
       console.log("Crashed 4");
@@ -781,7 +787,7 @@ export default function MapView() {
             </Mapbox.ShapeSource>
           )}
           {/* Render Direction Route */}
-          {indoorCoordinatesMap[originText] &&
+          {/*{indoorCoordinatesMap[originText] &&
           indoorCoordinatesMap[destinationText] && renderMap ? (
             <ShortestPathMap
               graph={graph}
@@ -802,6 +808,23 @@ export default function MapView() {
               />
             )
           )}
+          */}
+          {/* Use Directions component to Render route based on navigation type*/}
+          { origin && destination && renderMap && (
+            <Directions
+              graph={graph}
+              nodeCoordinates={nodeCoordinates}
+              startNode={originText}
+              endNode={destinationText}
+              currentFloor={selectedFloor}
+              origin={origin}
+              destination={destination}
+              mapRef={mapRef}
+              travelMode={travelMode}
+              navType={navType}
+            />
+          )
+          }
 
           {/* Render building polygons */}
           {buildings
@@ -863,7 +886,7 @@ export default function MapView() {
           {/* Indoor Map Using Vector Tileset */}
           <IndoorMap
             selectedBuilding={selectedIndoorBuilding}
-            selectedFloor={String(selectedFloor)}
+            selectedFloor={selectedFloor}
           />
 
           {/* Shuttle bus live location */}
@@ -998,6 +1021,7 @@ export default function MapView() {
                     handleIndoorBuildingSelect(
                       building,
                       selectedIndoorBuilding,
+                      selectedFloor,
                       updateIsExpanded,
                       updateSelectedIndoorBuilding,
                       updateSelectedFloor,

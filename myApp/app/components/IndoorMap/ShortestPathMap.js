@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 Mapbox.setAccessToken(Constants.expoConfig?.extra?.mapbox);
 
 //Algorithm only renders the floor that you are currently on. Splits paths into different floors.
-const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode, currentFloor, isDisabled }) => {
+const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode, currentFloor, isDisabled, pathId }) => {
   const [floorPaths, setFloorPaths] = useState({}); // Store paths for multiple floors
 
   useEffect(() => {
@@ -43,6 +43,7 @@ const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode, currentFl
 
   // Get path coordinates for the current floor
   const pathCoordinates = floorPaths[currentFloor] || [];
+  console.log("pathCoordinates", pathCoordinates)
 
   if (pathCoordinates.length < 2) return null; // Don't render if path is invalid
 
@@ -63,7 +64,7 @@ const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode, currentFl
   return (
     <Mapbox.ShapeSource id="shortestPath" shape={geoJsonPath}>
       <Mapbox.LineLayer
-        id="pathLayer"
+        id={`pathLayer-${pathId}`}
         style={{
           lineColor: "blue",
           lineWidth: 4,
