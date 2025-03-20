@@ -85,14 +85,15 @@ const styles = StyleSheet.create({
     todayNavButton: {
         backgroundColor: "#800020",
         padding: 10,
-        borderRadius: 20,
+        borderRadius: 20
     },
     todayLabelWrapper: {
         backgroundColor: "#800020",
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         paddingVertical: 10,
         borderRadius: 25,
         marginHorizontal: 8,
+        width: 150,
     },
     todayText: {
         color: "white",
