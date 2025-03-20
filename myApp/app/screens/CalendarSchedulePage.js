@@ -82,40 +82,65 @@ export default function CalendarSchedulePage() {
     const now = new Date();
     const currentTime = now.getTime();
     
+    console.log("Current time:", now.toLocaleString());
+    
     // Get all classes for today and future dates
     const upcomingClasses = schedule.filter(item => {
       const classDate = new Date(item.date);
-      if (classDate < now && classDate.getDate() !== now.getDate()) {
-        return false;
-      }
-      
       const [startTime] = item.time.split(' - ');
       const [hours, minutes] = startTime.split(':');
       const classTime = new Date(classDate);
       classTime.setHours(parseInt(hours), parseInt(minutes), 0);
       
+      console.log("Checking class:", {
+        course: item.course,
+        date: classDate.toLocaleDateString(),
+        time: startTime,
+        classTimestamp: classTime.getTime(),
+        currentTimestamp: currentTime,
+        isUpcoming: classTime.getTime() >= currentTime
+      });
+      
+      if (classDate < now && classDate.getDate() !== now.getDate()) {
+        return false;
+      }
+      
       return classTime.getTime() >= currentTime;
     });
+    
+    console.log("Found upcoming classes:", upcomingClasses);
   
-    // Sort by date and time
     upcomingClasses.sort((a, b) => {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
       const [startTimeA] = a.time.split(' - ');
       const [startTimeB] = b.time.split(' - ');
-      
       const [hoursA, minutesA] = startTimeA.split(':');
       const [hoursB, minutesB] = startTimeB.split(':');
       
-      dateA.setHours(parseInt(hoursA), parseInt(minutesA), 0);
-      dateB.setHours(parseInt(hoursB), parseInt(minutesB), 0);
+      // Set the hours and minutes for comparison
+      dateA.setHours(parseInt(hoursA), parseInt(minutesA), 0, 0);
+      dateB.setHours(parseInt(hoursB), parseInt(minutesB), 0, 0);
+      
+      console.log("Comparing times:", {
+        classA: { course: a.course, time: dateA.toLocaleString() },
+        classB: { course: b.course, time: dateB.toLocaleString() }
+      });
       
       return dateA.getTime() - dateB.getTime();
     });
+      
   
     if (upcomingClasses.length > 0) {
+      console.log("Selected next class:", {
+        course: upcomingClasses[0].course,
+        location: upcomingClasses[0].location,
+        time: upcomingClasses[0].time,
+        date: upcomingClasses[0].date
+      });
       handleGetDirections(upcomingClasses[0].location);
     } else {
+      console.log("No upcoming classes found");
       Alert.alert("No Upcoming Classes", "There are no upcoming classes scheduled.");
     }
   };
