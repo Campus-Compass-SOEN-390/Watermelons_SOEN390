@@ -67,6 +67,19 @@ Mapbox.setAccessToken(MAPBOX_API);
 const REGION_CHANGE_THRESHOLD = 0.005;
 
 export default function MapView() {
+  const { destinationString } = useLocalSearchParams();
+
+  useEffect(() => {
+    if (destinationString) {
+      // Update the destination using the existing context
+      updateDestination(
+        coordinatesMap[destinationString] || destinationString,
+        destinationString
+      );
+      updateShowTransportation(true);
+    }
+  }, [destinationString]);
+
   //get Campus type from homePage
   const { type } = useLocalSearchParams();
 

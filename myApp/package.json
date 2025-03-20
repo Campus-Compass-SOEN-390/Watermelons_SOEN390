@@ -26,6 +26,7 @@
     "@expo/vector-icons": "^14.0.2",
     "@mapbox/polyline": "^1.2.1",
     "@react-google-maps/api": "^2.20.5",
+    "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-native-community/geolocation": "^3.4.0",
     "@react-native-community/slider": "^4.5.6",
     "@react-native-google-signin/google-signin": "^13.2.0",
@@ -43,6 +44,7 @@
     "expo-blur": "~14.0.3",
     "expo-constants": "~17.0.5",
     "expo-dev-client": "~5.0.14",
+    "expo-file-system": "~18.0.11",
     "expo-font": "~13.0.3",
     "expo-haptics": "~14.0.1",
     "expo-linking": "~7.0.5",
@@ -84,8 +86,7 @@
     "react-native-web": "~0.19.13",
     "react-native-web-maps": "^0.1.0",
     "react-native-webview": "13.12.5",
-    "uuid": "^11.0.5",
-    "expo-file-system": "~18.0.11"
+    "uuid": "^11.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

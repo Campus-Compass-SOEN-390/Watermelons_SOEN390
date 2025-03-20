@@ -64,7 +64,7 @@ export default function HomePage() {
                     <TouchableOpacity 
                     style={styles.googleButton}
                     testID="calendarfetchbutton"
-                    onPress={() => router.push('/screens/CalendarFetching')}
+                    onPress={() => router.push('screens/CalendarFetching')}
                     >
                          <Image
                             source={require('../../assets/images/google_logo.png')}

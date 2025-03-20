@@ -21,6 +21,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import LayoutWrapper from "../components/LayoutWrapper.js";
 
+
+
+
 export default function CalendarFetching() {
   const navigation = useNavigation();
   const router = useRouter();

@@ -1,4 +1,5 @@
 import { Text, View, TouchableOpacity, ScrollView } from "react-native";
+import * as Location from 'expo-location';
 import React, { useState, useEffect } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import styles from '../styles/GoogleScheduleStyles';
@@ -66,6 +67,17 @@ export default function CalendarSchedulePage() {
       };
     });
   };
+  const handleGetDirections = (location) => {
+    console.log("Getting directions to:", location);    
+      
+    // Navigate to map with destination parameter
+    router.push({
+      pathname: '/(tabs)/map',
+      params: {
+        destinationString: location  // Pass the location string (H967)
+      }
+    });
+  };
 
   return (
     <LayoutWrapper>
@@ -99,18 +111,21 @@ export default function CalendarSchedulePage() {
 
       {/* Schedule Cards */}
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-        {filteredSchedule.map((item, idx) => (
-          <View key={idx} style={styles.card}>
-            <View style={styles.cardTextContainer}>
-              <Text style={styles.courseText}>{item.course}</Text>
-              <Text>{item.location}</Text>
-              <Text>{item.time}</Text>
-            </View>
-            <View style={styles.iconContainer}>
-              <MaterialIcons name="directions" size={28} color="white" />
-            </View>
+      {filteredSchedule.map((item, idx) => (
+        <View key={idx} style={styles.card}>
+          <View style={styles.cardTextContainer}>
+            <Text style={styles.courseText}>{item.course}</Text>
+            <Text>{item.location}</Text>
+            <Text>{item.time}</Text>
           </View>
-        ))}
+          <TouchableOpacity 
+            style={styles.iconContainer}
+            onPress={() => handleGetDirections(item.location)}
+          >
+            <MaterialIcons name="directions" size={28} color="white" />
+          </TouchableOpacity>
+        </View>
+      ))}
       </ScrollView>
 
       {/* Bottom Navigation Buttons */}
