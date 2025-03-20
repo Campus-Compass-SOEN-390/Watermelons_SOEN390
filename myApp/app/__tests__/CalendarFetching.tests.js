@@ -12,6 +12,16 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
+jest.mock('@react-native-async-storage/async-storage', () => ({
+  setItem: jest.fn(() => Promise.resolve(null)),
+  getItem: jest.fn(() => Promise.resolve(null)),
+  removeItem: jest.fn(() => Promise.resolve(null)),
+  getAllKeys: jest.fn(() => Promise.resolve([])),
+  multiGet: jest.fn(() => Promise.resolve([])),
+  multiRemove: jest.fn(() => Promise.resolve(null)),
+}));
+
+
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import CalendarFetching from '../screens/CalendarFetching';
