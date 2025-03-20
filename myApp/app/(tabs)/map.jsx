@@ -217,7 +217,7 @@ export default function MapView() {
       console.log("IN MAP:", destinationText, renderMap);
       updateOrigin(origin, originText);
       updateDestination(destination, destinationText);
-      updateNavigationToMap(true);
+      
       
       //these two things above are not what is crashing the app
       if (
@@ -714,6 +714,8 @@ export default function MapView() {
     console.log("SHOW NAVIGATION:", navigationToMap);
     setShowStartAndDestination(navigationToMap);
 
+    
+
 
 
 
@@ -723,14 +725,7 @@ export default function MapView() {
   }, [navigationToMap]);
   
   
-  const handleNavigation = () => {
 
-
-
-
-
-
-  }
 
 
 
@@ -924,6 +919,9 @@ export default function MapView() {
       {/* Position Buttons */}
       <View style={styles.positionButtonsContainer}>
         {/* User Location Button */}
+       
+       
+        {/* CENTER ON MY LOC */}
         <TouchableOpacity
           style={styles.positionButton}
           onPress={centerMapOnUser}
@@ -933,6 +931,7 @@ export default function MapView() {
         </TouchableOpacity>
 
         {/* Campus Location Button */}
+        {/* CENTER ON MY  */}
         <TouchableOpacity
           style={styles.positionButton}
           onPress={centerMapOnCampus}

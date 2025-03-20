@@ -37,7 +37,7 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [showFooter, setShowFooter] = useState(false);
   const [travelMode, setTravelMode] = useState("");
   const [showShuttleRoute, setShowShuttleRoute] = useState(false);
-  const [navigationToMap, setNavigationToMap]= useState(false);
+  const [navigationToMap, setNavigationToMap]= useState(true);
 
 
   const [POILocationData, setPOILocationData] = useState<{ name: string; lat: number; lng: number } | null>(null);

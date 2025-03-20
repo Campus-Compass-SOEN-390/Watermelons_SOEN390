@@ -131,9 +131,6 @@ const StartAndDestinationPoints = ({}) => {
   // Handle "GO" button click
   const handleGoClick = () => {
     // console.log("Navigating...");
-    setShowFooter(false);
-    updateShowTransportation(false);
-    updateNavigationToMap(false);
     
 
   
@@ -387,7 +384,7 @@ const StartAndDestinationPoints = ({}) => {
                   <TouchableOpacity key={i} style={styles.routeCard} onPress={handleGoClick}>
                     <Text >{route.duration} min</Text>
                     <Text >{route.distance}</Text>
-                    <Text >Go</Text>
+                   
                   </TouchableOpacity>
                 ))}
               </View>
