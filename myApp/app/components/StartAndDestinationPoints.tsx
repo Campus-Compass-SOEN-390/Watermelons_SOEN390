@@ -377,7 +377,7 @@ const StartAndDestinationPoints = ({}) => {
                   <TouchableOpacity key={i} style={styles.routeCard} onPress={()=>handleGoClick(i)}>
                     <Text >{route.duration} min</Text>
                     <Text >{route.distance}</Text>
-                    <Text >Go</Text>
+                   
                   </TouchableOpacity>
                 ))}
               </View>
