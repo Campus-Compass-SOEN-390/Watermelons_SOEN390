@@ -48,18 +48,10 @@ export default function HomePage() {
                         <Text style={styles.buttonText}>Interest Points</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity 
-                    style={styles.buttonOrange}
-                    testID="directionButton"
-                    onPress={() => router.push('screens/CalendarSchedulePage')}
-                    >
-                        <Text style={styles.buttonText}>Next on Schedule</Text>
-                    </TouchableOpacity>
-                </View>
+           
             </View>
             <View style={styles.buttonsContainer}>
-                <Text style={styles.title}>Link your account</Text>
+                <Text style={styles.title}>View My Calendar</Text>
                  <View style={styles.buttonContainer}>
                     <TouchableOpacity 
                     style={styles.googleButton}
