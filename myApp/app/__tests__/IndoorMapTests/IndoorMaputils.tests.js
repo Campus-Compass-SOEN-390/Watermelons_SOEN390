@@ -3,7 +3,7 @@ import {
     handleClearIndoorMap, 
     convertCoordinates, 
     calculateCentroid 
-  } from "../../utils/indoor-map"; 
+  } from "../../utils/IndoorMapUtils"; 
   
   describe("Indoor Map Utility Functions", () => {
     

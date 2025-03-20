@@ -75,3 +75,48 @@ export const handleClearIndoorMap = (
     animationDuration: 1000,
   });
 };
+
+// Extracts the building prefix from a classroom name like "H101" -> "H"
+export const extractBuildingPrefix = (classroomName) => {
+  const match = classroomName.match(/^[A-Za-z]+/); // Extracts letters at the start
+  return match ? match[0] : null;
+};
+
+// Finds and sets the building based on the classroom name
+export const selectBuildingFromClassroom = (classroom, buildings, updateSelectedIndoorBuilding, setSelectedFloor) => {
+  if (!classroom) return;
+
+  const buildingPrefix = extractBuildingPrefix(classroom);
+  if (!buildingPrefix) return;
+
+  // Find the corresponding building
+  const matchingBuilding = buildings.find((b) => b.name.startsWith(buildingPrefix));
+
+  if (matchingBuilding) {
+    console.log(`Setting selected indoor building to: ${matchingBuilding.name}`);
+    updateSelectedIndoorBuilding(matchingBuilding);
+    setSelectedFloor("1"); // Default to the first floor
+  } else {
+    console.log(`No matching building found for prefix: ${buildingPrefix}`);
+  }
+};
+
+export const parseClassroomLocation = (classroomText) => {
+  const classroomRegex = /^([A-Z]+)(\d{1,3})/i;
+  const match = classroomText.match(classroomRegex);
+
+  if (!match) return null;
+
+  let buildingName = match[1];
+  let floor = parseInt(match[2][0], 10);
+
+  // Special case for MB building
+  if (classroomText.startsWith("MB")) {
+    buildingName = "MB";
+    if (classroomText.includes("S2")) {
+      floor = -2; // Convert "S2" to -2
+    }
+  }
+
+  return { buildingName, floor };
+}

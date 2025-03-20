@@ -27,7 +27,7 @@ describe('Home page', () => {
         const shuttleScheduleButton = page.getByTestId('shuttleScheduleButton');
         const interestButton = page.getByTestId('interestButton');
         const directionButton = page.getByTestId('directionButton');
-        const googleButton = page.getByTestId('googleButton');
+        const googleButton = page.getByTestId('calendarfetchbutton');
 
         expect(logo).toBeTruthy();
         expect(googleIcon).toBeTruthy();
@@ -50,7 +50,7 @@ describe('Home page', () => {
         const page = render(<HomePage />);
         const loyolaButton = page.getByTestId('loyolaButton');
         fireEvent.press(loyolaButton);
-        expect(mockPush).toHaveBeenCalledWith('/(tabs)/map?type=loyola');
+        expect(mockPush).toHaveBeenCalledWith('/(tabs)/map?type=loy');
     });
 
     it('should navigate to Shuttle Bus Schedule when shuttle schedule button is pressed', () => {

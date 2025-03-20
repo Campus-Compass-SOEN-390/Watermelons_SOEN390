@@ -45,7 +45,9 @@ export const estimateShuttleTravelTime = async (
 
   // Get all possible travel times to the stop
   const travelModes = ["walking", "driving", "transit", "bicycling"];
+
   const travelOptions = await TravelFacade.getTravelTimes(
+
     userLocation,
     departureStop,
     travelModes
