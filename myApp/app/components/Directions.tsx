@@ -55,33 +55,6 @@ export const Directions : React.FC<Props> = ({
         "MB": { latitude: 45.495304, longitude: -73.579044 },  // John Molson Building
         "CC": {latitude: 45.458422, longitude: -73.640747}
     };
-    
-    {/*const findSetNode = (nodeText: string) => {
-        const buildingCode = getBuildingCode(nodeText)
-        if (buildingCode == "H"){
-            return "Hall-principal-entrance"
-        }
-        if (buildingCode == "MB"){
-            return "MB1-entrance"
-        }
-        if (buildingCode == "CC"){
-            return "CC1-entrance"
-        }
-    }
-
-    const findEntrance = (nodeText: string) => {
-        const buildingCode = getBuildingCode(nodeText)
-        if (buildingCode == "H"){
-            return buildingCoordinates["H"];
-        }
-        if (buildingCode == "MB"){
-            return buildingCoordinates["MB"];
-        }
-        if (buildingCode == "CC"){
-            return buildingCoordinates["CC"];
-        }
-        return null;
-    }*/}
 
     const findBuildingInfo = (nodeText: string): { setNode: string | null; entranceOrExit: { latitude: number; longitude: number } | null } => {
         const buildingCode = getBuildingCode(nodeText);
@@ -89,7 +62,7 @@ export const Directions : React.FC<Props> = ({
         if (!buildingCode) return { setNode: null, entranceOrExit: null }; // Return null values if no valid building code is found
     
         const setNodeMap: Record<string, string> = {
-            "H": "Hall-principal-entrance",
+            "H": "Hall1-principal-entrance",
             "MB": "MB1-entrance",
             "CC": "CC1-entrance",
         };
@@ -127,7 +100,7 @@ export const Directions : React.FC<Props> = ({
     }
     if (navType == "indoor-outdoor"){
         //const newEndNode = findSetNode(startNode);
-        const { setNode: newEndNode } = findBuildingInfo(startNode);
+        const { setNode: newEndNode, entranceOrExit: start } = findBuildingInfo(startNode);
         console.log("This is the new end node", newEndNode);
         return (
             <View>
@@ -141,7 +114,7 @@ export const Directions : React.FC<Props> = ({
                     pathId={"indoor"}
                 />
                 <MapDirections
-                    origin={origin}
+                    origin={start}
                     destination={destination}
                     mapRef={mapRef}
                     travelMode={travelMode}

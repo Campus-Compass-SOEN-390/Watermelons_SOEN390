@@ -10,7 +10,7 @@ Mapbox.setAccessToken(Constants.expoConfig?.extra?.mapbox);
 //Algorithm only renders the floor that you are currently on. Splits paths into different floors.
 const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode, currentFloor, isDisabled, pathId }) => {
   const [floorPaths, setFloorPaths] = useState({}); // Store paths for multiple floors
-  const entranceNodes = ["Hall-principal-entrance", "CC1-entrance"];
+  const entranceNodes = ["Hall1-principal-entrance", "CC1-entrance", "MB1-entrance"];
 
   useEffect(() => {
     if (!startNode || !endNode || !nodeCoordinates) return;
@@ -37,10 +37,9 @@ const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode, currentFl
       setFloorPaths(pathsByFloor);
     }
   }, [startNode, endNode]);
-const isEntrance = (id) => id.toLowerCase().includes("entrance");
 
   // Get path coordinates for the current floor
-  const currentPath = floorPaths[currentFloor] || [];
+const currentPath = floorPaths[currentFloor] || [];
 if (currentPath.length < 2) return null;
 
 const features = [];
@@ -49,10 +48,10 @@ for (let i = 0; i < currentPath.length - 1; i++) {
   const from = currentPath[i];
   const to = currentPath[i + 1];
 
-  const fromIsEntrance = isEntrance(from.id);
-  const toIsEntrance = isEntrance(to.id);
+  const fromIsEntrance = entranceNodes.some((entrance) => from.id.includes(entrance));
+  const toIsEntrance = entranceNodes.some((entrance) => to.id.includes(entrance));
 
-  // ❌ Skip drawing if both are entrances
+  // Skip drawing if both are entrances
   if (fromIsEntrance && toIsEntrance) continue;
 
   features.push({
