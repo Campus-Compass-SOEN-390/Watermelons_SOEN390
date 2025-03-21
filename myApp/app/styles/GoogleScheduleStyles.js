@@ -7,15 +7,6 @@ const styles = StyleSheet.create({
         paddingTop: 40,
         paddingHorizontal: 16,
     },
-    logoutButton: {
-        backgroundColor: "#d3d3d3",
-        paddingHorizontal: 20,
-        paddingVertical: 6,
-        borderRadius: 20,
-    },
-    logoutText: {
-        fontWeight: "bold",
-    },
     daysRow: {
         flexDirection: "row",
         justifyContent: "space-around",

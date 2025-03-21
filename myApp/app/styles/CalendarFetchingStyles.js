@@ -4,7 +4,7 @@ export const calendarFetchingStyles = StyleSheet.create({
   container: {
     backgroundColor: '#f5f5f5',
     justifyContent: 'center',
-    flex: 1, // You may want this if you need the full screen
+    flex: 1,
   },
   redContainer: {
     backgroundColor: '#922338',
@@ -41,7 +41,7 @@ export const calendarFetchingStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 15,
-    marginBottom: 20,
+    marginBottom: 10,
     fontSize: 16,
     backgroundColor: '#f9f9f9',
   },
@@ -107,7 +107,7 @@ export const calendarFetchingStyles = StyleSheet.create({
   // --- Calendar History Track --- 
 
   subtitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 10,
   },
@@ -118,9 +118,8 @@ export const calendarFetchingStyles = StyleSheet.create({
     marginBottom: 10,
   },
   historyText: {
-    fontSize: 14,
+    fontSize: 12,
     color: 'black',
-
   },
 
   // --- Clear History Button ---
@@ -129,16 +128,15 @@ export const calendarFetchingStyles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
     padding: 10,
-    borderRadius: 8,
+    borderRadius: 25,
     backgroundColor: '#f4f4f4',
     borderWidth: 1,
     borderColor: '#ccc',
     alignSelf: 'center',
     marginTop: 10,
   },
-
   clearHistoryText: {
-    fontSize: 16,
+    fontSize: 10,
     color: '#444',
     fontWeight: '500',
   },
