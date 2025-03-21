@@ -91,4 +91,44 @@ describe('CalendarFetching Component', () => {
       expect(AsyncStorage.removeItem).toHaveBeenCalledWith('calendarIds')
     );
   });
+
+  test('fetches and displays calendar events successfully', async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () =>
+          Promise.resolve({
+            items: [
+              { summary: 'Meeting', start: { dateTime: '2025-03-21T10:00:00Z' }, end: { dateTime: '2025-03-21T11:00:00Z' } },
+            ],
+          }),
+      })
+    );
+   
+  });
+
+  test('loads stored calendar IDs on mount', async () => {
+    const AsyncStorage = require('@react-native-async-storage/async-storage');
+    AsyncStorage.getItem.mockResolvedValue(
+      JSON.stringify([{ id: 'saved-id', name: 'Saved Calendar' }])
+    );
+
+    const { findByText } = renderWithNav(<CalendarFetching />);
+
+    expect(await findByText('Saved Calendar')).toBeTruthy();
+  });
+  test('allows selecting a stored calendar ID', async () => {
+    const AsyncStorage = require('@react-native-async-storage/async-storage');
+    AsyncStorage.getItem.mockResolvedValue(
+      JSON.stringify([{ id: 'stored-calendar', name: 'Stored Calendar' }])
+    );
+
+    const { findByText, getByPlaceholderText } = renderWithNav(<CalendarFetching />);
+
+    const storedCalendar = await findByText('Stored Calendar');
+    fireEvent.press(storedCalendar);
+
+    expect(getByPlaceholderText('Paste Calendar ID here').props.value).toBe('stored-calendar');
+  });
+
+  
 });
