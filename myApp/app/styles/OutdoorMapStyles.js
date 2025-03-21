@@ -34,7 +34,7 @@ export default StyleSheet.create({
   buttonContainer: {
     position: "absolute",
     right: 20,
-    bottom: 100, // Position above tab bar
+    bottom: 330, // Position above tab bar
     alignItems: "center",
     zIndex: 10,
   },

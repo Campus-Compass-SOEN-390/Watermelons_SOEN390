@@ -16,10 +16,21 @@ import styles from "../styles/StartAndDestinationPointsStyles";
 import useLocation from "../hooks/useLocation";
 import Icon from "react-native-vector-icons/Foundation";
 import { useLocationContext } from "../context/LocationContext";
+import TravelFacade from "../utils/TravelFacade";
 import { useIndoorMapContext } from "../context/IndoorMapContext";
 import { parseClassroomLocation } from "../utils/IndoorMapUtils";
 import { buildings } from "../api/buildingData";
-import { getTravelTimes } from "../api/googleMapsApi";
+
+// Define Types
+type Route = {
+  duration: string | number;
+  distance: string | number;
+};
+
+type RouteData = {
+  mode: string;
+  routes: Route[];
+};
 
 interface Step {
   id: number;
@@ -56,12 +67,39 @@ const StartAndDestinationPoints = () => {
     [key: string]: number | null;
   }>({});
   const [loading, setLoading] = useState(false);
+  const [routes, setRoutes] = useState<RouteData[] | null>(null);
+
+  //Fetch alternative routes
+
+  useEffect(() => {
+    const fetchAllRoutes = async () => {
+      setLoading(true);
+
+      if (!origin || !destination) {
+        console.error("Origin or destination is null.");
+        return;
+      }
+
+      const fetchedRoutes = await TravelFacade.getAlternativeRoutes(
+        origin,
+        destination
+      );
+      setRoutes(Object.values(fetchedRoutes));
+      setLoading(false);
+    };
+
+    if (origin && destination) {
+      fetchAllRoutes();
+    }
+
+    console.log("ALL ROUTES: ", routes);
+  }, [origin, destination, travelMode]);
 
   // Fetch travel times when origin or destination changes
   useEffect(() => {
     if (origin && destination) {
       setLoading(true);
-      getTravelTimes(origin, destination).then((times) => {
+      TravelFacade.getTravelTimes(origin, destination).then((times) => {
         const timesMap: { [key: string]: number | null } = {};
         times.forEach(({ mode, duration }) => {
           timesMap[mode] = duration;
@@ -313,10 +351,42 @@ const StartAndDestinationPoints = () => {
         )}
       </View>
       {/* Footer with ETA and "X" Button */}
+      {/* FOOTER */}
       {renderMap && (
         <View style={styles.footerContainer}>
+          <TouchableOpacity
+            style={styles.stepsButton}
+            onPress={handleStepsClick}
+          >
+            <Text style={styles.footerButtonText}>Steps</Text>
+          </TouchableOpacity>
+
+          {/* Display Alternative Routes */}
+          {routes && routes.length > 0 ? (
+            <View style={styles.routesContainer}>
+              {routes
+                .filter((routeData) => routeData.mode === travelMode) // Filter routes by selected mode
+                .map((routeData, index) => (
+                  <View key={index}>
+                    {routeData.routes.map((route, i) => (
+                      <TouchableOpacity
+                        key={i}
+                        style={styles.routeCard}
+                        onPress={handleGoClick}
+                      >
+                        <Text>{route.duration} min</Text>
+                        <Text>{route.distance}</Text>
+                        <Text>Go</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                ))}
+            </View>
+          ) : (
+            <Text>No alternative routes available.</Text>
+          )}
           {/* ETA Display */}
-          <Text style={styles.etaText}>
+          {/* <Text style={styles.etaText}>
             ETA:{" "}
             {loading
               ? "Calculating..."
@@ -331,6 +401,7 @@ const StartAndDestinationPoints = () => {
           >
             <Text style={styles.footerButtonText}>Steps</Text>
           </TouchableOpacity>
+
           {/* "X" Button as a red cancel */}
           <TouchableOpacity
             style={styles.cancelButton}
@@ -343,7 +414,9 @@ const StartAndDestinationPoints = () => {
               updateDestination(null, "");
             }}
           >
-            <Text style={[styles.footerButtonText, { color: "red" }]}>X</Text>
+            <Text style={[styles.footerButtonText, { color: "red" }]}>
+              Cancel
+            </Text>
           </TouchableOpacity>
         </View>
       )}
