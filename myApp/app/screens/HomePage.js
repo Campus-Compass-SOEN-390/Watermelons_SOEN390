@@ -48,7 +48,6 @@ export default function HomePage() {
                         <Text style={styles.buttonText}>Interest Points</Text>
                     </TouchableOpacity>
                 </View>
-           
             </View>
             <View style={styles.buttonsContainer}>
                 <Text style={styles.title}>View My Calendar</Text>
@@ -66,8 +65,6 @@ export default function HomePage() {
                         <Text style={styles.buttonText}>Fetch Calendars</Text>
                     </TouchableOpacity>
                 </View>
-               
-               
             </View>
         </View>
     );

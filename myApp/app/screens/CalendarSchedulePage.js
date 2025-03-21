@@ -6,6 +6,8 @@ import styles from '../styles/GoogleScheduleStyles';
 import { useRouter } from 'expo-router';
 import LayoutWrapper from "../components/LayoutWrapper";
 import * as FileSystem from 'expo-file-system';
+import HeaderButtons from "../components/HeaderButtons";
+import Head from "next/head";
 
 export default function CalendarSchedulePage() {
   const router = useRouter();
@@ -148,15 +150,7 @@ export default function CalendarSchedulePage() {
   return (
     <LayoutWrapper>
       {/* Top Navigation */}
-      <View style={styles.topNav}>
-        <TouchableOpacity onPress={() => router.push('/')} style={styles.headerButtons}>
-          <Ionicons name="home" size={28} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => router.push('/screens/SettingsPage')} style={styles.headerButtons}>
-          <Ionicons name="settings" size={28} color="white" />
-        </TouchableOpacity>
-      </View>
-
+      <HeaderButtons/>
       {/* Days Navigation */}
       <View style={styles.daysRow}>
         {days.map((day, index) => (

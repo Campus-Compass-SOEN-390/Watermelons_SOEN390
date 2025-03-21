@@ -20,7 +20,7 @@ import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import LayoutWrapper from "../components/LayoutWrapper.js";
-
+import HeaderButtons from "../components/HeaderButtons.js";
 
 
 
@@ -155,14 +155,8 @@ export default function CalendarFetching() {
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={20}>
       <LayoutWrapper>
       {/* Header */}
-      <View style={styles.topNav}>
-        <TouchableOpacity onPress={() => router.push('/')} style={styles.headerButtons}>
-          <Ionicons name="home" size={28} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => router.push('/screens/SettingsPage')} style={styles.headerButtons}>
-          <Ionicons name="settings" size={28} color="white" />
-        </TouchableOpacity>
-      </View>
+      <HeaderButtons/>
+      {/* Events */}
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.container}>
           <View style={styles.redContainer}>
@@ -217,7 +211,6 @@ export default function CalendarFetching() {
                 <Ionicons name="trash-outline" size={20} color="#888" style={{ marginRight: 6 }} />
                 <Text style={styles.clearHistoryText}>Clear History</Text>
               </TouchableOpacity>
-
             </View>
           </View>
         </View>

@@ -7,21 +7,6 @@ const styles = StyleSheet.create({
         paddingTop: 40,
         paddingHorizontal: 16,
     },
-    topNav: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 12,
-    },
-    headerButtons: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: "rgba(0, 0, 0, 0.6)",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 100,
-    },
     logoutButton: {
         backgroundColor: "#d3d3d3",
         paddingHorizontal: 20,
@@ -110,6 +95,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginVertical: 12,
     },
+    nextClassButtonText: {
+        color: "white",
+    }
 });
 
 export default styles;
