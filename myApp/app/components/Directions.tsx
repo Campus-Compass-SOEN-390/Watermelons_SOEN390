@@ -177,11 +177,8 @@ export const Directions : React.FC<Props> = ({
     if (navType == "indoor-outdoor-indoor"){
         //const newEndNode = findSetNode(startNode);
         //const newStartNode = findSetNode(endNode);
-        const { setNode: newEndNode, entranceOrExit: start} = findBuildingInfo(startNode);
-        const { setNode: newStartNode, entranceOrExit: end} = findBuildingInfo(endNode);
-        console.log("newEndNode, start:", newEndNode, start);
-        console.log("newStartNode, end:", newStartNode, end);
-        console.log("currentFloor", currentFloor);
+        const { entranceOrExit: start} = findBuildingInfo(startNode);
+        const { entranceOrExit: end} = findBuildingInfo(endNode);
         return (
             <View>
                 <MapDirections
@@ -194,19 +191,10 @@ export const Directions : React.FC<Props> = ({
                     graph={graph}
                     nodeCoordinates={nodeCoordinates}
                     startNode={startNode}
-                    endNode={newEndNode}
-                    currentFloor={Number(currentFloor)}
-                    isDisabled={isDisabled}
-                    pathId={"indoor1"}
-                />
-                <ShortestPathMap
-                    graph={graph}
-                    nodeCoordinates={nodeCoordinates}
-                    startNode={newStartNode}
                     endNode={endNode}
                     currentFloor={Number(currentFloor)}
                     isDisabled={isDisabled}
-                    pathId={"indoor2"}
+                    pathId={"indoor1"}
                 />
             </View>
         )

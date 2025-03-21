@@ -1236,7 +1236,8 @@ export const hGraph = {
   "Hall-principal-entrance": {
     "path-H1.2-Hall-principal-entrance": 8,
     "path-H1-Hall-principal-entrance": 11,
-    "H110": 14
+    "H110": 14,
+    "CC1-entrance": 0
   },
   "H932": {
     "path-H932": 1

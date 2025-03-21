@@ -42,7 +42,8 @@ export const ccGraph = {
     "path-CC101-CC106": 5
   },
   "CC1-entrance": {
-    "path-CC1-entrance": 5
+    "path-CC1-entrance": 5,
+    "Hall-principal-entrance":0
   },
   "path-CC119-CC124": {
     "CC119": 2,
