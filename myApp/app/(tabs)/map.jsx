@@ -55,7 +55,7 @@ Mapbox.setAccessToken(MAPBOX_API);
 // Constants
 const REGION_CHANGE_THRESHOLD = 0.005;
 
-function MapViewComponent() {
+function MapView() {
   // Get Campus type from homePage
   const { type } = useLocalSearchParams();
 
@@ -985,4 +985,4 @@ function MapViewComponent() {
   );
 }
 
-export default MapViewComponent;
+export default MapView;
