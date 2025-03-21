@@ -370,7 +370,8 @@ const StartAndDestinationPoints = () => {
                   size={20}
                   color={travelMode === mode ? "white" : "black"}
                 />
-                <Text style={{ fontSize: 12, marginTop: 5, textAlign: "center", flexWrap: "wrap" }}>
+                <Text 
+                style={{ fontSize: 12, marginTop: 5, textAlign: "center", flexWrap: "wrap", color : travelMode === mode ? "#fff" : "black" }}>
                   {getTravelTimeText(travelTimes, mode)}
                 </Text>
               </TouchableOpacity>
