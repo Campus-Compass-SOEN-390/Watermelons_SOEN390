@@ -23,10 +23,6 @@ import LayoutWrapper from "../components/LayoutWrapper.js";
 import HeaderButtons from "../components/HeaderButtons.js";
 import { Picker } from '@react-native-picker/picker';
 
-
-
-
-
 export default function CalendarFetching() {
   const navigation = useNavigation();
   const router = useRouter();
@@ -39,9 +35,6 @@ export default function CalendarFetching() {
   // Allows the storage of calendar id history for future selection
   const [storedCalendarIds, setStoredCalendarIds] = useState([]);
   const [monthsAhead, setMonthsAhead] = useState("1"); // default 1 month
-
-
-
 
   const API_KEY = process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
 
@@ -159,8 +152,6 @@ export default function CalendarFetching() {
       </View>
     );
   }
-
-
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={20}>
