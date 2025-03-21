@@ -55,8 +55,23 @@ Mapbox.setAccessToken(MAPBOX_API);
 // Constants
 const REGION_CHANGE_THRESHOLD = 0.005;
 
-function MapView() {
-  // Get Campus type from homePage
+
+export default function MapView() {
+  const { destinationString } = useLocalSearchParams();
+
+  useEffect(() => {
+    if (destinationString) {
+      // Update the destination using the existing context
+      updateDestination(
+        coordinatesMap[destinationString] || destinationString,
+        destinationString
+      );
+      updateShowTransportation(true);
+    }
+  }, [destinationString]);
+
+  //get Campus type from homePage
+
   const { type } = useLocalSearchParams();
 
   // Get coordinates and name from POI page
@@ -984,5 +999,3 @@ function MapView() {
     </View>
   );
 }
-
-export default MapView;
