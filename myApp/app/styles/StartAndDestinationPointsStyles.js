@@ -232,6 +232,9 @@ export default StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     backgroundColor: "#eee",
+    width: 70,
+    alignItems: "center",
+    justifyContent: "center",
   },
   selectedButton: {
     backgroundColor: "#922338",
