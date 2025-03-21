@@ -174,6 +174,7 @@ export default function CalendarSchedulePage() {
       <TouchableOpacity
        style={styles.nextClassDirections}
         onPress={findNextClass}
+        testID="get-directions-button"
       >
         <MaterialIcons name="schedule" size={24} color="white" style={{ marginRight: 8 }} />
         <Text style={styles.nextClassButtonText}>Get directions to my next class</Text>
@@ -205,6 +206,7 @@ export default function CalendarSchedulePage() {
       {/* Bottom Navigation Buttons */}
       <View style={styles.todayButtonContainer}>
         <TouchableOpacity
+          testID="prev-day-button"
           style={styles.todayNavButton}
           onPress={() =>
             setSelectedDate(
@@ -216,6 +218,7 @@ export default function CalendarSchedulePage() {
         </TouchableOpacity>
 
         <TouchableOpacity
+          testID="today-button"
           style={styles.todayLabelWrapper}
           onPress={() => setSelectedDate(new Date())}
         >
@@ -231,6 +234,7 @@ export default function CalendarSchedulePage() {
         </TouchableOpacity>
 
         <TouchableOpacity
+          testID="next-day-button"
           style={styles.todayNavButton}
           onPress={() =>
             setSelectedDate(
