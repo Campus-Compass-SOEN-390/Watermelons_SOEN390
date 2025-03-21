@@ -43,7 +43,7 @@ const FilterModal = ({
               
               <View style={styles.filterOption}>
                 <Text style={styles.filterOptionText}>Enable distance filtering</Text>
-                <Switch 
+                <Switch testID="distanceSwitch"
                   value={useDistance} 
                   onValueChange={setUseDistance} 
                   trackColor={{ false: "#e0e0e0", true: "#d6909a" }}
@@ -76,7 +76,7 @@ const FilterModal = ({
               
               <View style={styles.filterOption}>
                 <Text style={styles.filterOptionText}>Cafes</Text>
-                <Switch 
+                <Switch testID="cafeSwitch"
                   value={showCafes} 
                   onValueChange={setShowCafes} 
                   trackColor={{ false: "#e0e0e0", true: "#d6909a" }}
@@ -87,7 +87,7 @@ const FilterModal = ({
               
               <View style={styles.filterOption}>
                 <Text style={styles.filterOptionText}>Restaurants</Text>
-                <Switch 
+                <Switch testID="restaurantSwitch"
                   value={showRestaurants} 
                   onValueChange={setShowRestaurants}
                   trackColor={{ false: "#e0e0e0", true: "#d6909a" }}
@@ -98,7 +98,7 @@ const FilterModal = ({
               
               <View style={styles.filterOption}>
                 <Text style={styles.filterOptionText}>Activities</Text>
-                <Switch 
+                <Switch testID="activitySwitch"
                   value={showActivities} 
                   onValueChange={setShowActivities}
                   trackColor={{ false: "#e0e0e0", true: "#d6909a" }}
