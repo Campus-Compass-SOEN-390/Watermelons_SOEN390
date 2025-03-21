@@ -1,19 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Keyboard,
-  Modal,
-  ScrollView,
-} from "react-native";
-import buildings from "../api/buildingData";
+import { View } from "react-native";
 import Mapbox from "@rnmapbox/maps";
-import Constants from "expo-constants";
-import polyline from "@mapbox/polyline";
 import ShortestPathMap from "./IndoorMap/ShortestPathMap";
 import MapDirections from "./MapDirections";
+import useLocation from "../hooks/useLocation";
 
 interface Props {
   graph: any;
@@ -43,16 +33,20 @@ export const Directions : React.FC<Props> = ({
   navType
 }) => {
 
+    useEffect(() => {
+
+      }, [travelMode]);
+      
     const getBuildingCode = (room: string) => {
         const match = room.match(/^[A-Za-z]+/);
         return match ? match[0] : null;
       };
     
     const buildingCoordinates: Record<string, { latitude: number; longitude: number }> = {
-        "VL": { latitude: 45.459026, longitude: -73.638606 }, // Vanier Library
-        "H": { latitude: 45.497092, longitude: -73.578800 }, // Hall Building
-        "EV": { latitude: 45.495376, longitude: -73.577997}, // Engineering and Visual Arts
-        "MB": { latitude: 45.495304, longitude: -73.579044 },  // John Molson Building
+        "VL": { latitude: 45.459026, longitude: -73.638606 },
+        "H": { latitude: 45.497092, longitude: -73.578800 },
+        "EV": { latitude: 45.495376, longitude: -73.577997},
+        "MB": { latitude: 45.495304, longitude: -73.579044 },
         "CC": {latitude: 45.458422, longitude: -73.640747}
     };
 
@@ -99,7 +93,6 @@ export const Directions : React.FC<Props> = ({
         );
     }
     if (navType == "indoor-outdoor"){
-        //const newEndNode = findSetNode(startNode);
         const { setNode: newEndNode, entranceOrExit: start } = findBuildingInfo(startNode);
         console.log("This is the new end node", newEndNode);
         return (
@@ -123,8 +116,6 @@ export const Directions : React.FC<Props> = ({
         )
     }
     if (navType == "outdoor-indoor"){
-        //const newStartNode = findSetNode(endNode);
-        //const entrance = findEntrance(endNode);
         const { setNode: newStartNode, entranceOrExit: entrance } = findBuildingInfo(endNode);
         console.log("This is the new start node", newStartNode);
         return (
@@ -148,8 +139,6 @@ export const Directions : React.FC<Props> = ({
         )
     }
     if (navType == "indoor-outdoor-indoor"){
-        //const newEndNode = findSetNode(startNode);
-        //const newStartNode = findSetNode(endNode);
         const { entranceOrExit: start} = findBuildingInfo(startNode);
         const { entranceOrExit: end} = findBuildingInfo(endNode);
         return (

@@ -30,6 +30,7 @@ const MapDirections: React.FC<Props> = ({
 
   const prevOriginRef = useRef<{ latitude: number; longitude: number } | null>(null);
   const prevDestinationRef = useRef<{ latitude: number; longitude: number } | null>(null);
+  const prevTravelModeRef = useRef<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -40,15 +41,19 @@ const MapDirections: React.FC<Props> = ({
       // Check if origin or destination has actually changed before fetching
       const hasOriginChanged = JSON.stringify(origin) !== JSON.stringify(prevOriginRef.current);
       const hasDestinationChanged = JSON.stringify(destination) !== JSON.stringify(prevDestinationRef.current);
+      const hasTravelModeChanged = JSON.stringify(travelMode) !== JSON.stringify(prevTravelModeRef.current);
 
-      if (hasOriginChanged || hasDestinationChanged) {
+      if (hasOriginChanged || hasDestinationChanged || hasTravelModeChanged) {
         console.log("Origin or destination changed, fetching new routes...");
         await fetchRoutes(travelMode, isMounted);
 
         // Update previous values
         prevOriginRef.current = origin;
         prevDestinationRef.current = destination;
+        prevTravelModeRef.current = travelMode;
       }
+
+      console.log("Travel Mode", travelMode)
     };
 
     fetchData();
