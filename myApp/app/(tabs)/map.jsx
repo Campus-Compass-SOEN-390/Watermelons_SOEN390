@@ -886,7 +886,7 @@ export default function MapView() {
           {/* Indoor Map Using Vector Tileset */}
           <IndoorMap
             selectedBuilding={selectedIndoorBuilding}
-            selectedFloor={selectedFloor}
+            selectedFloor={Number(selectedFloor)}
           />
 
           {/* Shuttle bus live location */}
