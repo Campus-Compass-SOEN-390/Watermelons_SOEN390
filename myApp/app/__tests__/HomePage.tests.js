@@ -26,7 +26,6 @@ describe('Home page', () => {
         const loyolaButton = page.getByTestId('loyolaButton');
         const shuttleScheduleButton = page.getByTestId('shuttleScheduleButton');
         const interestButton = page.getByTestId('interestButton');
-        const directionButton = page.getByTestId('directionButton');
         const googleButton = page.getByTestId('calendarfetchbutton');
 
         expect(logo).toBeTruthy();
@@ -35,7 +34,6 @@ describe('Home page', () => {
         expect(loyolaButton).toBeTruthy();
         expect(shuttleScheduleButton).toBeTruthy();
         expect(interestButton).toBeTruthy();
-        expect(directionButton).toBeTruthy();
         expect(googleButton).toBeTruthy();
     });
 

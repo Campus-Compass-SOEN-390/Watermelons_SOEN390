@@ -8,7 +8,7 @@ export const calendarFetchingStyles = StyleSheet.create({
   },
   redContainer: {
     backgroundColor: '#922338',
-    margin: 20,
+    margin: 10,
     padding: 10,
     borderRadius: 10,
     justifyContent: 'center',
@@ -48,10 +48,10 @@ export const calendarFetchingStyles = StyleSheet.create({
   connectButton: {
     backgroundColor: '#922338',
     padding: 15,
-    borderRadius: 8,
-    alignSelf: 'center', 
-    minWidth: 100, 
-    paddingHorizontal: 20, 
+    borderRadius: 25,
+    alignSelf: 'center',
+    minWidth: 100,
+    paddingHorizontal: 20,
   },
   buttonText: {
     color: 'white',
@@ -103,19 +103,46 @@ export const calendarFetchingStyles = StyleSheet.create({
     height: 150,
     marginVertical: 20,
   },
-  // --- Back Button Styles ---
-backButton: {
-    alignSelf: 'flex-start',
-    marginTop: 40,  // Adjust this value to position it a bit lower
-    marginLeft: 20, // Adjust as needed
-    padding: 10,
-  },
-  backButtonText: {
+
+  // --- Calendar History Track --- 
+
+  subtitle: {
     fontSize: 16,
-    color: '#922338',
     fontWeight: 'bold',
+    marginBottom: 10,
   },
-  
+  historyItem: {
+    backgroundColor: "rgba(0, 0, 0, 0.19)",
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+  },
+  historyText: {
+    fontSize: 14,
+    color: 'black',
+
+  },
+
+  // --- Clear History Button ---
+  clearHistoryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: '#f4f4f4',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    alignSelf: 'center',
+    marginTop: 10,
+  },
+
+  clearHistoryText: {
+    fontSize: 16,
+    color: '#444',
+    fontWeight: '500',
+  },
+
 });
 
 export default calendarFetchingStyles;
