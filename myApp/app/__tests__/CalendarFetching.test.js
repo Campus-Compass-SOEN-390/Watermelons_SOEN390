@@ -51,7 +51,7 @@ jest.mock('@expo/vector-icons', () => {
 });
 
 // Import after mocking
-import CalendarFetching from '../screens/calendarFetching';
+import CalendarFetching from '../screens/CalendarFetching';
 
 // Render helper
 const renderWithNav = (ui) =>
