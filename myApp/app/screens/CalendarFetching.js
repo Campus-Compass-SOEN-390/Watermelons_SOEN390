@@ -26,6 +26,7 @@ import { Picker } from '@react-native-picker/picker';
 
 
 
+
 export default function CalendarFetching() {
   const navigation = useNavigation();
   const router = useRouter();
@@ -213,18 +214,19 @@ export default function CalendarFetching() {
                     }}
                   >
                     <Picker
+                      testID="month-picker"
                       selectedValue={monthsAhead}
                       onValueChange={(itemValue) => setMonthsAhead(itemValue)}
                       style={{ 
                         height: 50 }}
                     >
-                      <Picker.Item label="1 Month" value="1" />
-                      <Picker.Item label="2 Months" value="2" />
-                      <Picker.Item label="3 Months" value="3" />
-                      <Picker.Item label="4 Months" value="4" />
-                      <Picker.Item label="5 Months" value="5" />
-                      <Picker.Item label="6 Months" value="6" />
-                      <Picker.Item label="All Events" value="all" />
+                      <Picker.Item label="1 Month" value="1" testID="1m"/>
+                      <Picker.Item label="2 Months" value="2" testID="2m"/>
+                      <Picker.Item label="3 Months" value="3" testID="3m"/>
+                      <Picker.Item label="4 Months" value="4" testID="4m"/>
+                      <Picker.Item label="5 Months" value="5" testID="5m"/>
+                      <Picker.Item label="6 Months" value="6" testID="6m"/>
+                      <Picker.Item label="All Events" value="all" testID="allm"/>
                     </Picker>
                   </View>
                 </View>
