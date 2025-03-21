@@ -786,29 +786,7 @@ export default function MapView() {
               />
             </Mapbox.ShapeSource>
           )}
-          {/* Render Direction Route */}
-          {/*{indoorCoordinatesMap[originText] &&
-          indoorCoordinatesMap[destinationText] && renderMap ? (
-            <ShortestPathMap
-              graph={graph}
-              nodeCoordinates={nodeCoordinates}
-              startNode={originText}
-              endNode={destinationText}
-              currentFloor={selectedFloor}
-            />
-          ) : (
-            origin &&
-            destination &&
-            renderMap && (
-              <MapDirections
-                origin={origin}
-                destination={destination}
-                mapRef={mapRef}
-                travelMode={travelMode}
-              />
-            )
-          )}
-          */}
+          
           {/* Use Directions component to Render route based on navigation type*/}
           { origin && destination && renderMap && (
             <Directions

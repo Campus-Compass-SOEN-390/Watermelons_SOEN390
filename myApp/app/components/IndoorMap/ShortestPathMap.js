@@ -31,7 +31,7 @@ const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode, currentFl
           pathsByFloor[floor] = [];
         }
       
-        pathsByFloor[floor].push({ id: node, coordinates }); // Include ID for later filtering
+        pathsByFloor[floor].push({ id: node, coordinates });
       });      
 
       setFloorPaths(pathsByFloor);
