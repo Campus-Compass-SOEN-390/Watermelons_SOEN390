@@ -13,13 +13,11 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import styles from "../styles/IndoorMapStyles";
-import outdoorStyles from "../styles/OutdoorMapStyles";
+import indoorMapStyles from "../styles/IndoorMapStyles.js";
+import outdoorMapStyles from "../styles/OutdoorMapStyles";
 import { MaterialIcons } from "@expo/vector-icons";
 import Mapbox from "@rnmapbox/maps";
 import Constants from "expo-constants";
-import { buildings, getBuildingById } from "../api/buildingData";
-import { isPointInPolygon } from "geolib";
 import useLocation from "../hooks/useLocation";
 import { useLocationContext } from "../context/LocationContext";
 import { useIndoorMapContext } from "../context/IndoorMapContext";
@@ -31,21 +29,15 @@ import IndoorMap from "../components/IndoorMap/IndoorMap";
 import FloorNavigation from "../components/FloorNavigation";
 import MapDirections from "../components/MapDirections";
 import ShortestPathMap from "../components/IndoorMap/ShortestPathMap";
-import { hGraph, hNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/Hall";
-import { ccGraph, ccNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/CC";
-import { loyolaGraph, loyolaNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/Loyola";
-import { mbGraph, mbNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/MB";
-import { indoorCoordinatesMap } from "../components/IndoorMap/GraphAndCoordinates/GraphAndCoordinates";
-import {
-  handleIndoorBuildingSelect,
-  handleClearIndoorMap,
-  calculateCentroid,
-  convertCoordinates,
-} from "../utils/IndoorMapUtils";
-import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
-import { extractShuttleInfo } from "../api/shuttleLiveData";
+import { styles as poiStylesImport } from "../styles/poiStyles";
+import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
 import { useLocalSearchParams } from "expo-router";
 import { Directions } from "../components/Directions";
+
+// Import Controllers
+import POIController from '../controllers/POIController';
+import IndoorController from '../controllers/IndoorController';
+import OutdoorController from '../controllers/OutdoorController';
 
 // Import POI related components
 import MapMarkers from "../components/POI/MapMarkers";
@@ -55,17 +47,15 @@ import {
   RestaurantMarker,
   ActivityMarker,
 } from "../components/POI/Markers";
-import POIPopup from "../components/POI/POIPopup"; // Import the new component
-import { fetchPOIData, poiDataSubject, getCachedPOIData } from "../api/poiApi";
-import { styles as poiStyles } from "../styles/poiStyles";
-import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
-import { estimateShuttleFromButton } from "../utils/shuttleUtils";
+import POIPopup from "../components/POI/POIPopup";
+import { sgwRegion, loyolaRegion } from "../constants/outdoorMap";
 
 const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API);
 
-// Constants for POI functionality
+// Constants
 const REGION_CHANGE_THRESHOLD = 0.005;
+
 
 export default function MapView() {
   const { destinationString } = useLocalSearchParams();
@@ -82,13 +72,14 @@ export default function MapView() {
   }, [destinationString]);
 
   //get Campus type from homePage
+
   const { type } = useLocalSearchParams();
 
-  //get coordinates and name from POI page
+  // Get coordinates and name from POI page
   const { name, lat, lng } = useLocalSearchParams();
 
-  console.log(name, lat, lng);
   // Campus switching
+
   const [activeCampus, setActiveCampus] = useState(type || "sgw"); // Default to "sgw" if no type is passed
   const mapRef = useRef(null);
 
@@ -97,9 +88,7 @@ export default function MapView() {
 
   // Location & permissions
   const { location, hasPermission } = useLocation();
-  const [showPermissionPopup, setShowPermissionPopup] = useState(
-    !hasPermission
-  );
+  const [showPermissionPopup, setShowPermissionPopup] = useState(!hasPermission);
 
   // Building popup
   const [selectedBuilding, setSelectedBuilding] = useState(null);
@@ -107,13 +96,10 @@ export default function MapView() {
   const [shuttlePopupVisible, setShuttlePopupVisible] = useState(false);
   const [shuttleDetails, setShuttleDetails] = useState(null);
 
-  // The missing piece: track the building user is inside
+  // The building user is inside
   const [highlightedBuilding, setHighlightedBuilding] = useState(null);
 
-  //Statues for displaying shuttle polylines or not
-  //const [shuttleRoute, setShuttleRoute] = useState("");
-
-  //Set Shuttle Live loc
+  // Shuttle Live locations
   const [shuttleLocations, setShuttleLocations] = useState([]);
   const fetchInterval = 30000;
 
@@ -128,7 +114,7 @@ export default function MapView() {
   const [lastFetchedRegion, setLastFetchedRegion] = useState(null);
   const [showUpdateButton, setShowUpdateButton] = useState(false);
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
-  const [distance, setDistance] = useState(40); 
+  const [distance, setDistance] = useState(40);
   const [useDistance, setUseDistance] = useState(true);
   const [showCafes, setShowCafes] = useState(true);
   const [showRestaurants, setShowRestaurants] = useState(true);
@@ -137,8 +123,38 @@ export default function MapView() {
   const [selectedPOI, setSelectedPOI] = useState(null);
   const isFetchingRef = useRef(false);
   const activeRequestRef = useRef(null);
+  const isRegionChangingRef = useRef(false);
 
-  const coordinatesMap = {
+  // Indoor map context
+  const {
+    isExpanded,
+    selectedIndoorBuilding,
+    selectedFloor,
+    updateIsExpanded,
+    updateSelectedIndoorBuilding,
+    updateSelectedFloor,
+  } = useIndoorMapContext();
+
+  // Location context for navigation
+  const {
+    updateOrigin,
+    updateDestination,
+    updateShowTransportation,
+    updateRenderMap,
+    updateTravelMode,
+    updateShowShuttleRoute,
+    origin,
+    destination,
+    originText,
+    destinationText,
+    renderMap,
+    showShuttleRoute,
+    travelMode,
+    showTransportation,
+  } = useLocationContext();
+
+  // Get the combined coordinates map
+  const [coordinatesMap, setCoordinatesMap] = useState({
     "My Position": location?.latitude
       ? { latitude: location.latitude, longitude: location.longitude }
       : undefined,
@@ -149,17 +165,15 @@ export default function MapView() {
     "SGW Campus": { latitude: 45.4962, longitude: -73.578 },
     "Loyola Campus": { latitude: 45.4582, longitude: -73.6405 },
     "Montreal Downtown": { latitude: 45.5017, longitude: -73.5673 },
-    ...indoorCoordinatesMap,
-  };
+    ...IndoorController.getIndoorCoordinatesMap()
+  });
 
-  // Combine Graphs and Coordinates
-  const graph = { ...hGraph, ...mbGraph, ...ccGraph, ...loyolaGraph};
-  const nodeCoordinates = { ...hNodeCoordinates, ...mbNodeCoordinates, ...ccNodeCoordinates, ...loyolaNodeCoordinates};
-
+  // Navigation
+  const navigation = useNavigation();
 
   // Handle clearing indoor mode when "Outdoor" is pressed
   const clearIndoorMap = () => {
-    handleClearIndoorMap(
+    IndoorController.handleClearIndoorMap(
       updateSelectedIndoorBuilding,
       updateIsExpanded,
       mapRef,
@@ -167,6 +181,7 @@ export default function MapView() {
       updateSelectedFloor
     );
   };
+
 
   //Global constants to manage components used on outdoor maps page
   const {
@@ -212,8 +227,8 @@ export default function MapView() {
           animationDuration: 1000,
         });
       }
-    } catch {
-      console.log("Crashed at 1");
+    } catch (error) {
+      console.log("Error animating map to campus:", error);
     }
   }, [activeCampus]);
 
@@ -221,38 +236,31 @@ export default function MapView() {
   useEffect(() => {
     try {
       if (location) {
-        let found = false;
-        for (const building of buildings.filter(
-          (b) => b.coordinates && b.coordinates.length > 0
-        )) {
-          if (isPointInPolygon(location, building.coordinates)) {
-            setHighlightedBuilding(building.name);
-            found = true;
-            break;
-          }
-        }
-        if (!found) setHighlightedBuilding(null);
+        const buildingName = OutdoorController.checkUserInBuilding(location);
+        setHighlightedBuilding(buildingName);
       }
       if (!hasPermission) {
         setShowPermissionPopup(true);
       }
-    } catch {
-      console.log("Crashed at 2");
+    } catch (error) {
+      console.log("Error checking user location:", error);
     }
   }, [location, hasPermission]);
 
-  // This useEffect manages origin, destination, and the footer appearing when dependencies change
+  // Manage origin, destination, and the footer when dependencies change
   useEffect(() => {
     try {
-      console.log("IN MAP:", destinationText, renderMap);
+      // Update coordinates map with current position
+      const updatedMap = {
+        ...coordinatesMap,
+        "My Position": location?.latitude
+          ? { latitude: location.latitude, longitude: location.longitude }
+          : undefined
+      };
+      setCoordinatesMap(updatedMap);
   
-      // Ensure "My Position" is dynamically updated from location
-      coordinatesMap["My Position"] = location?.latitude
-        ? { latitude: location.latitude, longitude: location.longitude }
-        : undefined;
-  
-      const newOrigin = coordinatesMap[originText] || origin;
-      const newDestination = coordinatesMap[destinationText] || destination;
+      const newOrigin = updatedMap[originText] || origin;
+      const newDestination = updatedMap[destinationText] || destination;
   
       if (JSON.stringify(newOrigin) !== JSON.stringify(origin)) {
         updateOrigin(newOrigin, originText);
@@ -275,7 +283,7 @@ export default function MapView() {
         tabBarStyle: renderMap ? { display: "none" } : tabStyles.tabBarStyle,
       });
     } catch (error) {
-      console.log("Crashed in useEffect:", error);
+      console.log("Error in useEffect:", error);
     }
     console.log("Lock in", navType)
   }, [
@@ -289,41 +297,21 @@ export default function MapView() {
     showShuttleRoute,
     showTransportation,
   ]);
-  
-
-  // POI distance calculation function
-  const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const toRad = (value) => (value * Math.PI) / 180;
-    const R = 6371000;
-    const dLat = toRad(lat2 - lat1);
-    const dLon = toRad(lon2 - lon1);
-    const a =
-      Math.sin(dLat / 2) ** 2 +
-      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  };
 
   // Load cached POI data on mount if available
   useEffect(() => {
     if (!showPOI) return;
 
     try {
-      const cachedData = getCachedPOIData();
-      if (
-        cachedData.coffeeShops.length > 0 ||
-        cachedData.restaurants.length > 0 ||
-        cachedData.activities.length > 0
-      ) {
-        setCoffeeShops(cachedData.coffeeShops);
-        setRestaurants(cachedData.restaurants);
-        setActivities(cachedData.activities);
-        if (cachedData.lastRegion) {
-          setLastFetchedRegion(cachedData.lastRegion);
-        }
+      if (POIController.loadCachedPOIs()) {
+        setCoffeeShops(POIController.getCoffeeShops());
+        setRestaurants(POIController.getRestaurants());
+        setActivities(POIController.getActivities());
+        setLastFetchedRegion(POIController.getLastFetchedRegion());
+        
         const now = Date.now();
         if (
-          now - cachedData.lastFetchTime > 10 * 60 * 1000 &&
+          now - (POIController.getLastFetchedRegion()?.timestamp || 0) > 10 * 60 * 1000 &&
           location &&
           region
         ) {
@@ -341,11 +329,8 @@ export default function MapView() {
   // Show update button when region has shifted
   useEffect(() => {
     if (!lastFetchedRegion || !region || !showPOI) return;
-    const latDiff = Math.abs(region.latitude - lastFetchedRegion.latitude);
-    const lngDiff = Math.abs(region.longitude - lastFetchedRegion.longitude);
-    setShowUpdateButton(
-      latDiff > REGION_CHANGE_THRESHOLD || lngDiff > REGION_CHANGE_THRESHOLD
-    );
+    
+    setShowUpdateButton(POIController.shouldShowUpdateButton(region));
   }, [region, lastFetchedRegion, showPOI]);
 
   // Initial fetch if no data is loaded
@@ -359,6 +344,7 @@ export default function MapView() {
       coffeeShops.length === 0 &&
       restaurants.length === 0 &&
       activities.length === 0;
+      
     if (shouldFetch) {
       console.log("Initial data fetch triggered");
       handleFetchPlaces();
@@ -375,9 +361,7 @@ export default function MapView() {
   // Cleanup active requests on unmount
   useEffect(() => {
     return () => {
-      if (activeRequestRef.current) {
-        activeRequestRef.current.abort();
-      }
+      POIController.abortActiveRequest();
     };
   }, []);
 
@@ -387,10 +371,7 @@ export default function MapView() {
     setRegion(currentRegion);
   }, []);
 
-  /**
-   * Subscribe to POI data changes through Observer pattern
-   * This makes the map component an observer of POIDataSubject
-   */
+  // Subscribe to POI data changes
   useEffect(() => {
     if (!showPOI) return;
     
@@ -402,14 +383,14 @@ export default function MapView() {
       setLastFetchedRegion(data.lastRegion);
       setLoading(isLoading);
       
-      // Show update button if region has changed significantly 
-      setShowUpdateButton(poiDataSubject.hasRegionChanged(region));
+      // Show update button if region has changed significantly
+      setShowUpdateButton(POIController.shouldShowUpdateButton(region));
     };
     
     // Subscribe to data changes
-    const unsubscribe = poiDataSubject.subscribe(updatePOIData);
+    const unsubscribe = POIController.subscribe(updatePOIData);
     
-    // Initial fetch ONLY when POI display is first enabled
+    // Initial fetch when POI display is first enabled
     if (showPOI && 
         coffeeShops.length === 0 && 
         restaurants.length === 0 && 
@@ -421,25 +402,39 @@ export default function MapView() {
     
     // Cleanup subscription on unmount
     return () => unsubscribe();
-  }, [showPOI]); // Removed region from dependencies to prevent auto-fetches on map drag
+  }, [showPOI]);
 
-  // Show update button when region has shifted
+  // Fetch shuttle locations periodically
   useEffect(() => {
-    if (!lastFetchedRegion || !region || !showPOI) return;
-    
-    const latDiff = Math.abs(region.latitude - lastFetchedRegion.latitude);
-    const lngDiff = Math.abs(region.longitude - lastFetchedRegion.longitude);
-    
-    // Only update the button visibility when the region changes significantly
-    if (latDiff > REGION_CHANGE_THRESHOLD || lngDiff > REGION_CHANGE_THRESHOLD) {
-      setShowUpdateButton(true);
-    } else {
-      setShowUpdateButton(false);
-    }
-  }, [region, lastFetchedRegion, showPOI]);
+    const fetchShuttleData = async () => {
+      try {
+        const shuttleData = await OutdoorController.fetchShuttleLocations();
+        setShuttleLocations(shuttleData);
+      } catch (error) {
+        console.warn("Error fetching schedule:", error.message);
+      }
+    };
 
+    fetchShuttleData();
+    const interval = setInterval(fetchShuttleData, fetchInterval);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Reset render map when origin or destination changes
+  useEffect(() => {
+    try {
+      updateRenderMap(false);
+      updateTravelMode("");
+    } catch (error) {
+      console.log("Error resetting render map:", error);
+    }
+  }, [origin, destination]);
+
+  // Event Handlers and Controller Functions
+  
+  // Handle fetching places
   const handleFetchPlaces = async (currentRegion = region) => {
-    // If no region provided, try to use current camera position
     if (!currentRegion && mapRef.current) {
       try {
         const camera = await mapRef.current.getCamera();
@@ -450,10 +445,6 @@ export default function MapView() {
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
           };
-          console.log(
-            "Using camera position as region fallback:",
-            currentRegion
-          );
         }
       } catch (error) {
         console.error("Error getting camera position:", error);
@@ -461,9 +452,7 @@ export default function MapView() {
     }
 
     if (!currentRegion) {
-      console.error(
-        "Cannot fetch POIs: No region provided and couldn't get camera position"
-      );
+      console.error("Cannot fetch POIs: No region provided");
       return;
     }
 
@@ -472,52 +461,34 @@ export default function MapView() {
       return;
     }
 
-    console.log("Starting POI fetch for region:", currentRegion);
     isFetchingRef.current = true;
-
-    const controller = new AbortController();
-    activeRequestRef.current = controller;
+    setLoading(true);
 
     try {
-      // Using the Observer pattern through the fetchPOIData
-      // This will update the subject which notifies all observers
-      await fetchPOIData(currentRegion, controller.signal);
+      await POIController.fetchPOIs(currentRegion);
       setShowUpdateButton(false);
     } catch (error) {
-      if (error.name === "AbortError") {
-        console.log("Fetch aborted - this is normal during unmount or when starting a new request");
-      } else {
-        console.error("Error fetching places:", error);
-      }
+      console.error("Error fetching places:", error);
     } finally {
       isFetchingRef.current = false;
-      activeRequestRef.current = null;
+      setLoading(false);
     }
   };
 
-  // Add a tracking flag to prevent duplicate region change events
-  const isRegionChangingRef = useRef(false);
-
-  // Fix the handleRegionChange function to properly handle the Mapbox event object
+  // Handle region change
   const handleRegionChange = useCallback((feature) => {
     if (isRegionChangingRef.current || !feature?.properties) return;
 
     try {
       // Get the center coordinates from the visibleBounds property
       const { visibleBounds } = feature.properties;
-      if (!visibleBounds || visibleBounds.length < 2) {
-        console.log("No valid bounds in region change event");
-        return;
-      }
+      if (!visibleBounds || visibleBounds.length < 2) return;
 
       // Calculate center from the visible bounds [sw, ne]
       const centerLng = (visibleBounds[0][0] + visibleBounds[1][0]) / 2;
       const centerLat = (visibleBounds[0][1] + visibleBounds[1][1]) / 2;
 
-      if (isNaN(centerLat) || isNaN(centerLng)) {
-        console.log("Invalid center coordinates calculated from region change");
-        return;
-      }
+      if (isNaN(centerLat) || isNaN(centerLng)) return;
 
       const newRegion = {
         latitude: centerLat,
@@ -529,17 +500,10 @@ export default function MapView() {
       // Update region state with current map center
       setRegion(newRegion);
       
-      // Don't automatically fetch - just check if button should be shown
+      // Check if update button should be shown
       if (showPOI && lastFetchedRegion) {
-        const latDiff = Math.abs(newRegion.latitude - lastFetchedRegion.latitude);
-        const lngDiff = Math.abs(newRegion.longitude - lastFetchedRegion.longitude);
-        
-        if (latDiff > REGION_CHANGE_THRESHOLD || lngDiff > REGION_CHANGE_THRESHOLD) {
-          setShowUpdateButton(true);
-        }
+        setShowUpdateButton(POIController.shouldShowUpdateButton(newRegion));
       }
-
-      console.log("Map region updated:", newRegion);
     } catch (error) {
       console.error("Error in handleRegionChange:", error);
     }
@@ -563,10 +527,8 @@ export default function MapView() {
 
   // Handle building tap
   const handleBuildingPress = (building) => {
-    console.log("Polygon pressed for building:", building.name);
-    const fullBuilding = getBuildingById(building.id);
+    const fullBuilding = OutdoorController.handleBuildingPress(building);
     if (fullBuilding) {
-      console.log("Setting popup for building:", fullBuilding.name);
       setSelectedBuilding(fullBuilding);
       setPopupVisible(true);
     } else {
@@ -574,205 +536,110 @@ export default function MapView() {
     }
   };
 
+  // Handle getting directions to a building
   const handleBuildingGetDirections = (building) => {
-    updateOrigin(coordinatesMap["My Position"], "My Location");
-    const buildingFullName = building.name + ", " + building.longName;
-    console.log(buildingFullName);
-    updateDestination(building.entranceCoordinates, buildingFullName);
-    updateShowTransportation(true);
+    OutdoorController.handleBuildingGetDirections(
+      building, 
+      updateOrigin, 
+      updateDestination, 
+      coordinatesMap["My Position"],
+      updateShowTransportation
+    );
   };
 
+  // Handle setting a building as starting point
   const handleBuildingSetStartingPoint = (building) => {
-    if (!building?.entranceCoordinates) {
-      console.error("Invalid building data:", building);
-      return;
-    }
-    const buildingFullName = `${building.name}, ${building.longName}`;
-    updateOrigin(building.entranceCoordinates, buildingFullName);
+    OutdoorController.handleBuildingSetStartingPoint(building, updateOrigin);
   };
 
+  // Handle shuttle button
   const handleShuttleButton = async () => {
-    console.log("Shuttle button click");
-
-    // Update origin & destination as before
-    updateOrigin(coordinatesMap["My Position"], "My Location");
-    if (activeCampus === "sgw") {
-      updateDestination(
-        coordinatesMap["Loyola Campus, Shuttle Stop"],
-        "Loyola Campus, Shuttle Stop"
-      );
-    } else {
-      updateDestination(
-        coordinatesMap["SGW Campus, Shuttle Stop"],
-        "SGW Campus, Shuttle Stop"
-      );
-    }
-
-    try {
-      const currentStop = activeCampus === "sgw" ? "SGW" : "LOY";
-      const shuttleResult = await estimateShuttleFromButton(currentStop);
-
-      // If the utility returned an object with "error", store it directly.
-      if (shuttleResult?.error) {
-        setShuttleDetails({ error: shuttleResult.error });
-      } else if (!shuttleResult) {
-        // If it's null or undefined for some reason
-        setShuttleDetails({ error: "No bus available." });
-      } else {
-        // If valid times
-        setShuttleDetails(shuttleResult);
-      }
-    } catch (error) {
-      // If something truly unexpected happens
-      console.warn("Error estimating shuttle time:", error);
-      setShuttleDetails({ error: error.message });
-    }
-
-    // Show the popup
+    const details = await OutdoorController.handleShuttleButton(
+      updateOrigin, 
+      updateDestination, 
+      coordinatesMap["My Position"]
+    );
+    
+    setShuttleDetails(details);
     setShuttlePopupVisible(true);
   };
 
-  // Center on campus
+  // Center map on campus
   const centerMapOnCampus = () => {
-    if (mapRef.current) {
-      const currentRegion = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
-      mapRef.current.setCamera({
-        centerCoordinate: [currentRegion.longitude, currentRegion.latitude],
-        zoomLevel: 15,
-        animationMode: "flyTo",
-        animationDuration: 1000,
-      });
-    }
+    OutdoorController.centerMapOnCampus(mapRef);
   };
 
-  // Center on user
+  // Center map on user
   const centerMapOnUser = () => {
-    if (location && mapRef.current) {
-      mapRef.current.setCamera({
-        centerCoordinate: [location.longitude, location.latitude],
-        zoomLevel: 17,
-        animationMode: "flyTo",
-        animationDuration: 1000,
-      });
-    }
+    OutdoorController.centerMapOnUser(mapRef, location);
   };
 
   // Switch campus
   const toggleCampus = () => {
-    setActiveCampus((prev) => {
-      const newCampus = prev === "sgw" ? "loy" : "sgw";
-
-      if (mapRef.current) {
-        const newCenter =
-          newCampus === "sgw"
-            ? [-73.5792229, 45.4951962]
-            : [-73.6417009, 45.4581281];
-
-        mapRef.current.setCamera({
-          centerCoordinate: newCenter,
-          zoomLevel: 15, // Adjust zoom level as needed
-          animationMode: "flyTo",
-          animationDuration: 1000,
-        });
-      }
-
-      return newCampus;
-    });
+    const newCampus = OutdoorController.toggleCampus(mapRef);
+    setActiveCampus(newCampus);
   };
 
   // Toggle POI display
   const togglePOI = () => {
-    // First get the new value we're about to set
     const willShowPOI = !showPOI;
-
-    // Update the state
     setShowPOI(willShowPOI);
 
-    // If we're turning POIs ON, fetch the data
     if (willShowPOI) {
-      console.log("POI toggle: Showing POIs, fetching data if needed");
-
       if (
         coffeeShops.length > 0 ||
         restaurants.length > 0 ||
         activities.length > 0
       ) {
-        console.log("POI toggle: Using cached POI data");
+        console.log("Using cached POI data");
         return;
       }
-
-      // Try to use region, if not available, handleFetchPlaces will try to use camera position
       handleFetchPlaces();
-    } else {
-      console.log("POI toggle: Hiding POIs");
     }
   };
 
-  //fetch shuttle live data
-  useEffect(() => {
-    const fetchShuttleData = async () => {
-      try {
-        const shuttleData = await extractShuttleInfo(); // Replace with actual API function
-        console.log("Shuttle Data:", shuttleData);
-        setShuttleLocations(shuttleData); // Assume this returns an array of {latitude, longitude}
-      } catch (error) {
-        console.warn("Error fetching schedule:", error.message);
-      }
-    };
-
-    fetchShuttleData();
-    const interval = setInterval(fetchShuttleData, fetchInterval);
-
-    return () => clearInterval(interval);
-  }, []);
-
   // Handle POI marker press
   const handlePOIPress = (poi) => {
-    setSelectedPOI(selectedPOI?.place_id === poi.place_id ? null : poi);
+    setSelectedPOI(POIController.handlePOIPress(selectedPOI, poi));
   };
 
-  // Calculate distance to the selected POI
+  // Get distance to the selected POI
   const getDistanceToPOI = (poi) => {
-    if (!location || !poi?.geometry?.location) return null;
-
-    const lat1 = location.latitude;
-    const lon1 = location.longitude;
-    const lat2 = poi.geometry.location.lat;
-    const lon2 = poi.geometry.location.lng;
-
-    return calculateDistance(lat1, lon1, lat2, lon2);
+    return POIController.getDistanceToPOI(poi, location);
   };
 
-  // Handle "Get Directions" button press
+  // Handle "Get Directions" button press for POI
   const handlePOIGetDirections = (poi) => {
-    if (!poi?.geometry?.location) return;
-    updateOrigin(coordinatesMap["My Position"], "My Location");
-    updateDestination(
-      {
-        latitude: poi.geometry.location.lat,
-        longitude: poi.geometry.location.lng,
-      },
-      poi.name
+    POIController.handlePOIGetDirections(
+      poi, 
+      updateOrigin, 
+      updateDestination, 
+      coordinatesMap["My Position"],
+      updateShowTransportation
     );
-    updateShowTransportation(true);
   };
 
+  // Get the graph and node coordinates from controller
+  const graph = IndoorController.getGraph();
+  const nodeCoordinates = IndoorController.getNodeCoordinates();
+
+  // Render the component
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.container}>
+      <View style={indoorMapStyles.container}>
         <StartAndDestinationPoints />
         <Mapbox.MapView
-          style={styles.map}
+          style={indoorMapStyles.map}
           styleURL={Mapbox.StyleURL.Light}
           onRegionDidChange={(feature) => handleRegionChange(feature)}
         >
           <Mapbox.Camera
             ref={mapRef}
-            zoomLevel={selectedIndoorBuilding ? 18 : 15} // Adjust zoom based on selection
+            zoomLevel={selectedIndoorBuilding ? 18 : 15}
             centerCoordinate={(() => {
               if (selectedIndoorBuilding) {
-                return calculateCentroid(
-                  convertCoordinates(selectedIndoorBuilding.coordinates)
+                return IndoorController.calculateCentroid(
+                  IndoorController.convertCoordinates(selectedIndoorBuilding.coordinates)
                 );
               } else {
                 return activeCampus === "sgw"
@@ -784,10 +651,9 @@ export default function MapView() {
             animationDuration={1000}
           />
 
-          {/* Conditionally render line displaying shuttle bus travel */}
+          {/* Shuttle bus route */}
           {showShuttleRoute && (
-            <Mapbox.ShapeSource id="line1" shape={SGWtoLoyola}>
-              {/* LineLayer to style the line */}
+            <Mapbox.ShapeSource id="line1" shape={OutdoorController.getShuttleRoute()}>
               <Mapbox.LineLayer
                 id="linelayer1"
                 style={{
@@ -799,10 +665,18 @@ export default function MapView() {
               />
             </Mapbox.ShapeSource>
           )}
+
+
+          {/* Render Direction Route for indoor navigation */}
+          {IndoorController.getIndoorCoordinatesMap()[originText] &&
+          IndoorController.getIndoorCoordinatesMap()[destinationText] && renderMap ? (
+            <ShortestPathMap
+
           
           {/* Use Directions component to Render route based on navigation type*/}
           { origin && destination && renderMap && (
             <Directions
+
               graph={graph}
               nodeCoordinates={nodeCoordinates}
               startNode={originText}
@@ -818,11 +692,11 @@ export default function MapView() {
           }
 
           {/* Render building polygons */}
-          {buildings
+          {OutdoorController.getAllBuildings()
             .filter((b) => b.coordinates && b.coordinates.length > 0)
             .map((building) => {
-              const convertedCoords = convertCoordinates(building.coordinates);
-              const centroid = calculateCentroid(convertedCoords);
+              const convertedCoords = OutdoorController.convertCoordinates(building.coordinates);
+              const centroid = OutdoorController.calculateCentroid(convertedCoords);
               const fillColor =
                 highlightedBuilding === building.name
                   ? "#f8b837"
@@ -863,18 +737,18 @@ export default function MapView() {
                   <Mapbox.PointAnnotation
                     id={`label-${building.id}`}
                     coordinate={centroid}
-                    anchor={{ x: 0.5, y: 0.5 }} // Center the text
+                    anchor={{ x: 0.5, y: 0.5 }}
                     onSelected={() => handleBuildingPress(building)}
                   >
-                    <View style={styles.annotationContainer}>
-                      <Text style={styles.annotationText}>{building.name}</Text>
+                    <View style={indoorMapStyles.annotationContainer}>
+                      <Text style={indoorMapStyles.annotationText}>{building.name}</Text>
                     </View>
                   </Mapbox.PointAnnotation>
                 </Fragment>
               );
             })}
 
-          {/* Indoor Map Using Vector Tileset */}
+          {/* Indoor Map Component */}
           <IndoorMap
             selectedBuilding={selectedIndoorBuilding}
             selectedFloor={Number(selectedFloor)}
@@ -935,10 +809,10 @@ export default function MapView() {
       </View>
 
       {/* Position Buttons */}
-      <View style={styles.positionButtonsContainer}>
+      <View style={indoorMapStyles.positionButtonsContainer}>
         {/* User Location Button */}
         <TouchableOpacity
-          style={styles.positionButton}
+          style={indoorMapStyles.positionButton}
           onPress={centerMapOnUser}
           testID="locate-me-button"
         >
@@ -947,12 +821,12 @@ export default function MapView() {
 
         {/* Campus Location Button */}
         <TouchableOpacity
-          style={styles.positionButton}
+          style={indoorMapStyles.positionButton}
           onPress={centerMapOnCampus}
           testID="locate-campus-button"
         >
           <MaterialIcons name="location-on" size={24} color="black" />
-          <Text style={styles.campusButtonText}>
+          <Text style={indoorMapStyles.campusButtonText}>
             {activeCampus === "sgw" ? "SGW" : "LOY"}
           </Text>
         </TouchableOpacity>
@@ -970,31 +844,59 @@ export default function MapView() {
       {/* Buildings Navigation Button */}
       <View
         style={[
-          styles.buildingsContainer,
-          isExpanded && styles.expandedBuildingsContainer,
+          indoorMapStyles.buildingsContainer,
+          isExpanded && indoorMapStyles.expandedBuildingsContainer,
         ]}
       >
         <TouchableOpacity
-          style={styles.button}
+          style={indoorMapStyles.button}
           onPress={() => updateIsExpanded(!isExpanded)}
           testID="buildings-button"
         >
           {selectedIndoorBuilding ? (
-            <Text style={styles.text}>{selectedIndoorBuilding.name === "VL" || selectedIndoorBuilding.name === "VE" ? "VL&VE" : selectedIndoorBuilding.name}</Text>
+            <Text style={indoorMapStyles.text}>
+              {selectedIndoorBuilding.name === "VL" || selectedIndoorBuilding.name === "VE" 
+                ? "VL&VE" 
+                : selectedIndoorBuilding.name}
+            </Text>
           ) : (
             <MaterialIcons name="location-city" size={24} color="black" />
           )}
         </TouchableOpacity>
 
         {isExpanded && (
-          <View style={styles.expandedButtonsContainer}>
+          <View style={indoorMapStyles.expandedButtonsContainer}>
             {/* "None" button to disable the indoor map */}
             <TouchableOpacity
-              style={styles.expandedButton}
+              style={indoorMapStyles.expandedButton}
               onPress={clearIndoorMap}
             >
-              <Text style={styles.text}>Outdoor</Text>
+              <Text style={indoorMapStyles.text}>Outdoor</Text>
             </TouchableOpacity>
+
+            {/* Buildings with indoor mapping available */}
+            {IndoorController.getIndoorBuildingsForCampus(
+              OutdoorController.getAllBuildings(), 
+              activeCampus
+            ).map((building) => (
+              <TouchableOpacity
+                key={building.id}
+                style={indoorMapStyles.expandedButton}
+                onPress={() =>
+                  IndoorController.handleIndoorBuildingSelect(
+                    building,
+                    updateSelectedIndoorBuilding,
+                    updateIsExpanded,
+                    updateSelectedFloor,
+                    mapRef
+                  )
+                }
+              >
+                <Text style={indoorMapStyles.text}>
+                  {building.name === "VL" ? "VL&VE" : building.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
 
             {/* Filtered buildings */}
             {buildings
@@ -1023,42 +925,43 @@ export default function MapView() {
                   <Text style={styles.text}>{building.name === "VL" ? "VL&VE" : building.name}</Text>
                 </TouchableOpacity>
               ))}
+
           </View>
         )}
       </View>
 
       {/* Switch Campus Button */}
-      <View style={styles.switchCampusButton}>
+      <View style={indoorMapStyles.switchCampusButton}>
         <TouchableOpacity
           disabled={isExpanded}
           onPress={toggleCampus}
-          style={isExpanded ? styles.disabledButton : null}
+          style={isExpanded ? indoorMapStyles.disabledButton : null}
         >
-          <Text style={styles.text}>Switch Campus</Text>
+          <Text style={indoorMapStyles.text}>Switch Campus</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Switch Campus (Shuttle) Button */}
-      <View style={outdoorStyles.shuttleButtonContainer}>
+      {/* Shuttle Button */}
+      <View style={outdoorMapStyles.shuttleButtonContainer}>
         <TouchableOpacity
-          style={outdoorStyles.shuttleButton}
+          style={outdoorMapStyles.shuttleButton}
           onPress={handleShuttleButton}
         >
           <Image
             source={require("../../assets/images/icon-for-shuttle.png")}
             resizeMode="contain"
-            style={outdoorStyles.shuttleIcon}
+            style={outdoorMapStyles.shuttleIcon}
           />
-          <Text style={outdoorStyles.switchButtonText}>
+          <Text style={outdoorMapStyles.switchButtonText}>
             {activeCampus === "sgw" ? "Shuttle To Loyola" : "Shuttle To SGW"}
           </Text>
         </TouchableOpacity>
       </View>
 
-      {/* POI Filter Button - only visible when POI is enabled */}
+      {/* POI Filter Button */}
       {showPOI && (
         <TouchableOpacity
-          style={outdoorStyles.actionButton}
+          style={outdoorMapStyles.actionButton}
           onPress={() => setIsFilterModalVisible(true)}
         >
           <MaterialIcons name="filter-list" size={24} color="white" />
@@ -1067,18 +970,18 @@ export default function MapView() {
 
       {/* POI Loading Indicator */}
       {loading && (
-        <View style={outdoorStyles.loadingContainer}>
+        <View style={outdoorMapStyles.loadingContainer}>
           <ActivityIndicator size="large" color="#922338" />
         </View>
       )}
 
-      {/* POI Update Button - only visible when POI is enabled and region changed */}
+      {/* POI Update Button */}
       {showUpdateButton && showPOI && (
         <TouchableOpacity
-          style={poiStyles.updateButtonContainer}
+          style={poiStylesImport.updateButtonContainer}
           onPress={() => handleFetchPlaces(region)}
         >
-          <Text style={poiStyles.updateButtonText}>Update POIs</Text>
+          <Text style={poiStylesImport.updateButtonText}>Update POIs</Text>
         </TouchableOpacity>
       )}
 
@@ -1099,8 +1002,8 @@ export default function MapView() {
       />
 
       {/* Floating Buttons */}
-      <View style={outdoorStyles.buttonContainer}>
-        <TouchableOpacity style={outdoorStyles.button} onPress={togglePOI}>
+      <View style={outdoorMapStyles.buttonContainer}>
+        <TouchableOpacity style={outdoorMapStyles.button} onPress={togglePOI}>
           <MaterialIcons
             name={showPOI ? "local-dining" : "restaurant"}
             size={24}
@@ -1111,18 +1014,18 @@ export default function MapView() {
 
       {/* Location Permission Denial */}
       <Modal visible={showPermissionPopup} transparent animationType="slide">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Location Permission Denied</Text>
-            <Text style={styles.modalText}>
+        <View style={indoorMapStyles.modalContainer}>
+          <View style={indoorMapStyles.modalContent}>
+            <Text style={indoorMapStyles.modalTitle}>Location Permission Denied</Text>
+            <Text style={indoorMapStyles.modalText}>
               Location access is required to show your current location on the
               map. Please enable location permissions in your settings.
             </Text>
             <TouchableOpacity
-              style={styles.closeButton}
+              style={indoorMapStyles.closeButton}
               onPress={() => setShowPermissionPopup(false)}
             >
-              <Text style={styles.closeButtonText}>X</Text>
+              <Text style={indoorMapStyles.closeButtonText}>X</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1139,6 +1042,8 @@ export default function MapView() {
         onGetDirections={handleBuildingGetDirections}
         setAsStartingPoint={handleBuildingSetStartingPoint}
       />
+
+      {/* Shuttle Info Popup */}
       <ShuttleInfoPopup
         visible={shuttlePopupVisible}
         onClose={() => setShuttlePopupVisible(false)}
@@ -1164,11 +1069,6 @@ export default function MapView() {
               distance={getDistanceToPOI(selectedPOI)}
               onClose={() => setSelectedPOI(null)}
               onGetDirections={() => {
-                console.log(
-                  `Get directions for address: ${
-                    selectedPOI.vicinity || "unknown"
-                  }`
-                );
                 handlePOIGetDirections(selectedPOI);
                 setSelectedPOI(null);
               }}

@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions } from "react-native";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const styles = StyleSheet.create({
+export default StyleSheet.create({
   container: {
     flex: 1,
     width: screenWidth,
@@ -130,5 +130,3 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-
-export default styles;
