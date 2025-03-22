@@ -30,6 +30,10 @@ const MapDirections: React.FC<Props> = ({
   //To be used when options of routes are added
   const cameraRef = useRef<Mapbox.Camera | null>(null);
 
+  const prevOriginRef = useRef<{ latitude: number; longitude: number } | null>(null);
+  const prevDestinationRef = useRef<{ latitude: number; longitude: number } | null>(null);
+  const prevTravelModeRef = useRef<string | null>(null);
+
   useEffect(() => {
     let isMounted = true;
   
@@ -71,7 +75,6 @@ const MapDirections: React.FC<Props> = ({
       isMounted = false;
     };
   }, [travelMode, origin, destination]);
-  
 
   useEffect(() => {
     if (routes.length > 0 && routes[selectedRouteIndex]) {
@@ -79,32 +82,6 @@ const MapDirections: React.FC<Props> = ({
       fitToRoute(coordinates);
     }
   }, [selectedRouteIndex, routes]);
-
-  {/*
-  const fetchRoutes = async (mode: string, isMounted: boolean) => {
-    if (!origin || !destination) return;
-
-    console.log(`Fetching routes from Google Maps with mode: ${mode}`);
-
-    //By setting alternatives to true in url, now get all routes rather than just 1
-    let url = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&mode=${mode}&alternatives=true&key=${GOOGLE_MAPS_API_KEY}`;
-
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      if (!isMounted) return;
-      if (data.routes && data.routes.length > 0) {
-        setRoutes(parseGoogleMapsResponse(data));
-      } else {
-        console.warn("No routes found in Google Maps API response.");
-      }
-    } catch (error) {
-      console.error("Error fetching Google Maps routes:", error);
-    }
-  };*/}
 
   const fitToRoute = (coordinates: number[][]) => {
     if (cameraRef.current && coordinates.length > 1) {

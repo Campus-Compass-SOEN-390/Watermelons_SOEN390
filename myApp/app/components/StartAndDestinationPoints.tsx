@@ -60,6 +60,7 @@ const StartAndDestinationPoints = () => {
     updateSelectedRouteIndex,
     updateTravelTime,
     updateTravelDistance,
+    updateNavType,
     origin,
     destination,
     originText,
@@ -71,8 +72,9 @@ const StartAndDestinationPoints = () => {
     selectedRouteIndex,
     travelTime,
     travelDistance,
+    navType
   } = useLocationContext();
-  const { updateSelectedFloor, updateSelectedIndoorBuilding } =
+  const { selectedFloor, updateSelectedFloor, updateSelectedIndoorBuilding } =
     useIndoorMapContext();
   const { location } = useLocation();
   const originRef = useRef<any>(null);
@@ -119,6 +121,7 @@ const StartAndDestinationPoints = () => {
   useEffect(() => {
     if (origin && destination) {
       setLoading(true);
+      
       getTravelTimes(origin, destination).then((times) => {
         const timesMap: { [key: string]: number | null } = {};
         times.forEach(({ mode, duration }) => {
@@ -185,6 +188,7 @@ const handleRouteSelection = (index: number) => {
 
   useEffect(() => {
     try {
+      handleNavType(originText, destinationText);
       updateOrigin(origin, originText);
       updateDestination(destination, destinationText);
     } catch {
@@ -197,16 +201,17 @@ const handleRouteSelection = (index: number) => {
       /*originText, destinationText*/
     },
     showTransportation,
-    showSteps,
+    showSteps, 
   ]);
 
   useEffect(() => {
     try {
+      handleNavType(originText, destinationText);
       updateShowTransportation(false);
     } catch {
       console.log("Crashed 4");
     }
-  }, [origin, location]);
+  }, [origin, location,]);
 
   const getTravelTimeText = (
     times: { [key: string]: number | null },
@@ -311,7 +316,8 @@ const handleRouteSelection = (index: number) => {
             }}
             textInputProps={{
               value: destinationText,
-              onChangeText: (text) => updateDestination(destination, text),
+              onChangeText: handleDestinationInput,
+              //onChangeText: (text) => updateDestination(destination, text),
               style: styles.input,
             }}
             styles={{
@@ -369,14 +375,16 @@ const handleRouteSelection = (index: number) => {
                 style={[
                   styles.transportButton,
                   travelMode === mode && styles.selectedButton,
+                  { flexDirection: "row", alignItems: "center"}, // Added row layout
                 ]}
               >
                 <MaterialIcons
                   name={icon}
-                  size={24}
+                  size={20}
                   color={travelMode === mode ? "white" : "black"}
                 />
-                <Text style={{ fontSize: 14, marginTop: 5 }}>
+                <Text 
+                style={{ fontSize: 12, marginTop: 5, textAlign: "center", flexWrap: "wrap", color : travelMode === mode ? "#fff" : "black" }}>
                   {getTravelTimeText(travelTimes, mode)}
                 </Text>
               </TouchableOpacity>
@@ -457,7 +465,7 @@ const handleRouteSelection = (index: number) => {
             onPress={() => {
               updateShowTransportation(false);
               updateRenderMap(false);
-              updateSelectedFloor(null);
+              updateSelectedFloor(1);
               updateSelectedIndoorBuilding(null);
               updateOrigin(null, "");
               updateDestination(null, "");

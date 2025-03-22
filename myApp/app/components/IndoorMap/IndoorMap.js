@@ -155,7 +155,7 @@ IndoorMap.propTypes = {
   selectedBuilding: PropTypes.shape({
     name: PropTypes.string.isRequired,
   }),
-  selectedFloor: PropTypes.string,
+  selectedFloor: PropTypes.number,
 };
 
 export default IndoorMap;

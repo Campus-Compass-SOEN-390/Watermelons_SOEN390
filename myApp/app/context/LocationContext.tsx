@@ -19,6 +19,7 @@ interface LocationContextType {
   showFooter: boolean;
   travelMode: string;
   showShuttleRoute: boolean;
+  navType: string;
   navigationToMap: boolean;
   selectedRouteIndex: number;
   travelTime: string;
@@ -31,6 +32,7 @@ interface LocationContextType {
   updateShowFooter: (setting: boolean) => void;
   updateTravelMode: (mode: string) => void;
   updateShowShuttleRoute: (setting: boolean) => void;
+  updateNavType: (mode: string) => void;
   updateNavigationToMap: (setting: boolean) => void;
   updateSelectedRouteIndex: (index: number) => void;
   updateTravelTime: (time: string) =>void;
@@ -66,6 +68,7 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
   const [routeSteps, setRouteSteps] = useState<Array<{ id: number; instruction: string; distance: string }>>([]); 
 
 
+  const [navType, setNavType] = useState("");
 
   const [POILocationData, setPOILocationData] = useState<{ name: string; lat: number; lng: number } | null>(null);
 
@@ -145,14 +148,11 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
     setRouteSteps(steps);
   };
 
+  const updateNavType = (mode: string) => {
+    setNavType(mode);
+  }
 
-  
-
-  useEffect(() => {
-    console.log("FROM LOCATION CONTEXT", lat, lng, name)
-  }, []);
-
-  const value = React.useMemo(() => ({ 
+  const memoDependencies = [
     origin, 
     destination, 
     originText, 
@@ -167,6 +167,7 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
     travelTime,
     travelDistance,
     routeSteps,
+    navType,
     updateOrigin, 
     updateDestination, 
     updateShowTransportation, 
@@ -179,9 +180,40 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
     updateSelectedRouteIndex,
     updateTravelTime,
     updateTravelDistance,
-    updateRouteSteps
-   }), [origin, destination, originText, destinationText, showTransportation, renderMap, showFooter, travelMode, showShuttleRoute, navigationToMap, selectedRouteIndex,travelTime, travelDistance, updateOrigin, updateDestination, updateShowTransportation, updateRenderMap, updateShowFooter, updateTravelMode, updateShowShuttleRoute, updateNavigationToMap, updateSelectedRouteIndex, updateTravelTime, updateTravelDistance]);
-  
+    updateRouteSteps,
+    updateNavType
+  ];
+    
+  const value = React.useMemo(
+    () => ({
+      origin,
+      destination,
+      originText,
+      destinationText,
+      showTransportation,
+      renderMap,
+      showFooter,
+      travelMode,
+      showShuttleRoute,
+      navType,
+      updateOrigin,
+      updateDestination,
+      updateShowTransportation,
+      updateRenderMap,
+      updateShowFooter,
+      updateTravelMode,
+      updateShowShuttleRoute,
+      updatePOILocationData, // expose the update function
+      updateNavigationToMap,
+      updateSelectedRouteIndex,
+      updateTravelTime,
+      updateTravelDistance,
+      updateRouteSteps,
+      updateNavType
+    }),
+    memoDependencies
+  );
+
   return (
     <LocationContext.Provider value={value}>
       {children}

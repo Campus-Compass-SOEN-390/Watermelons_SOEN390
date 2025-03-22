@@ -8,8 +8,9 @@ import PropTypes from 'prop-types';
 Mapbox.setAccessToken(Constants.expoConfig?.extra?.mapbox);
 
 //Algorithm only renders the floor that you are currently on. Splits paths into different floors.
-const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode, currentFloor, isDisabled }) => {
+const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode, currentFloor, isDisabled, pathId }) => {
   const [floorPaths, setFloorPaths] = useState({}); // Store paths for multiple floors
+  const entranceNodes = ["Hall1-principal-entrance", "CC1-entrance", "MB1-entrance"];
 
   useEffect(() => {
     if (!startNode || !endNode || !nodeCoordinates) return;
@@ -22,48 +23,57 @@ const ShortestPathMap = ({ graph, nodeCoordinates, startNode, endNode, currentFl
 
       shortestPathNodes.forEach((node) => {
         const nodeData = nodeCoordinates[node];
-
-        if (!nodeData) {
-          console.error(` ${node} is missing from nodeCoordinates!`);
-          return;
-        }
-
+        if (!nodeData) return;
+      
         const { floor, coordinates } = nodeData;
-
+      
         if (!pathsByFloor[floor]) {
           pathsByFloor[floor] = [];
         }
-
-        pathsByFloor[floor].push(coordinates);
-      });
+      
+        pathsByFloor[floor].push({ id: node, coordinates });
+      });      
 
       setFloorPaths(pathsByFloor);
     }
   }, [startNode, endNode]);
 
   // Get path coordinates for the current floor
-  const pathCoordinates = floorPaths[currentFloor] || [];
+const currentPath = floorPaths[currentFloor] || [];
+if (currentPath.length < 2) return null;
 
-  if (pathCoordinates.length < 2) return null; // Don't render if path is invalid
+const features = [];
 
-  const geoJsonPath = {
-    type: "FeatureCollection",
-    features: [
-      {
-        type: "Feature",
-        geometry: {
-          type: "LineString",
-          coordinates: pathCoordinates,
-        },
-        properties: {},
-      },
-    ],
-  };
+for (let i = 0; i < currentPath.length - 1; i++) {
+  const from = currentPath[i];
+  const to = currentPath[i + 1];
+
+  const fromIsEntrance = entranceNodes.some((entrance) => from.id.includes(entrance));
+  const toIsEntrance = entranceNodes.some((entrance) => to.id.includes(entrance));
+
+  // Skip drawing if both are entrances
+  if (fromIsEntrance && toIsEntrance) continue;
+
+  features.push({
+    type: "Feature",
+    geometry: {
+      type: "LineString",
+      coordinates: [from.coordinates, to.coordinates],
+    },
+    properties: {},
+  });
+}
+
+const geoJsonPath = {
+  type: "FeatureCollection",
+  features,
+};
+
 
   return (
     <Mapbox.ShapeSource id="shortestPath" shape={geoJsonPath}>
       <Mapbox.LineLayer
-        id="pathLayer"
+        id={`pathLayer-${pathId}`}
         style={{
           lineColor: "blue",
           lineWidth: 4,
