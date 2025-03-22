@@ -286,6 +286,9 @@ export default StyleSheet.create({
       shadowRadius: 4,
       elevation: 3, // for Android shadow
       width: "100%",
+      flexDirection: 'row',  // Align items horizontally
+      justifyContent: 'space-between', // Space between button and text
+      alignItems: 'center',  // Align items in the center
     },
     routeTitle: {
       fontSize: 16,
