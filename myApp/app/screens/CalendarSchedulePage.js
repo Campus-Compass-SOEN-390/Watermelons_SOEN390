@@ -208,7 +208,7 @@ export default function CalendarSchedulePage() {
         {nextClass && (
           <>
             <Text style={styles.nextClassInfoText}>
-              {`Your next class is: ${
+              {`Your next class is: ${nextClass.course}, ${
                 new Date(nextClass.date).toDateString() === new Date().toDateString()
                   ? 'today'
                   : new Date(nextClass.date).toLocaleDateString('en-US', {
