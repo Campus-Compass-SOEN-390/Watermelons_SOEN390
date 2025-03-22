@@ -1,67 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1742665126903" clover="3.2.0">
-  <project timestamp="1742665126903" name="All files">
-    <metrics statements="55" coveredstatements="50" conditionals="17" coveredconditionals="13" methods="25" coveredmethods="20" elements="97" coveredelements="83" complexity="0" loc="55" ncloc="55" packages="1" files="2" classes="2"/>
-    <file name="IndoorModel.js" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/models/IndoorModel.js">
-      <metrics statements="16" coveredstatements="15" conditionals="2" coveredconditionals="0" methods="7" coveredmethods="6"/>
-      <line num="9" count="1" type="stmt"/>
-      <line num="10" count="1" type="stmt"/>
-      <line num="11" count="1" type="stmt"/>
-      <line num="14" count="1" type="stmt"/>
-      <line num="15" count="1" type="stmt"/>
-      <line num="22" count="1" type="stmt"/>
-      <line num="27" count="6" type="stmt"/>
-      <line num="32" count="3" type="stmt"/>
-      <line num="33" count="3" type="stmt"/>
-      <line num="34" count="3" type="stmt"/>
-      <line num="36" count="3" type="stmt"/>
-      <line num="37" count="9" type="stmt"/>
-      <line num="38" count="9" type="stmt"/>
-      <line num="41" count="3" type="stmt"/>
-      <line num="46" count="1" type="stmt"/>
-      <line num="51" count="0" type="cond" truecount="0" falsecount="2"/>
-    </file>
-    <file name="OutdoorModel.js" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/models/OutdoorModel.js">
-      <metrics statements="39" coveredstatements="35" conditionals="15" coveredconditionals="13" methods="18" coveredmethods="14"/>
-      <line num="8" count="1" type="stmt"/>
-      <line num="9" count="1" type="stmt"/>
-      <line num="10" count="1" type="stmt"/>
-      <line num="11" count="1" type="stmt"/>
-      <line num="12" count="1" type="stmt"/>
-      <line num="13" count="1" type="stmt"/>
-      <line num="14" count="1" type="stmt"/>
-      <line num="28" count="5" type="stmt"/>
-      <line num="33" count="3" type="stmt"/>
-      <line num="34" count="3" type="stmt"/>
-      <line num="35" count="3" type="stmt"/>
-      <line num="37" count="3" type="stmt"/>
-      <line num="38" count="5" type="stmt"/>
-      <line num="39" count="5" type="stmt"/>
-      <line num="42" count="3" type="stmt"/>
-      <line num="47" count="1" type="stmt"/>
-      <line num="52" count="2" type="stmt"/>
-      <line num="57" count="0" type="stmt"/>
-      <line num="58" count="0" type="stmt"/>
-      <line num="64" count="0" type="stmt"/>
-      <line num="65" count="0" type="cond" truecount="0" falsecount="2"/>
-      <line num="71" count="7" type="cond" truecount="2" falsecount="0"/>
-      <line num="73" count="24" type="cond" truecount="2" falsecount="0"/>
-      <line num="74" count="21" type="cond" truecount="2" falsecount="0"/>
-      <line num="75" count="1" type="stmt"/>
-      <line num="78" count="5" type="stmt"/>
-      <line num="83" count="4" type="cond" truecount="2" falsecount="0"/>
-      <line num="88" count="2" type="stmt"/>
-      <line num="89" count="2" type="stmt"/>
-      <line num="94" count="2" type="cond" truecount="5" falsecount="0"/>
-      <line num="95" count="1" type="stmt"/>
-      <line num="100" count="1" type="stmt"/>
-      <line num="106" count="1" type="stmt"/>
-      <line num="111" count="5" type="stmt"/>
-      <line num="112" count="5" type="stmt"/>
-      <line num="113" count="2" type="stmt"/>
-      <line num="114" count="2" type="stmt"/>
-      <line num="116" count="3" type="stmt"/>
-      <line num="117" count="3" type="stmt"/>
-    </file>
+<coverage generated="1742673724919" clover="3.2.0">
+  <project timestamp="1742673724919" name="All files">
+    <metrics statements="13" coveredstatements="13" conditionals="10" coveredconditionals="7" methods="1" coveredmethods="1" elements="24" coveredelements="21" complexity="0" loc="13" ncloc="13" packages="2" files="3" classes="3"/>
+    <package name="components.POI">
+      <metrics statements="3" coveredstatements="3" conditionals="10" coveredconditionals="7" methods="1" coveredmethods="1"/>
+      <file name="FilterModal.js" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/components/POI/FilterModal.js">
+        <metrics statements="3" coveredstatements="3" conditionals="10" coveredconditionals="7" methods="1" coveredmethods="1"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="22" count="12" type="stmt"/>
+        <line num="122" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="styles">
+      <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="constants.js" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/styles/constants.js">
+        <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+      </file>
+      <file name="poiStyles.js" path="/Users/othmanesbi/Code/Watermelons_SOEN390/myApp/app/styles/poiStyles.js">
+        <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
+      </file>
+    </package>
   </project>
 </coverage>
