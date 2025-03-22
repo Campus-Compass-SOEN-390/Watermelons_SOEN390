@@ -16,6 +16,9 @@ import styles from "../styles/StartAndDestinationPointsStyles";
 import useLocation from "../hooks/useLocation";
 import Icon from "react-native-vector-icons/Foundation";
 import { useLocationContext } from "../context/LocationContext";
+import { useIndoorMapContext } from "../context/IndoorMapContext";
+import { parseClassroomLocation } from "../utils/IndoorMapUtils";
+import { buildings } from "../api/buildingData";
 import { getTravelTimes } from "../api/googleMapsApi";
 
 
@@ -46,7 +49,7 @@ interface Step {
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
-const StartAndDestinationPoints = ({}) => {
+const StartAndDestinationPoints = () => {
   const {
     updateOrigin,
     updateDestination,
@@ -69,14 +72,17 @@ const StartAndDestinationPoints = ({}) => {
     travelTime,
     travelDistance,
   } = useLocationContext();
-
+  const { updateSelectedFloor, updateSelectedIndoorBuilding } =
+    useIndoorMapContext();
   const { location } = useLocation();
   const originRef = useRef<any>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showMyLocButton, setShowMyLocButton] = useState(true);
   const [showSteps, setShowSteps] = useState(false);
   const [routeSteps, setRouteSteps] = useState<Step[]>([]);
-  const [travelTimes, setTravelTimes] = useState<{ [key: string]: number | null }>({});
+  const [travelTimes, setTravelTimes] = useState<{
+    [key: string]: number | null;
+  }>({});
   const [loading, setLoading] = useState(false);
   const [routes, setRoutes] = useState<RouteData[] | null>(null);
   const [showFooter, setShowFooter] = useState(false);
@@ -202,6 +208,13 @@ const handleRouteSelection = (index: number) => {
     }
   }, [origin, location]);
 
+  const getTravelTimeText = (
+    times: { [key: string]: number | null },
+    mode: string
+  ) => {
+    return times[mode] ? `${times[mode]} min` : "N/A";
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.card}>
@@ -313,6 +326,21 @@ const handleRouteSelection = (index: number) => {
             style={styles.button}
             onPress={() => {
               if (origin && destination) {
+                const parsedLocation = parseClassroomLocation(originText);
+
+                if (parsedLocation) {
+                  const { buildingName, floor } = parsedLocation;
+
+                  const matchedBuilding = buildings.find(
+                    (b) => b.name === buildingName
+                  );
+
+                  if (matchedBuilding) {
+                    updateSelectedIndoorBuilding(matchedBuilding);
+                    updateSelectedFloor(Number(floor));
+                  }
+                }
+
                 updateShowTransportation(true);
               }
             }}
@@ -349,11 +377,7 @@ const handleRouteSelection = (index: number) => {
                   color={travelMode === mode ? "white" : "black"}
                 />
                 <Text style={{ fontSize: 14, marginTop: 5 }}>
-                  {loading
-                    ? "..."
-                    : travelTimes[mode]
-                    ? `${travelTimes[mode]} min`
-                    : "N/A"}
+                  {getTravelTimeText(travelTimes, mode)}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -420,18 +444,25 @@ const handleRouteSelection = (index: number) => {
           </Text> */}
           {/* <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
             <Text style={styles.footerButtonText}>GO</Text>
-          </TouchableOpacity> */}
-      
-         
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.stepsButton}
+            onPress={handleStepsClick}
+          >
+            <Text style={styles.footerButtonText}>Steps</Text>
+          </TouchableOpacity>
           {/* "X" Button as a red cancel */}
           <TouchableOpacity
             style={styles.cancelButton}
             onPress={() => {
               updateShowTransportation(false);
               updateRenderMap(false);
-              setShowFooter(false);
-              updateDestination(null, "");
+              updateSelectedFloor(null);
+              updateSelectedIndoorBuilding(null);
               updateOrigin(null, "");
+              updateDestination(null, "");
+              setShowFooter(false);
+        
             }}
           >
             <Text style={[styles.footerButtonText, { color: "red" }]}>Cancel</Text>

@@ -1,12 +1,11 @@
 import React from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useRouter } from 'expo-router';
-import { homepageStyles as styles } from '../styles/HomePageStyles.js'
+import { homepageStyles as styles } from '../styles/HomePageStyles.js';
 
 export default function HomePage() {
    
     const router = useRouter();
-    
 
     return (
         <View style ={{flex:1}}>
@@ -28,7 +27,7 @@ export default function HomePage() {
                     <TouchableOpacity 
                     style={styles.button}
                     testID="loyolaButton"
-                    onPress={() => router.push('/(tabs)/map?type=loyola')}
+                    onPress={() => router.push('/(tabs)/map?type=loy')}
                     >
                         <Text style={styles.buttonText}>Loyola Campus</Text>
                     </TouchableOpacity>
@@ -49,28 +48,21 @@ export default function HomePage() {
                         <Text style={styles.buttonText}>Interest Points</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity 
-                    style={styles.buttonOrange}
-                    testID="directionButton"
-                    >
-                        <Text style={styles.buttonText}>Directions to my next class</Text>
-                    </TouchableOpacity>
-                </View>
             </View>
             <View style={styles.buttonsContainer}>
-                <Text style={styles.title}>Link your account</Text>
-                <View style={styles.buttonContainer}>
+                <Text style={styles.title}>View My Calendar</Text>
+                 <View style={styles.buttonContainer}>
                     <TouchableOpacity 
                     style={styles.googleButton}
-                    testID="googleButton"
+                    testID="calendarfetchbutton"
+                    onPress={() => router.push('screens/CalendarFetching')}
                     >
-                        <Image
+                         <Image
                             source={require('../../assets/images/google_logo.png')}
                             style={styles.icon}
                             testID="googleIcon"
                         />
-                        <Text style={styles.googleButtonText}>Connect Google Calendar</Text>
+                        <Text style={styles.buttonText}>Fetch Calendars</Text>
                     </TouchableOpacity>
                 </View>
             </View>
