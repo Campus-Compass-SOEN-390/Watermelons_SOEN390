@@ -808,6 +808,7 @@ export default function MapView() {
               startNode={originText}
               endNode={destinationText}
               currentFloor={selectedFloor}
+              isDisabled={isDisabled}
               origin={origin}
               destination={destination}
               mapRef={mapRef}
