@@ -89,7 +89,7 @@ export default function MapView() {
 
   console.log(name, lat, lng);
   // Campus switching
-  const [activeCampus, setActiveCampus] = useState(type);
+  const [activeCampus, setActiveCampus] = useState(type || "sgw"); // Default to "sgw" if no type is passed
   const mapRef = useRef(null);
 
   // Disabled on or off
