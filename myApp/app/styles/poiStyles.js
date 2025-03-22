@@ -1,5 +1,6 @@
 // poiStyles.js
 import { StyleSheet, Dimensions } from "react-native";
+import { FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4, FONT_SIZE_5 } from "./constants";
 
 // Set safe area variables (adjust as needed)
 const safeAreaTop = 20;
@@ -31,12 +32,12 @@ export const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: FONT_SIZE_4,
     fontWeight: "bold",
     marginBottom: 10,
   },
   modalText: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     textAlign: "center",
     marginBottom: 15,
   },
@@ -53,7 +54,7 @@ export const styles = StyleSheet.create({
   closeButtonText: {
     color: "#ffffff",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
   },
 
   // Updated POI button styled to match the team theme.
@@ -75,7 +76,7 @@ export const styles = StyleSheet.create({
   },
   updateButtonText: {
     color: "#fff",
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     fontWeight: "bold",
   },
 
@@ -114,13 +115,13 @@ export const styles = StyleSheet.create({
     marginVertical: 12,
   },
   filterSectionTitle: {
-    fontSize: 18,
+    fontSize: FONT_SIZE_4,
     fontWeight: "600",
     color: "#555",
     marginBottom: 8,
   },
   distanceValue: {
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     fontWeight: "bold",
     color: "#922338", // App's primary color
     textAlign: "center",
@@ -135,7 +136,7 @@ export const styles = StyleSheet.create({
     borderBottomColor: "#eee",
   },
   filterOptionText: {
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     color: "#333",
     fontWeight: "500",
   },
@@ -168,7 +169,7 @@ export const styles = StyleSheet.create({
   },
   applyButtonText: {
     color: "#ffffff",
-    fontSize: 18,
+    fontSize: FONT_SIZE_4,
     fontWeight: "700",
   },
   closeModalButton: {
@@ -180,7 +181,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
   closeModalIcon: {
-    fontSize: 20,
+    fontSize: FONT_SIZE_5,
     fontWeight: "bold",
     color: "#555",
   },
@@ -192,7 +193,7 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   distanceRangeLabel: {
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     fontWeight: "500",
     color: "#555",
     marginBottom: 10,

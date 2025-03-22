@@ -1,5 +1,6 @@
 // outdoorMapStyles.js
 import { StyleSheet, Dimensions } from "react-native";
+import {FONT_SIZE_1, FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4, FONT_SIZE_5} from './constants';
 
 // Set these variables as needed (or import them from a config)
 const safeAreaTop = 20;
@@ -50,7 +51,7 @@ export default StyleSheet.create({
   },
   debugText: {
     color: "white",
-    fontSize: 12,
+    fontSize: FONT_SIZE_1,
     marginTop: 2,
   },
 
@@ -75,12 +76,12 @@ export default StyleSheet.create({
     shadowRadius: 3,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: FONT_SIZE_4,
     fontWeight: "bold",
     marginBottom: 10,
   },
   modalText: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     textAlign: "center",
     marginBottom: 15,
   },
@@ -96,7 +97,7 @@ export default StyleSheet.create({
   closeButtonText: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
   },
 
   // Switch Button Container now placed above the bottom safe area
@@ -139,7 +140,7 @@ export default StyleSheet.create({
     marginRight: 8,
   },
   titleForMap: {
-    fontSize: 20,
+    fontSize: FONT_SIZE_5,
     fontWeight: "bold",
     marginBottom: 10,
     textAlign: "center",
