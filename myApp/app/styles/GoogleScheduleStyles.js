@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { FONT_SIZE_SMALL, FONT_SIZE_MEDIUM, FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_5 } from "./constants";
+import { FONT_SIZE_SMALL, FONT_SIZE_MEDIUM, FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_5, FONT_SIZE_1 } from "./constants";
 
 const styles = StyleSheet.create({
     container: {
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     nextClassInfoText: {
-        fontSize: 14,
+        fontSize: FONT_SIZE_2,
         color: '#333',
         textAlign: 'center',
         marginBottom: 12,
@@ -104,17 +104,18 @@ const styles = StyleSheet.create({
     },
     nextClassDetailsText: {
         color: 'white',
-        fontSize: 13,
+        fontSize: FONT_SIZE_1,
         marginTop: 6,
         textAlign: 'center',
         paddingHorizontal: 10,
     },
     nextClassButtonText: {
         color: 'white',
-        fontSize: 16,
+        fontSize: FONT_SIZE_3,
         fontWeight: 'bold',
-    },noClassText: {
-        fontSize: 16,
+    },
+    noClassText: {
+        fontSize: FONT_SIZE_3,
         color: '#666',
         textAlign: 'center',
         padding: 20,
