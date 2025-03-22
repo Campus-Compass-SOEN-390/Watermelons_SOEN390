@@ -60,9 +60,7 @@ const StartAndDestinationPoints = () => {
   const [loading, setLoading] = useState(false);
 
   const handleNavType = (originText: string, destinationText: string) => {
-    console.log("yo broski");
     if (!originText || !destinationText){
-      console.log("Hey, youre done");
       return "";
     }
     const originBuilding = getBuildingCode(originText);
@@ -70,25 +68,20 @@ const StartAndDestinationPoints = () => {
     console.log("originbuilding is", originBuilding);
     console.log("destinationbuilding is", destinationBuilding);
     console.log("buildingCoordinates");
-    // Navigation type is indoor, same building navigation
-    if (originBuilding == destinationBuilding && buildingCoordinates[String(originBuilding)] && buildingCoordinates[String(destinationBuilding)] ){
-      updateNavType("indoor");
-    }
-    // indoor to outdoor navigation
-    else if (originBuilding && buildingCoordinates[String(originBuilding)] && !buildingCoordinates[String(destinationBuilding)]){
-      updateNavType("indoor-outdoor");
-    }
-    else if (destinationBuilding && buildingCoordinates[String(destinationBuilding)] && !buildingCoordinates[String(originBuilding)]){
-      updateNavType("outdoor-indoor");
-    }
-    else if (originBuilding && destinationBuilding && buildingCoordinates[String(originBuilding)] && buildingCoordinates[String(destinationBuilding)] && (destinationBuilding != originBuilding)){
-      updateNavType("indoor-outdoor-indoor");
-    }
-    else{
-      updateNavType("outdoor")
-    }
-
-    console.log("we got this:", navType);
+    // Function to determine navigation type
+    const navigationType = (origin: any, destination: any) => {
+      const originBuilding = getBuildingCode(origin);
+      const destinationBuilding = getBuildingCode(destination);
+  
+      if (originBuilding && destinationBuilding && buildingCoordinates[String(originBuilding)] && buildingCoordinates[String(destinationBuilding)]) {
+          return originBuilding === destinationBuilding ? "indoor" : "indoor-outdoor-indoor";
+      }
+      if (originBuilding && buildingCoordinates[String(originBuilding)]) return "indoor-outdoor";
+      if (destinationBuilding && buildingCoordinates[String(destinationBuilding)]) return "outdoor-indoor";
+      
+      return "outdoor";
+    };
+    updateNavType(navigationType(originText, destinationText));
   }
 
   const getBuildingCode = (room: string) => {

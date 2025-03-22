@@ -67,8 +67,7 @@ export const Directions : React.FC<Props> = ({
         };
     };
     
-
-    console.log("Hey chat, we got:", navType)
+    console.log("Navigation type,", navType)
     if (navType == "indoor"){
         return (
         <ShortestPathMap
