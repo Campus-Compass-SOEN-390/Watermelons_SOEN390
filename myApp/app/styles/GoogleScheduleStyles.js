@@ -113,6 +113,12 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
+    },noClassText: {
+        fontSize: 16,
+        color: '#666',
+        textAlign: 'center',
+        padding: 20,
+        fontStyle: 'italic'
     }
 });
 

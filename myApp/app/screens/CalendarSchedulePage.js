@@ -151,11 +151,11 @@ export default function CalendarSchedulePage() {
     }
   };
 
-  const findNextClassInfo = () => {
+  const getUpcomingClasses = () => {
     const now = new Date();
     const currentTime = now.getTime();
     
-    const upcomingClasses = schedule.filter(item => {
+    return schedule.filter(item => {
       const classDate = new Date(item.date);
       const [startTime] = item.time.split(' - ');
       const [hours, minutes] = startTime.split(':');
@@ -168,8 +168,10 @@ export default function CalendarSchedulePage() {
       
       return classTime.getTime() >= currentTime;
     });
-
-    upcomingClasses.sort((a, b) => {
+  };
+  
+  const sortClassesByStartTime = (classes) => {
+    return [...classes].sort((a, b) => {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
       const [startTimeA] = a.time.split(' - ');
@@ -182,8 +184,14 @@ export default function CalendarSchedulePage() {
       
       return dateA.getTime() - dateB.getTime();
     });
-
-    setNextClass(upcomingClasses[0] || null);
+  };
+  
+  const findNextClassInfo = () => {
+    const upcomingClasses = getUpcomingClasses();
+    const sortedClasses = sortClassesByStartTime(upcomingClasses);
+    
+    console.log("Next class found:", sortedClasses[0] || "No upcoming classes");
+    setNextClass(sortedClasses[0] || null);
   };
 
   return (
@@ -205,7 +213,7 @@ export default function CalendarSchedulePage() {
         ))}
       </View>
       <View style={styles.nextClassContainer}>
-        {nextClass && (
+        {nextClass ? (
           <>
             <Text style={styles.nextClassInfoText}>
               {`Your next class is: ${nextClass.course}, ${
@@ -229,6 +237,10 @@ export default function CalendarSchedulePage() {
               </Text>
             </TouchableOpacity>
           </>
+        ) : (
+          <Text style={styles.noClassText}>
+            No upcoming classes scheduled
+          </Text>
         )}
       </View>
 
