@@ -25,19 +25,20 @@ jest.mock('expo-constants', () => ({
 jest.mock('expo-router', () => ({
   useRouter: () => ({ push: jest.fn() }),
 }));
-
-// Correctly mock LayoutWrapper
 jest.mock('../components/LayoutWrapper.js', () => {
   const React = require('react');
   const { View } = require('react-native');
-  return ({ children }) => React.createElement(View, null, children);
+  return () => <View testID="LayoutWrapperMock" />;
 });
 
-// Correctly mock HeaderButtons
 jest.mock('../components/HeaderButtons.js', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
-  return () => React.createElement(View, null, React.createElement(Text, null, 'HeaderButtons Mock'));
+  return () => (
+    <View testID="HeaderButtonsMock">
+      <Text>HeaderButtons Mock</Text>
+    </View>
+  );
 });
 
 // Correctly mock Ionicons
@@ -60,11 +61,11 @@ describe('CalendarFetching Component', () => {
   beforeEach(() => jest.clearAllMocks());
 
   test('renders correctly with inputs and buttons', async () => {
-    const { getByPlaceholderText, getByText } = renderWithNav(<CalendarFetching />);
-
-    expect(getByPlaceholderText('Paste Calendar ID here')).toBeTruthy();
-    expect(getByText('Connect')).toBeTruthy();
-    expect(getByText('Clear History')).toBeTruthy();
+    const { findByPlaceholderText, findByText } = renderWithNav(<CalendarFetching />);
+  
+    expect(await findByPlaceholderText('Paste Calendar ID here')).toBeTruthy();
+    expect(await findByText('Connect')).toBeTruthy();
+    expect(await findByText('Clear History')).toBeTruthy();
   });
 
   test('shows alert when trying to connect with empty input', async () => {
