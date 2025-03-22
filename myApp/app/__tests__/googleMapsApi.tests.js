@@ -227,14 +227,16 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
 
     const routes = await getAlternativeRoutes(origin, destination, modes);
 
-    expect(routes.walking).toHaveLength(1);
-    expect(routes.walking[0].summary).toBe("Route A");
-    expect(routes.walking[0].steps).toHaveLength(2);
-    expect(routes.walking[0].steps[0]).toEqual({
-      instruction: "Turn left",
-      distance: "500m",
-      duration: 2,
+    const walking = routes.find((r) => r.mode === "walking");
+    expect(walking.routes).toHaveLength(1);
+    expect(walking.routes[0].summary).toBe("Route A");
+    expect(walking.routes[0].steps).toHaveLength(2);
+    expect(walking.routes[0].steps[0]).toEqual({
+    instruction: "Turn left",
+    distance: "500m",
+    duration: 2,
     });
+
   });
 
   /**
@@ -248,7 +250,9 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const modes = ["driving"];
 
     const routes = await getAlternativeRoutes(origin, destination, modes);
-    expect(routes.driving).toEqual([]); // No routes should be returned
+    const driving = routes.find((r) => r.mode === "driving");
+    expect(driving.routes).toEqual([]);
+
   });
 
   /**
@@ -262,7 +266,8 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const modes = ["transit"];
 
     const routes = await getAlternativeRoutes(origin, destination, modes);
-    expect(routes).toEqual({ transit: [] });
+    expect(routes).toEqual([{ mode: "transit", routes: [] }]);
+
   });
 
   /**
@@ -276,7 +281,8 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const modes = ["walking"];
 
     const routes = await getAlternativeRoutes(origin, destination, modes);
-    expect(routes).toEqual({ walking: [] });
+    expect(routes).toEqual([{ mode: "walking", routes: [] }]);
+
   });
 
   /**
@@ -340,8 +346,12 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
 
     const routes = await getAlternativeRoutes(origin, destination, modes);
 
-    expect(routes.walking?.[0]?.summary).toBe("Route A");
-    expect(routes.driving?.[0]?.summary).toBe("Route B");
+    const walking = routes.find((r) => r.mode === "walking");
+    const driving = routes.find((r) => r.mode === "driving");
+
+    expect(walking.routes[0].summary).toBe("Route A");
+    expect(driving.routes[0].summary).toBe("Route B");
+
   });
 
   /**
@@ -368,12 +378,25 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
 
     const routes = await getAlternativeRoutes(origin, destination, modes);
 
-    expect(routes).toEqual({
-      walking: [
-        { duration: 15, distance: "5 km", summary: "Route A", coordinates: expect.any(Array), steps: [] },
-      ],
-      driving: [],
-    });
+    expect(routes).toEqual([
+      {
+        mode: "walking",
+        routes: [
+          {
+            duration: 15,
+            distance: "5 km",
+            summary: "Route A",
+            coordinates: expect.any(Array),
+            steps: [],
+          },
+        ],
+      },
+      {
+        mode: "driving",
+        routes: [],
+      },
+    ]);
+    
   });
 
   /**
@@ -384,7 +407,8 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
 
     const routes = await getAlternativeRoutes(origin, destination, []);
-    expect(routes).toEqual({});
+    expect(routes).toEqual([]);
+
   });
 });
 
