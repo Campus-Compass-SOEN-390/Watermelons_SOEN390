@@ -15,6 +15,7 @@ export default function CalendarSchedulePage() {
   const selectedDayIndex = selectedDate.getDay(); // Sunday = 0
 
   const [schedule, setSchedule] = useState([]);
+  const [nextClass, setNextClass] = useState(null);
 
   // Will allow to display event on proper date
   const filteredSchedule = schedule.filter(
@@ -38,6 +39,9 @@ export default function CalendarSchedulePage() {
     readCSV();
   }, []);
 
+  useEffect(() => {
+    findNextClassInfo();
+  }, [schedule]);
 
   // Parse CSV data for display
   const parseCSV = (csvText) => {
@@ -147,6 +151,73 @@ export default function CalendarSchedulePage() {
     }
   };
 
+  const getUpcomingClasses = () => {
+    const now = new Date();
+    const currentTime = now.getTime();
+    
+    return schedule.filter(item => {
+      const classDate = new Date(item.date);
+      const [startTime] = item.time.split(' - ');
+      const [hours, minutes] = startTime.split(':');
+      const classTime = new Date(classDate);
+      classTime.setHours(parseInt(hours), parseInt(minutes), 0);
+      
+      if (classDate < now && classDate.getDate() !== now.getDate()) {
+        return false;
+      }
+      
+      return classTime.getTime() >= currentTime;
+    });
+  };
+  
+  const sortClassesByStartTime = (classes) => {
+    return [...classes].sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      const [startTimeA] = a.time.split(' - ');
+      const [startTimeB] = b.time.split(' - ');
+      const [hoursA, minutesA] = startTimeA.split(':');
+      const [hoursB, minutesB] = startTimeB.split(':');
+      
+      dateA.setHours(parseInt(hoursA), parseInt(minutesA), 0, 0);
+      dateB.setHours(parseInt(hoursB), parseInt(minutesB), 0, 0);
+      
+      return dateA.getTime() - dateB.getTime();
+    });
+  };
+  
+  const findNextClassInfo = () => {
+    try {
+      if (!schedule || schedule.length === 0) {
+        console.log("Schedule is empty");
+        setNextClass(null);
+        return;
+      }
+  
+      const upcomingClasses = getUpcomingClasses();
+      if (upcomingClasses.length === 0) {
+        console.log("No upcoming classes found");
+        setNextClass(null);
+        return;
+      }
+  
+      const sortedClasses = sortClassesByStartTime(upcomingClasses);
+      const nextClass = sortedClasses[0];
+      
+      console.log("Next class found:", {
+        course: nextClass.course,
+        date: nextClass.date,
+        time: nextClass.time,
+        location: nextClass.location
+      });
+      
+      setNextClass(nextClass);
+    } catch (error) {
+      console.error("Error finding next class:", error);
+      setNextClass(null);
+    }
+  };
+
   return (
     <LayoutWrapper>
       {/* Top Navigation */}
@@ -165,14 +236,37 @@ export default function CalendarSchedulePage() {
           </Text>
         ))}
       </View>
-      <TouchableOpacity
-       style={styles.nextClassDirections}
-        onPress={findNextClass}
-        testID="get-directions-button"
-      >
-        <MaterialIcons name="schedule" size={24} color="white" style={{ marginRight: 8 }} />
-        <Text style={styles.nextClassButtonText}>Get directions to my next class</Text>
-      </TouchableOpacity>
+      <View style={styles.nextClassContainer}>
+        {nextClass ? (
+          <>
+            <Text style={styles.nextClassInfoText}>
+              {`Your next class is: ${nextClass.course}, ${
+                new Date(nextClass.date).toDateString() === new Date().toDateString()
+                  ? 'today'
+                  : new Date(nextClass.date).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      month: 'long',
+                      day: 'numeric'
+                    })
+              } ${nextClass.time} at ${nextClass.location}`}
+            </Text>
+            <TouchableOpacity
+              style={styles.nextClassDirections}
+              onPress={findNextClass}
+              testID="get-directions-button"
+            >
+              <MaterialIcons name="directions" size={24} color="white" style={{ marginRight: 8 }} />
+              <Text style={styles.nextClassButtonText}>
+                Get directions to next class
+              </Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <Text style={styles.noClassText}>
+            No upcoming classes scheduled
+          </Text>
+        )}
+      </View>
 
       {/* Schedule Header */}
       <Text style={styles.scheduleTitle}>Schedule</Text>
