@@ -62,7 +62,7 @@ export default function HomePage() {
                             style={styles.icon}
                             testID="googleIcon"
                         />
-                        <Text style={styles.buttonText}>Fetch Calendars</Text>
+                        <Text style={styles.buttonText}>Connect Calendars</Text>
                     </TouchableOpacity>
                 </View>
             </View>

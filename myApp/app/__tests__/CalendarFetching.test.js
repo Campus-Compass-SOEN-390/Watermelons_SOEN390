@@ -103,7 +103,7 @@ describe('CalendarFetching Component', () => {
           }),
       })
     );
-   
+
   });
 
   test('loads stored calendar IDs on mount', async () => {
@@ -130,5 +130,5 @@ describe('CalendarFetching Component', () => {
     expect(getByPlaceholderText('Paste Calendar ID here').props.value).toBe('stored-calendar');
   });
 
-  
+
 });
