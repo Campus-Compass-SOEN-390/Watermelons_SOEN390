@@ -159,6 +159,40 @@ describe("OutdoorModel Tests", () => {
     OutdoorModel.getIndoorBuildingsForCampus = originalGetIndoorBuildingsForCampus;
   });
 
+  describe("calculateCentroid", () => {
+    test("should calculate centroid of a polygon with multiple points", () => {
+      const coordinates = [
+        [-73.5790, 45.4970],
+        [-73.5790, 45.4975],
+        [-73.5785, 45.4975],
+        [-73.5785, 45.4970]
+      ];
+      
+      const result = OutdoorModel.calculateCentroid(coordinates);
+      
+      expect(result[0]).toBeCloseTo(-73.57875, 3); // Longitude with less precision
+      expect(result[1]).toBeCloseTo(45.4973, 3);   // Latitude with less precision
+    });
+
+    test("should handle a single point", () => {
+      const coordinates = [[-73.5787, 45.4973]];
+      
+      const result = OutdoorModel.calculateCentroid(coordinates);
+      
+      expect(result).toEqual([-73.5787, 45.4973]);
+    });
+
+    test("should handle empty array", () => {
+      const coordinates = [];
+      
+      const result = OutdoorModel.calculateCentroid(coordinates);
+      
+      // NaN results because division by zero
+      expect(result[0]).toBeNaN();
+      expect(result[1]).toBeNaN();
+    });
+  });
+
   describe("getAllBuildings", () => {
     test("should return all buildings", () => {
       const result = OutdoorModel.getAllBuildings();
@@ -259,6 +293,56 @@ describe("OutdoorModel Tests", () => {
       expect(isPointInPolygon).toHaveBeenCalled();
       expect(result).toBeNull();
     });
+
+    test("should return null if no buildings have coordinates", () => {
+      const location = { latitude: 45.4972, longitude: -73.5787 };
+      // Mock buildings to have no coordinates
+      const mockBuildings = buildings.map(b => ({ ...b, coordinates: [] }));
+      jest.spyOn(OutdoorModel, 'getAllBuildings').mockReturnValueOnce(mockBuildings);
+      
+      const result = OutdoorModel.checkLocationInBuildings(location);
+      
+      expect(result).toBeNull();
+    });
+
+    test("should return null if buildings array is empty", () => {
+      const location = { latitude: 45.4972, longitude: -73.5787 };
+      jest.spyOn(OutdoorModel, 'getAllBuildings').mockReturnValueOnce([]);
+      
+      const result = OutdoorModel.checkLocationInBuildings(location);
+      
+      expect(result).toBeNull();
+    });
+
+    test("should handle buildings with empty coordinates array", () => {
+      const location = { latitude: 45.4972, longitude: -73.5787 };
+      const buildingsWithEmptyCoords = [
+        { ...buildings[0], coordinates: [] },
+        ...buildings.slice(1)
+      ];
+      jest.spyOn(OutdoorModel, 'getAllBuildings').mockReturnValueOnce(buildingsWithEmptyCoords);
+      isPointInPolygon.mockReturnValue(false);
+      
+      const result = OutdoorModel.checkLocationInBuildings(location);
+      
+      expect(isPointInPolygon).toHaveBeenCalled();
+      expect(result).toBeNull();
+    });
+
+    test("should skip buildings with undefined coordinates", () => {
+      const location = { latitude: 45.4972, longitude: -73.5787 };
+      const buildingsWithUndefinedCoords = [
+        { ...buildings[0], coordinates: undefined },
+        ...buildings.slice(1)
+      ];
+      jest.spyOn(OutdoorModel, 'getAllBuildings').mockReturnValueOnce(buildingsWithUndefinedCoords);
+      isPointInPolygon.mockReturnValue(false);
+      
+      const result = OutdoorModel.checkLocationInBuildings(location);
+      
+      expect(isPointInPolygon).toHaveBeenCalled();
+      expect(result).toBeNull();
+    });
   });
 
   describe("getCurrentCampusRegion", () => {
@@ -347,6 +431,74 @@ describe("OutdoorModel Tests", () => {
       expect(console.warn).toHaveBeenCalledWith("Error fetching shuttle data:", "Failed to fetch");
       expect(result).toEqual([]);
       expect(OutdoorModel.shuttleLocations).toEqual([]);
+    });
+
+    test("should handle an empty response from the API", async () => {
+      extractShuttleInfo.mockResolvedValueOnce([]);
+      
+      const result = await OutdoorModel.fetchShuttleLocations();
+      
+      expect(extractShuttleInfo).toHaveBeenCalled();
+      expect(result).toEqual([]);
+      expect(OutdoorModel.shuttleLocations).toEqual([]);
+    });
+  });
+
+  describe("fetchShuttleLocations - Edge Cases", () => {
+    test("should handle abort signal correctly", async () => {
+      const abortController = new AbortController();
+      const abortSignal = abortController.signal;
+
+      // Mock extractShuttleInfo to simulate abort behavior
+      extractShuttleInfo.mockImplementationOnce(() => {
+        return new Promise((_, reject) => {
+          const error = new Error("Aborted");
+          error.name = "AbortError";
+          reject(error);
+        });
+      });
+
+      const result = await OutdoorModel.fetchShuttleLocations(abortSignal);
+
+      expect(extractShuttleInfo).toHaveBeenCalled();
+      expect(result).toEqual([]); // Should return empty array on abort
+    });
+
+    test("should handle unexpected errors gracefully", async () => {
+      extractShuttleInfo.mockRejectedValueOnce(new Error("Unexpected error"));
+
+      const result = await OutdoorModel.fetchShuttleLocations();
+
+      expect(extractShuttleInfo).toHaveBeenCalled();
+      expect(console.warn).toHaveBeenCalledWith("Error fetching shuttle data:", "Unexpected error");
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe("convertCoordinates", () => {
+    test("should convert latitude/longitude objects to [longitude, latitude] arrays", () => {
+      const coords = [
+        { latitude: 45.4973, longitude: -73.5787 },
+        { latitude: 45.4974, longitude: -73.5788 }
+      ];
+
+      const result = OutdoorModel.convertCoordinates(coords);
+
+      expect(result).toEqual([
+        [-73.5787, 45.4973],
+        [-73.5788, 45.4974]
+      ]);
+    });
+
+    test("should handle an empty array", () => {
+      const result = OutdoorModel.convertCoordinates([]);
+      expect(result).toEqual([]);
+    });
+
+    test("should throw an error if input is not an array", () => {
+      expect(() => OutdoorModel.convertCoordinates(null)).toThrow();
+      expect(() => OutdoorModel.convertCoordinates(undefined)).toThrow();
+      expect(() => OutdoorModel.convertCoordinates({})).toThrow();
     });
   });
 });

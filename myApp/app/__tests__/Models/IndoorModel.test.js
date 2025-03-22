@@ -191,22 +191,61 @@ describe("IndoorModel Tests", () => {
   describe("hasIndoorMapping", () => {
     test("should return true for buildings with indoor mapping", () => {
       const building = { hasIndoor: true };
-      
       const result = IndoorModel.hasIndoorMapping(building);
-      
       expect(result).toBe(true);
     });
 
     test("should return false for buildings without indoor mapping", () => {
       const building = { hasIndoor: false };
-      
       const result = IndoorModel.hasIndoorMapping(building);
-      
       expect(result).toBe(false);
     });
 
     test("should return false if building is null or undefined", () => {
       expect(IndoorModel.hasIndoorMapping(null)).toBe(false);
+      expect(IndoorModel.hasIndoorMapping(undefined)).toBe(false);
+    });
+
+    test("should return false if building has no hasIndoor property", () => {
+      const building = { name: "Building without hasIndoor property" };
+      const result = IndoorModel.hasIndoorMapping(building);
+      expect(result).toBe(false);
+    });
+
+    test("should return false if building.hasIndoor is undefined", () => {
+      const building = { hasIndoor: undefined };
+      const result = IndoorModel.hasIndoorMapping(building);
+      expect(result).toBe(false);
+    });
+
+    test("should return false if building.hasIndoor is not strictly true", () => {
+      const building = { hasIndoor: 1 }; // truthy but not strictly true
+      const result = IndoorModel.hasIndoorMapping(building);
+      expect(result).toBe(false);
+    });
+  });
+
+  describe("hasIndoorMapping - Branch Coverage", () => {
+    test("should return true when building.hasIndoor is strictly true", () => {
+      const building = { hasIndoor: true };
+      expect(IndoorModel.hasIndoorMapping(building)).toBe(true);
+    });
+
+    test("should return false when building.hasIndoor is false", () => {
+      const building = { hasIndoor: false };
+      expect(IndoorModel.hasIndoorMapping(building)).toBe(false);
+    });
+
+    test("should return false when building.hasIndoor is undefined", () => {
+      const building = { hasIndoor: undefined };
+      expect(IndoorModel.hasIndoorMapping(building)).toBe(false);
+    });
+
+    test("should return false when building is null", () => {
+      expect(IndoorModel.hasIndoorMapping(null)).toBe(false);
+    });
+
+    test("should return false when building is undefined", () => {
       expect(IndoorModel.hasIndoorMapping(undefined)).toBe(false);
     });
   });
