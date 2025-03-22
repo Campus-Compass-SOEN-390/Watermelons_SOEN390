@@ -19,6 +19,7 @@ interface LocationContextType {
   showFooter: boolean;
   travelMode: string;
   showShuttleRoute: boolean;
+  navType: string;
   updateOrigin: (
     location: { latitude: number; longitude: number } | null,
     text: string
@@ -32,6 +33,7 @@ interface LocationContextType {
   updateShowFooter: (setting: boolean) => void;
   updateTravelMode: (mode: string) => void;
   updateShowShuttleRoute: (setting: boolean) => void;
+  updateNavType: (mode: string) => void;
 }
 
 const LocationContext = createContext<LocationContextType | null>(null);
@@ -55,6 +57,7 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
   const [showFooter, setShowFooter] = useState(false);
   const [travelMode, setTravelMode] = useState("");
   const [showShuttleRoute, setShowShuttleRoute] = useState(false);
+  const [navType, setNavType] = useState("");
 
   const [POILocationData, setPOILocationData] = useState<{
     name: string;
@@ -116,6 +119,10 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
     setShowShuttleRoute(setting);
   };
 
+  const updateNavType = (mode: string) => {
+    setNavType(mode);
+  }
+
   const memoDependencies = [
     origin,
     destination,
@@ -126,6 +133,7 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
     showFooter,
     travelMode,
     showShuttleRoute,
+    navType,
     updateOrigin,
     updateDestination,
     updateShowTransportation,
@@ -133,6 +141,7 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
     updateShowFooter,
     updateTravelMode,
     updateShowShuttleRoute,
+    updateNavType
   ];
 
   const value = React.useMemo(
@@ -146,6 +155,7 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
       showFooter,
       travelMode,
       showShuttleRoute,
+      navType,
       updateOrigin,
       updateDestination,
       updateShowTransportation,
@@ -154,6 +164,7 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({
       updateTravelMode,
       updateShowShuttleRoute,
       updatePOILocationData, // expose the update function
+      updateNavType
     }),
     memoDependencies
   );

@@ -28,17 +28,32 @@ const MapDirections: React.FC<Props> = ({
   const [selectedRouteIndex, setSelectedRouteIndex] = useState<number>(0);
   const cameraRef = useRef<Mapbox.Camera | null>(null);
 
+  const prevOriginRef = useRef<{ latitude: number; longitude: number } | null>(null);
+  const prevDestinationRef = useRef<{ latitude: number; longitude: number } | null>(null);
+  const prevTravelModeRef = useRef<string | null>(null);
+
   useEffect(() => {
     let isMounted = true;
 
     const fetchData = async () => {
-      try {
-        if (origin && destination && travelMode) {
-          await fetchRoutes(travelMode, isMounted);
-        }
-      } catch (error) {
-        console.log("Error in fetchData:", error);
+      if (!origin || !destination || !travelMode) return;
+
+      // Check if origin or destination has actually changed before fetching
+      const hasOriginChanged = JSON.stringify(origin) !== JSON.stringify(prevOriginRef.current);
+      const hasDestinationChanged = JSON.stringify(destination) !== JSON.stringify(prevDestinationRef.current);
+      const hasTravelModeChanged = JSON.stringify(travelMode) !== JSON.stringify(prevTravelModeRef.current);
+
+      if (hasOriginChanged || hasDestinationChanged || hasTravelModeChanged) {
+        console.log("Origin or destination changed, fetching new routes...");
+        await fetchRoutes(travelMode, isMounted);
+
+        // Update previous values
+        prevOriginRef.current = origin;
+        prevDestinationRef.current = destination;
+        prevTravelModeRef.current = travelMode;
       }
+
+      console.log("Travel Mode", travelMode)
     };
 
     fetchData();
@@ -47,6 +62,7 @@ const MapDirections: React.FC<Props> = ({
       isMounted = false;
     };
   }, [travelMode, origin, destination]);
+
 
   useEffect(() => {
     if (routes.length > 0 && routes[selectedRouteIndex]) {

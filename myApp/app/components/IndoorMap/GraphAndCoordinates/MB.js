@@ -28,14 +28,16 @@ export const mbGraph = {
     "path-MBS2.128": 2
   },
   "MB1Escalator": {
-    "escalatorMBS2": 18,
+    "escalatorMBS2": 30,
     "path-MB1.117": 3
   },
   "MB1.126": {
     "path-MB1.126": 5
   },
   "MB1-entrance": {
-    "path-MB1.128.2": 7
+    "path-MB1.128.2": 7,
+    "Hall1-principal-entrance": 0,
+    "CC1-entrance": 0
   },
   "MBS2.107": {
     "path-MBS2.107": 2
@@ -81,11 +83,11 @@ export const mbGraph = {
   "path-MBS2.114": {
     "path-MBS2.113": 4,
     "MBS2.114": 3,
-    "MBS2Stairs1": 3
+    "path-MBS2.114.2": 1
   },
   "escalatorMBS2": {
-    "MB1Escalator": 18,
-    "path_MBS2Stairs2": 18
+    "MB1Escalator": 30,
+    "path_MBS2Stairs2": 6
   },
   "path-stairs1MB1.3": {
     "path-MB1.210": 3,
@@ -149,9 +151,9 @@ export const mbGraph = {
     "path-MB1.210": 25,
     "path-stairs1MB1.2": 2
   },
-  "stairs2MB": {
+  "stairsMB1": {
     "path-MB1.108": 2,
-    "MBS2Stairs1": 6
+    "MBS2Stairs1": 7
   },
   "path2-escalatorMBS2": {
     "path-escalatorMBS2": 3,
@@ -162,6 +164,10 @@ export const mbGraph = {
   },
   "MBS2.132": {
     "path-MBS2.133": 4
+  },
+  "path-MBS2.114.2": {
+    "path-MBS2.114": 1,
+    "MBS2Stairs1": 3
   },
   "path-MBS2.103": {
     "path-MBS2.104": 3,
@@ -212,14 +218,14 @@ export const mbGraph = {
   },
   "path-MB1.108": {
     "MB1.108": 1,
-    "stairs2MB": 2,
+    "stairsMB1": 2,
     "path-MB1.107": 4
   },
   "MBS2.106": {
     "path-MBS2.106": 2
   },
   "path_MBS2Stairs2": {
-    "escalatorMBS2": 18,
+    "escalatorMBS2": 6,
     "MBS2Stairs2": 3
   },
   "MB1.107": {
@@ -289,8 +295,8 @@ export const mbGraph = {
     "path-MB1.117": 4
   },
   "MBS2Stairs1": {
-    "path-MBS2.114": 3,
-    "stairs2MB": 6
+    "stairsMB1": 7,
+    "path-MBS2.114.2": 3
   },
   "MB1.117": {
     "path-MB1.117": 2
@@ -353,8 +359,8 @@ export const mbGraph = {
 export const mbNodeCoordinates = {
   "path-MBS2.113": {
     "coordinates": [
-      -73.579072,
-      45.495216
+      -73.579073,
+      45.495207
     ],
     "floor": -2
   },
@@ -374,15 +380,15 @@ export const mbNodeCoordinates = {
   },
   "path-MBS2.104": {
     "coordinates": [
-      -73.578766,
-      45.495086
+      -73.578767,
+      45.495077
     ],
     "floor": -2
   },
   "MBS2.129": {
     "coordinates": [
-      -73.579412,
-      45.495314
+      -73.579413,
+      45.495305
     ],
     "floor": -2
   },
@@ -395,8 +401,8 @@ export const mbNodeCoordinates = {
   },
   "MBS2.127": {
     "coordinates": [
-      -73.579393,
-      45.495236
+      -73.579394,
+      45.495227
     ],
     "floor": -2
   },
@@ -423,15 +429,15 @@ export const mbNodeCoordinates = {
   },
   "MBS2.107": {
     "coordinates": [
-      -73.578811,
-      45.495084
+      -73.578812,
+      45.495075
     ],
     "floor": -2
   },
   "elevator1MBS2": {
     "coordinates": [
-      -73.57905,
-      45.495277
+      -73.579051,
+      45.495268
     ],
     "floor": -2
   },
@@ -472,29 +478,29 @@ export const mbNodeCoordinates = {
   },
   "path-MBS2.106": {
     "coordinates": [
-      -73.578798,
-      45.495061
+      -73.578799,
+      45.495052
     ],
     "floor": -2
   },
   "path-MBS2.125": {
     "coordinates": [
-      -73.579363,
-      45.495261
+      -73.579364,
+      45.495252
     ],
     "floor": -2
   },
   "path-MBS2.114": {
     "coordinates": [
-      -73.579103,
-      45.495191
+      -73.579104,
+      45.495182
     ],
     "floor": -2
   },
   "escalatorMBS2": {
     "coordinates": [
-      -73.578846,
-      45.495328
+      -73.578731,
+      45.49525
     ],
     "floor": -2
   },
@@ -514,15 +520,15 @@ export const mbNodeCoordinates = {
   },
   "MBS2.131": {
     "coordinates": [
-      -73.57924,
-      45.495385
+      -73.579241,
+      45.495376
     ],
     "floor": -2
   },
   "path-MBS2.108": {
     "coordinates": [
-      -73.578702,
-      45.495136
+      -73.578703,
+      45.495127
     ],
     "floor": -2
   },
@@ -535,8 +541,8 @@ export const mbNodeCoordinates = {
   },
   "MBS2.105": {
     "coordinates": [
-      -73.578759,
-      45.49504
+      -73.57876,
+      45.495031
     ],
     "floor": -2
   },
@@ -556,8 +562,8 @@ export const mbNodeCoordinates = {
   },
   "MBS2.114": {
     "coordinates": [
-      -73.579074,
-      45.495174
+      -73.579075,
+      45.495165
     ],
     "floor": -2
   },
@@ -584,15 +590,15 @@ export const mbNodeCoordinates = {
   },
   "MBS2.125": {
     "coordinates": [
-      -73.57929,
-      45.495219
+      -73.579291,
+      45.49521
     ],
     "floor": -2
   },
   "path-escalatorMBS2": {
     "coordinates": [
-      -73.578647,
-      45.495179
+      -73.578648,
+      45.49517
     ],
     "floor": -2
   },
@@ -603,17 +609,17 @@ export const mbNodeCoordinates = {
     ],
     "floor": 1
   },
-  "stairs2MB": {
+  "stairsMB1": {
     "coordinates": [
       -73.579172,
       45.49525
     ],
-    "floor": 2
+    "floor": 1
   },
   "path2-escalatorMBS2": {
     "coordinates": [
-      -73.578624,
-      45.495197
+      -73.578625,
+      45.495188
     ],
     "floor": -2
   },
@@ -626,22 +632,29 @@ export const mbNodeCoordinates = {
   },
   "MBS2.132": {
     "coordinates": [
-      -73.579247,
-      45.495474
+      -73.579248,
+      45.495465
+    ],
+    "floor": -2
+  },
+  "path-MBS2.114.2": {
+    "coordinates": [
+      -73.579115,
+      45.495173
     ],
     "floor": -2
   },
   "path-MBS2.103": {
     "coordinates": [
-      -73.57874,
-      45.495107
+      -73.578741,
+      45.495098
     ],
     "floor": -2
   },
   "path-MBS2.128": {
     "coordinates": [
-      -73.579376,
-      45.495251
+      -73.579377,
+      45.495242
     ],
     "floor": -2
   },
@@ -661,15 +674,15 @@ export const mbNodeCoordinates = {
   },
   "path-elevatorMBS2": {
     "coordinates": [
-      -73.579017,
-      45.495259
+      -73.579018,
+      45.49525
     ],
     "floor": -2
   },
   "path-S2.130": {
     "coordinates": [
-      -73.579289,
-      45.49532
+      -73.57929,
+      45.495311
     ],
     "floor": 2
   },
@@ -682,15 +695,15 @@ export const mbNodeCoordinates = {
   },
   "path-MBS2.124": {
     "coordinates": [
-      -73.579266,
-      45.495339
+      -73.579267,
+      45.49533
     ],
     "floor": -2
   },
   "path2-elevatorMBS2": {
     "coordinates": [
-      -73.578961,
-      45.495305
+      -73.578962,
+      45.495296
     ],
     "floor": -2
   },
@@ -710,15 +723,15 @@ export const mbNodeCoordinates = {
   },
   "MBS2.106": {
     "coordinates": [
-      -73.578812,
-      45.495049
+      -73.578813,
+      45.49504
     ],
     "floor": -2
   },
   "path_MBS2Stairs2": {
     "coordinates": [
-      -73.578669,
-      45.495223
+      -73.57867,
+      45.495214
     ],
     "floor": -2
   },
@@ -745,8 +758,8 @@ export const mbNodeCoordinates = {
   },
   "path-MBS2.129": {
     "coordinates": [
-      -73.579348,
-      45.495275
+      -73.579349,
+      45.495266
     ],
     "floor": -2
   },
@@ -759,8 +772,8 @@ export const mbNodeCoordinates = {
   },
   "path2-MBS2.133": {
     "coordinates": [
-      -73.579162,
-      45.495423
+      -73.579163,
+      45.495414
     ],
     "floor": -2
   },
@@ -780,50 +793,50 @@ export const mbNodeCoordinates = {
   },
   "MBS2.108": {
     "coordinates": [
-      -73.578715,
-      45.495143
+      -73.578716,
+      45.495134
     ],
     "floor": -2
   },
   "MBS2Stairs2": {
     "coordinates": [
-      -73.578644,
-      45.495243
+      -73.578645,
+      45.495234
     ],
     "floor": -2
   },
   "MBS2.133": {
     "coordinates": [
-      -73.579188,
-      45.495463
+      -73.579189,
+      45.495454
     ],
     "floor": -2
   },
   "path-MBS2.126": {
     "coordinates": [
-      -73.579306,
-      45.495307
+      -73.579307,
+      45.495298
     ],
     "floor": -2
   },
   "MBS2.124": {
     "coordinates": [
-      -73.579213,
-      45.495308
+      -73.579214,
+      45.495299
     ],
     "floor": -2
   },
   "MBS2.126": {
     "coordinates": [
-      -73.579274,
-      45.495291
+      -73.579275,
+      45.495282
     ],
     "floor": -2
   },
   "path-MBS2.133": {
     "coordinates": [
-      -73.579205,
-      45.495448
+      -73.579206,
+      45.495439
     ],
     "floor": -2
   },
@@ -836,8 +849,8 @@ export const mbNodeCoordinates = {
   },
   "MBS2Stairs1": {
     "coordinates": [
-      -73.579145,
-      45.495202
+      -73.579146,
+      45.495193
     ],
     "floor": -2
   },
@@ -850,15 +863,15 @@ export const mbNodeCoordinates = {
   },
   "MBS2.130": {
     "coordinates": [
-      -73.579305,
-      45.495329
+      -73.579306,
+      45.49532
     ],
     "floor": -2
   },
   "path-MBS2.107": {
     "coordinates": [
-      -73.578786,
-      45.49507
+      -73.578787,
+      45.495061
     ],
     "floor": -2
   },
@@ -871,15 +884,15 @@ export const mbNodeCoordinates = {
   },
   "MBS2.128": {
     "coordinates": [
-      -73.57941,
-      45.495269
+      -73.579411,
+      45.49526
     ],
     "floor": -2
   },
   "MBS2.103": {
     "coordinates": [
-      -73.578704,
-      45.495083
+      -73.578705,
+      45.495074
     ],
     "floor": -2
   },
@@ -899,8 +912,8 @@ export const mbNodeCoordinates = {
   },
   "path-MBS2.131": {
     "coordinates": [
-      -73.579223,
-      45.495373
+      -73.579224,
+      45.495364
     ],
     "floor": -2
   },
@@ -920,15 +933,15 @@ export const mbNodeCoordinates = {
   },
   "path3-elevatorMBS2": {
     "coordinates": [
-      -73.578915,
-      45.495339
+      -73.578916,
+      45.49533
     ],
     "floor": -2
   },
   "MBS2.113": {
     "coordinates": [
-      -73.579024,
-      45.495186
+      -73.579025,
+      45.495177
     ],
     "floor": -2
   },
@@ -941,8 +954,8 @@ export const mbNodeCoordinates = {
   },
   "MBS2.104": {
     "coordinates": [
-      -73.578731,
-      45.495063
+      -73.578732,
+      45.495054
     ],
     "floor": -2
   }
