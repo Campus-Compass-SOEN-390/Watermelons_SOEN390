@@ -188,7 +188,7 @@ const handleRouteSelection = (index: number) => {
 
   useEffect(() => {
     try {
-      handleNavType(originText, destinationText);
+      // handleNavType(originText, destinationText);
       updateOrigin(origin, originText);
       updateDestination(destination, destinationText);
     } catch {
@@ -206,7 +206,7 @@ const handleRouteSelection = (index: number) => {
 
   useEffect(() => {
     try {
-      handleNavType(originText, destinationText);
+      // handleNavType(originText, destinationText);
       updateShowTransportation(false);
     } catch {
       console.log("Crashed 4");
@@ -316,7 +316,7 @@ const handleRouteSelection = (index: number) => {
             }}
             textInputProps={{
               value: destinationText,
-              onChangeText: handleDestinationInput,
+             
               //onChangeText: (text) => updateDestination(destination, text),
               style: styles.input,
             }}
