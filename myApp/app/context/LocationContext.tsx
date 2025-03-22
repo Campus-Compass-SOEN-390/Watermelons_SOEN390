@@ -15,6 +15,9 @@ interface LocationContextType {
   showShuttleRoute: boolean;
   navigationToMap: boolean;
   selectedRouteIndex: number;
+  travelTime: string;
+  travelDistance: string;
+  routeSteps: Array<{id: number; instruction: string; distance: string}>;
   updateOrigin: (location: { latitude: number; longitude: number } | null, text: string) => void;
   updateDestination: (location: { latitude: number; longitude: number } | null, text: string) => void;
   updateShowTransportation: (setting: boolean) => void;
@@ -24,6 +27,9 @@ interface LocationContextType {
   updateShowShuttleRoute: (setting: boolean) => void;
   updateNavigationToMap: (setting: boolean) => void;
   updateSelectedRouteIndex: (index: number) => void;
+  updateTravelTime: (time: string) =>void;
+  updateTravelDistance: (distance: string) =>void;
+  updateRouteSteps: (steps: Array<{ id: number; instruction: string; distance: string }>) => void; 
 }
 
 const LocationContext = createContext<LocationContextType | null>(null);
@@ -41,6 +47,10 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [showShuttleRoute, setShowShuttleRoute] = useState(false);
   const [navigationToMap, setNavigationToMap]= useState(false);
   const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
+  const [travelTime, setTravelTime] = useState("");
+  const [travelDistance, setTravelDistance] = useState("");
+  const [routeSteps, setRouteSteps] = useState<Array<{ id: number; instruction: string; distance: string }>>([]); 
+
 
 
   const [POILocationData, setPOILocationData] = useState<{ name: string; lat: number; lng: number } | null>(null);
@@ -97,6 +107,22 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
     setSelectedRouteIndex(index);
   }
 
+  const updateTravelTime = (time: string) => {
+    setTravelTime(time);
+  }
+
+  const updateTravelDistance = (distance: string) =>{
+    setTravelDistance(distance);
+  }
+
+  // Update routeSteps
+  const updateRouteSteps = (steps: Array<{ id: number; instruction: string; distance: string }>) => {
+    setRouteSteps(steps);
+  };
+
+
+  
+
   useEffect(() => {
     console.log("FROM LOCATION CONTEXT", lat, lng, name)
   }, []);
@@ -113,6 +139,9 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
     showShuttleRoute,
     navigationToMap,
     selectedRouteIndex,
+    travelTime,
+    travelDistance,
+    routeSteps,
     updateOrigin, 
     updateDestination, 
     updateShowTransportation, 
@@ -122,8 +151,11 @@ export const LocationProvider: React.FC<{ children: ReactNode }> = ({ children }
     updateShowShuttleRoute,
     updatePOILocationData, // expose the update function
     updateNavigationToMap,
-    updateSelectedRouteIndex
-   }), [origin, destination, originText, destinationText, showTransportation, renderMap, showFooter, travelMode, showShuttleRoute, navigationToMap, selectedRouteIndex, updateOrigin, updateDestination, updateShowTransportation, updateRenderMap, updateShowFooter, updateTravelMode, updateShowShuttleRoute, updateNavigationToMap, updateSelectedRouteIndex]);
+    updateSelectedRouteIndex,
+    updateTravelTime,
+    updateTravelDistance,
+    updateRouteSteps
+   }), [origin, destination, originText, destinationText, showTransportation, renderMap, showFooter, travelMode, showShuttleRoute, navigationToMap, selectedRouteIndex,travelTime, travelDistance, updateOrigin, updateDestination, updateShowTransportation, updateRenderMap, updateShowFooter, updateTravelMode, updateShowShuttleRoute, updateNavigationToMap, updateSelectedRouteIndex, updateTravelTime, updateTravelDistance]);
   
   return (
     <LocationContext.Provider value={value}>

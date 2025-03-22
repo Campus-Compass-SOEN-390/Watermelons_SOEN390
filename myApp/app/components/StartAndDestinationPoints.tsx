@@ -29,8 +29,8 @@ import { useRouter } from 'expo-router';
 
 // Define Types
 type Route = {
-  duration: string | number;
-  distance: string | number;
+  duration: string ;
+  distance: string ;
 };
 
 type RouteData = {
@@ -55,6 +55,8 @@ const StartAndDestinationPoints = ({}) => {
     updateTravelMode,
     updateNavigationToMap,
     updateSelectedRouteIndex,
+    updateTravelTime,
+    updateTravelDistance,
     origin,
     destination,
     originText,
@@ -63,11 +65,10 @@ const StartAndDestinationPoints = ({}) => {
     renderMap,
     travelMode,
     navigationToMap,
-    selectedRouteIndex
+    selectedRouteIndex,
+    travelTime,
+    travelDistance,
   } = useLocationContext();
-
-
-
 
   const { location } = useLocation();
   const originRef = useRef<any>(null);
@@ -123,19 +124,22 @@ const StartAndDestinationPoints = ({}) => {
     }
   }, [origin, destination]);
 
-  // Handle "GO" button click
-  const handleGoClick = (index: number) => {
-    updateSelectedRouteIndex(index);
-    // console.log("Navigating...");    
+  // Handle Route Selection button click
+const handleRouteSelection = (index: number) => {
+  updateSelectedRouteIndex(index);
 
-  // Navigate to DirectionMap and pass location data if needed
-  // router.push({
-  //   pathname: "/(tabs)/directionMap", // Use the correct path to your directionMap screen
-  //   // query: {
-  //   //   location: JSON.stringify([-73.5792229, 45.4951962]), // Example location data as a query parameter
-  //   //   zoomLevel: 15,
-  //   // },
-  // });;
+ 
+      console.log("SELECTED TRAVEL TIME:", travelTime);
+      console.log("SELECTED TRAVEL DISTANCE:", travelDistance);
+    
+  
+};
+
+
+  // Handle "GO" button click
+  const handleGoClick = () =>{
+    setShowFooter(false);
+    updateNavigationToMap(true);
   };
 
   // Handle "Steps" button click (show modal)
@@ -374,11 +378,30 @@ const StartAndDestinationPoints = ({}) => {
             .map((routeData, index) => (
               <View key={index}>
                 {routeData.routes.map((route, i) => (
-                  <TouchableOpacity key={i} style={styles.routeCard} onPress={()=>handleGoClick(i)}>
-                    <Text >{route.duration} min</Text>
-                    <Text >{route.distance}</Text>
-                   
-                  </TouchableOpacity>
+             <TouchableOpacity 
+             key={i} 
+             style={styles.routeCard} 
+             onPress={() => {
+          
+               handleRouteSelection(i);
+              
+              
+             }}
+           >
+                 
+            
+                 <Text>{route.duration} min {"\n"} {route.distance}</Text>
+
+
+
+                    <TouchableOpacity style={styles.goButton}  onPress={() => {
+                      handleGoClick()
+                       updateTravelTime(route.duration)
+               updateTravelDistance(route.distance)}}>
+                       <Text >Go</Text>
+                       
+                     </TouchableOpacity>
+                    </TouchableOpacity>
                 ))}
               </View>
             ))}
