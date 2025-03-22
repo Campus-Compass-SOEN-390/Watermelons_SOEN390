@@ -1,13 +1,14 @@
-import { Text, View, TouchableOpacity, ScrollView , Alert} from "react-native";
+import { Text, View, TouchableOpacity, ScrollView , Alert, ActivityIndicator } from "react-native";
 import * as Location from 'expo-location';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , lazy, Suspense } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import styles from '../styles/GoogleScheduleStyles';
 import { useRouter } from 'expo-router';
-import LayoutWrapper from "../components/LayoutWrapper";
 import * as FileSystem from 'expo-file-system';
-import HeaderButtons from "../components/HeaderButtons";
 import Head from "next/head";
+
+const LayoutWrapper = lazy(() => import("../components/LayoutWrapper"));
+const HeaderButtons = lazy(() => import("../components/HeaderButtons"));
 
 export default function CalendarSchedulePage() {
   const router = useRouter();
@@ -148,6 +149,7 @@ export default function CalendarSchedulePage() {
   };
 
   return (
+    <Suspense fallback={<ActivityIndicator size="large" color="#922338" />}>  
     <LayoutWrapper>
       {/* Top Navigation */}
       <HeaderButtons/>
@@ -240,5 +242,6 @@ export default function CalendarSchedulePage() {
         </TouchableOpacity>
       </View>
     </LayoutWrapper>
+    </Suspense>
   );
 }
