@@ -1,4 +1,5 @@
 import { StyleSheet, Platform } from 'react-native';
+import { FONT_SIZE_4 } from './constants';
 
 export const homepageStyles = StyleSheet.create({
     container: {
@@ -91,13 +92,13 @@ export const homepageStyles = StyleSheet.create({
     buttonText: {
         color: '#000000',
         textAlign: 'center',
-        fontSize: 18,
+        fontSize: FONT_SIZE_4,
         flex: 1
     },
     googleButtonText: {
         color: '#000000',
         textAlign: 'center',
-        fontSize: 18,
+        fontSize: FONT_SIZE_4,
         marginLeft: 8, // Adds space between google icon and text
         flex: 1
     },

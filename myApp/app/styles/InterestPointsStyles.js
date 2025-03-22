@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4 } from "./constants";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -95,7 +96,7 @@ export default StyleSheet.create({
   },
   updateButtonText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     fontWeight: "bold",
   },
   // Modal styles (for permission denial)
@@ -117,12 +118,12 @@ export default StyleSheet.create({
     shadowRadius: 3,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: FONT_SIZE_4,
     fontWeight: "bold",
     marginBottom: 10,
   },
   modalText: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     textAlign: "center",
     marginBottom: 15,
   },
@@ -141,7 +142,7 @@ export default StyleSheet.create({
   closeButtonText: {
     color: "#fff",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
   },
   // Toggle button (for switching between map and list views)
   listButton: {
@@ -174,11 +175,11 @@ export default StyleSheet.create({
     borderBottomColor: "#ccc",
   },
   listItemText: {
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     fontWeight: "bold",
   },
   listItemDistance: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     color: "#666",
   },
 
@@ -210,7 +211,7 @@ export default StyleSheet.create({
     alignItems: "center",
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: FONT_SIZE_4,
     fontWeight: "bold",
     marginBottom: 10,
   },

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { FONT_SIZE_3, FONT_SIZE_4 } from './constants';
 
 export const shuttlePopupStyles = StyleSheet.create({
     overlay: {
@@ -28,13 +29,13 @@ export const shuttlePopupStyles = StyleSheet.create({
     textAlign: "center",
   },
   text: {
-    fontSize: 18,
+    fontSize: FONT_SIZE_4,
     marginBottom: 8,
     textAlign: "center",
     color: "#333",
   },
   alertText: {
-    fontSize: 18,
+    fontSize: FONT_SIZE_4,
     color: "#FF3B30", // Red if no shuttle available
     fontWeight: "bold",
     textAlign: "center",
@@ -56,7 +57,7 @@ export const shuttlePopupStyles = StyleSheet.create({
   },
   closeButtonText: {
     color: "white",
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     fontWeight: "bold",
   },
 });

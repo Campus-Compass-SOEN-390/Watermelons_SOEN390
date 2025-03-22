@@ -21,7 +21,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import LayoutWrapper from "../components/LayoutWrapper.js";
 import HeaderButtons from "../components/HeaderButtons.js";
-
+import MonthPicker from '../components/MonthPicker';
 
 
 export default function CalendarFetching() {
@@ -35,7 +35,7 @@ export default function CalendarFetching() {
   const [showSuccessScreen, setShowSuccessScreen] = useState(false);
   // Allows the storage of calendar id history for future selection
   const [storedCalendarIds, setStoredCalendarIds] = useState([]);
-
+  const [monthsAhead, setMonthsAhead] = useState("1"); // default 1 month
 
   const API_KEY = process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
 
@@ -47,7 +47,14 @@ export default function CalendarFetching() {
 
     setLoading(true);
 
-    const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${API_KEY}`;
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    const timeMin = oneMonthAgo.toISOString();
+    const futureDate = new Date();
+    futureDate.setMonth(futureDate.getMonth() + parseInt(monthsAhead || "1"));
+    const timeMax = futureDate.toISOString();
+
+    const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
 
     try {
       let response = await fetch(url);
@@ -149,72 +156,84 @@ export default function CalendarFetching() {
     );
   }
 
-
-
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={20}>
       <LayoutWrapper>
-      {/* Header */}
-      <HeaderButtons/>
-      {/* Events */}
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View style={styles.container}>
-          <View style={styles.redContainer}>
-            <View style={styles.whiteContainer}>
-              <Text style={styles.title}>Enter your Google Calendar ID</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Paste Calendar ID here"
-                value={calendarId}
-                onChangeText={setCalendarId}
-                placeholderTextColor="#666"
-              />
-              {storedCalendarIds.length > 0 && (
-                <View style={{ marginTop: 20 }}>
-                  <Text style={styles.subtitle}>Calendars History:</Text>
-                  {storedCalendarIds.map((item, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      style={styles.historyItem}
-                      onPress={() => setCalendarId(item.id)}
-                    >
-                      <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Ionicons name="timer-outline" size={20} color="#888" style={{ marginRight: 6 }} />
-                        <Text style={styles.historyText}>{item.name}</Text>
-                      </View>
-                    </TouchableOpacity>
-                  ))}
+        {/* Header */}
+        <HeaderButtons />
+        {/* Events Scroll */}
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={styles.container}>
+            <View style={styles.redContainer}>
+              <View style={styles.whiteContainer}>
+                {/* Calendar ID Input */}
+                <Text style={styles.title}>Enter your Google Calendar ID</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Paste Calendar ID here"
+                  value={calendarId}
+                  onChangeText={setCalendarId}
+                  placeholderTextColor="#666"
+                />
+
+                {/* Calendar History */}
+                {storedCalendarIds.length > 0 && (
+                  <View style={{ marginTop: 10 }}>
+                    <Text style={styles.subtitle}>Calendars History:</Text>
+                    {storedCalendarIds.map((item, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        style={styles.historyItem}
+                        onPress={() => setCalendarId(item.id)}
+                      >
+                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                          <Ionicons name="timer-outline" size={20} color="#888" style={{ marginRight: 6 }} />
+                          <Text style={styles.historyText}>{item.name}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
+
+                {/* Months Ahead Input */}
+                <View style={{ marginTop: 10 }}>
+                  <MonthPicker
+                    monthsAhead={monthsAhead}
+                    setMonthsAhead={setMonthsAhead}
+                    styles={styles}
+                  />
                 </View>
-              )}
 
-              <TouchableOpacity
-                style={styles.connectButton}
-                onPress={fetchCalendarEvents}
-                disabled={loading}
-              >
-                <Text style={styles.buttonText}>
-                  {loading ? "Connecting..." : "Connect"}
-                </Text>
-              </TouchableOpacity>
+                {/* Connect Button */}
+                <TouchableOpacity
+                  style={styles.connectButton}
+                  onPress={fetchCalendarEvents}
+                  disabled={loading}
+                >
+                  <Text style={styles.buttonText}>
+                    {loading ? "Connecting..." : "Connect"}
+                  </Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity
-                style={styles.clearHistoryButton}
-                onPress={async () => {
-                  try {
-                    await AsyncStorage.removeItem("calendarIds"); // clear ID from storage
-                    setStoredCalendarIds([]); // immediately clear from UI, no more history is displayed on screen
-                  } catch (err) {
-                    console.error("Failed to clear calendar history", err);
-                  }
-                }}
-              >
-                <Ionicons name="trash-outline" size={20} color="#888" style={{ marginRight: 6 }} />
-                <Text style={styles.clearHistoryText}>Clear History</Text>
-              </TouchableOpacity>
+                {/* Clear History Button */}
+                <TouchableOpacity
+                  style={styles.clearHistoryButton}
+                  onPress={async () => {
+                    try {
+                      await AsyncStorage.removeItem("calendarIds");
+                      setStoredCalendarIds([]);
+                    } catch (err) {
+                      console.error("Failed to clear calendar history", err);
+                    }
+                  }}
+                >
+                  <Ionicons name="trash-outline" size={10} color="#888" style={{ marginRight: 6 }} />
+                  <Text style={styles.clearHistoryText}>Clear History</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
       </LayoutWrapper>
     </KeyboardAvoidingView>
   );
