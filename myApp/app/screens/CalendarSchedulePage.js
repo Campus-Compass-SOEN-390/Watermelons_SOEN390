@@ -15,6 +15,7 @@ export default function CalendarSchedulePage() {
   const selectedDayIndex = selectedDate.getDay(); // Sunday = 0
 
   const [schedule, setSchedule] = useState([]);
+  const [nextClass, setNextClass] = useState(null);
 
   // Will allow to display event on proper date
   const filteredSchedule = schedule.filter(
@@ -38,6 +39,9 @@ export default function CalendarSchedulePage() {
     readCSV();
   }, []);
 
+  useEffect(() => {
+    findNextClassInfo();
+  }, [schedule]);
 
   // Parse CSV data for display
   const parseCSV = (csvText) => {
@@ -147,6 +151,41 @@ export default function CalendarSchedulePage() {
     }
   };
 
+  const findNextClassInfo = () => {
+    const now = new Date();
+    const currentTime = now.getTime();
+    
+    const upcomingClasses = schedule.filter(item => {
+      const classDate = new Date(item.date);
+      const [startTime] = item.time.split(' - ');
+      const [hours, minutes] = startTime.split(':');
+      const classTime = new Date(classDate);
+      classTime.setHours(parseInt(hours), parseInt(minutes), 0);
+      
+      if (classDate < now && classDate.getDate() !== now.getDate()) {
+        return false;
+      }
+      
+      return classTime.getTime() >= currentTime;
+    });
+
+    upcomingClasses.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      const [startTimeA] = a.time.split(' - ');
+      const [startTimeB] = b.time.split(' - ');
+      const [hoursA, minutesA] = startTimeA.split(':');
+      const [hoursB, minutesB] = startTimeB.split(':');
+      
+      dateA.setHours(parseInt(hoursA), parseInt(minutesA), 0, 0);
+      dateB.setHours(parseInt(hoursB), parseInt(minutesB), 0, 0);
+      
+      return dateA.getTime() - dateB.getTime();
+    });
+
+    setNextClass(upcomingClasses[0] || null);
+  };
+
   return (
     <LayoutWrapper>
       {/* Top Navigation */}
@@ -165,14 +204,33 @@ export default function CalendarSchedulePage() {
           </Text>
         ))}
       </View>
-      <TouchableOpacity
-       style={styles.nextClassDirections}
-        onPress={findNextClass}
-        testID="get-directions-button"
-      >
-        <MaterialIcons name="schedule" size={24} color="white" style={{ marginRight: 8 }} />
-        <Text style={styles.nextClassButtonText}>Get directions to my next class</Text>
-      </TouchableOpacity>
+      <View style={styles.nextClassContainer}>
+        {nextClass && (
+          <>
+            <Text style={styles.nextClassInfoText}>
+              {`Your next class is: ${
+                new Date(nextClass.date).toDateString() === new Date().toDateString()
+                  ? 'today'
+                  : new Date(nextClass.date).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      month: 'long',
+                      day: 'numeric'
+                    })
+              } ${nextClass.time} at ${nextClass.location}`}
+            </Text>
+            <TouchableOpacity
+              style={styles.nextClassDirections}
+              onPress={findNextClass}
+              testID="get-directions-button"
+            >
+              <MaterialIcons name="directions" size={24} color="white" style={{ marginRight: 8 }} />
+              <Text style={styles.nextClassButtonText}>
+                Get directions to next class
+              </Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
 
       {/* Schedule Header */}
       <Text style={styles.scheduleTitle}>Schedule</Text>
