@@ -1,13 +1,15 @@
 import React from "react";
-import { getGoogleTravelTime, getTravelTimes } from "../api/googleMapsApi";
+import { getGoogleTravelTime, getTravelTimes,  getAlternativeRoutes } from "../api/googleMapsApi";
 
 
-describe("Google Travel Time API Tests", () => {
+describe("Google Travel Time and Alternative Routes API Tests", () => {
   beforeEach(() => {
     fetch.resetMocks(); // Reset mock before each test
   });
 
- /**
+//_________________Test for travel Time__________________
+ 
+/**
  * Test Case 1: Successful API response
  * - Calls getGoogleTravelTime() with valid origin, destination, and mode.
  * - Ensures it correctly parses the API response and returns the expected travel time.
@@ -180,7 +182,6 @@ describe("Google Travel Time API Tests", () => {
     ]);
   });
 
-
   /**
    * Test Case 8: Handles empty modes array
    * - Ensures function handles empty mode list correctly.
@@ -192,4 +193,206 @@ describe("Google Travel Time API Tests", () => {
     const times = await getTravelTimes(origin, destination, []);
     expect(times).toEqual([]);
   });
+
+  //_________________Test for alternative routes__________________
+
+  /**
+   * Test Case 9: Successful API response with multiple routes (including steps)
+   */
+  test("should return up to 3 alternative routes per mode with steps", async () => {
+    fetch.mockResponseOnce(
+      JSON.stringify({
+        routes: [
+          {
+            legs: [
+              {
+                duration: { value: 900 },
+                distance: { text: "5 km" },
+                steps: [
+                  { html_instructions: "Turn left", distance: { text: "500m" }, duration: { value: 120 } },
+                  { html_instructions: "Go straight", distance: { text: "1km" }, duration: { value: 300 } },
+                ],
+              },
+            ],
+            summary: "Route A",
+            overview_polyline: { points: "encodedPolyline1" },
+          },
+        ],
+      })
+    );
+
+    const origin = { latitude: 45.4970605, longitude: -73.5788022 };
+    const destination = { latitude: 45.495495, longitude: -73.5791717 };
+    const modes = ["walking"];
+
+    const routes = await getAlternativeRoutes(origin, destination, modes);
+
+    expect(routes.walking).toHaveLength(1);
+    expect(routes.walking[0].summary).toBe("Route A");
+    expect(routes.walking[0].steps).toHaveLength(2);
+    expect(routes.walking[0].steps[0]).toEqual({
+      instruction: "Turn left",
+      distance: "500m",
+      duration: 2,
+    });
+  });
+
+  /**
+   * Test Case 10: No routes found for a given mode
+   */
+  test("should return empty array if no routes found", async () => {
+    fetch.mockResponseOnce(JSON.stringify({ routes: [] }));
+
+    const origin = { latitude: 45.4970605, longitude: -73.5788022 };
+    const destination = { latitude: 45.495495, longitude: -73.5791717 };
+    const modes = ["driving"];
+
+    const routes = await getAlternativeRoutes(origin, destination, modes);
+    expect(routes.driving).toEqual([]); // No routes should be returned
+  });
+
+  /**
+   * Test Case 11: API request failure
+   */
+  test("should return empty object if fetch request fails", async () => {
+    fetch.mockReject(new Error("Network error"));
+
+    const origin = { latitude: 45.4970605, longitude: -73.5788022 };
+    const destination = { latitude: 45.495495, longitude: -73.5791717 };
+    const modes = ["transit"];
+
+    const routes = await getAlternativeRoutes(origin, destination, modes);
+    expect(routes).toEqual({ transit: [] });
+  });
+
+  /**
+   * Test Case 12: Malformed API response
+   */
+  test("should return empty object if API response is malformed", async () => {
+    fetch.mockResponseOnce(JSON.stringify({}));
+
+    const origin = { latitude: 45.4970605, longitude: -73.5788022 };
+    const destination = { latitude: 45.495495, longitude: -73.5791717 };
+    const modes = ["walking"];
+
+    const routes = await getAlternativeRoutes(origin, destination, modes);
+    expect(routes).toEqual({ walking: [] });
+  });
+
+  /**
+   * Test Case 13: Correct API URL construction
+   */
+  test("should construct API URL correctly", async () => {
+    fetch.mockResponseOnce(
+      JSON.stringify({
+        routes: [
+          {
+            legs: [{ duration: { value: 900 }, distance: { text: "5 km" } }],
+            summary: "Test Route",
+            overview_polyline: { points: "encodedPolyline1" },
+          },
+        ],
+      })
+    );
+
+    const origin = { latitude: 45.4970605, longitude: -73.5788022 };
+    const destination = { latitude: 45.495495, longitude: -73.5791717 };
+    const modes = ["driving"];
+
+    await getAlternativeRoutes(origin, destination, modes);
+
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringMatching(/https:\/\/maps\.googleapis\.com\/maps\/api\/directions\/json\?.*key=TEST_API_KEY/)
+    );
+  });
+
+  /**
+   * Test Case 14: Handles multiple modes correctly
+   */
+  test("should return alternative routes for multiple modes", async () => {
+    fetch
+      .mockResponseOnce(
+        JSON.stringify({
+          routes: [
+            {
+              legs: [{ duration: { value: 900 }, distance: { text: "5 km" } }],
+              summary: "Route A",
+              overview_polyline: { points: "encodedPolyline1" },
+            },
+          ],
+        })
+      )
+      .mockResponseOnce(
+        JSON.stringify({
+          routes: [
+            {
+              legs: [{ duration: { value: 1200 }, distance: { text: "6 km" } }],
+              summary: "Route B",
+              overview_polyline: { points: "encodedPolyline2" },
+            },
+          ],
+        })
+      );
+
+    const origin = { latitude: 45.4970605, longitude: -73.5788022 };
+    const destination = { latitude: 45.495495, longitude: -73.5791717 };
+    const modes = ["walking", "driving"];
+
+    const routes = await getAlternativeRoutes(origin, destination, modes);
+
+    expect(routes.walking?.[0]?.summary).toBe("Route A");
+    expect(routes.driving?.[0]?.summary).toBe("Route B");
+  });
+
+  /**
+   * Test Case 15: Partial API failures (some modes fail while others succeed)
+   */
+  test("should handle partial API failures gracefully", async () => {
+    fetch
+      .mockResponseOnce(
+        JSON.stringify({
+          routes: [
+            {
+              legs: [{ duration: { value: 900 }, distance: { text: "5 km" }, steps: [] }],
+              summary: "Route A",
+              overview_polyline: { points: "encodedPolyline1" },
+            },
+          ],
+        })
+      )
+      .mockRejectOnce(new Error("Network error"));
+
+    const origin = { latitude: 45.4970605, longitude: -73.5788022 };
+    const destination = { latitude: 45.495495, longitude: -73.5791717 };
+    const modes = ["walking", "driving"];
+
+    const routes = await getAlternativeRoutes(origin, destination, modes);
+
+    expect(routes).toEqual({
+      walking: [
+        { duration: 15, distance: "5 km", summary: "Route A", coordinates: expect.any(Array), steps: [] },
+      ],
+      driving: [],
+    });
+  });
+
+  /**
+   * Test Case 16: Handles empty modes array
+   */
+  test("should return empty object if no transport modes are provided", async () => {
+    const origin = { latitude: 45.4970605, longitude: -73.5788022 };
+    const destination = { latitude: 45.495495, longitude: -73.5791717 };
+
+    const routes = await getAlternativeRoutes(origin, destination, []);
+    expect(routes).toEqual({});
+  });
 });
+
+  
+
+
+
+
+  
+
+

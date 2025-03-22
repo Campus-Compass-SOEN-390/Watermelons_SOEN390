@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     position: "absolute",
     left: 20,
-    bottom: 165,
+    bottom: 340,
     borderRadius: 20,
     shadowColor: "#000",
     elevation: 8,
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     zIndex: 11,
     minWidth: 50,
-    minHeight: 50,
+    minHeight: 50
   },
   expandedBuildingsContainer: {
     width: 170,
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   positionButtonsContainer: {
     position: "absolute",
     left: 20,
-    bottom: 340, // Position above floor button container
+    bottom: 390, // Position above floor button container
     flexDirection: "column",
     alignItems: "center",
   },

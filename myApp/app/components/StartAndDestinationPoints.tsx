@@ -21,6 +21,26 @@ import { parseClassroomLocation } from "../utils/IndoorMapUtils";
 import { buildings } from "../api/buildingData";
 import { getTravelTimes } from "../api/googleMapsApi";
 
+
+
+import { getAlternativeRoutes } from "../api/googleMapsApi";
+import { useRouter } from 'expo-router';
+
+
+
+
+
+// Define Types
+type Route = {
+  duration: string ;
+  distance: string ;
+};
+
+type RouteData = {
+  mode: string;
+  routes: Route[];
+};
+
 interface Step {
   id: number;
   distance: string;
@@ -36,6 +56,10 @@ const StartAndDestinationPoints = () => {
     updateShowTransportation,
     updateRenderMap,
     updateTravelMode,
+    updateNavigationToMap,
+    updateSelectedRouteIndex,
+    updateTravelTime,
+    updateTravelDistance,
     updateNavType,
     origin,
     destination,
@@ -44,6 +68,10 @@ const StartAndDestinationPoints = () => {
     showTransportation,
     renderMap,
     travelMode,
+    navigationToMap,
+    selectedRouteIndex,
+    travelTime,
+    travelDistance,
     navType
   } = useLocationContext();
   const { selectedFloor, updateSelectedFloor, updateSelectedIndoorBuilding } =
@@ -58,64 +86,42 @@ const StartAndDestinationPoints = () => {
     [key: string]: number | null;
   }>({});
   const [loading, setLoading] = useState(false);
+  const [routes, setRoutes] = useState<RouteData[] | null>(null);
+  const [showFooter, setShowFooter] = useState(false);
+  const router = useRouter();
 
-  const handleNavType = (originText: string, destinationText: string) => {
-    if (!originText || !destinationText){
-      return "";
-    }
-    const originBuilding = getBuildingCode(originText);
-    const destinationBuilding = getBuildingCode(destinationText)
-    console.log("originbuilding is", originBuilding);
-    console.log("destinationbuilding is", destinationBuilding);
-    console.log("buildingCoordinates");
-    // Function to determine navigation type
-    const navigationType = (origin: any, destination: any) => {
-      const originBuilding = getBuildingCode(origin);
-      const destinationBuilding = getBuildingCode(destination);
-  
-      if (originBuilding && destinationBuilding && buildingCoordinates[String(originBuilding)] && buildingCoordinates[String(destinationBuilding)]) {
-          return originBuilding === destinationBuilding ? "indoor" : "indoor-outdoor-indoor";
+
+
+
+  //Fetch alternative routes
+
+  useEffect(() => {
+
+    const fetchAllRoutes = async () => {
+      setLoading(true);
+
+      if (!origin || !destination) {
+        console.error("Origin or destination is null.");
+        return;
       }
-      if (originBuilding && buildingCoordinates[String(originBuilding)]) return "indoor-outdoor";
-      if (destinationBuilding && buildingCoordinates[String(destinationBuilding)]) return "outdoor-indoor";
-      
-      return "outdoor";
-    };
-    updateNavType(navigationType(originText, destinationText));
-  }
 
-  const getBuildingCode = (room: string) => {
-    const match = room.match(/^[A-Za-z]+/);
-    return match ? match[0] : null;
-  };
+      const fetchedRoutes = await getAlternativeRoutes(origin, destination);
+            setRoutes(Object.values(fetchedRoutes));
+            setLoading(false);
+        };
 
-  const buildingCoordinates: Record<string, { latitude: number; longitude: number }> = {
-    "VL": { latitude: 45.459026, longitude: -73.638606 }, // Vanier Library
-    "H": { latitude: 45.497092, longitude: -73.578800 }, // Hall Building
-    "EV": { latitude: 45.495376, longitude: -73.577997}, // Engineering and Visual Arts
-    "MB": { latitude: 45.495304, longitude: -73.579044 },  // John Molson Building
-    "CC": { latitude: 45.458422, longitude: -73.640747 }
-  };
+        if (origin && destination) {
+          fetchAllRoutes();
+      }
 
-  const handleDestinationInput = (text: string) => {
-    const buildingCode = getBuildingCode(text);
-    
-    if (buildingCode && buildingCoordinates[buildingCode]) {
-    const coords = buildingCoordinates[buildingCode];
-    updateDestination(coords, text);
-    //destination.current?.setAddressText(text);
-    } 
-    else {
-    updateDestination(null, text);
-    } 
-
-  }
+      console.log("ALL ROUTES: ", routes)
+  }, [origin, destination, travelMode]);
 
   // Fetch travel times when origin or destination changes
   useEffect(() => {
     if (origin && destination) {
       setLoading(true);
-      handleNavType(originText, destinationText);
+      
       getTravelTimes(origin, destination).then((times) => {
         const timesMap: { [key: string]: number | null } = {};
         times.forEach(({ mode, duration }) => {
@@ -127,9 +133,22 @@ const StartAndDestinationPoints = () => {
     }
   }, [origin, destination]);
 
+  // Handle Route Selection button click
+const handleRouteSelection = (index: number) => {
+  updateSelectedRouteIndex(index);
+
+ 
+      console.log("SELECTED TRAVEL TIME:", travelTime);
+      console.log("SELECTED TRAVEL DISTANCE:", travelDistance);
+    
+  
+};
+
+
   // Handle "GO" button click
-  const handleGoClick = () => {
-    console.log("Navigating...");
+  const handleGoClick = () =>{
+    setShowFooter(false);
+    updateNavigationToMap(true);
   };
 
   // Handle "Steps" button click (show modal)
@@ -350,6 +369,7 @@ const StartAndDestinationPoints = () => {
                     updateRenderMap(true);
                     updateTravelMode(mode);
                     updateShowTransportation(true);
+                    setShowFooter(true);
                   }
                 }}
                 style={[
@@ -372,17 +392,65 @@ const StartAndDestinationPoints = () => {
           </View>
         )}
       </View>
-      {/* Footer with ETA and "X" Button */}
-      {renderMap && (
+      
+      
+      {/* FOOTER */}
+      {showFooter && (
+        
         <View style={styles.footerContainer}>
+        <TouchableOpacity style={styles.stepsButton} onPress={handleStepsClick}>
+        <Text style={styles.footerButtonText}>Steps</Text>
+        </TouchableOpacity>
+
+      {/* Display Alternative Routes */}
+      {routes && routes.length > 0 ? (
+         <View style={styles.routesContainer}>
+         {routes
+            .filter((routeData) => routeData.mode === travelMode) // Filter routes by selected mode
+            .map((routeData, index) => (
+              <View key={index}>
+                {routeData.routes.map((route, i) => (
+             <TouchableOpacity 
+             key={i} 
+             style={styles.routeCard} 
+             onPress={() => {
+          
+               handleRouteSelection(i);
+              
+              
+             }}
+           >
+                 
+            
+                 <Text>{route.duration} min {"\n"} {route.distance}</Text>
+
+
+
+                    <TouchableOpacity style={styles.goButton}  onPress={() => {
+                      handleGoClick()
+                       updateTravelTime(route.duration)
+               updateTravelDistance(route.distance)}}>
+                       <Text >Go</Text>
+                       
+                     </TouchableOpacity>
+                    </TouchableOpacity>
+                ))}
+              </View>
+            ))}
+        </View>
+      ) : (
+        <Text>No alternative routes available.</Text>
+      )}
           {/* ETA Display */}
-          <Text style={styles.etaText}>
+          {/* <Text style={styles.etaText}>
             ETA:{" "}
             {loading
               ? "Calculating..."
-              : getTravelTimeText(travelTimes, travelMode)}
-          </Text>
-          <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
+              : travelTimes[travelMode]
+              ? `${travelTimes[travelMode]} min`
+              : "N/A"}
+          </Text> */}
+          {/* <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
             <Text style={styles.footerButtonText}>GO</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -401,9 +469,11 @@ const StartAndDestinationPoints = () => {
               updateSelectedIndoorBuilding(null);
               updateOrigin(null, "");
               updateDestination(null, "");
+              setShowFooter(false);
+        
             }}
           >
-            <Text style={[styles.footerButtonText, { color: "red" }]}>X</Text>
+            <Text style={[styles.footerButtonText, { color: "red" }]}>Cancel</Text>
           </TouchableOpacity>
         </View>
       )}
