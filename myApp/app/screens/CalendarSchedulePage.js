@@ -187,11 +187,35 @@ export default function CalendarSchedulePage() {
   };
   
   const findNextClassInfo = () => {
-    const upcomingClasses = getUpcomingClasses();
-    const sortedClasses = sortClassesByStartTime(upcomingClasses);
-    
-    console.log("Next class found:", sortedClasses[0] || "No upcoming classes");
-    setNextClass(sortedClasses[0] || null);
+    try {
+      if (!schedule || schedule.length === 0) {
+        console.log("Schedule is empty");
+        setNextClass(null);
+        return;
+      }
+  
+      const upcomingClasses = getUpcomingClasses();
+      if (upcomingClasses.length === 0) {
+        console.log("No upcoming classes found");
+        setNextClass(null);
+        return;
+      }
+  
+      const sortedClasses = sortClassesByStartTime(upcomingClasses);
+      const nextClass = sortedClasses[0];
+      
+      console.log("Next class found:", {
+        course: nextClass.course,
+        date: nextClass.date,
+        time: nextClass.time,
+        location: nextClass.location
+      });
+      
+      setNextClass(nextClass);
+    } catch (error) {
+      console.error("Error finding next class:", error);
+      setNextClass(null);
+    }
   };
 
   return (
