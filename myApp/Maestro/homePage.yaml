@@ -24,10 +24,10 @@ appId: com.anonymous.myApp
 - tapOn: 
     id: "shuttleScheduleButton"
 - tapOn: "✖"
-- tapOn: 
-    id: "directionButton"
 - tapOn:
-    id: "googleButton"
+    id: "calendarfetchbutton"
+- tapOn: Back
+
 
 
 # # Indoor Map Tests

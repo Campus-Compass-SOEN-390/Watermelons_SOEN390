@@ -32,6 +32,7 @@ import ShortestPathMap from "../components/IndoorMap/ShortestPathMap";
 import { styles as poiStylesImport } from "../styles/poiStyles";
 import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
 import { useLocalSearchParams } from "expo-router";
+import { Directions } from "../components/Directions";
 
 // Import Controllers
 import POIController from '../controllers/POIController';
@@ -180,6 +181,36 @@ export default function MapView() {
     );
   };
 
+
+  //Global constants to manage components used on outdoor maps page
+  const {
+    updateOrigin,
+    updateDestination,
+    updateShowTransportation,
+    updateRenderMap,
+    updateTravelMode,
+    updateShowShuttleRoute,
+    origin,
+    destination,
+    originText,
+    destinationText,
+    renderMap,
+    showShuttleRoute,
+    travelMode,
+    showTransportation,
+    navType
+  } = useLocationContext();
+
+  //Global constants to manage indoor-maps
+  const {
+    isExpanded,
+    selectedIndoorBuilding,
+    selectedFloor,
+    updateIsExpanded,
+    updateSelectedIndoorBuilding,
+    updateSelectedFloor,
+  } = useIndoorMapContext();
+
   // Animate map to correct campus
   useEffect(() => {
     try {
@@ -253,6 +284,7 @@ export default function MapView() {
     } catch (error) {
       console.log("Error in useEffect:", error);
     }
+    console.log("Lock in", navType)
   }, [
     location?.latitude,
     location?.longitude,
@@ -476,7 +508,23 @@ export default function MapView() {
     }
   }, [showPOI, lastFetchedRegion]);
 
-  // Handle building press
+  //This useEffect ensures the map is no longer rendered and the travel mode is set back to nothing when origin or location changes
+  useEffect(() => {
+    try {
+      if (!origin || !destination) {
+        updateRenderMap(false);
+        return;
+      }
+      updateTravelMode("");
+    } catch {
+      console.log("Crashed 4");
+    }
+  }, [origin, destination]);
+
+  //navbar
+  const navigation = useNavigation();
+
+  // Handle building tap
   const handleBuildingPress = (building) => {
     const fullBuilding = OutdoorController.handleBuildingPress(building);
     if (fullBuilding) {
@@ -617,28 +665,30 @@ export default function MapView() {
             </Mapbox.ShapeSource>
           )}
 
+
           {/* Render Direction Route for indoor navigation */}
           {IndoorController.getIndoorCoordinatesMap()[originText] &&
           IndoorController.getIndoorCoordinatesMap()[destinationText] && renderMap ? (
             <ShortestPathMap
+
+          
+          {/* Use Directions component to Render route based on navigation type*/}
+          { origin && destination && renderMap && (
+            <Directions
+
               graph={graph}
               nodeCoordinates={nodeCoordinates}
               startNode={originText}
               endNode={destinationText}
               currentFloor={selectedFloor}
+              origin={origin}
+              destination={destination}
+              mapRef={mapRef}
+              travelMode={travelMode}
+              navType={navType}
             />
-          ) : (
-            origin &&
-            destination &&
-            renderMap && (
-              <MapDirections
-                origin={origin}
-                destination={destination}
-                mapRef={mapRef}
-                travelMode={travelMode}
-              />
-            )
-          )}
+          )
+          }
 
           {/* Render building polygons */}
           {OutdoorController.getAllBuildings()
@@ -700,7 +750,7 @@ export default function MapView() {
           {/* Indoor Map Component */}
           <IndoorMap
             selectedBuilding={selectedIndoorBuilding}
-            selectedFloor={String(selectedFloor)}
+            selectedFloor={Number(selectedFloor)}
           />
 
           {/* Shuttle bus live location */}
@@ -846,6 +896,35 @@ export default function MapView() {
                 </Text>
               </TouchableOpacity>
             ))}
+
+            {/* Filtered buildings */}
+            {buildings
+              .filter(
+                (building) =>
+                  building.campus.toLowerCase() ===
+                    activeCampus.toLowerCase() && building.hasIndoor === true &&
+                    building.name.toLowerCase() !== "ve"
+              )
+              .map((building) => (
+                <TouchableOpacity
+                  key={building.id}
+                  style={styles.expandedButton}
+                  onPress={() =>
+                    handleIndoorBuildingSelect(
+                      building,
+                      selectedIndoorBuilding,
+                      selectedFloor,
+                      updateIsExpanded,
+                      updateSelectedIndoorBuilding,
+                      updateSelectedFloor,
+                      mapRef
+                    )
+                  }
+                >
+                  <Text style={styles.text}>{building.name === "VL" ? "VL&VE" : building.name}</Text>
+                </TouchableOpacity>
+              ))}
+
           </View>
         )}
       </View>

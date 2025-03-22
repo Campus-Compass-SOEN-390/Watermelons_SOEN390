@@ -14,10 +14,10 @@ interface Building {
 interface IndoorMapContextType {
   isExpanded: boolean;
   selectedIndoorBuilding: Building | null;
-  selectedFloor: number | null;
+  selectedFloor: number | 1;
   updateIsExpanded: (setting: boolean) => void;
   updateSelectedIndoorBuilding: (building: Building | null) => void;
-  updateSelectedFloor: (floor: number | null) => void;
+  updateSelectedFloor: (floor: number) => void;
 }
 
 const IndoorMapContext = createContext<IndoorMapContextType | null>(null);
@@ -25,7 +25,7 @@ const IndoorMapContext = createContext<IndoorMapContextType | null>(null);
 export const IndoorMapProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedIndoorBuilding, setSelectedIndoorBuilding] = useState<Building | null>(null); 
-  const [selectedFloor, setSelectedFloor] = useState<number | null>(null);
+  const [selectedFloor, setSelectedFloor] = useState<number>(1);
 
   const updateIsExpanded = (setting: boolean) => {
     console.log("isExpanded updated to:", setting);
@@ -37,7 +37,7 @@ export const IndoorMapProvider: React.FC<{ children: ReactNode }> = ({ children 
     setSelectedIndoorBuilding(building);
   }
 
-  const updateSelectedFloor = (floor: number | null) => {
+  const updateSelectedFloor = (floor: number) => {
     console.log("selectedFloor updated to:", floor);
     setSelectedFloor(floor);
   }
