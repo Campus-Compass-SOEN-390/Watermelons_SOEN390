@@ -21,7 +21,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import LayoutWrapper from "../components/LayoutWrapper.js";
 import HeaderButtons from "../components/HeaderButtons.js";
-import { Picker } from '@react-native-picker/picker';
 import MonthPicker from '../components/MonthPicker';
 
 
@@ -48,12 +47,14 @@ export default function CalendarFetching() {
 
     setLoading(true);
 
-    const now = new Date().toISOString();
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    const timeMin = oneMonthAgo.toISOString();
     const futureDate = new Date();
     futureDate.setMonth(futureDate.getMonth() + parseInt(monthsAhead || "1"));
     const timeMax = futureDate.toISOString();
 
-    const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${API_KEY}&timeMin=${now}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
+    const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
 
     try {
       let response = await fetch(url);

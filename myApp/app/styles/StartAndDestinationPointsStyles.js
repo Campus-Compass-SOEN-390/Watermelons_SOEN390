@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4 } from "./constants";
 const { width, height } = Dimensions.get("window");
 
 export default StyleSheet.create({
@@ -43,7 +44,7 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   label: {
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     fontWeight: "bold",
     width: 50,
     textAlign: "right",
@@ -105,7 +106,7 @@ export default StyleSheet.create({
     shadowColor: "black",
   },
   buttonText: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     color: "black",
   },
   buttonContainer: {
@@ -182,7 +183,7 @@ export default StyleSheet.create({
     borderRadius: 10,
   },
   etaText: {
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     color: "#333",
     marginBottom: 5,
     textAlign: "center",
@@ -212,12 +213,12 @@ export default StyleSheet.create({
     shadowRadius: 3,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: FONT_SIZE_4,
     fontWeight: "bold",
     marginBottom: 10,
   },
   modalText: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     textAlign: "center",
     marginBottom: 15,
   },
@@ -233,7 +234,7 @@ export default StyleSheet.create({
   closeButtonText: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
   },
   transportButton: {
     padding: 10,
@@ -253,11 +254,11 @@ export default StyleSheet.create({
     borderBottomColor: "#ddd",
   },
   stepText: {
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     fontWeight: "bold",
   },
   stepDistance: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     color: "gray",
   },
 });

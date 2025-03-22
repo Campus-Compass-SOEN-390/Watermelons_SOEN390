@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { FONT_SIZE_1,FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4, FONT_SIZE_5 } from './constants';
 
 export const calendarFetchingStyles = StyleSheet.create({
   container: {
@@ -42,7 +43,7 @@ export const calendarFetchingStyles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 15,
     marginBottom: 10,
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     backgroundColor: '#f9f9f9',
   },
   connectButton: {
@@ -55,7 +56,7 @@ export const calendarFetchingStyles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: FONT_SIZE_4,
     fontWeight: 'bold',
   },
 
@@ -68,7 +69,7 @@ export const calendarFetchingStyles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   successTitle: {
-    fontSize: 20,
+    fontSize: FONT_SIZE_5,
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#333',
@@ -76,7 +77,7 @@ export const calendarFetchingStyles = StyleSheet.create({
   },
   successSubtitle: {
     marginTop: 10,
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     textAlign: 'center',
     color: '#666',
   },
@@ -89,13 +90,13 @@ export const calendarFetchingStyles = StyleSheet.create({
     borderRadius: 6,
   },
   eventTitle: {
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     fontWeight: 'bold',
     marginBottom: 4,
     color: '#333',
   },
   eventDate: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     color: '#666',
   },
   logo: {
@@ -107,7 +108,7 @@ export const calendarFetchingStyles = StyleSheet.create({
   // --- Calendar History Track --- 
 
   subtitle: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     fontWeight: 'bold',
     marginBottom: 10,
   },
@@ -116,9 +117,10 @@ export const calendarFetchingStyles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginBottom: 10,
+    paddingVertical: 12,
   },
   historyText: {
-    fontSize: 12,
+    fontSize: 10,
     color: 'black',
   },
 
@@ -136,7 +138,7 @@ export const calendarFetchingStyles = StyleSheet.create({
     marginTop: 10,
   },
   clearHistoryText: {
-    fontSize: 10,
+    fontSize: FONT_SIZE_1,
     color: '#444',
     fontWeight: '500',
   },

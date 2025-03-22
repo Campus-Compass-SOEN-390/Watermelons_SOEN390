@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { FONT_SIZE_SMALL, FONT_SIZE_MEDIUM, FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_5 } from "./constants";
 
 const styles = StyleSheet.create({
     container: {
@@ -13,7 +14,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     dayText: {
-        fontSize: 14,
+        fontSize: FONT_SIZE_2,
         fontWeight: "bold",
         color: "gray",
     },
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     scheduleTitle: {
-        fontSize: 20,
+        fontSize: FONT_SIZE_5,
         fontWeight: "bold",
         marginBottom: 8,
     },
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     },
     courseText: {
         fontWeight: "bold",
-        fontSize: 16,
+        fontSize: FONT_SIZE_3,
         marginBottom: 4,
     },
     iconContainer: {
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
     todayText: {
         color: "white",
         fontWeight: "bold",
-        fontSize: 16,
+        fontSize: FONT_SIZE_3,
         textAlign: "center",
     },
     nextClassDirections: {

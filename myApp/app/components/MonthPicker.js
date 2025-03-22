@@ -1,5 +1,4 @@
 import { Picker } from '@react-native-picker/picker';
-// components/MonthPicker.js
 import React from 'react';
 import { View, Text } from 'react-native';
 
