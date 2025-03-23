@@ -1,5 +1,8 @@
 import React from "react";
-import TravelFacade from "../utils/TravelFacade";
+import {
+  findNearestLocation,
+  haversineDistance,
+} from "../utils/distanceShuttle";
 
 describe("Haversine Distance Function", () => {
   /**
@@ -10,7 +13,7 @@ describe("Haversine Distance Function", () => {
     const coord1 = { latitude: 45.5017, longitude: -73.5673 }; // Montreal
     const coord2 = { latitude: 40.7128, longitude: -74.006 }; // New York
 
-    const distance = TravelFacade.haversineDistance(coord1, coord2);
+    const distance = haversineDistance(coord1, coord2);
     expect(distance).toBeCloseTo(534, 0); // Expected ~534 km
   });
 
@@ -19,7 +22,7 @@ describe("Haversine Distance Function", () => {
    */
   test("should return 0 km for identical locations", () => {
     const coord = { latitude: 45.5017, longitude: -73.5673 };
-    expect(TravelFacade.haversineDistance(coord, coord)).toBe(0);
+    expect(haversineDistance(coord, coord)).toBe(0);
   });
 
   /**
@@ -29,7 +32,7 @@ describe("Haversine Distance Function", () => {
     const coord1 = { latitude: -34.6037, longitude: -58.3816 }; // Buenos Aires
     const coord2 = { latitude: 51.5074, longitude: -0.1278 }; // London
 
-    const distance = TravelFacade.haversineDistance(coord1, coord2);
+    const distance = haversineDistance(coord1, coord2);
     expect(distance).toBeCloseTo(11128, 0); // Increase precision tolerance to 1 decimal place
   });
 });
@@ -47,7 +50,7 @@ describe("Find Nearest Location Function", () => {
       { latitude: 45.5088, longitude: -73.554 }, // Montreal (~1 km)
     ];
 
-    const nearest = TravelFacade.findNearestLocation(userLocation, stops);
+    const nearest = findNearestLocation(userLocation, stops);
     expect(nearest).toEqual(stops[2]); // The closest location should be Montreal (~1 km)
   });
 
@@ -56,7 +59,7 @@ describe("Find Nearest Location Function", () => {
    */
   test("should return undefined for an empty list of locations", () => {
     const userLocation = { latitude: 45.5017, longitude: -73.5673 };
-    expect(TravelFacade.findNearestLocation(userLocation, [])).toBeUndefined();
+    expect(findNearestLocation(userLocation, [])).toBeUndefined();
   });
 
   /**
@@ -66,9 +69,7 @@ describe("Find Nearest Location Function", () => {
     const userLocation = { latitude: 45.5017, longitude: -73.5673 };
     const stops = [{ latitude: 40.7128, longitude: -74.006 }];
 
-    expect(TravelFacade.findNearestLocation(userLocation, stops)).toEqual(
-      stops[0]
-    );
+    expect(findNearestLocation(userLocation, stops)).toEqual(stops[0]);
   });
 
   /**
@@ -82,7 +83,7 @@ describe("Find Nearest Location Function", () => {
       { latitude: 45.51, longitude: -73.56 }, // 2nd stop (same distance)
     ];
 
-    const nearest = TravelFacade.findNearestLocation(userLocation, stops);
+    const nearest = findNearestLocation(userLocation, stops);
     expect(nearest).toEqual(stops[0]); // Should return the first one
   });
 });

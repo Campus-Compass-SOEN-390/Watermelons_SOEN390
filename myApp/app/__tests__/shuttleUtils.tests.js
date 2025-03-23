@@ -1,6 +1,10 @@
+import {
+  estimateShuttleTravelTime,
+  estimateShuttleFromButton,
+} from "../utils/shuttleUtils";
 import { getTravelTimes } from "../api/googleMapsApi";
 import { fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
-import TravelFacade from "../utils/TravelFacade";
+import { haversineDistance } from "../utils/distanceShuttle";
 
 jest.mock("../api/googleMapsApi", () => ({
   getTravelTimes: jest.fn(),
@@ -26,10 +30,7 @@ describe("estimateShuttleTravelTime", () => {
   test("should return an error if it is a weekend", async () => {
     jest.setSystemTime(new Date("2024-03-09T12:00:00Z")); // Mocking a Saturday
 
-    const result = await TravelFacade.estimateShuttleTravelTime(
-      userLocation,
-      "LOY"
-    );
+    const result = await estimateShuttleTravelTime(userLocation, "LOY");
 
     expect(result).toEqual({ error: "No bus available on weekends." });
   });
@@ -37,10 +38,7 @@ describe("estimateShuttleTravelTime", () => {
   test("should return null if no shuttle schedule is available", async () => {
     fetchShuttleScheduleByDay.mockResolvedValue(null);
 
-    const result = await TravelFacade.estimateShuttleTravelTime(
-      userLocation,
-      "LOY"
-    );
+    const result = await estimateShuttleTravelTime(userLocation, "LOY");
 
     expect(result).toBeNull();
   });
@@ -51,10 +49,7 @@ describe("estimateShuttleTravelTime", () => {
     });
     getTravelTimes.mockResolvedValue([]); // No available travel options
 
-    const result = await TravelFacade.estimateShuttleTravelTime(
-      userLocation,
-      "LOY"
-    );
+    const result = await estimateShuttleTravelTime(userLocation, "LOY");
 
     expect(result).toBeNull();
   });
@@ -63,10 +58,7 @@ describe("estimateShuttleTravelTime", () => {
     fetchShuttleScheduleByDay.mockResolvedValue({ SGW: [] });
     getTravelTimes.mockResolvedValue([{ mode: "walking", duration: 10 }]);
 
-    const result = await TravelFacade.estimateShuttleTravelTime(
-      userLocation,
-      "LOY"
-    );
+    const result = await estimateShuttleTravelTime(userLocation, "LOY");
 
     expect(result).toBeNull();
   });
@@ -78,12 +70,9 @@ describe("estimateShuttleTravelTime", () => {
     });
 
     getTravelTimes.mockResolvedValue([{ mode: "walking", duration: 5 }]);
-    TravelFacade.haversineDistance.mockReturnValue(5);
+    haversineDistance.mockReturnValue(5);
 
-    const estimatedTime = await TravelFacade.estimateShuttleTravelTime(
-      userLocation,
-      "LOY"
-    );
+    const estimatedTime = await estimateShuttleTravelTime(userLocation, "LOY");
 
     expect(estimatedTime).toBeGreaterThan(0);
   });
@@ -95,12 +84,9 @@ describe("estimateShuttleTravelTime", () => {
     });
 
     getTravelTimes.mockResolvedValue([{ mode: "driving", duration: 2 }]);
-    TravelFacade.haversineDistance.mockReturnValue(10);
+    haversineDistance.mockReturnValue(10);
 
-    const estimatedTime = await TravelFacade.estimateShuttleTravelTime(
-      userLocation,
-      "LOY"
-    );
+    const estimatedTime = await estimateShuttleTravelTime(userLocation, "LOY");
 
     expect(estimatedTime).toBeGreaterThan(0);
   });
@@ -116,7 +102,7 @@ describe("estimateShuttleFromButton", () => {
   test("should return an error if it is a weekend", async () => {
     jest.setSystemTime(new Date("2024-03-09T12:00:00Z")); // Mocking a Saturday
 
-    const result = await TravelFacade.estimateShuttleFromButton("SGW");
+    const result = await estimateShuttleFromButton("SGW");
 
     expect(result).toEqual({ error: "No bus available on weekends." });
   });
@@ -124,7 +110,7 @@ describe("estimateShuttleFromButton", () => {
   test("should return null if no shuttle service is available today", async () => {
     fetchShuttleScheduleByDay.mockResolvedValue(null);
 
-    const result = await TravelFacade.estimateShuttleFromButton("SGW");
+    const result = await estimateShuttleFromButton("SGW");
 
     expect(result).toBeNull();
   });
@@ -132,7 +118,7 @@ describe("estimateShuttleFromButton", () => {
   test("should return null if no shuttle is available at this time", async () => {
     fetchShuttleScheduleByDay.mockResolvedValue({ SGW: [] });
 
-    const result = await TravelFacade.estimateShuttleFromButton("SGW");
+    const result = await estimateShuttleFromButton("SGW");
 
     expect(result).toBeNull();
   });
@@ -143,9 +129,9 @@ describe("estimateShuttleFromButton", () => {
       LOY: ["12:45", "13:15", "14:15"],
     });
 
-    TravelFacade.haversineDistance.mockReturnValue(7);
+    haversineDistance.mockReturnValue(7);
 
-    const result = await TravelFacade.estimateShuttleFromButton("SGW");
+    const result = await estimateShuttleFromButton("SGW");
 
     expect(result.waitTime).toBeGreaterThanOrEqual(0);
     expect(result.shuttleRideTime).toBeGreaterThan(0);

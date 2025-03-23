@@ -1,5 +1,9 @@
 import React from "react";
-import TravelFacade from "../utils/TravelFacade";
+import {
+  getGoogleTravelTime,
+  getTravelTimes,
+  getAlternativeRoutes,
+} from "../api/googleMapsApi";
 
 describe("Google Travel Time and Alternative Routes API Tests", () => {
   beforeEach(() => {
@@ -32,11 +36,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
     const mode = "walking";
 
-    const time = await TravelFacade.getGoogleTravelTime(
-      origin,
-      destination,
-      mode
-    );
+    const time = await getGoogleTravelTime(origin, destination, mode);
     expect(time).toBe(15); // 900 seconds = 15 minutes
   });
 
@@ -52,11 +52,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
     const mode = "driving";
 
-    const time = await TravelFacade.getGoogleTravelTime(
-      origin,
-      destination,
-      mode
-    );
+    const time = await getGoogleTravelTime(origin, destination, mode);
     expect(time).toBeNull();
   });
 
@@ -72,11 +68,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
     const mode = "walking";
 
-    const time = await TravelFacade.getGoogleTravelTime(
-      origin,
-      destination,
-      mode
-    );
+    const time = await getGoogleTravelTime(origin, destination, mode);
     expect(time).toBeNull();
   });
 
@@ -92,11 +84,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
     const mode = "walking";
 
-    const time = await TravelFacade.getGoogleTravelTime(
-      origin,
-      destination,
-      mode
-    );
+    const time = await getGoogleTravelTime(origin, destination, mode);
     expect(time).toBeNull();
   });
 
@@ -124,7 +112,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
     const mode = "driving";
 
-    await TravelFacade.getGoogleTravelTime(origin, destination, mode);
+    await getGoogleTravelTime(origin, destination, mode);
 
     expect(fetch).toHaveBeenCalledWith(
       expect.stringMatching(
@@ -156,7 +144,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
     const modes = ["walking", "driving"];
 
-    const times = await TravelFacade.getTravelTimes(origin, destination, modes);
+    const times = await getTravelTimes(origin, destination, modes);
 
     expect(times).toEqual([
       { mode: "walking", duration: 20 },
@@ -189,7 +177,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
     const modes = ["walking", "driving"];
 
-    const times = await TravelFacade.getTravelTimes(origin, destination, modes);
+    const times = await getTravelTimes(origin, destination, modes);
 
     expect(times).toEqual([
       { mode: "walking", duration: 15 },
@@ -205,7 +193,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const origin = { latitude: 45.4970605, longitude: -73.5788022 };
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
 
-    const times = await TravelFacade.getTravelTimes(origin, destination, []);
+    const times = await getTravelTimes(origin, destination, []);
     expect(times).toEqual([]);
   });
 
@@ -248,11 +236,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
     const modes = ["walking"];
 
-    const routes = await TravelFacade.getAlternativeRoutes(
-      origin,
-      destination,
-      modes
-    );
+    const routes = await getAlternativeRoutes(origin, destination, modes);
 
     const walking = routes.find((r) => r.mode === "walking");
     expect(walking.routes).toHaveLength(1);
@@ -275,11 +259,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
     const modes = ["driving"];
 
-    const routes = await TravelFacade.getAlternativeRoutes(
-      origin,
-      destination,
-      modes
-    );
+    const routes = await getAlternativeRoutes(origin, destination, modes);
     const driving = routes.find((r) => r.mode === "driving");
     expect(driving.routes).toEqual([]);
   });
@@ -294,11 +274,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
     const modes = ["transit"];
 
-    const routes = await TravelFacade.getAlternativeRoutes(
-      origin,
-      destination,
-      modes
-    );
+    const routes = await getAlternativeRoutes(origin, destination, modes);
     expect(routes).toEqual([{ mode: "transit", routes: [] }]);
   });
 
@@ -312,11 +288,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
     const modes = ["walking"];
 
-    const routes = await TravelFacade.getAlternativeRoutes(
-      origin,
-      destination,
-      modes
-    );
+    const routes = await getAlternativeRoutes(origin, destination, modes);
     expect(routes).toEqual([{ mode: "walking", routes: [] }]);
   });
 
@@ -340,7 +312,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
     const modes = ["driving"];
 
-    await TravelFacade.getAlternativeRoutes(origin, destination, modes);
+    await getAlternativeRoutes(origin, destination, modes);
 
     expect(fetch).toHaveBeenCalledWith(
       expect.stringMatching(
@@ -381,11 +353,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
     const modes = ["walking", "driving"];
 
-    const routes = await TravelFacade.getAlternativeRoutes(
-      origin,
-      destination,
-      modes
-    );
+    const routes = await getAlternativeRoutes(origin, destination, modes);
 
     const walking = routes.find((r) => r.mode === "walking");
     const driving = routes.find((r) => r.mode === "driving");
@@ -422,11 +390,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
     const modes = ["walking", "driving"];
 
-    const routes = await TravelFacade.getAlternativeRoutes(
-      origin,
-      destination,
-      modes
-    );
+    const routes = await getAlternativeRoutes(origin, destination, modes);
 
     expect(routes).toEqual([
       {
@@ -455,11 +419,7 @@ describe("Google Travel Time and Alternative Routes API Tests", () => {
     const origin = { latitude: 45.4970605, longitude: -73.5788022 };
     const destination = { latitude: 45.495495, longitude: -73.5791717 };
 
-    const routes = await TravelFacade.getAlternativeRoutes(
-      origin,
-      destination,
-      []
-    );
+    const routes = await getAlternativeRoutes(origin, destination, []);
     expect(routes).toEqual([]);
   });
 });

@@ -1,7 +1,7 @@
 import { addShuttleOption } from "../utils/addShuttleOption";
 import { getAlternativeRoutes } from "../api/googleMapsApi";
 import { estimateShuttleFromButton } from "../utils/shuttleUtils";
-import TravelFacade from "../utils/TravelFacade";
+import { haversineDistance } from "../utils/distanceShuttle";
 
 // Mock dependencies
 jest.mock("../api/googleMapsApi", () => ({
@@ -70,7 +70,7 @@ describe("addShuttleOption", () => {
       nextShuttleTime: 630, // Shuttle at 10:30 (630 mins)
     });
 
-    TravelFacade.haversineDistance.mockReturnValue(4.8);
+    haversineDistance.mockReturnValue(4.8);
 
     const result = await addShuttleOption(origin, destinationLoyola);
 
@@ -148,7 +148,7 @@ describe("addShuttleOption", () => {
       nextShuttleTime: 615,
     });
 
-    TravelFacade.haversineDistance.mockReturnValue(mockShuttleDistance);
+    haversineDistance.mockReturnValue(mockShuttleDistance);
 
     const result = await addShuttleOption(origin, destinationLoyola);
 
