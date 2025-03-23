@@ -289,7 +289,7 @@ export default StyleSheet.create({
   cancelButtonContainer:{
     position: "absolute",
     bottom: safeAreaBottom + 85,
-    left: 350,
+    left:'80%',
     zIndex: 2,
   }
 
