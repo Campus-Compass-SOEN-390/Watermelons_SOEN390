@@ -166,6 +166,8 @@ export default function CalendarFetching() {
         <ScrollView 
           contentContainerStyle={{ flexGrow: 1 }} 
           keyboardShouldPersistTaps="handled"
+          enableOnAndroid={true}
+          extraScrollHeight={20}
         >
 
           <View style={styles.container}>
