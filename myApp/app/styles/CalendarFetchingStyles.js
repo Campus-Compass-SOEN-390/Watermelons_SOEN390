@@ -53,6 +53,8 @@ export const calendarFetchingStyles = StyleSheet.create({
     alignSelf: 'center',
     minWidth: 100,
     paddingHorizontal: 20,
+    position: 'absolute',
+    bottom: 55,
   },
   buttonText: {
     color: 'white',
@@ -117,7 +119,7 @@ export const calendarFetchingStyles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginBottom: 10,
-    paddingVertical: 12,
+    paddingVertical: 5,
   },
   historyText: {
     fontSize: 10,
@@ -136,6 +138,8 @@ export const calendarFetchingStyles = StyleSheet.create({
     borderColor: '#ccc',
     alignSelf: 'center',
     marginTop: 10,
+    position: 'absolute',
+    bottom: 10,
   },
   clearHistoryText: {
     fontSize: FONT_SIZE_1,
