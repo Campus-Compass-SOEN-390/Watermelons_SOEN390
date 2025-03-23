@@ -122,10 +122,10 @@ export default StyleSheet.create({
     justifyContent: "flex-start", // Start from the top
     bottom:
       Dimensions.get("window").height > 945
-        ? -665
+        ? -705
         : height > 870
-        ? -635
-        : -560,
+        ? -675
+        : -600,
     left: -30,
     right: 0,
     height: 350,
@@ -193,8 +193,10 @@ export default StyleSheet.create({
     padding: 10,
     alignItems: "center",
     justifyContent: "center",
-    top: -20, // Adjust this value to move the button upwards
-  },
+    alignSelf: "center", // centers within parent
+    width: "90%",        // or use fixed width like 200
+    marginTop: 10
+  },  
   modalContainer: {
     flex: 1,
     justifyContent: "center",

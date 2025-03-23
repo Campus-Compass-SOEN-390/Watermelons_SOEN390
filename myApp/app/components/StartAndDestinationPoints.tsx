@@ -121,7 +121,7 @@ const StartAndDestinationPoints = () => {
   useEffect(() => {
     if (origin && destination) {
       setLoading(true);
-      
+      handleNavType(originText, destinationText);
       getTravelTimes(origin, destination).then((times) => {
         const timesMap: { [key: string]: number | null } = {};
         times.forEach(({ mode, duration }) => {
@@ -132,6 +132,58 @@ const StartAndDestinationPoints = () => {
       });
     }
   }, [origin, destination]);
+
+  const handleNavType = (originText: string, destinationText: string) => {
+    if (!originText || !destinationText){
+      return "";
+    }
+    const originBuilding = getBuildingCode(originText);
+    const destinationBuilding = getBuildingCode(destinationText)
+    console.log("originbuilding is", originBuilding);
+    console.log("destinationbuilding is", destinationBuilding);
+    console.log("buildingCoordinates");
+    // Function to determine navigation type
+    const navigationType = (origin: any, destination: any) => {
+      const originBuilding = getBuildingCode(origin);
+      const destinationBuilding = getBuildingCode(destination);
+
+      if (originBuilding && destinationBuilding && buildingCoordinates[String(originBuilding)] && buildingCoordinates[String(destinationBuilding)]) {
+          return originBuilding === destinationBuilding ? "indoor" : "indoor-outdoor-indoor";
+      }
+      if (originBuilding && buildingCoordinates[String(originBuilding)]) return "indoor-outdoor";
+      if (destinationBuilding && buildingCoordinates[String(destinationBuilding)]) return "outdoor-indoor";
+
+      return "outdoor";
+    };
+    updateNavType(navigationType(originText, destinationText));
+  }
+
+  const getBuildingCode = (room: string) => {
+    const match = room.match(/^[A-Za-z]+/);
+    return match ? match[0] : null;
+  };
+
+  const buildingCoordinates: Record<string, { latitude: number; longitude: number }> = {
+    "VL": { latitude: 45.459026, longitude: -73.638606 }, // Vanier Library
+    "H": { latitude: 45.497092, longitude: -73.578800 }, // Hall Building
+    "EV": { latitude: 45.495376, longitude: -73.577997}, // Engineering and Visual Arts
+    "MB": { latitude: 45.495304, longitude: -73.579044 },  // John Molson Building
+    "CC": { latitude: 45.458422, longitude: -73.640747 }
+  };
+
+  const handleDestinationInput = (text: string) => {
+    const buildingCode = getBuildingCode(text);
+
+    if (buildingCode && buildingCoordinates[buildingCode]) {
+    const coords = buildingCoordinates[buildingCode];
+    updateDestination(coords, text);
+    //destination.current?.setAddressText(text);
+    } 
+    else {
+    updateDestination(null, text);
+    } 
+
+  }
 
   // Handle Route Selection button click
 const handleRouteSelection = (index: number) => {
@@ -393,7 +445,6 @@ const handleRouteSelection = (index: number) => {
         )}
       </View>
       
-      
       {/* FOOTER */}
       {showFooter && (
         
@@ -417,14 +468,10 @@ const handleRouteSelection = (index: number) => {
           
                handleRouteSelection(i);
               
-              
              }}
            >
-                 
             
                  <Text>{route.duration} min {"\n"} {route.distance}</Text>
-
-
 
                     <TouchableOpacity style={styles.goButton}  onPress={() => {
                       handleGoClick()
@@ -441,25 +488,6 @@ const handleRouteSelection = (index: number) => {
       ) : (
         <Text>No alternative routes available.</Text>
       )}
-          {/* ETA Display */}
-          {/* <Text style={styles.etaText}>
-            ETA:{" "}
-            {loading
-              ? "Calculating..."
-              : travelTimes[travelMode]
-              ? `${travelTimes[travelMode]} min`
-              : "N/A"}
-          </Text> */}
-          {/* <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
-            <Text style={styles.footerButtonText}>GO</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.stepsButton}
-            onPress={handleStepsClick}
-          >
-            <Text style={styles.footerButtonText}>Steps</Text>
-          </TouchableOpacity>
-          {/* "X" Button as a red cancel */}
           <TouchableOpacity
             style={styles.cancelButton}
             onPress={() => {
