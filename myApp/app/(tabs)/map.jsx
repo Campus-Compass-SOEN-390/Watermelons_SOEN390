@@ -69,17 +69,24 @@ const REGION_CHANGE_THRESHOLD = 0.005;
 
 export default function MapView() {
   const { destinationString } = useLocalSearchParams();
+// Disabled on or off
+const [isDisabled, setIsDisabled] = useState(false);
+console.log("Is Disabled in map.jsx", isDisabled);
 
-  useEffect(() => {
-    if (destinationString) {
-      // Update the destination using the existing context
-      updateDestination(
-        coordinatesMap[destinationString] || destinationString,
-        destinationString
-      );
-      updateShowTransportation(true);
-    }
-  }, [destinationString]);
+
+useEffect(() => {
+  if (destinationString) {
+    updateDestination(
+      coordinatesMap[destinationString] || destinationString,
+      destinationString
+    );
+  }
+  // This will trigger a recalculation of the route whenever destinationString or isDisabled changes.
+  updateShowTransportation(true);
+  console.log("Recalculating route; isDisabled:", isDisabled);
+}, [destinationString, isDisabled]);
+
+
 
   //get Campus type from homePage
   const { type } = useLocalSearchParams();
@@ -92,9 +99,7 @@ export default function MapView() {
   const [activeCampus, setActiveCampus] = useState(type || "sgw"); // Default to "sgw" if no type is passed
   const mapRef = useRef(null);
 
-  // Disabled on or off
-  const [isDisabled, setIsDisabled] = useState(false);
-
+  
   // Location & permissions
   const { location, hasPermission } = useLocation();
   const [showPermissionPopup, setShowPermissionPopup] = useState(
@@ -760,7 +765,8 @@ export default function MapView() {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
-        <StartAndDestinationPoints />
+       <StartAndDestinationPoints isDisabled={isDisabled} setIsDisabled={setIsDisabled} />
+
         <Mapbox.MapView
           style={styles.map}
           styleURL={Mapbox.StyleURL.Light}
@@ -803,6 +809,7 @@ export default function MapView() {
           {/* Use Directions component to Render route based on navigation type*/}
           { origin && destination && renderMap && (
             <Directions
+              key={isDisabled ? "accessible" : "normal"}
               graph={graph}
               nodeCoordinates={nodeCoordinates}
               startNode={originText}
@@ -815,8 +822,7 @@ export default function MapView() {
               travelMode={travelMode}
               navType={navType}
             />
-          )
-          }
+          )}
 
           {/* Render building polygons */}
           {buildings

@@ -1,3 +1,7 @@
+interface StartAndDestinationPointsProps {
+  isDisabled: boolean;
+  setIsDisabled: (value: boolean) => void;
+}
 import React, { useEffect, useRef, useState } from "react";
 import {
   View,
@@ -7,6 +11,7 @@ import {
   Keyboard,
   Modal,
   ScrollView,
+  Switch,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import "react-native-get-random-values";
@@ -29,7 +34,8 @@ interface Step {
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
-const StartAndDestinationPoints = () => {
+const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({ isDisabled, setIsDisabled }) => {
+
   const {
     updateOrigin,
     updateDestination,
@@ -67,6 +73,7 @@ const StartAndDestinationPoints = () => {
     const destinationBuilding = getBuildingCode(destinationText)
     console.log("originbuilding is", originBuilding);
     console.log("destinationbuilding is", destinationBuilding);
+    console.log("Is Disabled", isDisabled);
     console.log("buildingCoordinates");
     // Function to determine navigation type
     const navigationType = (origin: any, destination: any) => {
@@ -375,6 +382,21 @@ const StartAndDestinationPoints = () => {
       {/* Footer with ETA and "X" Button */}
       {renderMap && (
         <View style={styles.footerContainer}>
+           {/* Top Row: Only the wheelchair toggle */}
+           <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Switch
+                value={isDisabled}
+                onValueChange={(val) => setIsDisabled(val)}
+                trackColor={{ false: "#ccc", true: "#922338" }}
+                thumbColor="#fff"
+              />
+          <MaterialIcons
+            name="accessible"
+            size={24}
+            color={isDisabled ? "#922338" : "#555"}
+            style={{ marginLeft: 5 }}
+          />
+        </View>
           {/* ETA Display */}
           <Text style={styles.etaText}>
             ETA:{" "}
