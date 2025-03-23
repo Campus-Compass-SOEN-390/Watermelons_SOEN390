@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import {
   View,
   Image,
   Text,
   TextInput,
   TouchableOpacity,
-  FlatList,
+  ScrollView,
   Alert,
-  Modal,
   ActivityIndicator,
   KeyboardAvoidingView,
-  ScrollView,
 } from "react-native";
 import Constants from "expo-constants";
 import { calendarFetchingStyles as styles } from "../styles/CalendarFetchingStyles.js";
@@ -19,9 +17,11 @@ import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
-import LayoutWrapper from "../components/LayoutWrapper.js";
-import HeaderButtons from "../components/HeaderButtons.js";
+const LayoutWrapper = lazy(() => import("../components/LayoutWrapper.js"));
+const HeaderButtons = lazy(() => import("../components/HeaderButtons.js"));
+
 import MonthPicker from '../components/MonthPicker';
+
 
 
 export default function CalendarFetching() {
@@ -158,6 +158,8 @@ export default function CalendarFetching() {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={20}>
+      <Suspense fallback={<ActivityIndicator size="large" color="#922338" />}>
+
       <LayoutWrapper>
         {/* Header */}
         <HeaderButtons />
@@ -235,6 +237,7 @@ export default function CalendarFetching() {
           </View>
         </ScrollView>
       </LayoutWrapper>
+      </Suspense>
     </KeyboardAvoidingView>
   );
 }
