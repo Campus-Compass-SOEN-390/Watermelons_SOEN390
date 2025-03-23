@@ -1053,7 +1053,7 @@ useEffect(() => {
         <FloorNavigation
           selectedBuilding={selectedIndoorBuilding}
           selectedFloor={selectedFloor}
-          onChangeFloor={setSelectedFloor}
+          onChangeFloor={updateSelectedFloor}
         />
       )}
 
