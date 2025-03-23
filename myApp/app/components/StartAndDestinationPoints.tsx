@@ -457,7 +457,7 @@ const handleRouteSelection = (index: number) => {
         
         <View style={styles.footerContainer}>
            {/* Top Row: Only the wheelchair toggle */}
-           <View style={{ flexDirection: "row", alignItems: "center" }}>
+           <View style={{ flexDirection: "row", alignItems: "center", alignSelf: "flex-start", marginBottom: 4}}>
               <Switch
                 value={isDisabled}
                 onValueChange={(val) => setIsDisabled(val)}

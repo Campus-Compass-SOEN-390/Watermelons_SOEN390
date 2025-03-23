@@ -190,14 +190,20 @@ export default StyleSheet.create({
     fontWeight: "bold",
   },
   cancelButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
     fontSize: 26,
     padding: 10,
     alignItems: "center",
     justifyContent: "center",
-    alignSelf: "center", // centers within parent
-    width: "90%",        // or use fixed width like 200
-    marginTop: 10
-  },  
+    // Optionally remove width so it sizes to its content:
+    // width: "auto",
+    // Adjust margin if needed:
+    marginTop: 0,
+  },
+  
+   
   modalContainer: {
     flex: 1,
     justifyContent: "center",
