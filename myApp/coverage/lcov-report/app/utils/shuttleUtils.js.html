@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.29% </span>
+                <span class="strong">96.42% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>52/54</span>
+                <span class='fraction'>54/56</span>
             </div>
         
             
@@ -213,7 +213,23 @@
 <a name='L148'></a><a href='#L148'>148</a>
 <a name='L149'></a><a href='#L149'>149</a>
 <a name='L150'></a><a href='#L150'>150</a>
-<a name='L151'></a><a href='#L151'>151</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L151'></a><a href='#L151'>151</a>
+<a name='L152'></a><a href='#L152'>152</a>
+<a name='L153'></a><a href='#L153'>153</a>
+<a name='L154'></a><a href='#L154'>154</a>
+<a name='L155'></a><a href='#L155'>155</a>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a>
+<a name='L161'></a><a href='#L161'>161</a>
+<a name='L162'></a><a href='#L162'>162</a>
+<a name='L163'></a><a href='#L163'>163</a>
+<a name='L164'></a><a href='#L164'>164</a>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -228,6 +244,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
@@ -259,6 +278,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -268,9 +291,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
@@ -325,6 +353,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -363,7 +392,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getTravelTimes } from "../api/googleMapsApi";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
+import { getTravelTimes } from "../api/googleMapsApi";
 import { haversineDistance } from "./distanceShuttle";
 import { fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
 import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
@@ -377,7 +408,10 @@ import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
  *    - null: if no shuttle is available
  *    - { error: string }: if it's a weekend or another error scenario you want to handle
  */
-export const estimateShuttleTravelTime = async (userLocation, destinationCampus) =&gt; {
+export const estimateShuttleTravelTime = async (
+  userLocation,
+  destinationCampus
+) =&gt; {
   const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
   const now = new Date();
   const currentTime = now.getHours() * 60 + now.getMinutes(); // Convert to minutes
@@ -408,23 +442,32 @@ export const estimateShuttleTravelTime = async (userLocation, destinationCampus)
 &nbsp;
   // Get all possible travel times to the stop
   const travelModes = ["walking", "driving", "transit", "bicycling"];
-  const travelOptions = await getTravelTimes(userLocation, departureStop, travelModes);
+  const travelOptions = await getTravelTimes(
+    userLocation,
+    departureStop,
+    travelModes
+  );
   if (!travelOptions.length) {
     return null; // No available transportation
   }
 &nbsp;
-  const validOptions = travelOptions.filter(option =&gt; option.duration !== null);
-<span class="missing-if-branch" title="if path not taken" >I</span>if (!validOptions.length) <span class="cstat-no" title="statement not covered" >return null; </span>// No available transportation
+  const validOptions = travelOptions.filter(
+    (option) =&gt; option.duration !== null
+  );
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!validOptions.length) <span class="cstat-no" title="statement not covered" >return null; </span>// No available transportation
 &nbsp;
-const travelTimeToStop = Math.min(...validOptions.map(option =&gt; option.duration));
- // Shortest travel time
+  const travelTimeToStop = Math.min(
+    ...validOptions.map((option) =&gt; option.duration)
+  );
+  // Shortest travel time
 &nbsp;
   // Determine next available shuttle departure time
   const stopKey = destinationCampus === "LOY" ? "SGW" : <span class="branch-1 cbranch-no" title="branch not covered" >"LOY";</span>
-  const stopSchedule = schedule[stopKey]?.map((time) =&gt; {
-    const [hours, minutes] = time.split(":").map(Number);
-    return hours * 60 + minutes; // Convert time to minutes
-  }) || <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
+  const stopSchedule =
+    schedule[stopKey]?.map((time) =&gt; {
+      const [hours, minutes] = time.split(":").map(Number);
+      return hours * 60 + minutes; // Convert time to minutes
+    }) || <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
 &nbsp;
   let nextShuttleTime = stopSchedule.find((time) =&gt; time &gt; currentTime);
   if (nextShuttleTime === undefined) {
@@ -475,10 +518,11 @@ export const estimateShuttleFromButton = async (currentStop) =&gt; {
   // Determine the next available shuttle departure time
   const stopKey = currentStop === "SGW" ? "SGW" : <span class="branch-1 cbranch-no" title="branch not covered" >"LOY";</span>
 &nbsp;
-  const stopSchedule = schedule[stopKey]?.map((time) =&gt; {
-    const [hours, minutes] = time.split(":").map(Number);
-    return hours * 60 + minutes; // Convert time to minutes
-  }) || <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
+  const stopSchedule =
+    schedule[stopKey]?.map((time) =&gt; {
+      const [hours, minutes] = time.split(":").map(Number);
+      return hours * 60 + minutes; // Convert time to minutes
+    }) || <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
 &nbsp;
   let nextShuttleTime = stopSchedule.find((time) =&gt; time &gt; currentTime);
   if (nextShuttleTime === undefined) {
@@ -511,6 +555,7 @@ export const estimateShuttleFromButton = async (currentStop) =&gt; {
     waitTime,
     shuttleRideTime,
     totalTime: waitTime + shuttleRideTime,
+    nextShuttleTime,
   };
 };
 &nbsp;</pre></td></tr></table></pre>
@@ -520,7 +565,7 @@ export const estimateShuttleFromButton = async (currentStop) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-03-18T17:50:55.495Z
+                at 2025-03-23T00:58:31.971Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

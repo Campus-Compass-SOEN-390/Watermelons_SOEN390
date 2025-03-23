@@ -127,6 +127,13 @@ const StartAndDestinationPoints = () => {
     }
   }, [origin, destination]);
 
+  // Handle Route Selection button click
+const handleRouteSelection = (index: number) => {
+  updateSelectedRouteIndex(index);
+    
+};
+
+
   // Handle "GO" button click
   const handleGoClick = () => {
     console.log("Navigating...");
@@ -375,6 +382,49 @@ const StartAndDestinationPoints = () => {
       {/* Footer with ETA and "X" Button */}
       {renderMap && (
         <View style={styles.footerContainer}>
+        <TouchableOpacity style={styles.stepsButton} onPress={handleStepsClick}>
+        <Text style={styles.footerButtonText}>Steps</Text>
+        </TouchableOpacity>
+
+      {/* Display Alternative Routes */}
+      {routes && routes.length > 0 ? (
+         <View style={styles.routesContainer}>
+         {routes
+            .filter((routeData) => routeData.mode === travelMode) // Filter routes by selected mode
+            .map((routeData, index) => (
+              <View key={index}>
+                {routeData.routes.map((route, i) => (
+             <TouchableOpacity 
+             key={i} 
+             style={styles.routeCard} 
+             onPress={() => {
+          
+               handleRouteSelection(i);
+              
+              
+             }}
+           >
+                 
+            
+                 <Text>{route.duration} min {"\n"} {route.distance}</Text>
+
+
+
+                    <TouchableOpacity style={styles.goButton}  onPress={() => {
+                      handleGoClick()
+                       updateTravelTime(route.duration)
+               updateTravelDistance(route.distance)}}>
+                       <Text >Go</Text>
+                       
+                     </TouchableOpacity>
+                    </TouchableOpacity>
+                ))}
+              </View>
+            ))}
+        </View>
+      ) : (
+        <Text>No alternative routes available.</Text>
+      )}
           {/* ETA Display */}
           <Text style={styles.etaText}>
             ETA:{" "}
