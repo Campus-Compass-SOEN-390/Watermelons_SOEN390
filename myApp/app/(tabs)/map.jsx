@@ -253,9 +253,21 @@ useEffect(() => {
   useEffect(() => {
     try {
       console.log("IN MAP:", destinationText, renderMap);
-      updateOrigin(origin, originText);
-      updateDestination(destination, destinationText);
-      
+      // Ensure "My Position" is dynamically updated from location
+      coordinatesMap["My Position"] = location?.latitude
+        ? { latitude: location.latitude, longitude: location.longitude }
+        : undefined;
+
+      const newOrigin = coordinatesMap[originText] || origin;
+      const newDestination = coordinatesMap[destinationText] || destination;
+
+      if (JSON.stringify(newOrigin) !== JSON.stringify(origin)) {
+        updateOrigin(newOrigin, originText);
+      }
+
+      if (JSON.stringify(newDestination) !== JSON.stringify(destination)) {
+        updateDestination(newDestination, destinationText);
+      }
       
       //these two things above are not what is crashing the app
       if (

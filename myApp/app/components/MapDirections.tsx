@@ -32,40 +32,50 @@ const MapDirections: React.FC<Props> = ({
 
   const prevOriginRef = useRef<{ latitude: number; longitude: number } | null>(null);
   const prevDestinationRef = useRef<{ latitude: number; longitude: number } | null>(null);
-  const prevTravelModeRef = useRef<string | null>(null);
+  const prevTravelModeRef = useRef<"driving" | "cycling" | "walking" | "transit" | undefined>(undefined);
 
   useEffect(() => {
     let isMounted = true;
   
     const fetchData = async () => {
       if (!origin || !destination) return;
+
+      const hasOriginChanged = JSON.stringify(origin) !== JSON.stringify(prevOriginRef.current);
+      const hasDestinationChanged = JSON.stringify(destination) !== JSON.stringify(prevDestinationRef.current);
+      const hasTravelModeChanged = JSON.stringify(travelMode) !== JSON.stringify(prevTravelModeRef.current);
     
-      try {
-        console.log("Fetching alternative routes...");
-        const alternativeRoutes = await getAlternativeRoutes(origin, destination, [travelMode || "walking"]);
-    
-        if (!isMounted) return;
-    
-        // Check if alternativeRoutes is an array
-        if (Array.isArray(alternativeRoutes)) {
-          // Extract the first mode's routes (assuming one mode at a time for now)
-          const selectedModeRoutes = alternativeRoutes
-            .filter((r) => r.mode === travelMode)
-            .flatMap((r) => r.routes) || [];
-    
-          if (selectedModeRoutes.length > 0) {
-            setRoutes(parseAlternativeRoutes(selectedModeRoutes));
+      if (hasOriginChanged || hasDestinationChanged || hasTravelModeChanged) {
+        try {
+          console.log("Fetching alternative routes...");
+          const alternativeRoutes = await getAlternativeRoutes(origin, destination, [travelMode || "walking"]);
+      
+          if (!isMounted) return;
+      
+          // Check if alternativeRoutes is an array
+          if (Array.isArray(alternativeRoutes)) {
+            // Extract the first mode's routes (assuming one mode at a time for now)
+            const selectedModeRoutes = alternativeRoutes
+              .filter((r) => r.mode === travelMode)
+              .flatMap((r) => r.routes) || [];
+      
+            if (selectedModeRoutes.length > 0) {
+              setRoutes(parseAlternativeRoutes(selectedModeRoutes));
+            } else {
+              console.warn("No alternative routes found.");
+              setRoutes([]);
+            }
+
+            prevOriginRef.current = origin;
+            prevDestinationRef.current = destination;
+            prevTravelModeRef.current = travelMode;
           } else {
-            console.warn("No alternative routes found.");
+            console.error("Unexpected response structure:", alternativeRoutes);
             setRoutes([]);
           }
-        } else {
-          console.error("Unexpected response structure:", alternativeRoutes);
-          setRoutes([]);
+        } catch (error) {
+          console.error("Error fetching alternative routes:", error);
         }
-      } catch (error) {
-        console.error("Error fetching alternative routes:", error);
-      }
+    }
     };
     
   
