@@ -24,6 +24,7 @@ import HeaderButtons from "../components/HeaderButtons.js";
 import MonthPicker from '../components/MonthPicker';
 
 
+
 export default function CalendarFetching() {
   const navigation = useNavigation();
   const router = useRouter();
@@ -162,7 +163,11 @@ export default function CalendarFetching() {
         {/* Header */}
         <HeaderButtons />
         {/* Events Scroll */}
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <ScrollView 
+          contentContainerStyle={{ flexGrow: 1 }} 
+          keyboardShouldPersistTaps="handled"
+        >
+
           <View style={styles.container}>
             <View style={styles.redContainer}>
               <View style={styles.whiteContainer}>
