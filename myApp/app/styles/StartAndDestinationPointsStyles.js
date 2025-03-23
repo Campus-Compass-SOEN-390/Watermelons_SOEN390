@@ -118,24 +118,30 @@ export default StyleSheet.create({
   },
   footerContainer: {
     position: "absolute",
-    bottom: -height * 0.69,
+    flexDirection: "column", // Align items vertically
+    alignItems: "center", // Center items horizontally
+    justifyContent: "flex-start", // Start from the top
+    bottom:
+      Dimensions.get("window").height > 945
+        ? -705
+        : height > 870
+        ? -675
+        : -600,
     left: -30,
     right: 0,
-    height: 120,
+    height: 350,
     width: width * 1,
     marginHorizontal: "2.5%",
     backgroundColor: "#ffffff",
     shadowColor: "#000",
-    flexDirection: "row",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
     paddingVertical: 12,
     paddingHorizontal: 18,
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: "flex-start", // Ensure content starts from top
     elevation: 5,
-    zIndex: 5,
+    zIndex: 999, // Ensures it's on top of other elements
   },
   footerButton: {
     flex: 1,
@@ -167,6 +173,7 @@ export default StyleSheet.create({
     backgroundColor: "#393a41",
     padding: 10,
     paddingHorizontal: 20,
+    width: "100%",
     borderRadius: 10,
   },
   favoriteButton: {
@@ -187,7 +194,10 @@ export default StyleSheet.create({
     padding: 10,
     alignItems: "center",
     justifyContent: "center",
-  },
+    alignSelf: "center", // centers within parent
+    width: "90%",        // or use fixed width like 200
+    marginTop: 10
+  },  
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -257,4 +267,46 @@ export default StyleSheet.create({
     fontSize: FONT_SIZE_2,
     color: "gray",
   },
+
+
+    modeText: {
+      fontSize: 18,
+      fontWeight: "bold",
+      marginBottom: 10,
+      color: "#333",
+    },
+
+    routesContainer: {
+      flexDirection: 'column',
+      justifyContent: 'space-around',
+      marginBottom: 10,
+      width: "100%",
+    },
+    routeCard: {
+      backgroundColor: "#f9f9f9",
+      padding: 12,
+      marginVertical: 5,
+      borderRadius: 8,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3, // for Android shadow
+      width: "100%",
+      flexDirection: 'row',  // Align items horizontally
+      justifyContent: 'space-between', // Space between button and text
+      alignItems: 'center',  // Align items in the center
+    },
+    routeTitle: {
+      fontSize: 16,
+      fontWeight: "bold",
+      marginBottom: 5,
+    },
+    routeDetails: {
+      fontSize: 14,
+      color: "#555",
+      marginBottom: 3,
+    },
+  
+  
 });
