@@ -1,11 +1,4 @@
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  Modal,
-  Image,
-  ActivityIndicator,
-} from "react-native";
+import { Text, TouchableOpacity, View, Modal, Image, ActivityIndicator, ScrollView } from "react-native";
 import React, {
   useState,
   useRef,
@@ -20,7 +13,7 @@ import Mapbox from "@rnmapbox/maps";
 import Constants from "expo-constants";
 import { buildings, getBuildingById } from "../api/buildingData";
 import { isPointInPolygon } from "geolib";
-import useLocation from "../hooks/useLocation";
+import useLocation from "../hooks/useLocation"; 
 import { useLocationContext } from "../context/LocationContext";
 import { useIndoorMapContext } from "../context/IndoorMapContext";
 import { useNavigation } from "@react-navigation/native";
@@ -61,8 +54,10 @@ import { styles as poiStyles } from "../styles/poiStyles";
 import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
 import { estimateShuttleFromButton } from "../utils/shuttleUtils";
 
-const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
-Mapbox.setAccessToken(MAPBOX_API);
+const MAPBOX_API = Constants.expoConfig?.extra?.mapbox; 
+Mapbox.setAccessToken("MAPBOX_API");
+const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
+
 
 // Constants for POI functionality
 const REGION_CHANGE_THRESHOLD = 0.005;
@@ -137,6 +132,10 @@ export default function MapView() {
   const [selectedPOI, setSelectedPOI] = useState(null);
   const isFetchingRef = useRef(false);
   const activeRequestRef = useRef(null);
+  const [showStartAndDestination, setShowStartAndDestination] = useState(true);
+  const [showFooter, setShowFooter] = useState(false);
+  const [showSteps, setShowSteps] = useState(false);
+  const [routeSteps, setRouteSteps] = useState([]); 
 
   const coordinatesMap = {
     "My Position": location?.latitude
@@ -176,6 +175,7 @@ export default function MapView() {
     updateRenderMap,
     updateTravelMode,
     updateShowShuttleRoute,
+    updateNavigationToMap,
     origin,
     destination,
     originText,
@@ -184,6 +184,9 @@ export default function MapView() {
     showShuttleRoute,
     travelMode,
     showTransportation,
+    navigationToMap,
+    travelTime,
+    travelDistance,
     navType
   } = useLocationContext();
 
@@ -245,37 +248,39 @@ export default function MapView() {
   useEffect(() => {
     try {
       console.log("IN MAP:", destinationText, renderMap);
-  
-      // Ensure "My Position" is dynamically updated from location
-      coordinatesMap["My Position"] = location?.latitude
-        ? { latitude: location.latitude, longitude: location.longitude }
-        : undefined;
-  
-      const newOrigin = coordinatesMap[originText] || origin;
-      const newDestination = coordinatesMap[destinationText] || destination;
-  
-      if (JSON.stringify(newOrigin) !== JSON.stringify(origin)) {
-        updateOrigin(newOrigin, originText);
+      updateOrigin(origin, originText);
+      updateDestination(destination, destinationText);
+      
+      
+      //these two things above are not what is crashing the app
+      if (
+        originText == "My Location" &&
+        (destinationText == "Loyola Campus, Shuttle Stop" ||
+          destinationText == "SGW Campus, Shuttle Stop") &&
+        renderMap
+      ) {
+        updateShowShuttleRoute(true);
+      } else {
+        updateShowShuttleRoute(false);
       }
-  
-      if (JSON.stringify(newDestination) !== JSON.stringify(destination)) {
-        updateDestination(newDestination, destinationText);
+      if (renderMap) {
+        navigation.setOptions({
+          tabBarStyle: { display: "none" },
+        });
       }
-  
-      // Manage shuttle route visibility
-      updateShowShuttleRoute(
-        originText === "My Location" &&
-          (destinationText === "Loyola Campus, Shuttle Stop" ||
-            destinationText === "SGW Campus, Shuttle Stop") &&
-          renderMap
-      );
-  
-      // Manage navigation bar visibility
-      navigation.setOptions({
-        tabBarStyle: renderMap ? { display: "none" } : tabStyles.tabBarStyle,
-      });
-    } catch (error) {
-      console.log("Crashed in useEffect:", error);
+      if (!renderMap) {
+        navigation.setOptions({
+          tabBarStyle: tabStyles.tabBarStyle,
+        });
+      }
+      if (navigationToMap) {
+        setShowFooter(true);
+      }
+      if (!navigationToMap) {
+        setShowFooter(false);
+      }
+    } catch {
+      console.log("Crashed 3");
     }
     console.log("Lock in", navType)
   }, [
@@ -288,6 +293,8 @@ export default function MapView() {
     popupVisible,
     showShuttleRoute,
     showTransportation,
+    navigationToMap,
+    showFooter
   ]);
   
 
@@ -755,14 +762,86 @@ export default function MapView() {
       poi.name
     );
     updateShowTransportation(true);
+  }
+
+  const handleStepsClick = async () => {
+
+  
+    
+    if (!origin || !destination) return;
+  
+    const originStr = `${origin.latitude},${origin.longitude}`;
+    const destinationStr = `${destination.latitude},${destination.longitude}`;
+   
+  
+    const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${originStr}&destination=${destinationStr}&mode=${travelMode.toLowerCase()}&key=${GOOGLE_PLACES_API_KEY}`;
+    console.log(originStr, destinationStr,travelMode);
+    try {
+
+      console.log("INSIDE CLICK");
+      const response = await fetch(url);
+      const data = await response.json();
+  
+      if (data.routes.length > 0) {
+        const stepsArray = data.routes[0].legs[0].steps.map((step, index) => ({
+          id: index,
+          instruction: step.html_instructions.replace(/<[^>]+>/g, ""),
+          distance: step.distance.text,
+        }));
+  
+        setRouteSteps(stepsArray);
+        setShowSteps(true);
+      }
+    } catch (error) {
+      console.error("Error fetching directions:", error);
+    }
   };
+  
+  // Close steps modal
+  const handleCloseSteps = () => {
+    setShowSteps(false);
+  };
+  
+
+  
+  useEffect(() =>{  
+    setShowStartAndDestination(navigationToMap);
+  }, [navigationToMap]);
+  
+  
+ const handleCancelButton = () =>{
+  updateNavigationToMap(false);
+  updateOrigin(null, "");
+  updateDestination(null, "");
+  updateRenderMap(false);
+  setShowFooter(false);
+ }
+
+ useEffect(() => {
+  if (navigationToMap) {
+    centerMapOnUser(); // Call the function when navigationToMap is true
+  }
+  else
+     centerMapOnCampus();
+}, [navigationToMap]);
+
+
+
 
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
+       
+       
+      {!navigationToMap &&(
         <StartAndDestinationPoints />
-        <Mapbox.MapView
-          style={styles.map}
+      )}
+      
+      
+
+
+        <Mapbox.MapView 
+          style={styles.map} 
           styleURL={Mapbox.StyleURL.Light}
           onRegionDidChange={(feature) => handleRegionChange(feature)}
         >
@@ -938,6 +1017,9 @@ export default function MapView() {
       {/* Position Buttons */}
       <View style={styles.positionButtonsContainer}>
         {/* User Location Button */}
+       
+       
+        {/* CENTER ON MY LOC */}
         <TouchableOpacity
           style={styles.positionButton}
           onPress={centerMapOnUser}
@@ -947,6 +1029,7 @@ export default function MapView() {
         </TouchableOpacity>
 
         {/* Campus Location Button */}
+        {/* CENTER ON CAMPUS  */}
         <TouchableOpacity
           style={styles.positionButton}
           onPress={centerMapOnCampus}
@@ -964,9 +1047,71 @@ export default function MapView() {
         <FloorNavigation
           selectedBuilding={selectedIndoorBuilding}
           selectedFloor={selectedFloor}
-          onChangeFloor={updateSelectedFloor}
+          onChangeFloor={setSelectedFloor}
         />
       )}
+
+      {/* Footer */}
+      {navigationToMap &&(
+
+        
+        <View style={outdoorStyles.footerContainer}>
+        <Text style={outdoorStyles.footerText}>{destinationText}: {"\n"}{travelTime} min     {travelDistance}</Text>
+
+        <TouchableOpacity style={outdoorStyles.stepsButton} onPress={handleStepsClick}>
+        <Text style={outdoorStyles.footerButtonText}>Steps</Text>
+        </TouchableOpacity>
+
+      
+      {/* Steps Modal */}
+{/* Steps Modal */}
+{showSteps && (
+            <Modal visible={showSteps} transparent animationType="slide">
+              <View style={outdoorStyles.modalContainer}>
+                <View style={outdoorStyles.modalContent}>
+                  <Text style={outdoorStyles.modalTitle}>Step-by-Step Directions</Text>
+                  <ScrollView style={outdoorStyles.stepsList}>
+                    {routeSteps.map((step) => (
+                      <View key={step.id} style={outdoorStyles.stepItem}>
+                        <Text style={outdoorStyles.stepText}>{step.instruction}</Text>
+                        <Text style={outdoorStyles.stepDistance}>{step.distance}</Text>
+                      </View>
+                    ))}
+                  </ScrollView>
+                  <TouchableOpacity
+                    style={outdoorStyles.closeButton}
+                    onPress={handleCloseSteps}
+                  >
+                    <Text style={outdoorStyles.closeButtonText}>X</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+)}
+
+        </View>
+
+        
+      )
+      }
+
+{navigationToMap && (
+  
+  <View style={outdoorStyles.cancelButtonContainer}>
+    <TouchableOpacity
+      style={outdoorStyles.shuttleButton}
+      onPress={handleCancelButton} // You may want to define a separate handler for the cancel action
+    >
+      <Text style={outdoorStyles.switchButtonText}>
+        Cancel
+      </Text>
+    </TouchableOpacity>
+  </View>
+)}
+
+
+  
+
 
       {/* Buildings Navigation Button */}
       <View
@@ -1040,6 +1185,7 @@ export default function MapView() {
       </View>
 
       {/* Switch Campus (Shuttle) Button */}
+      { !navigationToMap &&(
       <View style={outdoorStyles.shuttleButtonContainer}>
         <TouchableOpacity
           style={outdoorStyles.shuttleButton}
@@ -1055,6 +1201,7 @@ export default function MapView() {
           </Text>
         </TouchableOpacity>
       </View>
+      )}
 
       {/* POI Filter Button - only visible when POI is enabled */}
       {showPOI && (
@@ -1100,7 +1247,10 @@ export default function MapView() {
       />
 
       {/* Floating Buttons */}
-      <View style={outdoorStyles.buttonContainer}>
+
+      { !navigationToMap  && !travelMode &&(
+
+        <View style={outdoorStyles.buttonContainer}>
         <TouchableOpacity style={outdoorStyles.button} onPress={togglePOI}>
           <MaterialIcons
             name={showPOI ? "local-dining" : "restaurant"}
@@ -1108,7 +1258,10 @@ export default function MapView() {
             color="white"
           />
         </TouchableOpacity>
-      </View>
+        </View>
+
+      )}
+
 
       {/* Location Permission Denial */}
       <Modal visible={showPermissionPopup} transparent animationType="slide">

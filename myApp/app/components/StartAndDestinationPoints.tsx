@@ -21,6 +21,26 @@ import { parseClassroomLocation } from "../utils/IndoorMapUtils";
 import { buildings } from "../api/buildingData";
 import { getTravelTimes } from "../api/googleMapsApi";
 
+
+
+import { getAlternativeRoutes } from "../api/googleMapsApi";
+import { useRouter } from 'expo-router';
+
+
+
+
+
+// Define Types
+type Route = {
+  duration: string ;
+  distance: string ;
+};
+
+type RouteData = {
+  mode: string;
+  routes: Route[];
+};
+
 interface Step {
   id: number;
   distance: string;
@@ -36,6 +56,10 @@ const StartAndDestinationPoints = () => {
     updateShowTransportation,
     updateRenderMap,
     updateTravelMode,
+    updateNavigationToMap,
+    updateSelectedRouteIndex,
+    updateTravelTime,
+    updateTravelDistance,
     updateNavType,
     origin,
     destination,
@@ -44,6 +68,10 @@ const StartAndDestinationPoints = () => {
     showTransportation,
     renderMap,
     travelMode,
+    navigationToMap,
+    selectedRouteIndex,
+    travelTime,
+    travelDistance,
     navType
   } = useLocationContext();
   const { selectedFloor, updateSelectedFloor, updateSelectedIndoorBuilding } =
@@ -58,6 +86,52 @@ const StartAndDestinationPoints = () => {
     [key: string]: number | null;
   }>({});
   const [loading, setLoading] = useState(false);
+  const [routes, setRoutes] = useState<RouteData[] | null>(null);
+  const [showFooter, setShowFooter] = useState(false);
+  const router = useRouter();
+
+
+
+
+  //Fetch alternative routes
+
+  useEffect(() => {
+
+    const fetchAllRoutes = async () => {
+      setLoading(true);
+
+      if (!origin || !destination) {
+        console.error("Origin or destination is null.");
+        return;
+      }
+
+      const fetchedRoutes = await getAlternativeRoutes(origin, destination);
+            setRoutes(Object.values(fetchedRoutes));
+            setLoading(false);
+        };
+
+        if (origin && destination) {
+          fetchAllRoutes();
+      }
+
+      console.log("ALL ROUTES: ", routes)
+  }, [origin, destination, travelMode]);
+
+  // Fetch travel times when origin or destination changes
+  useEffect(() => {
+    if (origin && destination) {
+      setLoading(true);
+      handleNavType(originText, destinationText);
+      getTravelTimes(origin, destination).then((times) => {
+        const timesMap: { [key: string]: number | null } = {};
+        times.forEach(({ mode, duration }) => {
+          timesMap[mode] = duration;
+        });
+        setTravelTimes(timesMap);
+        setLoading(false);
+      });
+    }
+  }, [origin, destination]);
 
   const handleNavType = (originText: string, destinationText: string) => {
     if (!originText || !destinationText){
@@ -72,13 +146,13 @@ const StartAndDestinationPoints = () => {
     const navigationType = (origin: any, destination: any) => {
       const originBuilding = getBuildingCode(origin);
       const destinationBuilding = getBuildingCode(destination);
-  
+
       if (originBuilding && destinationBuilding && buildingCoordinates[String(originBuilding)] && buildingCoordinates[String(destinationBuilding)]) {
           return originBuilding === destinationBuilding ? "indoor" : "indoor-outdoor-indoor";
       }
       if (originBuilding && buildingCoordinates[String(originBuilding)]) return "indoor-outdoor";
       if (destinationBuilding && buildingCoordinates[String(destinationBuilding)]) return "outdoor-indoor";
-      
+
       return "outdoor";
     };
     updateNavType(navigationType(originText, destinationText));
@@ -99,7 +173,7 @@ const StartAndDestinationPoints = () => {
 
   const handleDestinationInput = (text: string) => {
     const buildingCode = getBuildingCode(text);
-    
+
     if (buildingCode && buildingCoordinates[buildingCode]) {
     const coords = buildingCoordinates[buildingCode];
     updateDestination(coords, text);
@@ -111,25 +185,22 @@ const StartAndDestinationPoints = () => {
 
   }
 
-  // Fetch travel times when origin or destination changes
-  useEffect(() => {
-    if (origin && destination) {
-      setLoading(true);
-      handleNavType(originText, destinationText);
-      getTravelTimes(origin, destination).then((times) => {
-        const timesMap: { [key: string]: number | null } = {};
-        times.forEach(({ mode, duration }) => {
-          timesMap[mode] = duration;
-        });
-        setTravelTimes(timesMap);
-        setLoading(false);
-      });
-    }
-  }, [origin, destination]);
+  // Handle Route Selection button click
+const handleRouteSelection = (index: number) => {
+  updateSelectedRouteIndex(index);
+
+ 
+      console.log("SELECTED TRAVEL TIME:", travelTime);
+      console.log("SELECTED TRAVEL DISTANCE:", travelDistance);
+    
+  
+};
+
 
   // Handle "GO" button click
-  const handleGoClick = () => {
-    console.log("Navigating...");
+  const handleGoClick = () =>{
+    setShowFooter(false);
+    updateNavigationToMap(true);
   };
 
   // Handle "Steps" button click (show modal)
@@ -169,7 +240,7 @@ const StartAndDestinationPoints = () => {
 
   useEffect(() => {
     try {
-      handleNavType(originText, destinationText);
+      // handleNavType(originText, destinationText);
       updateOrigin(origin, originText);
       updateDestination(destination, destinationText);
     } catch {
@@ -187,7 +258,7 @@ const StartAndDestinationPoints = () => {
 
   useEffect(() => {
     try {
-      handleNavType(originText, destinationText);
+      // handleNavType(originText, destinationText);
       updateShowTransportation(false);
     } catch {
       console.log("Crashed 4");
@@ -297,7 +368,7 @@ const StartAndDestinationPoints = () => {
             }}
             textInputProps={{
               value: destinationText,
-              onChangeText: handleDestinationInput,
+             
               //onChangeText: (text) => updateDestination(destination, text),
               style: styles.input,
             }}
@@ -350,6 +421,7 @@ const StartAndDestinationPoints = () => {
                     updateRenderMap(true);
                     updateTravelMode(mode);
                     updateShowTransportation(true);
+                    setShowFooter(true);
                   }
                 }}
                 style={[
@@ -372,26 +444,50 @@ const StartAndDestinationPoints = () => {
           </View>
         )}
       </View>
-      {/* Footer with ETA and "X" Button */}
-      {renderMap && (
+      
+      {/* FOOTER */}
+      {showFooter && (
+        
         <View style={styles.footerContainer}>
-          {/* ETA Display */}
-          <Text style={styles.etaText}>
-            ETA:{" "}
-            {loading
-              ? "Calculating..."
-              : getTravelTimeText(travelTimes, travelMode)}
-          </Text>
-          <TouchableOpacity style={styles.goButton} onPress={handleGoClick}>
-            <Text style={styles.footerButtonText}>GO</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.stepsButton}
-            onPress={handleStepsClick}
-          >
-            <Text style={styles.footerButtonText}>Steps</Text>
-          </TouchableOpacity>
-          {/* "X" Button as a red cancel */}
+        <TouchableOpacity style={styles.stepsButton} onPress={handleStepsClick}>
+        <Text style={styles.footerButtonText}>Steps</Text>
+        </TouchableOpacity>
+
+      {/* Display Alternative Routes */}
+      {routes && routes.length > 0 ? (
+         <View style={styles.routesContainer}>
+         {routes
+            .filter((routeData) => routeData.mode === travelMode) // Filter routes by selected mode
+            .map((routeData, index) => (
+              <View key={index}>
+                {routeData.routes.map((route, i) => (
+             <TouchableOpacity 
+             key={i} 
+             style={styles.routeCard} 
+             onPress={() => {
+          
+               handleRouteSelection(i);
+              
+             }}
+           >
+            
+                 <Text>{route.duration} min {"\n"} {route.distance}</Text>
+
+                    <TouchableOpacity style={styles.goButton}  onPress={() => {
+                      handleGoClick()
+                       updateTravelTime(route.duration)
+               updateTravelDistance(route.distance)}}>
+                       <Text >Go</Text>
+                       
+                     </TouchableOpacity>
+                    </TouchableOpacity>
+                ))}
+              </View>
+            ))}
+        </View>
+      ) : (
+        <Text>No alternative routes available.</Text>
+      )}
           <TouchableOpacity
             style={styles.cancelButton}
             onPress={() => {
@@ -401,9 +497,11 @@ const StartAndDestinationPoints = () => {
               updateSelectedIndoorBuilding(null);
               updateOrigin(null, "");
               updateDestination(null, "");
+              setShowFooter(false);
+        
             }}
           >
-            <Text style={[styles.footerButtonText, { color: "red" }]}>X</Text>
+            <Text style={[styles.footerButtonText, { color: "red" }]}>Cancel</Text>
           </TouchableOpacity>
         </View>
       )}
