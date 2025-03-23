@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for app/api/shuttleSchedule.js</title>
+    <title>Code coverage report for app/components/MonthPicker.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">app/api</a> shuttleSchedule.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">app/components</a> MonthPicker.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>2/3</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>2/3</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -98,36 +98,12 @@
 <a name='L33'></a><a href='#L33'>33</a>
 <a name='L34'></a><a href='#L34'>34</a>
 <a name='L35'></a><a href='#L35'>35</a>
-<a name='L36'></a><a href='#L36'>36</a>
-<a name='L37'></a><a href='#L37'>37</a>
-<a name='L38'></a><a href='#L38'>38</a>
-<a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L36'></a><a href='#L36'>36</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -139,44 +115,59 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getAllShuttleSchedules, getShuttleScheduleByDay } from "./shuttleScheduleData.js";
-import { getRealTimeShuttleData, extractShuttleInfo } from "./shuttleLiveData.js";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Picker } from '@react-native-picker/picker';
+import React from 'react';
+import { View, Text } from 'react-native';
 &nbsp;
-// Fetch all shuttle schedules
-export const fetchAllShuttleSchedules = async () =&gt; getAllShuttleSchedules();
+const MonthPicker = ({ monthsAhead, setMonthsAhead, styles }) =&gt; (
+  &lt;View style={{ marginTop: 10 }}&gt;
+    &lt;Text style={styles.subtitle}&gt;Show events for the upcoming:&lt;/Text&gt;
+    &lt;View
+      style={{
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 6,
+        overflow: 'hidden',
+        marginBottom: 10,
+      }}
+    &gt;
+      &lt;Picker
+        selectedValue={monthsAhead}
+        onValueChange={<span class="fstat-no" title="function not covered" >(i</span>temValue) =&gt; <span class="cstat-no" title="statement not covered" >setMonthsAhead(itemValue)}</span>
+        style={{ height: 50 }}
+        testID="month-picker"
+      &gt;
+        &lt;Picker.Item label="1 Month" value="1" /&gt;
+        &lt;Picker.Item label="2 Months" value="2" /&gt;
+        &lt;Picker.Item label="3 Months" value="3" /&gt;
+        &lt;Picker.Item label="4 Months" value="4" /&gt;
+        &lt;Picker.Item label="5 Months" value="5" /&gt;
+        &lt;Picker.Item label="6 Months" value="6" /&gt;
+        &lt;Picker.Item label="All Events" value="all" /&gt;
+      &lt;/Picker&gt;
+    &lt;/View&gt;
+  &lt;/View&gt;
+);
 &nbsp;
-// Fetch a specific day's schedule
-export const fetchShuttleScheduleByDay = async (day) =&gt; {
-  try {
-    // If getShuttleScheduleByDay(day) throws "Invalid day: Sunday...", we catch it here
-    return getShuttleScheduleByDay(day);
-  } catch (error) {
-    console.warn("Error fetching schedule:", error.message);
-    throw new Error(`Invalid day: ${day}. Please provide Monday, Tuesday, Wednesday, Thursday, or Friday.`);
-    // Instead of re-throwing, just return null
-    
-  }
-};
-&nbsp;
-&nbsp;
-// Fetch live shuttle data
-export const fetchLiveShuttleData = async () =&gt; getRealTimeShuttleData();
-&nbsp;
-// Extract shuttle information from live data
-export const fetchShuttleInfo = async () =&gt; {
-  const rawData = await getRealTimeShuttleData(); // Fetch data
-  return extractShuttleInfo(rawData); // Process data
-};
-&nbsp;
-&nbsp;
-// Default export
-export default {
-  fetchAllShuttleSchedules,
-  fetchShuttleScheduleByDay,
-  fetchLiveShuttleData,
-  fetchShuttleInfo,
-&nbsp;
-};
+export default MonthPicker;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

@@ -140,8 +140,20 @@
 <a name='L75'></a><a href='#L75'>75</a>
 <a name='L76'></a><a href='#L76'>76</a>
 <a name='L77'></a><a href='#L77'>77</a>
-<a name='L78'></a><a href='#L78'>78</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -155,6 +167,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
@@ -187,11 +205,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -206,6 +219,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -217,21 +232,37 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
-import React from "react";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
 import { View, Text, Modal, TouchableOpacity, ScrollView } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons"; // For icons
-import { buildingPopupStyles as styles } from "../styles/BuildingPopupStyles"  
+import { buildingPopupStyles as styles } from "../styles/BuildingPopupStyles";
 &nbsp;
 export interface BuildingPopupProps {
   visible: boolean;
   onClose: () =&gt; void;
   building: any | null; // Replace "any" with your Building type if available
-  onGetDirections(building: any): void
-  setAsStartingPoint(building: any): void
+  onGetDirections(building: any): void;
+  setAsStartingPoint(building: any): void;
 }
 &nbsp;
-export const BuildingPopup: React.FC&lt;BuildingPopupProps&gt; = ({ visible, onClose, building, onGetDirections, setAsStartingPoint }) =&gt; {
+export const BuildingPopup: React.FC&lt;BuildingPopupProps&gt; = ({
+  visible,
+  onClose,
+  building,
+  onGetDirections,
+  setAsStartingPoint,
+}) =&gt; {
   <span class="missing-if-branch" title="if path not taken" >I</span>if (!building) <span class="cstat-no" title="statement not covered" >return null; </span>// Don't render if no building is selected
 &nbsp;
   return (
@@ -252,38 +283,45 @@ export const BuildingPopup: React.FC&lt;BuildingPopupProps&gt; = ({ visible, onC
                 🕒 {building.openHours || <span class="branch-1 cbranch-no" title="branch not covered" >"Hours not available"}</span>
               &lt;/Text&gt;
               &lt;Text style={styles.text}&gt;
-                ♿ Accessibility: {building.wheelchairAccessible ? "✅ Yes" : <span class="branch-1 cbranch-no" title="branch not covered" >"❌ No"}</span>
+                ♿ Accessibility:{" "}
+                {building.wheelchairAccessible ? "✅ Yes" : <span class="branch-1 cbranch-no" title="branch not covered" >"❌ No"}</span>
               &lt;/Text&gt;
               &lt;Text style={styles.text}&gt;
                 🏢 Departments:{" "}
-                {building.departments.length &gt; 0 ? building.departments.join(", ") : <span class="branch-1 cbranch-no" title="branch not covered" >"No department info"}</span>
+                {building.departments.length &gt; 0
+                  ? building.departments.join(", ")
+                  : <span class="branch-1 cbranch-no" title="branch not covered" >"No department info"}</span>
               &lt;/Text&gt;
             &lt;/View&gt;
           &lt;/ScrollView&gt;
           {/* Buttons */}
           &lt;View style={styles.buttonContainer}&gt;
-            &lt;TouchableOpacity style={[styles.button, styles.directionButton]} 
-            onPress={() =&gt; {
-            onGetDirections(building);
-            onClose();
-            }
-            }&gt;
+            &lt;TouchableOpacity
+              style={[styles.button, styles.directionButton]}
+              onPress={() =&gt; {
+                onGetDirections(building);
+                onClose();
+              }}
+            &gt;
               &lt;MaterialIcons name="directions" size={20} color="white" /&gt;
               &lt;Text style={styles.buttonText}&gt;Get Directions&lt;/Text&gt;
             &lt;/TouchableOpacity&gt;
-            &lt;TouchableOpacity style={[styles.button, styles.startPointButton]} 
-            onPress={() =&gt; {
-            setAsStartingPoint(building);
-            onClose();
-            }
-            }&gt;
+            &lt;TouchableOpacity
+              style={[styles.button, styles.startPointButton]}
+              onPress={() =&gt; {
+                setAsStartingPoint(building);
+                onClose();
+              }}
+            &gt;
               &lt;MaterialIcons name="place" size={20} color="white" /&gt;
               &lt;Text style={styles.buttonText}&gt;Use As Starting Point&lt;/Text&gt;
             &lt;/TouchableOpacity&gt;
-&nbsp;
           &lt;/View&gt;
           &lt;View style={styles.buttonContainer}&gt;
-            &lt;TouchableOpacity style={[styles.button, styles.closeButton]} onPress={onClose}&gt;
+            &lt;TouchableOpacity
+              style={[styles.button, styles.closeButton]}
+              onPress={onClose}
+            &gt;
               &lt;MaterialIcons name="close" size={20} color="white" /&gt;
               &lt;Text style={styles.buttonText}&gt;Close&lt;/Text&gt;
             &lt;/TouchableOpacity&gt;
@@ -294,14 +332,15 @@ export const BuildingPopup: React.FC&lt;BuildingPopupProps&gt; = ({ visible, onC
   );
 };
 &nbsp;
-export default BuildingPopup;</pre></td></tr></table></pre>
+export default BuildingPopup;
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-03-18T17:50:55.495Z
+                at 2025-03-23T01:51:34.086Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

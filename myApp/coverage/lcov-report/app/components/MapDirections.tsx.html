@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.14% </span>
+                <span class="strong">63.51% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>36/63</span>
+                <span class='fraction'>47/74</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">48.78% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>18/36</span>
+                <span class='fraction'>20/41</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.4% </span>
+                <span class="strong">68.65% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>35/57</span>
+                <span class='fraction'>46/67</span>
             </div>
         
             
@@ -215,7 +215,25 @@
 <a name='L150'></a><a href='#L150'>150</a>
 <a name='L151'></a><a href='#L151'>151</a>
 <a name='L152'></a><a href='#L152'>152</a>
-<a name='L153'></a><a href='#L153'>153</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L153'></a><a href='#L153'>153</a>
+<a name='L154'></a><a href='#L154'>154</a>
+<a name='L155'></a><a href='#L155'>155</a>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a>
+<a name='L161'></a><a href='#L161'>161</a>
+<a name='L162'></a><a href='#L162'>162</a>
+<a name='L163'></a><a href='#L163'>163</a>
+<a name='L164'></a><a href='#L164'>164</a>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -246,21 +264,37 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -373,7 +407,8 @@ import { View, Button } from "react-native";
 import Constants from "expo-constants";
 import polyline from "@mapbox/polyline";
 &nbsp;
-const MAPBOX_API_KEY = Constants.expoConfig?.extra?.mapbox;
+// const MAPBOX_API_KEY = Constants.expoConfig?.extra?.mapbox;
+const MAPBOX_API_KEY = "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw";
 Mapbox.setAccessToken(MAPBOX_API_KEY);
 const GOOGLE_MAPS_API_KEY = Constants.expoConfig?.extra?.apiKey;
 &nbsp;
@@ -396,17 +431,32 @@ const MapDirections: React.FC&lt;Props&gt; = ({
   const [selectedRouteIndex, setSelectedRouteIndex] = useState&lt;number&gt;(0);
   const cameraRef = useRef&lt;Mapbox.Camera | null&gt;(null);
 &nbsp;
+  const prevOriginRef = useRef&lt;{ latitude: number; longitude: number } | null&gt;(null);
+  const prevDestinationRef = useRef&lt;{ latitude: number; longitude: number } | null&gt;(null);
+  const prevTravelModeRef = useRef&lt;string | null&gt;(null);
+&nbsp;
   useEffect(() =&gt; {
     let isMounted = true;
 &nbsp;
     const fetchData = async () =&gt; {
-      try {
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (origin &amp;&amp; destination &amp;&amp; travelMode) {
-          await fetchRoutes(travelMode, isMounted);
-        }
-      } catch (error) {
-<span class="cstat-no" title="statement not covered" >        console.log("Error in fetchData:", error);</span>
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (!origin || !destination || !travelMode) <span class="cstat-no" title="statement not covered" >return;</span>
+&nbsp;
+      // Check if origin or destination has actually changed before fetching
+      const hasOriginChanged = JSON.stringify(origin) !== JSON.stringify(prevOriginRef.current);
+      const hasDestinationChanged = JSON.stringify(destination) !== JSON.stringify(prevDestinationRef.current);
+      const hasTravelModeChanged = JSON.stringify(travelMode) !== JSON.stringify(prevTravelModeRef.current);
+&nbsp;
+      <span class="missing-if-branch" title="else path not taken" >E</span>if (hasOriginChanged || <span class="branch-1 cbranch-no" title="branch not covered" >hasDestinationChanged </span>|| <span class="branch-2 cbranch-no" title="branch not covered" >hasTravelModeChanged)</span> {
+        console.log("Origin or destination changed, fetching new routes...");
+        await fetchRoutes(travelMode, isMounted);
+&nbsp;
+        // Update previous values
+        prevOriginRef.current = origin;
+        prevDestinationRef.current = destination;
+        prevTravelModeRef.current = travelMode;
       }
+&nbsp;
+      console.log("Travel Mode", travelMode)
     };
 &nbsp;
     fetchData();
@@ -415,6 +465,7 @@ const MapDirections: React.FC&lt;Props&gt; = ({
       isMounted = false;
     };
   }, [travelMode, origin, destination]);
+&nbsp;
 &nbsp;
   useEffect(() =&gt; {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (routes.length &gt; 0 &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >routes[selectedRouteIndex])</span> {
@@ -526,7 +577,7 @@ export default MapDirections;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-03-18T17:50:55.495Z
+                at 2025-03-23T01:51:34.086Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
