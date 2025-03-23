@@ -1,14 +1,15 @@
 import { StyleSheet } from 'react-native';
+import { FONT_SIZE_1,FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4, FONT_SIZE_5 } from './constants';
 
 export const calendarFetchingStyles = StyleSheet.create({
   container: {
     backgroundColor: '#f5f5f5',
     justifyContent: 'center',
-    flex: 1, // You may want this if you need the full screen
+    flex: 1,
   },
   redContainer: {
     backgroundColor: '#922338',
-    margin: 20,
+    margin: 10,
     padding: 10,
     borderRadius: 10,
     justifyContent: 'center',
@@ -41,21 +42,23 @@ export const calendarFetchingStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 15,
-    marginBottom: 20,
-    fontSize: 16,
+    marginBottom: 10,
+    fontSize: FONT_SIZE_3,
     backgroundColor: '#f9f9f9',
   },
   connectButton: {
     backgroundColor: '#922338',
     padding: 15,
-    borderRadius: 8,
-    alignSelf: 'center', 
-    minWidth: 100, 
-    paddingHorizontal: 20, 
+    borderRadius: 25,
+    alignSelf: 'center',
+    minWidth: 100,
+    paddingHorizontal: 20,
+    position: 'absolute',
+    bottom: 55,
   },
   buttonText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: FONT_SIZE_4,
     fontWeight: 'bold',
   },
 
@@ -68,7 +71,7 @@ export const calendarFetchingStyles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   successTitle: {
-    fontSize: 20,
+    fontSize: FONT_SIZE_5,
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#333',
@@ -76,7 +79,7 @@ export const calendarFetchingStyles = StyleSheet.create({
   },
   successSubtitle: {
     marginTop: 10,
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     textAlign: 'center',
     color: '#666',
   },
@@ -89,13 +92,13 @@ export const calendarFetchingStyles = StyleSheet.create({
     borderRadius: 6,
   },
   eventTitle: {
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     fontWeight: 'bold',
     marginBottom: 4,
     color: '#333',
   },
   eventDate: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     color: '#666',
   },
   logo: {
@@ -103,19 +106,47 @@ export const calendarFetchingStyles = StyleSheet.create({
     height: 150,
     marginVertical: 20,
   },
-  // --- Back Button Styles ---
-backButton: {
-    alignSelf: 'flex-start',
-    marginTop: 40,  // Adjust this value to position it a bit lower
-    marginLeft: 20, // Adjust as needed
-    padding: 10,
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: '#922338',
+
+  // --- Calendar History Track --- 
+
+  subtitle: {
+    fontSize: FONT_SIZE_2,
     fontWeight: 'bold',
+    marginBottom: 10,
   },
-  
+  historyItem: {
+    backgroundColor: "rgba(0, 0, 0, 0.19)",
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+    paddingVertical: 5,
+  },
+  historyText: {
+    fontSize: 10,
+    color: 'black',
+  },
+
+  // --- Clear History Button ---
+  clearHistoryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 25,
+    backgroundColor: '#f4f4f4',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    alignSelf: 'center',
+    marginTop: 10,
+    position: 'absolute',
+    bottom: 10,
+  },
+  clearHistoryText: {
+    fontSize: FONT_SIZE_1,
+    color: '#444',
+    fontWeight: '500',
+  },
+
 });
 
 export default calendarFetchingStyles;
