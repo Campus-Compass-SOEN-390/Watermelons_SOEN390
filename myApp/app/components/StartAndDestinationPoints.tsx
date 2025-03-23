@@ -1,3 +1,7 @@
+interface StartAndDestinationPointsProps {
+  isDisabled: boolean;
+  setIsDisabled: (value: boolean) => void;
+}
 import React, { useEffect, useRef, useState } from "react";
 import {
   View,
@@ -7,6 +11,7 @@ import {
   Keyboard,
   Modal,
   ScrollView,
+  Switch,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import "react-native-get-random-values";
@@ -49,7 +54,8 @@ interface Step {
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
-const StartAndDestinationPoints = () => {
+const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({ isDisabled, setIsDisabled }) => {
+
   const {
     updateOrigin,
     updateDestination,
@@ -141,6 +147,7 @@ const StartAndDestinationPoints = () => {
     const destinationBuilding = getBuildingCode(destinationText)
     console.log("originbuilding is", originBuilding);
     console.log("destinationbuilding is", destinationBuilding);
+    console.log("Is Disabled", isDisabled);
     console.log("buildingCoordinates");
     // Function to determine navigation type
     const navigationType = (origin: any, destination: any) => {
@@ -240,7 +247,7 @@ const handleRouteSelection = (index: number) => {
 
   useEffect(() => {
     try {
-      // handleNavType(originText, destinationText);
+      handleNavType(originText, destinationText);
       updateOrigin(origin, originText);
       updateDestination(destination, destinationText);
     } catch {
@@ -258,7 +265,7 @@ const handleRouteSelection = (index: number) => {
 
   useEffect(() => {
     try {
-      // handleNavType(originText, destinationText);
+      handleNavType(originText, destinationText);
       updateShowTransportation(false);
     } catch {
       console.log("Crashed 4");
@@ -369,7 +376,7 @@ const handleRouteSelection = (index: number) => {
             textInputProps={{
               value: destinationText,
              
-              //onChangeText: (text) => updateDestination(destination, text),
+              onChangeText: handleDestinationInput,
               style: styles.input,
             }}
             styles={{
@@ -399,6 +406,7 @@ const handleRouteSelection = (index: number) => {
                   }
                 }
 
+                handleNavType(originText, destinationText);
                 updateShowTransportation(true);
               }
             }}
@@ -447,64 +455,79 @@ const handleRouteSelection = (index: number) => {
       
       {/* FOOTER */}
       {showFooter && (
-        
-        <View style={styles.footerContainer}>
-        <TouchableOpacity style={styles.stepsButton} onPress={handleStepsClick}>
-        <Text style={styles.footerButtonText}>Steps</Text>
-        </TouchableOpacity>
+  <View style={styles.footerContainer}>
+    {/* Accessibility Toggle pushed to the right */}
+    <View style={styles.accessibilityToggle}>
+      <Switch
+        value={isDisabled}
+        onValueChange={(val) => setIsDisabled(val)}
+        trackColor={{ false: "#ccc", true: "#922338" }}
+        thumbColor="#fff"
+      />
+      <MaterialIcons
+        name="accessible"
+        size={24}
+        color={isDisabled ? "#922338" : "#555"}
+        style={{ marginLeft: 5 }}
+      />
+    </View>
 
-      {/* Display Alternative Routes */}
-      {routes && routes.length > 0 ? (
-         <View style={styles.routesContainer}>
-         {routes
-            .filter((routeData) => routeData.mode === travelMode) // Filter routes by selected mode
-            .map((routeData, index) => (
-              <View key={index}>
-                {routeData.routes.map((route, i) => (
-             <TouchableOpacity 
-             key={i} 
-             style={styles.routeCard} 
-             onPress={() => {
-          
-               handleRouteSelection(i);
-              
-             }}
-           >
-            
-                 <Text>{route.duration} min {"\n"} {route.distance}</Text>
+    {/* Cancel Button at Top Right */}
+    <View style={styles.cancelButtonTopRight}>
+      <TouchableOpacity
+        onPress={() => {
+          updateShowTransportation(false);
+          updateRenderMap(false);
+          updateSelectedFloor(1);
+          updateSelectedIndoorBuilding(null);
+          updateOrigin(null, "");
+          updateDestination(null, "");
+          setShowFooter(false);
+        }}
+      >
+        <Text style={[styles.footerButtonText, { color: "red" }]}>Cancel</Text>
+      </TouchableOpacity>
+    </View>
 
-                    <TouchableOpacity style={styles.goButton}  onPress={() => {
-                      handleGoClick()
-                       updateTravelTime(route.duration)
-               updateTravelDistance(route.distance)}}>
-                       <Text >Go</Text>
-                       
-                     </TouchableOpacity>
-                    </TouchableOpacity>
-                ))}
-              </View>
-            ))}
-        </View>
-      ) : (
-        <Text>No alternative routes available.</Text>
-      )}
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={() => {
-              updateShowTransportation(false);
-              updateRenderMap(false);
-              updateSelectedFloor(1);
-              updateSelectedIndoorBuilding(null);
-              updateOrigin(null, "");
-              updateDestination(null, "");
-              setShowFooter(false);
-        
-            }}
-          >
-            <Text style={[styles.footerButtonText, { color: "red" }]}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+    {/* Steps Button */}
+    <TouchableOpacity style={styles.stepsButton} onPress={handleStepsClick}>
+      <Text style={styles.footerButtonText}>Steps</Text>
+    </TouchableOpacity>
+
+    {/* Display Alternative Routes */}
+    {routes && routes.length > 0 ? (
+      <View style={styles.routesContainer}>
+        {routes
+          .filter((routeData) => routeData.mode === travelMode)
+          .map((routeData, index) => (
+            <View key={index}>
+              {routeData.routes.map((route, i) => (
+                <TouchableOpacity 
+                  key={i} 
+                  style={styles.routeCard} 
+                  onPress={() => {
+                    handleRouteSelection(i);
+                  }}
+                >
+                  <Text>{route.duration} min {"\n"} {route.distance}</Text>
+                  <TouchableOpacity style={styles.goButton} onPress={() => {
+                    handleGoClick();
+                    updateTravelTime(route.duration);
+                    updateTravelDistance(route.distance);
+                  }}>
+                    <Text>Go</Text>
+                  </TouchableOpacity>
+                </TouchableOpacity>
+              ))}
+            </View>
+          ))}
+      </View>
+    ) : (
+      <Text>No alternative routes available.</Text>
+    )}
+  </View>
+)}
+
       {/* Steps Modal */}
       {showSteps && (
         <Modal visible={showSteps} transparent animationType="slide">

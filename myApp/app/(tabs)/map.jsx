@@ -64,17 +64,24 @@ const REGION_CHANGE_THRESHOLD = 0.005;
 
 export default function MapView() {
   const { destinationString } = useLocalSearchParams();
+// Disabled on or off
+const [isDisabled, setIsDisabled] = useState(false);
+console.log("Is Disabled in map.jsx", isDisabled);
 
-  useEffect(() => {
-    if (destinationString) {
-      // Update the destination using the existing context
-      updateDestination(
-        coordinatesMap[destinationString] || destinationString,
-        destinationString
-      );
-      updateShowTransportation(true);
-    }
-  }, [destinationString]);
+
+useEffect(() => {
+  if (destinationString) {
+    updateDestination(
+      coordinatesMap[destinationString] || destinationString,
+      destinationString
+    );
+  }
+  // This will trigger a recalculation of the route whenever destinationString or isDisabled changes.
+  updateShowTransportation(true);
+  console.log("Recalculating route; isDisabled:", isDisabled);
+}, [destinationString, isDisabled]);
+
+
 
   //get Campus type from homePage
   const { type } = useLocalSearchParams();
@@ -87,9 +94,7 @@ export default function MapView() {
   const [activeCampus, setActiveCampus] = useState(type || "sgw"); // Default to "sgw" if no type is passed
   const mapRef = useRef(null);
 
-  // Disabled on or off
-  const [isDisabled, setIsDisabled] = useState(false);
-
+  
   // Location & permissions
   const { location, hasPermission } = useLocation();
   const [showPermissionPopup, setShowPermissionPopup] = useState(
@@ -248,9 +253,21 @@ export default function MapView() {
   useEffect(() => {
     try {
       console.log("IN MAP:", destinationText, renderMap);
-      updateOrigin(origin, originText);
-      updateDestination(destination, destinationText);
-      
+      // Ensure "My Position" is dynamically updated from location
+      coordinatesMap["My Position"] = location?.latitude
+        ? { latitude: location.latitude, longitude: location.longitude }
+        : undefined;
+
+      const newOrigin = coordinatesMap[originText] || origin;
+      const newDestination = coordinatesMap[destinationText] || destination;
+
+      if (JSON.stringify(newOrigin) !== JSON.stringify(origin)) {
+        updateOrigin(newOrigin, originText);
+      }
+
+      if (JSON.stringify(newDestination) !== JSON.stringify(destination)) {
+        updateDestination(newDestination, destinationText);
+      }
       
       //these two things above are not what is crashing the app
       if (
@@ -834,7 +851,8 @@ export default function MapView() {
        
        
       {!navigationToMap &&(
-        <StartAndDestinationPoints />
+       <StartAndDestinationPoints isDisabled={isDisabled} setIsDisabled={setIsDisabled} />
+
       )}
       
       
@@ -882,6 +900,7 @@ export default function MapView() {
           {/* Use Directions component to Render route based on navigation type*/}
           { origin && destination && renderMap && (
             <Directions
+              key={isDisabled ? "accessible" : "normal"}
               graph={graph}
               nodeCoordinates={nodeCoordinates}
               startNode={originText}
@@ -894,8 +913,7 @@ export default function MapView() {
               travelMode={travelMode}
               navType={navType}
             />
-          )
-          }
+          )}
 
           {/* Render building polygons */}
           {buildings
@@ -1047,7 +1065,7 @@ export default function MapView() {
         <FloorNavigation
           selectedBuilding={selectedIndoorBuilding}
           selectedFloor={selectedFloor}
-          onChangeFloor={setSelectedFloor}
+          onChangeFloor={updateSelectedFloor}
         />
       )}
 

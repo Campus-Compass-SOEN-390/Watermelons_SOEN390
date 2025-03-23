@@ -189,15 +189,23 @@ export default StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
   },
-  cancelButton: {
+  accessibilityToggle: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",  // Pushes the toggle completely to the right
+    marginBottom: 4,        // A tiny bit of space below the toggle
+  },
+  
+  cancelButtonTopRight: {
+    position: "absolute",
+    top: 10,
+    right: 10,
     fontSize: 26,
     padding: 10,
     alignItems: "center",
     justifyContent: "center",
-    alignSelf: "center", // centers within parent
-    width: "90%",        // or use fixed width like 200
-    marginTop: 10
-  },  
+  },
+   
   modalContainer: {
     flex: 1,
     justifyContent: "center",
