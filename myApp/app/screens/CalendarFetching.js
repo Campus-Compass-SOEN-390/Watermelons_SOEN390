@@ -163,8 +163,8 @@ export default function CalendarFetching() {
         {/* Header */}
         <HeaderButtons />
         {/* Events Scroll */}
-        <ScrollView 
-          contentContainerStyle={{ flexGrow: 1 }} 
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
           enableOnAndroid={true}
           extraScrollHeight={20}
@@ -184,23 +184,29 @@ export default function CalendarFetching() {
                 />
 
                 {/* Calendar History */}
-                {storedCalendarIds.length > 0 && (
-                  <View style={{ marginTop: 10 }}>
-                    <Text style={styles.subtitle}>Calendars History:</Text>
-                    {storedCalendarIds.map((item, index) => (
-                      <TouchableOpacity
-                        key={index}
-                        style={styles.historyItem}
-                        onPress={() => setCalendarId(item.id)}
-                      >
-                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                          <Ionicons name="timer-outline" size={20} color="#888" style={{ marginRight: 6 }} />
-                          <Text style={styles.historyText}>{item.name}</Text>
-                        </View>
-                      </TouchableOpacity>
-                    ))}
+                <View style={{ marginTop: 10 }}>
+                  <Text style={styles.subtitle}>Calendars History:</Text>
+                  <View style={{ height: 100, borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 5 }}>
+                    {storedCalendarIds.length === 0 ? (
+                      <Text style={{ color: '#888', fontStyle: 'italic' }}>No history yet.</Text>
+                    ) : (
+                      <ScrollView>
+                        {storedCalendarIds.map((item, index) => (
+                          <TouchableOpacity
+                            key={index}
+                            style={styles.historyItem}
+                            onPress={() => setCalendarId(item.id)}
+                          >
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                              <Ionicons name="timer-outline" size={20} color="#888" style={{ marginRight: 6 }} />
+                              <Text style={styles.historyText}>{item.name}</Text>
+                            </View>
+                          </TouchableOpacity>
+                        ))}
+                      </ScrollView>
+                    )}
                   </View>
-                )}
+                </View>
 
                 {/* Months Ahead Input */}
                 <View style={{ marginTop: 10 }}>
