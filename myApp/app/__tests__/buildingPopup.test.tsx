@@ -66,4 +66,17 @@ describe("BuildingPopup Component", () => {
 
     expect(mockOnClose).toHaveBeenCalled();
   });
+  
+  it("displays 'No department info' when departments array is empty", () => {
+    const props = {
+      ...defaultProps,
+      building: { ...defaultProps.building, departments: [] },
+    };
+
+    const { getByTestId } = render(<BuildingPopup {...props} />);
+    const deptText = getByTestId("departments-text");
+
+    expect(deptText.children.join("")).toContain("No department info");
+  });
+
 });

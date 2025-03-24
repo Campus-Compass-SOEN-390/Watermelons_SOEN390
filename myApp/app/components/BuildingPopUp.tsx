@@ -88,9 +88,9 @@ export const BuildingPopup: React.FC<BuildingPopupProps> = ({
                   color="#333"
                   style={styles.icon}
                 />
-                <Text style={styles.text}>
+                <Text style={styles.text} testID="departments-text">
                   <Text style={styles.boldLabel}>Departments: </Text>
-                  {building.departments.length > 0
+                  {Array.isArray(building.departments) && building.departments.length > 0
                     ? building.departments.join(", ")
                     : "No department info"}
                 </Text>

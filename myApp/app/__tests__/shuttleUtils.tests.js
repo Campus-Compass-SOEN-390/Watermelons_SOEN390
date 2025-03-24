@@ -1,6 +1,7 @@
 import {
   estimateShuttleTravelTime,
   estimateShuttleFromButton,
+  formatTime,
 } from "../utils/shuttleUtils";
 import { getTravelTimes } from "../api/googleMapsApi";
 import { fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
@@ -136,5 +137,27 @@ describe("estimateShuttleFromButton", () => {
     expect(result.waitTime).toBeGreaterThanOrEqual(0);
     expect(result.shuttleRideTime).toBeGreaterThan(0);
     expect(result.totalTime).toEqual(result.waitTime + result.shuttleRideTime);
+  });
+});
+
+describe("formatTime", () => {
+  test("returns 'Unavailable' for NaN", () => {
+    expect(formatTime(NaN)).toBe("Unavailable");
+  });
+
+  test("returns '0 minutes' for 0", () => {
+    expect(formatTime(0)).toBe("~About 0 minutes");
+  });
+
+  test("formats only minutes correctly", () => {
+    expect(formatTime(5)).toBe("~About 5 minutes");
+  });
+
+  test("formats only hours correctly", () => {
+    expect(formatTime(60)).toBe("~About 1 hr");
+  });
+
+  test("formats both hours and minutes correctly", () => {
+    expect(formatTime(125)).toBe("~About 2 hrs 5 minutes");
   });
 });
