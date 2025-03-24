@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { FONT_SIZE_SMALL, FONT_SIZE_MEDIUM, FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_5, FONT_SIZE_1 } from "./constants";
+import { FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_5, FONT_SIZE_1 } from "./constants";
 
 const styles = StyleSheet.create({
     container: {

@@ -72,3 +72,8 @@ ShuttleInfoPopup.propTypes = {
     totalTime: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }),
 };
+
+// Set default props to avoid null/undefined issues
+ShuttleInfoPopup.defaultProps = {
+  shuttleDetails: null,
+};

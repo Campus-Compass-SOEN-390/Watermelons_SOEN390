@@ -12,6 +12,7 @@ import {
   Modal,
   ScrollView,
   Switch,
+  ActivityIndicator,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import "react-native-get-random-values";
@@ -25,7 +26,6 @@ import TravelFacade from "../utils/TravelFacade";
 import { useIndoorMapContext } from "../context/IndoorMapContext";
 import { parseClassroomLocation } from "../utils/IndoorMapUtils";
 import { buildings } from "../api/buildingData";
-import { useRouter } from "expo-router";
 
 // Define Types
 type Route = {
@@ -66,15 +66,11 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
     originText,
     destinationText,
     showTransportation,
-    renderMap,
     travelMode,
-    navigationToMap,
-    selectedRouteIndex,
     travelTime,
     travelDistance,
-    navType,
   } = useLocationContext();
-  const { selectedFloor, updateSelectedFloor, updateSelectedIndoorBuilding } =
+  const {  updateSelectedFloor, updateSelectedIndoorBuilding } =
     useIndoorMapContext();
   const { location } = useLocation();
   const originRef = useRef<any>(null);
@@ -88,7 +84,6 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
   const [loading, setLoading] = useState(false);
   const [routes, setRoutes] = useState<RouteData[] | null>(null);
   const [showFooter, setShowFooter] = useState(false);
-  const router = useRouter();
 
   //Fetch alternative routes
 
@@ -192,7 +187,6 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
     if (buildingCode && buildingCoordinates[buildingCode]) {
       const coords = buildingCoordinates[buildingCode];
       updateDestination(coords, text);
-      //destination.current?.setAddressText(text);
     } else {
       updateDestination(null, text);
     }
@@ -417,47 +411,54 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
           </TouchableOpacity>
         ) : (
           <View style={styles.buttonContainer}>
-            {[
-              { mode: "driving" as const, icon: "directions-car" as const },
-              { mode: "transit" as const, icon: "directions-bus" as const },
-              { mode: "walking" as const, icon: "directions-walk" as const },
-              { mode: "bicycling" as const, icon: "directions-bike" as const },
-            ].map(({ mode, icon }) => (
-              <TouchableOpacity
-                key={mode}
-                onPress={() => {
-                  if (origin && destination) {
-                    console.log("Get Directions Pressed");
-                    updateRenderMap(true);
-                    updateTravelMode(mode);
-                    updateShowTransportation(true);
-                    setShowFooter(true);
-                  }
-                }}
-                style={[
-                  styles.transportButton,
-                  travelMode === mode && styles.selectedButton,
-                  { flexDirection: "row", alignItems: "center" }, // Added row layout
-                ]}
-              >
-                <MaterialIcons
-                  name={icon}
-                  size={20}
-                  color={travelMode === mode ? "white" : "black"}
-                />
-                <Text
-                  style={{
-                    fontSize: 12,
-                    marginTop: 5,
-                    textAlign: "center",
-                    flexWrap: "wrap",
-                    color: travelMode === mode ? "#fff" : "black",
+            {loading ? (
+              <View style={loadingStyles.loadingContainer}>
+                <ActivityIndicator size="large" color="#922338" />
+                <Text style={loadingStyles.loadingText}>Calculating travel times...</Text>
+              </View>
+            ) : (
+              [
+                { mode: "driving" as const, icon: "directions-car" as const },
+                { mode: "transit" as const, icon: "directions-bus" as const },
+                { mode: "walking" as const, icon: "directions-walk" as const },
+                { mode: "bicycling" as const, icon: "directions-bike" as const },
+              ].map(({ mode, icon }) => (
+                <TouchableOpacity
+                  key={mode}
+                  onPress={() => {
+                    if (origin && destination) {
+                      console.log("Get Directions Pressed");
+                      updateRenderMap(true);
+                      updateTravelMode(mode);
+                      updateShowTransportation(true);
+                      setShowFooter(true);
+                    }
                   }}
+                  style={[
+                    styles.transportButton,
+                    travelMode === mode && styles.selectedButton,
+                    { flexDirection: "row", alignItems: "center" }, // Added row layout
+                  ]}
                 >
-                  {getTravelTimeText(travelTimes, mode)}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <MaterialIcons
+                    name={icon}
+                    size={20}
+                    color={travelMode === mode ? "white" : "black"}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      marginTop: 5,
+                      textAlign: "center",
+                      flexWrap: "wrap",
+                      color: travelMode === mode ? "#fff" : "black",
+                    }}
+                  >
+                    {getTravelTimeText(travelTimes, mode)}
+                  </Text>
+                </TouchableOpacity>
+              ))
+            )}
           </View>
         )}
       </View>
@@ -509,7 +510,12 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
           </TouchableOpacity>
 
           {/* Display Alternative Routes */}
-          {routes && routes.length > 0 ? (
+          {loading ? (
+            <View style={loadingStyles.loadingContainer}>
+              <ActivityIndicator size="large" color="#922338" />
+              <Text style={loadingStyles.loadingText}>Loading routes...</Text>
+            </View>
+          ) : routes && routes.length > 0 ? (
             <View style={styles.routesContainer}>
               {routes
                 .filter((routeData) => routeData.mode === travelMode)
@@ -601,4 +607,20 @@ const myLocationStyles = StyleSheet.create({
     color: "black",
     fontWeight: "bold",
   },
+});
+
+// Define loading container styles locally until they can be moved to the styles file
+const loadingStyles = StyleSheet.create({
+  loadingContainer: {
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 14,
+    color: '#555',
+    textAlign: 'center',
+  }
 });

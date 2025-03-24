@@ -137,7 +137,6 @@ export const calendarFetchingStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     alignSelf: 'center',
-    marginTop: 10,
     position: 'absolute',
     bottom: 10,
   },
