@@ -36,7 +36,11 @@ export const BuildingPopup: React.FC<BuildingPopupProps> = ({
       <View style={styles.overlay}>
         <View style={styles.popup}>
           {/* Close Icon */}
-          <TouchableOpacity onPress={onClose} style={styles.closeIcon}>
+          <TouchableOpacity
+            testID="close-button"
+            onPress={onClose}
+            style={styles.closeIcon}
+          >
             <MaterialIcons name="close" size={20} color="#555" />
           </TouchableOpacity>
 
