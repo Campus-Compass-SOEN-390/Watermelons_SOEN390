@@ -118,15 +118,17 @@ export default StyleSheet.create({
   },
   footerContainer: {
     position: "absolute",
-    flexDirection: "column", // Align items vertically
-    alignItems: "center", // Center items horizontally
-    justifyContent: "flex-start", // Start from the top
-    bottom:
-      Dimensions.get("window").height > 945
-        ? -705
-        : height > 870
-        ? -675
-        : -600,
+
+    bottom: (() => {
+      if (Dimensions.get("window").height > 930) {
+        return -640;
+      } else if (height > 870) {
+        return -585;
+      } else {
+        return -560;
+      }
+    })(),
+
     left: -30,
     right: 0,
     height: 350,
@@ -192,10 +194,10 @@ export default StyleSheet.create({
   accessibilityToggle: {
     flexDirection: "row",
     alignItems: "center",
-    alignSelf: "flex-start",  // Pushes the toggle completely to the right
-    marginBottom: 4,        // A tiny bit of space below the toggle
+    alignSelf: "flex-start", // Pushes the toggle completely to the right
+    marginBottom: 4, // A tiny bit of space below the toggle
   },
-  
+
   cancelButtonTopRight: {
     position: "absolute",
     top: 10,
@@ -205,7 +207,7 @@ export default StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-   
+
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -276,45 +278,42 @@ export default StyleSheet.create({
     color: "gray",
   },
 
+  modeText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "#333",
+  },
 
-    modeText: {
-      fontSize: 18,
-      fontWeight: "bold",
-      marginBottom: 10,
-      color: "#333",
-    },
-
-    routesContainer: {
-      flexDirection: 'column',
-      justifyContent: 'space-around',
-      marginBottom: 10,
-      width: "100%",
-    },
-    routeCard: {
-      backgroundColor: "#f9f9f9",
-      padding: 12,
-      marginVertical: 5,
-      borderRadius: 8,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 3, // for Android shadow
-      width: "100%",
-      flexDirection: 'row',  // Align items horizontally
-      justifyContent: 'space-between', // Space between button and text
-      alignItems: 'center',  // Align items in the center
-    },
-    routeTitle: {
-      fontSize: 16,
-      fontWeight: "bold",
-      marginBottom: 5,
-    },
-    routeDetails: {
-      fontSize: 14,
-      color: "#555",
-      marginBottom: 3,
-    },
-  
-  
+  routesContainer: {
+    flexDirection: "column",
+    justifyContent: "space-around",
+    marginBottom: 10,
+    width: "100%",
+  },
+  routeCard: {
+    backgroundColor: "#f9f9f9",
+    padding: 12,
+    marginVertical: 5,
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3, // for Android shadow
+    width: "100%",
+    flexDirection: "row", // Align items horizontally
+    justifyContent: "space-between", // Space between button and text
+    alignItems: "center", // Align items in the center
+  },
+  routeTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  routeDetails: {
+    fontSize: 14,
+    color: "#555",
+    marginBottom: 3,
+  },
 });

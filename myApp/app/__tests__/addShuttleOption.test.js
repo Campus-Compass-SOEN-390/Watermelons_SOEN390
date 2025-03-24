@@ -55,7 +55,7 @@ describe("addShuttleOption", () => {
         });
         
     
-        haversineDistance.mockReturnValue(4.8);
+        haversineDistance.mockReturnValue(6.4);
     
         const result = await addShuttleOption(origin, destinationLoyola);
     
@@ -64,11 +64,11 @@ describe("addShuttleOption", () => {
                 mode: "driving + Shuttle",
                 duration: 50, // 15 driving + 15 waiting + 20 shuttle
                 summary: "Drive to SGW → Shuttle",
-                distance: "3 km + 4.8 km",
+                distance: "3 km + 6.4 km",
                 coordinates: undefined,
                 steps: [
                     { instruction: "Wait for shuttle at SGW", distance: "0 km", duration: 15 },
-                    { instruction: "Take the shuttle to Loyola", distance: "4.8 km", duration: 20 },
+                    { instruction: "Take the shuttle to Loyola", distance: "6.4 km", duration: 20 },
                 ],
                 details: {
                     waitTime: 5, // original minimum wait mock (just informational)
@@ -81,11 +81,11 @@ describe("addShuttleOption", () => {
                 mode: "walking + Shuttle",
                 duration: 50, // 25 walking + 5 waiting + 20 shuttle
                 summary: "Walk to SGW → Shuttle",
-                distance: "2 km + 4.8 km",
+                distance: "2 km + 6.4 km",
                 coordinates: undefined,
                 steps: [
                     { instruction: "Wait for shuttle at SGW", distance: "0 km", duration: 5 },
-                    { instruction: "Take the shuttle to Loyola", distance: "4.8 km", duration: 20 },
+                    { instruction: "Take the shuttle to Loyola", distance: "6.4 km", duration: 20 },
                 ],
                 details: {
                     waitTime: 5,

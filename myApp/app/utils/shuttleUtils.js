@@ -1,6 +1,4 @@
-
-import { getTravelTimes } from "../api/googleMapsApi";
-import { haversineDistance } from "./distanceShuttle";
+import TravelFacade from "./TravelFacade";
 import { fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
 import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
 
@@ -47,7 +45,9 @@ export const estimateShuttleTravelTime = async (
 
   // Get all possible travel times to the stop
   const travelModes = ["walking", "driving", "transit", "bicycling"];
-  const travelOptions = await getTravelTimes(
+
+  const travelOptions = await TravelFacade.getTravelTimes(
+
     userLocation,
     departureStop,
     travelModes
@@ -85,8 +85,8 @@ export const estimateShuttleTravelTime = async (
   // Estimate shuttle ride duration (40 km/h)
   const shuttleRideTime =
     destinationCampus === "LOY"
-      ? (haversineDistance(sgwStop, loyolaRegion) / 40) * 60
-      : (haversineDistance(loyolaStop, sgwRegion) / 40) * 60;
+      ? (TravelFacade.haversineDistance(sgwStop, loyolaRegion) / 40) * 60
+      : (TravelFacade.haversineDistance(loyolaStop, sgwRegion) / 40) * 60;
 
   if (isNaN(travelTimeToStop) || isNaN(shuttleRideTime)) {
     return null; // Invalid calculation
@@ -148,8 +148,8 @@ export const estimateShuttleFromButton = async (currentStop) => {
 
   const shuttleRideTime =
     currentStop === "SGW"
-      ? (haversineDistance(sgwStop, loyolaRegion) / 40) * 60
-      : (haversineDistance(loyolaStop, sgwRegion) / 40) * 60;
+      ? (TravelFacade.haversineDistance(sgwStop, loyolaRegion) / 40) * 60
+      : (TravelFacade.haversineDistance(loyolaStop, sgwRegion) / 40) * 60;
 
   if (isNaN(shuttleRideTime)) {
     return null; // Invalid calculation
