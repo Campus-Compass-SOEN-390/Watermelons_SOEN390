@@ -1,13 +1,16 @@
+// TravelFacade.test.js
 import TravelFacade from "../utils/TravelFacade";
 import * as googleMapsApi from "../api/googleMapsApi";
 import * as shuttleUtils from "../utils/shuttleUtils";
 import * as shuttleOption from "../utils/addShuttleOption";
+import * as distanceShuttle from "../utils/distanceShuttle";
 import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
 
 // Mock all dependencies
 jest.mock("../api/googleMapsApi");
 jest.mock("../utils/shuttleUtils");
 jest.mock("../utils/addShuttleOption");
+jest.mock("../utils/distanceShuttle");
 
 // Sample test data
 const sampleOrigin = { latitude: 45.495304, longitude: -73.578468 }; // Downtown
@@ -82,6 +85,10 @@ describe("TravelFacade", () => {
         details: sampleShuttleResponse,
       },
     ]);
+
+    // Setup mocks for distance functions
+    distanceShuttle.haversineDistance.mockReturnValue(6.4);
+    distanceShuttle.findNearestLocation.mockReturnValue(TravelFacade.sgwStop);
   });
 
   // Test for static shuttle stop properties
@@ -185,30 +192,20 @@ describe("TravelFacade", () => {
   });
 
   // Tests for utility methods
-  test("haversineDistance calculates correct distance", () => {
-    // The actual calculated distance between SGW and Loyola stops is around 6.41 km
-    // Adjust expected distance to match the actual calculation
-    const expectedDistance = 6.4; // km (approximate)
-    const tolerance = 0.5; // km
-
+  test("haversineDistance calls the imported function with correct parameters", () => {
     const result = TravelFacade.haversineDistance(
       TravelFacade.sgwStop,
       TravelFacade.loyolaStop
     );
 
-    // Verify the result is within expected range
-    expect(result).toBeGreaterThanOrEqual(expectedDistance - tolerance);
-    expect(result).toBeLessThanOrEqual(expectedDistance + tolerance);
-
-    // Also verify that the function calculates consistently
-    const reversedResult = TravelFacade.haversineDistance(
-      TravelFacade.loyolaStop,
-      TravelFacade.sgwStop
+    expect(distanceShuttle.haversineDistance).toHaveBeenCalledWith(
+      TravelFacade.sgwStop,
+      TravelFacade.loyolaStop
     );
-    expect(reversedResult).toEqual(result); // Distance should be the same in either direction
+    expect(result).toBe(6.4);
   });
 
-  test("findNearestLocation finds the correct location", () => {
+  test("findNearestLocation calls the imported function with correct parameters", () => {
     const currentLocation = { latitude: 45.496, longitude: -73.577 }; // Close to SGW
     const locations = [
       TravelFacade.sgwStop,
@@ -218,6 +215,10 @@ describe("TravelFacade", () => {
 
     const result = TravelFacade.findNearestLocation(currentLocation, locations);
 
+    expect(distanceShuttle.findNearestLocation).toHaveBeenCalledWith(
+      currentLocation,
+      locations
+    );
     expect(result).toEqual(TravelFacade.sgwStop);
   });
 
@@ -254,6 +255,18 @@ describe("TravelFacade", () => {
     expect(TravelFacade.determineCampus(inSGW)).toBe("SGW");
     expect(TravelFacade.determineCampus(inLoyola)).toBe("LOY");
     expect(TravelFacade.determineCampus(outsideCampus)).toBeNull();
+  });
+
+  test("getDirectShuttleTime uses imported haversineDistance function", () => {
+    const result = TravelFacade.getDirectShuttleTime();
+
+    expect(distanceShuttle.haversineDistance).toHaveBeenCalledWith(
+      TravelFacade.sgwStop,
+      TravelFacade.loyolaStop
+    );
+
+    // 6.4 km at 40 km/h = 0.16 hours = 9.6 minutes
+    expect(result).toBe(9.6);
   });
 
   // Tests for comprehensive methods
@@ -409,19 +422,6 @@ describe("TravelFacade", () => {
         duration: null,
       },
     ]);
-  });
-
-  test("getDirectShuttleTime calculates correct shuttle time", () => {
-    // Mock the haversineDistance method
-    jest.spyOn(TravelFacade, "haversineDistance").mockReturnValueOnce(8);
-
-    const result = TravelFacade.getDirectShuttleTime();
-
-    // 8 km at 40 km/h = 0.2 hours = 12 minutes
-    expect(result).toBe(12);
-
-    // Restore the original implementation
-    TravelFacade.haversineDistance.mockRestore();
   });
 
   // Test for error handling
