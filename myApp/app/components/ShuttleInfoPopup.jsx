@@ -72,3 +72,5 @@ ShuttleInfoPopup.propTypes = {
     totalTime: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }),
 };
+
+
