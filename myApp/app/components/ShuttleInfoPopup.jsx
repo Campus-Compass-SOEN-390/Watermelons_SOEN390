@@ -4,7 +4,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { shuttlePopupStyles } from "../styles/shuttlePopupStyles";
 import PropTypes from "prop-types"; // Import PropTypes for validation
 
-export default function ShuttleInfoPopup({ visible, onClose, shuttleDetails }) {
+export default function ShuttleInfoPopup({ visible, onClose, shuttleDetails = null }) {
   console.log("ShuttleInfoPopup received visible:", visible);
 
   // Extract nested ternary into a function
