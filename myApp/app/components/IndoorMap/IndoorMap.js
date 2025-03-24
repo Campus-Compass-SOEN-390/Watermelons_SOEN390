@@ -1,32 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Mapbox from "@rnmapbox/maps";
 import Constants from "expo-constants";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+import finalMapData from "../../../assets/floorplans/finalMap.json";
 
 const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
-  const [geoJsonData, setGeoJsonData] = useState(null);
-  const MAPBOX_ACCESS_TOKEN = Constants.expoConfig?.extra?.mapbox;
-  const DATASET_ID = "cm7qjtnoy2d3o1qmmngcrv0jl";
+  const [geoJsonData, setGeoJsonData] = useState({
+    type: "FeatureCollection",
+    features: [],
+  });
 
   useEffect(() => {
-    const fetchGeoJson = async () => {
-      try {
-        const response = await fetch(
-          `https://api.mapbox.com/datasets/v1/7anine/${DATASET_ID}/features?access_token=${MAPBOX_ACCESS_TOKEN}`
-        );
-        if (!response.ok)
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        const data = await response.json();
-        setGeoJsonData(data);
-      } catch (error) {
-        console.error("Error fetching GeoJSON:", error);
-      }
-    };
-
-    fetchGeoJson();
+    Mapbox.setAccessToken(Constants.expoConfig?.extra?.mapbox);
+    setGeoJsonData(finalMapData);
   }, []);
 
-  if (!geoJsonData) return null;
+  if (!geoJsonData.features.length) {
+    return <Mapbox.ShapeSource id="indoor-map" testID="indoor-map" shape={{ type: "FeatureCollection", features: [] }} />;
+  }  
 
   // Filter features: selected floor for the selected building + first floors of other buildings
   const filteredGeoJson = {
@@ -47,13 +38,14 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
   };
 
   return (
-    <Mapbox.ShapeSource id="indoor-map" shape={filteredGeoJson}>
-      {/* Room Fill Layer (Polygon & MultiPolygon) */}
+    <Mapbox.ShapeSource id="indoor-map" testID="indoor-map" shape={filteredGeoJson}>
+      {/* Room Fill Layer */}
       <Mapbox.FillLayer
         id="room-fill-layer"
+        testID="room-fill-layer"
         sourceID="indoor-map"
         style={{
-          fillColor: "red",
+          fillColor: "#922338",
           fillOpacity: 0.2,
         }}
         filter={[
@@ -67,9 +59,10 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
       {/* Room Outline */}
       <Mapbox.LineLayer
         id="room-line-layer"
+        testID="room-line-layer"
         sourceID="indoor-map"
         style={{
-          lineColor: "red",
+          lineColor: "#922338",
           lineWidth: 2,
           lineOpacity: 1.0,
         }}
@@ -81,9 +74,10 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         minZoomLevel={18}
       />
 
-      {/* Pathways (LineString & MultiLineString) */}
+      {/* Pathways */}
       <Mapbox.LineLayer
         id="path-line-layer"
+        testID="path-line-layer"
         sourceID="indoor-map"
         style={{
           lineColor: "black",
@@ -92,59 +86,76 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         }}
         filter={[
           "any",
-          ["==", ["geometry-type"], "LineString"],
-          ["==", ["geometry-type"], "MultiLineString"],
           ["==", ["get", "type"], "Paths"],
         ]}
         minZoomLevel={18}
       />
 
-      {/* Walls (LineString & MultiLineString) */}
+      {/* Walls */}
       <Mapbox.LineLayer
         id="wall-line-layer"
+        testID="wall-line-layer"
         sourceID="indoor-map"
         style={{
-          lineColor: "red",
+          lineColor: "#922338",
           lineWidth: 2,
           lineOpacity: 1.0,
         }}
         filter={[
           "any",
-          ["==", ["geometry-type"], "LineString"],
-          ["==", ["geometry-type"], "MultiLineString"],
           ["==", ["get", "type"], "Walls"],
         ]}
         minZoomLevel={18}
       />
 
-      {/* Labels for Doors & Points of Interest (Only for Points) */}
+      {/* Labels for Doors */}
       <Mapbox.SymbolLayer
-  id="door-text-layer"
-  sourceID="indoor-map"
-  style={{
-    textField: ["coalesce", ["get", "name"], "Unnamed"], // Fallback for missing names
-    textSize: 14,
-    textColor: "black",
-    textHaloColor: "white",
-    textHaloWidth: 1,
-  }}
-  filter={[
-    "all",
-    ["==", ["geometry-type"], "Point"], 
-    ["==", ["get", "floor"], Number(selectedFloor)] 
-  ]}
-  minZoomLevel={18}
-/>
+        id="door-text-layer"
+        testID="door-text-layer"
+        sourceID="indoor-map"
+        style={{
+          textField: ["coalesce", ["get", "id"], "Unnamed"],
+          textSize: 14,
+          textColor: "black",
+          textHaloColor: "white",
+          textHaloWidth: 1,
+        }}
+        filter={[
+          "any",
+          ["==", ["get", "type"], "Door"],
+          ["==", ["get", "type"], "Doors"],
+        ]}
+        minZoomLevel={18}
+      />
 
-
+      {/* Labels for POIs */}
+      <Mapbox.SymbolLayer
+        id="poi-text-layer"
+        testID="poi-text-layer"
+        sourceID="indoor-map"
+        style={{
+          textField: ["coalesce", ["get", "name"], "Unnamed"],
+          textSize: 14,
+          textColor: "black",
+          textHaloColor: "white",
+          textHaloWidth: 1,
+        }}
+        filter={[
+          "any",
+          ["==", ["get", "type"], "Point of Interest"],
+          ["==", ["get", "type"], "Points of Interest"],
+        ]}
+        minZoomLevel={18}
+      />
     </Mapbox.ShapeSource>
   );
 };
+
 IndoorMap.propTypes = {
   selectedBuilding: PropTypes.shape({
     name: PropTypes.string.isRequired,
   }),
-  selectedFloor: PropTypes.string
+  selectedFloor: PropTypes.number,
 };
 
 export default IndoorMap;

@@ -1,7 +1,5 @@
-import React from "react";
-import { getGoogleTravelTime, getTravelTimes } from "../api/googleMapsApi";
-import { findNearestLocation, haversineDistance } from "./distanceShuttle";
-import { fetchShuttleInfo, fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
+import TravelFacade from "./TravelFacade";
+import { fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
 import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
 
 /**
@@ -10,7 +8,10 @@ import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
  * @param {string} destinationCampus - "LOY" or "SGW"
  * @returns {Promise<number|null|{error:string}>}
  */
-export const estimateShuttleTravelTime = async (userLocation, destinationCampus) => {
+export const estimateShuttleTravelTime = async (
+  userLocation,
+  destinationCampus
+) => {
   const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
   const now = new Date();
   const currentTime = now.getHours() * 60 + now.getMinutes();
@@ -55,8 +56,8 @@ export const estimateShuttleTravelTime = async (userLocation, destinationCampus)
 
   const shuttleRideTime =
     destinationCampus === "LOY"
-      ? (haversineDistance(sgwStop, loyolaRegion) / 40) * 60
-      : (haversineDistance(loyolaStop, sgwRegion) / 40) * 60;
+      ? (TravelFacade.haversineDistance(sgwStop, loyolaRegion) / 40) * 60
+      : (TravelFacade.haversineDistance(loyolaStop, sgwRegion) / 40) * 60;
 
   if (isNaN(travelTimeToStop) || isNaN(shuttleRideTime)) return null;
 
@@ -81,7 +82,6 @@ export const estimateShuttleFromButton = async (currentStop) => {
   if (!schedule) return null;
 
   const stopKey = currentStop === "SGW" ? "SGW" : "LOY";
-  const destination = currentStop === "SGW" ? "LOY" : "SGW";
 
   const stopSchedule = schedule[stopKey]?.map((time) => {
     const [hours, minutes] = time.split(":").map(Number);
@@ -104,8 +104,8 @@ export const estimateShuttleFromButton = async (currentStop) => {
 
   const shuttleRideTime =
     currentStop === "SGW"
-      ? (haversineDistance(sgwStop, loyolaRegion) / 40) * 60
-      : (haversineDistance(loyolaStop, sgwRegion) / 40) * 60;
+      ? (TravelFacade.haversineDistance(sgwStop, loyolaRegion) / 40) * 60
+      : (TravelFacade.haversineDistance(loyolaStop, sgwRegion) / 40) * 60;
 
   if (isNaN(shuttleRideTime)) return null;
 

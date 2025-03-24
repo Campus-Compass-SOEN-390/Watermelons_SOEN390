@@ -801,7 +801,7 @@ export const buildings: Building[] = [
   },
   {
     id: "sgw21",
-    name: "JMSB",
+    name: "MB",
     longName: "John Molson School of Business",
     openHours: "Monday - Sunday: 7:00 AM - 11:00 PM",
     wheelchairAccessible: true,
@@ -828,7 +828,7 @@ export const buildings: Building[] = [
       { latitude: 45.49519965068126, longitude: -73.57846505866647 },
     ],
     
-    floors: ["1", "2"]
+    floors: ["1", "-2"]
   },
   {
     id: "sgw22",

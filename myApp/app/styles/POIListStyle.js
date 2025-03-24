@@ -1,6 +1,5 @@
-import { StyleSheet, Dimensions } from "react-native";
-
-const { width, height } = Dimensions.get("window");
+import { StyleSheet } from "react-native";
+import { FONT_SIZE_1, FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4 } from "./constants";
 
 export const styles = StyleSheet.create({
   container: {
@@ -86,7 +85,7 @@ export const styles = StyleSheet.create({
   },
   noImageText: {
     color: "#888",
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     marginTop: 8,
   },
   poiHeader: {
@@ -96,19 +95,19 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
   poiName: {
-    fontSize: 18,
+    fontSize: FONT_SIZE_4,
     fontWeight: "bold",
     flex: 1,
     color: "#333",
   },
   poiDistance: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     color: "#666",
     marginLeft: 10,
     fontWeight: "500",
   },
   poiAddress: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     color: "#666",
     marginTop: 5,
     marginBottom: 10,
@@ -134,7 +133,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "#BBDEFB", // Light blue
   },
   categoryText: {
-    fontSize: 12,
+    fontSize: FONT_SIZE_1,
     fontWeight: "600",
   },
   loadingContainer: {
@@ -146,7 +145,7 @@ export const styles = StyleSheet.create({
   loadingText: {
     marginTop: 10,
     color: "#666",
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
   },
   noResultsContainer: {
     flex: 1,
@@ -155,13 +154,13 @@ export const styles = StyleSheet.create({
     padding: 20,
   },
   noResultsText: {
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     color: "#666",
     textAlign: "center",
     lineHeight: 22,
   },
   errorText: {
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     color: "#922338", // Updated to app's theme
     textAlign: "center",
     padding: 20,
@@ -177,7 +176,7 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
   },
   ratingText: {
-    fontSize: 12,
+    fontSize: FONT_SIZE_1,
     fontWeight: "bold",
     marginLeft: 3,
     color: "#FF8F00",
@@ -202,6 +201,6 @@ export const styles = StyleSheet.create({
     color: "white",
     fontWeight: "600",
     marginLeft: 8,
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
   },
 });
