@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useRouter } from 'expo-router';
-import { homepageStyles as styles } from '../styles/HomePageStyles.js'
+import { homepageStyles as styles } from '../styles/HomePageStyles.js';
 
 export default function HomePage() {
    
@@ -48,33 +48,23 @@ export default function HomePage() {
                         <Text style={styles.buttonText}>Interest Points</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity 
-                    style={styles.buttonOrange}
-                    testID="directionButton"
-                    >
-                        <Text style={styles.buttonText}>Directions to my next class</Text>
-                    </TouchableOpacity>
-                </View>
             </View>
             <View style={styles.buttonsContainer}>
-                <Text style={styles.title}>Link your account</Text>
+                <Text style={styles.title}>View My Calendar</Text>
                  <View style={styles.buttonContainer}>
                     <TouchableOpacity 
                     style={styles.googleButton}
                     testID="calendarfetchbutton"
-                    onPress={() => router.push('/screens/CalendarFetching')}
+                    onPress={() => router.push('screens/CalendarFetching')}
                     >
                          <Image
                             source={require('../../assets/images/google_logo.png')}
                             style={styles.icon}
                             testID="googleIcon"
                         />
-                        <Text style={styles.buttonText}>Fetch Calendars</Text>
+                        <Text style={styles.buttonText}>Connect Calendars</Text>
                     </TouchableOpacity>
                 </View>
-               
-               
             </View>
         </View>
     );

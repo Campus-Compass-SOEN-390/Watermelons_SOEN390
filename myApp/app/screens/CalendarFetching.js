@@ -1,28 +1,45 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { 
-  View, Image, Text, TextInput, TouchableOpacity, 
-  FlatList, Alert, Modal, ActivityIndicator 
+import {
+  View,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  Alert,
+  Modal,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  ScrollView,
 } from "react-native";
 import Constants from "expo-constants";
-import { KeyboardAvoidingView, ScrollView } from "react-native";
 import { calendarFetchingStyles as styles } from "../styles/CalendarFetchingStyles.js";
 import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
+import * as FileSystem from "expo-file-system";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
+import LayoutWrapper from "../components/LayoutWrapper.js";
+import HeaderButtons from "../components/HeaderButtons.js";
+import MonthPicker from '../components/MonthPicker';
+
+
 
 export default function CalendarFetching() {
   const navigation = useNavigation();
+  const router = useRouter();
 
-  // Declare all state variables
   const [calendarId, setCalendarId] = useState("");
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-
-  // **Add showSuccessScreen here**:
   const [showSuccessScreen, setShowSuccessScreen] = useState(false);
+  // Allows the storage of calendar id history for future selection
+  const [storedCalendarIds, setStoredCalendarIds] = useState([]);
+  const [monthsAhead, setMonthsAhead] = useState("1"); // default 1 month
 
   const API_KEY = process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
 
-  // Fetch events
   const fetchCalendarEvents = useCallback(async () => {
     if (!calendarId.trim()) {
       Alert.alert("Invalid", "Please enter a valid Calendar ID");
@@ -31,7 +48,15 @@ export default function CalendarFetching() {
 
     setLoading(true);
 
-    const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${API_KEY}`;
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    const timeMin = oneMonthAgo.toISOString();
+    const futureDate = new Date();
+    futureDate.setMonth(futureDate.getMonth() + parseInt(monthsAhead || "1"));
+    const timeMax = futureDate.toISOString();
+
+    const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
+
     try {
       let response = await fetch(url);
       let data = await response.json();
@@ -41,14 +66,44 @@ export default function CalendarFetching() {
       } else {
         if (data.items) {
           setEvents(data.items);
-          // 3) Trigger success screen
+
+          // Keeps track of each calendar's events
+          const csvContent = convertEventsToCSV(data.items, data.summary);
+          const fileUri = FileSystem.documentDirectory + "calendar_events.csv";
+
+          // All events are stored in a CSV file
+          await FileSystem.writeAsStringAsync(fileUri, csvContent);
+          console.log("CSV saved to:", fileUri);
+
+          // Save calendar id if not already in store
+          try {
+
+            if (!calendarId || !data.summary) return;
+            // Display as unlabelled calendar if no name found for it
+            const newEntry = { id: calendarId, name: data.summary || "Unlabelled Calendar" };
+            const existingEntries = [...storedCalendarIds];
+
+            // Check if the entry already exists
+            const isDuplicate = existingEntries.some(entry => entry.id === calendarId);
+
+            // Ensure new entry is not a duplicate by verifying the ID not the calendar name
+            if (!isDuplicate) {
+              const updatedCalendarIds = [newEntry, ...existingEntries];
+              setStoredCalendarIds(updatedCalendarIds);
+              await AsyncStorage.setItem("calendarIds", JSON.stringify(updatedCalendarIds));
+            }
+          } catch (err) {
+            console.error("Failed to save calendar ID and name", err);
+          }
+
           setShowSuccessScreen(true);
         } else {
           setEvents([]);
           Alert.alert("No Events", "No upcoming events found.");
         }
       }
-      console.log("API Response:", data); // Debug
+
+      console.log("API Response:", data);
     } catch (error) {
       console.error("Error fetching calendar events:", error);
       Alert.alert("Error", "Something went wrong while fetching the events.");
@@ -57,25 +112,39 @@ export default function CalendarFetching() {
     setLoading(false);
   }, [calendarId, API_KEY]);
 
-  // Navigate after success
+  // Redirect user to events page upon successful entry of a calendar id
   useEffect(() => {
     if (showSuccessScreen) {
       const timer = setTimeout(() => {
-        // Navigate to the desired screen after 5 seconds
-        navigation.navigate("Events");
-      }, 5000);
+        router.push("../screens/CalendarSchedulePage");
+      }, 2000);
 
       return () => clearTimeout(timer);
     }
   }, [showSuccessScreen, navigation]);
 
-  // 5) Conditional rendering for success screen
+  // Allows the display of calendar history
+  useEffect(() => {
+    const loadStoredCalendarIds = async () => {
+      try {
+        const stored = await AsyncStorage.getItem('calendarIds');
+        if (stored) {
+          setStoredCalendarIds(JSON.parse(stored));
+        }
+      } catch (error) {
+        console.error("Error loading stored calendar IDs", error);
+      }
+    };
+
+    loadStoredCalendarIds();
+  }, []);
+
   if (showSuccessScreen) {
     return (
       <View style={styles.successContainer}>
         <Image
           style={styles.logo}
-          source={require('../../assets/images/logo.png')}
+          source={require("../../assets/images/logo.png")}
           resizeMode="contain"
           testID="logo"
         />
@@ -83,45 +152,123 @@ export default function CalendarFetching() {
           Successful Connection to Google Calendar ID: {calendarId}
         </Text>
         <ActivityIndicator size="large" style={{ marginVertical: 20 }} />
-        <Text style={styles.successSubtitle}>
-          Redirecting to Events Page...
-        </Text>
+        <Text style={styles.successSubtitle}>Redirecting to Events Page...</Text>
       </View>
     );
   }
 
-  // Default screen rendering
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={20}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-         {/* Back Button positioned above the container */}
-         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backButtonText}>Back</Text>
-        </TouchableOpacity>
-        <View style={styles.container}>
-          <View style={styles.redContainer}>
-            <View style={styles.whiteContainer}>
-              <Text style={styles.title}>Enter your Google Calendar ID</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Paste Calendar ID here"
-                value={calendarId}
-                onChangeText={setCalendarId}
-                placeholderTextColor="#666"
-              />
-              <TouchableOpacity
-                style={styles.connectButton}
-                onPress={fetchCalendarEvents}
-                disabled={loading}
-              >
-                <Text style={styles.buttonText}>
-                  {loading ? "Connecting..." : "Connect"}
-                </Text>
-              </TouchableOpacity>
+      <LayoutWrapper>
+        {/* Header */}
+        <HeaderButtons />
+        {/* Events Scroll */}
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          enableOnAndroid={true}
+          extraScrollHeight={20}
+        >
+
+          <View style={styles.container}>
+            <View style={styles.redContainer}>
+              <View style={styles.whiteContainer}>
+                {/* Calendar ID Input */}
+                <Text style={styles.title}>Enter your Google Calendar ID</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Paste Calendar ID here"
+                  value={calendarId}
+                  onChangeText={setCalendarId}
+                  placeholderTextColor="#666"
+                />
+
+                {/* Calendar History */}
+                <View style={{ marginTop: 10 }}>
+                  <Text style={styles.subtitle}>Calendars History:</Text>
+                  <View style={{ height: 100, borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 5 }}>
+                    {storedCalendarIds.length === 0 ? (
+                      <Text style={{ color: '#888', fontStyle: 'italic' }}>No history yet.</Text>
+                    ) : (
+                      <ScrollView>
+                        {storedCalendarIds.map((item, index) => (
+                          <TouchableOpacity
+                            key={index}
+                            style={styles.historyItem}
+                            onPress={() => setCalendarId(item.id)}
+                          >
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                              <Ionicons name="timer-outline" size={20} color="#888" style={{ marginRight: 6 }} />
+                              <Text style={styles.historyText}>{item.name}</Text>
+                            </View>
+                          </TouchableOpacity>
+                        ))}
+                      </ScrollView>
+                    )}
+                  </View>
+                </View>
+
+                {/* Months Ahead Input */}
+                <View style={{ marginTop: 10 }}>
+                  <MonthPicker
+                    monthsAhead={monthsAhead}
+                    setMonthsAhead={setMonthsAhead}
+                    styles={styles}
+                  />
+                </View>
+
+                {/* Connect Button */}
+                <TouchableOpacity
+                  style={styles.connectButton}
+                  onPress={fetchCalendarEvents}
+                  disabled={loading}
+                >
+                  <Text style={styles.buttonText}>
+                    {loading ? "Connecting..." : "Connect"}
+                  </Text>
+                </TouchableOpacity>
+
+                {/* Clear History Button */}
+                <TouchableOpacity
+                  style={styles.clearHistoryButton}
+                  onPress={async () => {
+                    try {
+                      await AsyncStorage.removeItem("calendarIds");
+                      setStoredCalendarIds([]);
+                    } catch (err) {
+                      console.error("Failed to clear calendar history", err);
+                    }
+                  }}
+                >
+                  <Ionicons name="trash-outline" size={10} color="#888" style={{ marginRight: 6 }} />
+                  <Text style={styles.clearHistoryText}>Clear History</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </LayoutWrapper>
     </KeyboardAvoidingView>
   );
 }
+
+// Helper function to store events in a CSV file
+const convertEventsToCSV = (events) => {
+  const headers = ["Title", "Start", "End", "Location", "CalendarID"];
+
+  const rows = events.map(event => [
+    event.summary || "No Title",
+    event.start?.dateTime || event.start?.date || "",
+    event.end?.dateTime || event.end?.date || "",
+    event.location || "",
+    event.htmlLink || ""
+  ]);
+
+  const csvContent = [
+    headers.join(","),
+    ...rows.map(row => row.join(","))
+  ].join("\n");
+
+  return csvContent;
+
+};

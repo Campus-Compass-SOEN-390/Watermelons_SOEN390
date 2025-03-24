@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4 } from "./constants";
 const { width, height } = Dimensions.get("window");
 
 export default StyleSheet.create({
@@ -43,7 +44,7 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   label: {
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     fontWeight: "bold",
     width: 50,
     textAlign: "right",
@@ -105,43 +106,42 @@ export default StyleSheet.create({
     shadowColor: "black",
   },
   buttonText: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     color: "black",
   },
   buttonContainer: {
     flexDirection: "row",
+    flexWrap: "wrap",
     justifyContent: "space-between",
     paddingHorizontal: 10,
     marginTop: 10,
   },
   footerContainer: {
     position: "absolute",
-    bottom: (() => {
-      if (Dimensions.get("window").height > 930) {
-        return -640;
-      } else if (height > 870) {
-        return -585;
-      } else {
-        return -560;
-      }
-    })(),
+    flexDirection: "column", // Align items vertically
+    alignItems: "center", // Center items horizontally
+    justifyContent: "flex-start", // Start from the top
+    bottom:
+      Dimensions.get("window").height > 945
+        ? -705
+        : height > 870
+        ? -675
+        : -600,
     left: -30,
     right: 0,
-    height: 120,
+    height: 350,
     width: width * 1,
     marginHorizontal: "2.5%",
     backgroundColor: "#ffffff",
     shadowColor: "#000",
-    flexDirection: "row",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
     paddingVertical: 12,
     paddingHorizontal: 18,
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: "flex-start", // Ensure content starts from top
     elevation: 5,
-    zIndex: 5,
+    zIndex: 999, // Ensures it's on top of other elements
   },
   footerButton: {
     flex: 1,
@@ -173,6 +173,7 @@ export default StyleSheet.create({
     backgroundColor: "#393a41",
     padding: 10,
     paddingHorizontal: 20,
+    width: "100%",
     borderRadius: 10,
   },
   favoriteButton: {
@@ -182,18 +183,29 @@ export default StyleSheet.create({
     borderRadius: 10,
   },
   etaText: {
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     color: "#333",
     marginBottom: 5,
     textAlign: "center",
     fontWeight: "bold",
   },
-  cancelButton: {
+  accessibilityToggle: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",  // Pushes the toggle completely to the right
+    marginBottom: 4,        // A tiny bit of space below the toggle
+  },
+  
+  cancelButtonTopRight: {
+    position: "absolute",
+    top: 10,
+    right: 10,
     fontSize: 26,
     padding: 10,
     alignItems: "center",
     justifyContent: "center",
   },
+   
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -212,12 +224,12 @@ export default StyleSheet.create({
     shadowRadius: 3,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: FONT_SIZE_4,
     fontWeight: "bold",
     marginBottom: 10,
   },
   modalText: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     textAlign: "center",
     marginBottom: 15,
   },
@@ -233,12 +245,15 @@ export default StyleSheet.create({
   closeButtonText: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
   },
   transportButton: {
     padding: 10,
     borderRadius: 8,
     backgroundColor: "#eee",
+    width: 70,
+    alignItems: "center",
+    justifyContent: "center",
   },
   selectedButton: {
     backgroundColor: "#922338",
@@ -253,11 +268,53 @@ export default StyleSheet.create({
     borderBottomColor: "#ddd",
   },
   stepText: {
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     fontWeight: "bold",
   },
   stepDistance: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     color: "gray",
   },
+
+
+    modeText: {
+      fontSize: 18,
+      fontWeight: "bold",
+      marginBottom: 10,
+      color: "#333",
+    },
+
+    routesContainer: {
+      flexDirection: 'column',
+      justifyContent: 'space-around',
+      marginBottom: 10,
+      width: "100%",
+    },
+    routeCard: {
+      backgroundColor: "#f9f9f9",
+      padding: 12,
+      marginVertical: 5,
+      borderRadius: 8,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3, // for Android shadow
+      width: "100%",
+      flexDirection: 'row',  // Align items horizontally
+      justifyContent: 'space-between', // Space between button and text
+      alignItems: 'center',  // Align items in the center
+    },
+    routeTitle: {
+      fontSize: 16,
+      fontWeight: "bold",
+      marginBottom: 5,
+    },
+    routeDetails: {
+      fontSize: 14,
+      color: "#555",
+      marginBottom: 3,
+    },
+  
+  
 });

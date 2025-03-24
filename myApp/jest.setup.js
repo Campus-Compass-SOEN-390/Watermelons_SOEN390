@@ -16,3 +16,4 @@ jest.mock('@expo/vector-icons', () => ({
 jest.mock('expo-font', () => ({
     loadAsync: jest.fn(),
 }));
+
