@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for app/constants/outdoorMap.jsx</title>
+    <title>Code coverage report for app/components/MonthPicker.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">app/constants</a> outdoorMap.jsx</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">app/components</a> MonthPicker.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
@@ -110,21 +110,13 @@
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
 <a name='L47'></a><a href='#L47'>47</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -135,9 +127,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -155,53 +149,59 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//Campus regions
-export const sgwRegion = {
-    latitude: 45.4951962,
-    longitude: -73.5792229,
-    latitudeDelta: 0.005,
-    longitudeDelta: 0.005,
-  };
-export const loyolaRegion = {
-    latitude: 45.4581281,
-    longitude: -73.6417009,
-    latitudeDelta: 0.005,
-    longitudeDelta: 0.005,
-  };
-  //Coordinates for shuttle from SGW to Loyola. Need to be updated with proper coordinates. Also, need to add ones for loyola to SGW.
-  //Note that here for mapbox it is longitude first, and the latitude. So, the reverse of google maps
-export const SGWtoLoyola = {
-    type: "Feature",
-    properties: {},
-    geometry: {
-      type: "LineString",
-      coordinates: [
-        [-73.57849, 45.49706],
-        [-73.57926, 45.49598], 
-        [-73.57929, 45.49567],
-        [-73.5817, 45.49361],
-        [-73.57752, 45.49113],
-        [-73.57703, 45.49031],
-        [-73.57718, 45.48926],
-        [-73.59379, 45.47847],
-        [-73.59624, 45.47457], 
-        [-73.59759, 45.47338],
-        [-73.59856, 45.47311],
-        [-73.60328, 45.4696],
-        [-73.60533, 45.46872],
-        [-73.60716, 45.46741],
-        [-73.60989, 45.46663],
-        [-73.61212, 45.4655],
-        [-73.61413, 45.46513],
-        [-73.61774, 45.46328],
-        [-73.62239, 45.46232],
-        [-73.62399, 45.46158],
-        [-73.62893, 45.46368],
-        [-73.63701, 45.45937],
-        [-73.63882, 45.45789],
-      ],
-    },
-  };</pre></td></tr></table></pre>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState, useEffect } from "react";
+import DropDownPicker from "react-native-dropdown-picker";
+import { View, Text } from "react-native";
+&nbsp;
+const MonthPicker = ({ monthsAhead, setMonthsAhead, styles }) =&gt; {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(monthsAhead);
+  const [items, setItems] = useState([
+    { label: "1 Month", value: "1" },
+    { label: "2 Months", value: "2" },
+    { label: "3 Months", value: "3" },
+    { label: "4 Months", value: "4" },
+    { label: "5 Months", value: "5" },
+    { label: "6 Months", value: "6" },
+    { label: "All Events", value: "all" },
+  ]);
+&nbsp;
+  // Update parent state when dropdown changes
+  useEffect(() =&gt; {
+    setMonthsAhead(value);
+  }, [value]);
+&nbsp;
+  return (
+    &lt;View style={{ zIndex: 1000, marginBottom: open ? <span class="branch-0 cbranch-no" title="branch not covered" >160 </span>: 30 }}&gt;
+      &lt;Text style={styles.subtitle}&gt;Show events for the upcoming:&lt;/Text&gt;
+      &lt;DropDownPicker
+        open={open}
+        value={value}
+        items={items}
+        setOpen={setOpen}
+        setValue={setValue}
+        setItems={setItems}
+        placeholder="Select a time range"
+        style={{
+          borderColor: "#ccc",
+          backgroundColor: "#fff",
+        }}
+        dropDownContainerStyle={{
+          borderColor: "#ccc",
+        }}
+      /&gt;
+    &lt;/View&gt;
+  );
+};
+&nbsp;
+export default MonthPicker;
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
