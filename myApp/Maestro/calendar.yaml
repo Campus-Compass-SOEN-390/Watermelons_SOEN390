@@ -1,0 +1,24 @@
+
+appId: com.anonymous.myApp  
+---
+- launchApp
+
+- tapOn:
+    id: "calendarfetchbutton"
+
+# Tap on the TEXT field and enter CALENDAR ID
+- tapOn: "Paste Calendar ID here"
+- inputText: "72c3dca7524a2eea4a471f6abef09e6bca9e564db537cc9e95e67b7bbf4be4e1@group.calendar.google.com"
+- tapOn: "Connect"
+
+- tapOn: ""
+- tapOn: ""
+- tapOn:
+    id: "get-directions-button"
+#go back home
+- tapOn: ""
+
+- tapOn:
+    id: "calendarfetchbutton"
+- tapOn: " CampusCompasTestCalendar"
+- tapOn: "Connect"
