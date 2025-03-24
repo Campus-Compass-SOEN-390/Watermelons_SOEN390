@@ -160,4 +160,32 @@ describe("formatTime", () => {
   test("formats both hours and minutes correctly", () => {
     expect(formatTime(125)).toBe("~About 2 hrs 5 minutes");
   });
+
+  test("should handle malformed shuttle schedule time gracefully", async () => {
+    fetchShuttleScheduleByDay.mockResolvedValue({
+      SGW: ["badTime", "13:30"],
+    });
+    getTravelTimes.mockResolvedValue([{ mode: "driving", duration: 5 }]);
+    haversineDistance.mockReturnValue(10);
+  
+    const result = await estimateShuttleTravelTime(
+      { latitude: 45.5, longitude: -73.6 },
+      "LOY"
+    );
+  
+    expect(result).toBeGreaterThan(0); // Should skip badTime and continue
+  });
+  
+  test("should handle malformed time strings in shuttleFromButton", async () => {
+    fetchShuttleScheduleByDay.mockResolvedValue({
+      SGW: ["not-a-time", "14:30"],
+    });
+    haversineDistance.mockReturnValue(7);
+  
+    const result = await estimateShuttleFromButton("SGW");
+  
+    expect(result).not.toBeNull();
+    expect(result.waitTime).toBeGreaterThanOrEqual(0);
+  });
+  
 });
