@@ -7,7 +7,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   Keyboard,
   Modal,
   ScrollView,
@@ -339,10 +338,10 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
                   console.log("User location not available.");
                 }
               }}
-              style={myLocationStyles.myLocationButton}
+              style={styles.myLocationButton}
             >
               <Icon name="target-two" size={20} color="black" />
-              <Text style={myLocationStyles.myLocationText}>My Location</Text>
+              <Text style={styles.myLocationText}>My Location</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -412,9 +411,9 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
         ) : (
           <View style={styles.buttonContainer}>
             {loading ? (
-              <View style={loadingStyles.loadingContainer}>
+              <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#922338" />
-                <Text style={loadingStyles.loadingText}>Calculating travel times...</Text>
+                <Text style={styles.loadingText}>Calculating travel times...</Text>
               </View>
             ) : (
               [
@@ -511,9 +510,9 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
 
           {/* Display Alternative Routes */}
           {loading ? (
-            <View style={loadingStyles.loadingContainer}>
+            <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="#922338" />
-              <Text style={loadingStyles.loadingText}>Loading routes...</Text>
+              <Text style={styles.loadingText}>Loading routes...</Text>
             </View>
           ) : routes && routes.length > 0 ? (
             <View style={styles.routesContainer}>
@@ -582,45 +581,3 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
 };
 
 export default StartAndDestinationPoints;
-
-const myLocationStyles = StyleSheet.create({
-  myLocationButton: {
-    backgroundColor: "white",
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    alignSelf: "flex-start",
-    marginTop: 5,
-    position: "absolute",
-    top: 45,
-    left: -15,
-    elevation: 40,
-    shadowColor: "black",
-    zIndex: 11,
-    width: 390,
-    height: 44,
-    borderBottomColor: "#ccc",
-    borderBottomWidth: 1,
-    flexDirection: "row",
-  },
-  myLocationText: {
-    fontSize: 16,
-    color: "black",
-    fontWeight: "bold",
-  },
-});
-
-// Define loading container styles locally until they can be moved to the styles file
-const loadingStyles = StyleSheet.create({
-  loadingContainer: {
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 14,
-    color: '#555',
-    textAlign: 'center',
-  }
-});
