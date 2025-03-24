@@ -1,0 +1,59 @@
+appId: com.anonymous.myApp  
+---
+- launchApp
+
+# Click on SGW button from home page
+- tapOn:
+    id: "sgwButton"
+
+# Type in Hall classroom
+- tapOn: "Type or select origin location"
+- inputText: "H919"
+
+# Click enter
+- pressKey: "enter"
+
+# Type in CC classroom
+- tapOn: "Type or select destination location"
+- inputText: "CC115"
+
+# Click enter
+- pressKey: "enter"
+
+# Click Get Directions
+- tapOn: "Get Directions"
+
+# Click on travel mode
+- tapOn: " 19 min"
+
+# Click on GO
+- tapOn:
+    point: "81%,76%"
+
+# Click on building button
+- tapOn:
+    id: "buildings-button"
+
+# Click on Hall building
+- tapOn:
+    point: "37%,49%"
+
+# Click on floor down
+- tapOn:
+    id: "floor-down"
+- tapOn:
+    id: "floor-down"
+- tapOn:
+    id: "floor-down"
+
+# Click switch campus
+- tapOn: "Switch Campus"
+
+# Click on building button
+- tapOn:
+    id: "buildings-button"
+
+# Click on CC building
+- tapOn:
+    point: "37%,49%"
+

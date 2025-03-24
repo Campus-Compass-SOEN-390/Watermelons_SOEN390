@@ -32,3 +32,9 @@ appId: com.anonymous.myApp
 - tapOn:
     id: "locate-campus-button"
 
+# shuttle 
+- tapOn: "Shuttle To SGW"
+
+# close
+- tapOn:
+    point: "50%,54%"

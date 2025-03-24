@@ -31,19 +31,17 @@ appId: com.anonymous.myApp
 - tapOn: " 3 min"
 - tapOn: " 1 min"
 
+# Toggle disability
+- tapOn:
+    point: "11%,65%"
+- tapOn:
+    point: "11%,65%"
+
 # View steps
 - tapOn: "Steps"
 - tapOn:
     point: 50%,63%
 
-# Start navigation
-- tapOn: "GO"
-
-# Shuttle navigation between campuses
-- tapOn: "Shuttle To Loyola"
+# Click on GO
 - tapOn:
-    point: "50%,54%"
-- tapOn: "Switch Campus"
-- tapOn: "Shuttle To SGW"
-- tapOn:
-    point: "50%,54%"
+    point: "81%,76%"
