@@ -35,7 +35,7 @@ export const estimateShuttleTravelTime = async (
   const departureStop = destinationCampus === "LOY" ? sgwStop : loyolaStop;
 
   const travelModes = ["walking", "driving", "transit", "bicycling"];
-  const travelOptions = await getTravelTimes(userLocation, departureStop, travelModes);
+  const travelOptions = await TravelFacade.getTravelTimes(userLocation, departureStop, travelModes);
   if (!travelOptions.length) return null;
 
   const validOptions = travelOptions.filter(option => option.duration !== null);
