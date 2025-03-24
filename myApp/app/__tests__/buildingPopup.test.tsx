@@ -1,6 +1,6 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import BuildingPopup, { BuildingPopupProps } from "../components/BuildingPopUp"; // Adjust the path as needed
+import BuildingPopup, { BuildingPopupProps } from "../components/BuildingPopUp"; // Adjust path if needed
 
 describe("BuildingPopup Component", () => {
   const mockOnClose = jest.fn();
@@ -23,15 +23,19 @@ describe("BuildingPopup Component", () => {
     setAsStartingPoint: mockSetAsStartingPoint,
   };
 
+  beforeEach(() => {
+    jest.clearAllMocks(); // Reset all mocks before each test
+  });
+
   it("renders building information correctly", () => {
     const { getByText } = render(<BuildingPopup {...defaultProps} />);
 
     expect(getByText("Building Information")).toBeTruthy();
-    expect(getByText("📍 Mock Building")).toBeTruthy();
-    expect(getByText("🏛 Mock Building Long Name")).toBeTruthy();
-    expect(getByText("🕒 9 AM - 5 PM")).toBeTruthy();
-    expect(getByText("♿ Accessibility: ✅ Yes")).toBeTruthy();
-    expect(getByText("🏢 Departments: Engineering, Math")).toBeTruthy();
+    expect(getByText("Mock Building")).toBeTruthy();
+    expect(getByText("Mock Building Long Name")).toBeTruthy();
+    expect(getByText("9 AM - 5 PM")).toBeTruthy();
+    expect(getByText("Accessibility: Yes")).toBeTruthy();
+    expect(getByText("Departments: Engineering, Math")).toBeTruthy();
   });
 
   it("calls onGetDirections when 'Get Directions' button is pressed", () => {
@@ -41,22 +45,22 @@ describe("BuildingPopup Component", () => {
     fireEvent.press(getDirectionsButton);
 
     expect(mockOnGetDirections).toHaveBeenCalledWith(mockBuilding);
-    expect(mockOnClose).toHaveBeenCalled(); // Should close the modal
+    expect(mockOnClose).toHaveBeenCalled();
   });
 
-  it("calls setAsStartingPoint when 'Set Starting Point' button is pressed", () => {
+  it("calls setAsStartingPoint when 'Use as Starting Point' button is pressed", () => {
     const { getByText } = render(<BuildingPopup {...defaultProps} />);
-    const setStartPointButton = getByText("Use As Starting Point");
+    const setStartPointButton = getByText("Use as Starting Point");
 
     fireEvent.press(setStartPointButton);
 
     expect(mockSetAsStartingPoint).toHaveBeenCalledWith(mockBuilding);
-    expect(mockOnClose).toHaveBeenCalled(); // Should close the modal
+    expect(mockOnClose).toHaveBeenCalled();
   });
 
-  it("calls onClose when 'Close' button is pressed", () => {
-    const { getByText } = render(<BuildingPopup {...defaultProps} />);
-    const closeButton = getByText("Close");
+  it("calls onClose when close icon is pressed", () => {
+    const { getByTestId } = render(<BuildingPopup {...defaultProps} />);
+    const closeButton = getByTestId("close-button");
 
     fireEvent.press(closeButton);
 
