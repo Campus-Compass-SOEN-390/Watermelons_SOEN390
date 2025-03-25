@@ -92,6 +92,8 @@ ShortestPathMap.propTypes = {
   startNode: PropTypes.string,
   endNode: PropTypes.string,
   currentFloor: PropTypes.number,
+  isDisabled: PropTypes.bool,
+  pathId: PropTypes.string,
 };
 
 export default ShortestPathMap;

@@ -6,7 +6,6 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-import { useLocalSearchParams } from "expo-router";
 
 //Interface for the context
 interface LocationContextType {
@@ -45,7 +44,6 @@ const LocationContext = createContext<LocationContextType | null>(null);
 export const LocationProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const { name, lat, lng } = useLocalSearchParams();
   const [origin, setOrigin] = useState<{
     latitude: number;
     longitude: number;

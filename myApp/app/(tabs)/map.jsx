@@ -22,8 +22,6 @@ import tabStyles from "../styles/LayoutStyles";
 import StartAndDestinationPoints from "../components/StartAndDestinationPoints";
 import IndoorMap from "../components/IndoorMap/IndoorMap";
 import FloorNavigation from "../components/FloorNavigation";
-import MapDirections from "../components/MapDirections";
-import ShortestPathMap from "../components/IndoorMap/ShortestPathMap";
 import { hGraph, hNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/Hall";
 import { ccGraph, ccNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/CC";
 import { loyolaGraph, loyolaNodeCoordinates } from "../components/IndoorMap/GraphAndCoordinates/Loyola";
@@ -137,7 +135,6 @@ useEffect(() => {
   const [selectedPOI, setSelectedPOI] = useState(null);
   const isFetchingRef = useRef(false);
   const activeRequestRef = useRef(null);
-  const [showStartAndDestination, setShowStartAndDestination] = useState(true);
   const [showFooter, setShowFooter] = useState(false);
   const [showSteps, setShowSteps] = useState(false);
   const [routeSteps, setRouteSteps] = useState([]); 
@@ -819,11 +816,6 @@ useEffect(() => {
     setShowSteps(false);
   };
   
-
-  
-  useEffect(() =>{  
-    setShowStartAndDestination(navigationToMap);
-  }, [navigationToMap]);
   
   
  const handleCancelButton = () =>{
