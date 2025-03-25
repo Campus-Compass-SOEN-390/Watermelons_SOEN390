@@ -12,6 +12,8 @@ import {
 import {
   haversineDistance
 } from "../utils/distanceShuttle";
+import TravelFacade from "../utils/TravelFacade";
+
 
 jest.mock("../api/googleMapsApi", () => ({
   getTravelTimes: jest.fn(),
@@ -265,7 +267,9 @@ describe("formatTime", () => {
 
   // Test when fetchShuttleScheduleByDay returns null (valid weekday but no data)
   test("estimateShuttleTravelTime should return null if schedule is null", async () => {
-    jest.spyOn(global, 'Date').mockImplementation(() => new Date("2023-11-01T10:00:00")); // Wednesday
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date("2023-11-01T10:00:00Z")); // Wednesday
+
     const mockGetTravelTimes = jest.spyOn(TravelFacade, "getTravelTimes").mockResolvedValue([{ duration: 5 }]);
   
     const mockFetch = jest.spyOn(require("../api/shuttleSchedule"), "fetchShuttleScheduleByDay");
