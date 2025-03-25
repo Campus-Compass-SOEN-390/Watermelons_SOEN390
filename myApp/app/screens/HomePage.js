@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, React } from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { homepageStyles as styles } from "../styles/HomePageStyles.js";

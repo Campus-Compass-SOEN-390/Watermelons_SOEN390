@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import React from "react";
+import { useEffect, React } from "react";
 import RNUxcam from "react-native-ux-cam";
 
 export default function Favorites() {

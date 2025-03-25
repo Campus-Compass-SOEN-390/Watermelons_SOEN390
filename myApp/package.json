@@ -94,6 +94,7 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@expo/cli": "^0.22.13",
+    "@react-native-community/cli": "^18.0.0",
     "@react-navigation/native": "^7.0.14",
     "@testing-library/react-native": "^13.0.1",
     "@tsconfig/react-native": "^3.0.5",

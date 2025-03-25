@@ -1,44 +1,76 @@
-import { LogBox, View } from "react-native";
+import { LogBox, View, Platform } from "react-native";
 import React, { useEffect } from "react";
 import HomePage from "./screens/HomePage";
 import "react-native-get-random-values";
 import RNUxcam from "react-native-ux-cam";
 import Constants from "expo-constants";
 
-// Remove this import since it's redundant and may cause confusion
-// import { startWithKey } from "react-native-ux-cam";
-
 LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
 
 export default function Index() {
   useEffect(() => {
     try {
-      // Access UXCam API key from environment variables
+      // Access UXCam API key with fallback
       const UXCAM_API_KEY = Constants.expoConfig?.extra?.uxcamApiKey;
 
-      // Check if the key exists
       if (!UXCAM_API_KEY) {
-        console.warn("UXCam API key not found in environment variables");
+        console.error("UXCam API key not found in environment variables!");
         return;
       }
 
-      // Enable iOS screen recordings
-      RNUxcam.optIntoSchematicRecordings();
+      console.log(
+        `Initializing UXCam with key: ${UXCAM_API_KEY.substring(0, 5)}...`
+      );
 
-      // Configure UXCam with all settings
+      // Safely call methods with error checking
+      if (typeof RNUxcam.optIntoSchematicRecordings === "function") {
+        RNUxcam.optIntoSchematicRecordings();
+      }
+
+      // Configure UXCam with correct key name
       const configuration = {
-        userAppKey: UXCAM_API_KEY,
-        enableAutomaticScreenNameTagging: false,
+        appKey: UXCAM_API_KEY, // CORRECTED from userAppKey
+        enableAutomaticScreenNameTagging: true,
         enableImprovedScreenCapture: true,
       };
 
-      // Start UXCam with the configuration
-      RNUxcam.startWithConfiguration(configuration);
+      // Check if startWithConfiguration takes a callback
+      if (RNUxcam.startWithConfiguration.length > 1) {
+        // Version with callback
+        RNUxcam.startWithConfiguration(configuration, (started) => {
+          console.log(
+            "UXCam start callback result:",
+            started ? "SUCCESS" : "FAILED"
+          );
+        });
+      } else {
+        // Version without callback
+        RNUxcam.startWithConfiguration(configuration);
+        console.log("UXCam configuration applied (no callback available)");
+      }
 
-      // Manually tag this screen
-      RNUxcam.tagScreenName("HomePage");
+      // Log a test event
+      if (typeof RNUxcam.logEvent === "function") {
+        RNUxcam.logEvent("AppInitialized", {
+          platform: Platform.OS,
+          isSimulator: Platform.OS === "ios" && !Platform.isDevice,
+          timestamp: new Date().toISOString(),
+        });
+      }
+
+      // Check recording status after a short delay
+      setTimeout(() => {
+        try {
+          if (typeof RNUxcam.isRecording === "function") {
+            const recordingStatus = RNUxcam.isRecording();
+            console.log("UXCam recording status:", recordingStatus);
+          }
+        } catch (error) {
+          console.error("Error checking recording status:", error);
+        }
+      }, 2000);
     } catch (error) {
-      console.log("UXCam initialization error:", error);
+      console.error("UXCam initialization error:", error);
     }
   }, []);
 
