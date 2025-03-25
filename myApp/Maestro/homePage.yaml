@@ -26,8 +26,6 @@ appId: com.anonymous.myApp
 - tapOn: "✖"
 - tapOn:
     id: "calendarfetchbutton"
-- tapOn: Back
-
 
 
 # # Indoor Map Tests
