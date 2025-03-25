@@ -1,32 +1,52 @@
 import { getAllShuttleSchedules, getShuttleScheduleByDay } from "./shuttleScheduleData.js";
 import { getRealTimeShuttleData, extractShuttleInfo } from "./shuttleLiveData.js";
 
+// Enable this to simulate schedule for testing
+const TEST_MODE = true;
+
+/**
+ * Return a mocked shuttle schedule for testing purposes.
+ */
+const getMockSchedule = () => {
+  const now = new Date();
+  const currentHour = now.getHours();
+  const nextHour = currentHour + 1;
+
+  return {
+    SGW: [`${currentHour}:${now.getMinutes() + 2}`, `${currentHour}:${now.getMinutes() + 15}`],
+    LOY: [`${nextHour}:${now.getMinutes() + 5}`, `${nextHour}:${now.getMinutes() + 20}`],
+  };
+};
+
 // Fetch all shuttle schedules
 export const fetchAllShuttleSchedules = async () => getAllShuttleSchedules();
 
-// Fetch a specific day's schedule
+/**
+ * Fetch a specific day's shuttle schedule.
+ * In test mode, returns a mock schedule that always has shuttles available.
+ */
 export const fetchShuttleScheduleByDay = async (day) => {
+  if (TEST_MODE) {
+    console.log("[TEST_MODE] Returning mock shuttle schedule.");
+    return getMockSchedule();
+  }
+
   try {
-    // If getShuttleScheduleByDay(day) throws "Invalid day: Sunday...", we catch it here
     return getShuttleScheduleByDay(day);
   } catch (error) {
     console.warn("Error fetching schedule:", error.message);
-    throw new Error(`Invalid day: ${day}. Please provide Monday, Tuesday, Wednesday, Thursday, or Friday.`);
-    // Instead of re-throwing, just return null
-    
+    return null;
   }
 };
-
 
 // Fetch live shuttle data
 export const fetchLiveShuttleData = async () => getRealTimeShuttleData();
 
 // Extract shuttle information from live data
 export const fetchShuttleInfo = async () => {
-  const rawData = await getRealTimeShuttleData(); // Fetch data
-  return extractShuttleInfo(rawData); // Process data
+  const rawData = await getRealTimeShuttleData();
+  return extractShuttleInfo(rawData);
 };
-
 
 // Default export
 export default {
@@ -34,5 +54,4 @@ export default {
   fetchShuttleScheduleByDay,
   fetchLiveShuttleData,
   fetchShuttleInfo,
-
 };

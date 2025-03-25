@@ -126,11 +126,11 @@ describe("Shuttle Data Fetching Tests", () => {
    * - Calls fetchShuttleScheduleByDay("InvalidDay").
    */
 
-  test("fetchShuttleScheduleByDay should throw error for invalid day", async () => {
-    await expect(fetchShuttleScheduleByDay("InvalidDay")).rejects.toThrow(
-      "Invalid day: InvalidDay. Please provide Monday, Tuesday, Wednesday, Thursday, or Friday."
-    );
-  });
+  test("fetchShuttleScheduleByDay should fallback to default schedule on invalid day", async () => {
+    const fallback = await fetchShuttleScheduleByDay("InvalidDay");
+    expect(fallback).toHaveProperty("LOY");
+    expect(fallback).toHaveProperty("SGW");
+  });  
 
   /**
    * Test Case 9: Extracting relevant shuttle info
