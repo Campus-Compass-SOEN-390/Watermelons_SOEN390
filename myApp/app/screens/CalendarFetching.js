@@ -26,7 +26,7 @@ export default function CalendarFetching() {
   // Add this useEffect hook for UXCam screen tagging
   useEffect(() => {
     // Tag this screen in UXCam
-    RNUxcam.tagScreenName("HomePage");
+    RNUxcam.tagScreenName("Calendar Fetching");
   }, []);
 
   const navigation = useNavigation();

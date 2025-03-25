@@ -2,6 +2,7 @@ import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { Alert, View, Text } from "react-native";
+import RNUxcam from "react-native-ux-cam";
 
 // Mock AsyncStorage
 jest.mock("@react-native-async-storage/async-storage", () => ({
@@ -54,6 +55,18 @@ jest.mock("../components/HeaderButtons.js", () => {
     );
 });
 
+// Correctly mock MonthPicker
+jest.mock("../components/MonthPicker.js", () => {
+  const React = require("react");
+  const { View, Text } = require("react-native");
+  return ({ monthsAhead, setMonthsAhead, styles }) =>
+    React.createElement(
+      View,
+      null,
+      React.createElement(Text, null, "MonthPicker Mock")
+    );
+});
+
 // Correctly mock Ionicons
 jest.mock("@expo/vector-icons", () => {
   const React = require("react");
@@ -71,7 +84,15 @@ const renderWithNav = (ui) =>
   render(<NavigationContainer>{ui}</NavigationContainer>);
 
 describe("CalendarFetching Component", () => {
-  beforeEach(() => jest.clearAllMocks());
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("tags the screen name with UXCam when component mounts", async () => {
+    renderWithNav(<CalendarFetching />);
+
+    expect(RNUxcam.tagScreenName).toHaveBeenCalledWith("Calendar Fetching");
+  });
 
   test("renders correctly with inputs and buttons", async () => {
     const { getByPlaceholderText, getByText } = renderWithNav(
@@ -97,15 +118,18 @@ describe("CalendarFetching Component", () => {
     );
   });
 
-  test("clears calendar history when pressing Clear History", async () => {
+  test("logs event and clears calendar history when pressing Clear History", async () => {
     const AsyncStorage = require("@react-native-async-storage/async-storage");
     const { getByText } = renderWithNav(<CalendarFetching />);
 
     fireEvent.press(getByText("Clear History"));
 
-    await waitFor(() =>
-      expect(AsyncStorage.removeItem).toHaveBeenCalledWith("calendarIds")
-    );
+    await waitFor(() => {
+      expect(RNUxcam.logEvent).toHaveBeenCalledWith(
+        "Clear History Button Pressed"
+      );
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith("calendarIds");
+    });
   });
 
   test("fetches and displays calendar events successfully", async () => {
@@ -135,7 +159,8 @@ describe("CalendarFetching Component", () => {
 
     expect(await findByText("Saved Calendar")).toBeTruthy();
   });
-  test("allows selecting a stored calendar ID", async () => {
+
+  test("logs event and allows selecting a stored calendar ID", async () => {
     const AsyncStorage = require("@react-native-async-storage/async-storage");
     AsyncStorage.getItem.mockResolvedValue(
       JSON.stringify([{ id: "stored-calendar", name: "Stored Calendar" }])
@@ -148,6 +173,9 @@ describe("CalendarFetching Component", () => {
     const storedCalendar = await findByText("Stored Calendar");
     fireEvent.press(storedCalendar);
 
+    expect(RNUxcam.logEvent).toHaveBeenCalledWith(
+      "Stored Calendar Ids Button Pressed"
+    );
     expect(getByPlaceholderText("Paste Calendar ID here").props.value).toBe(
       "stored-calendar"
     );
