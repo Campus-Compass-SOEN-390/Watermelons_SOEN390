@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1742927425907" clover="3.2.0">
-  <project timestamp="1742927425907" name="All files">
-    <metrics statements="673" coveredstatements="587" conditionals="443" coveredconditionals="328" methods="146" coveredmethods="127" elements="1262" coveredelements="1042" complexity="0" loc="673" ncloc="673" packages="10" files="32" classes="32"/>
+<coverage generated="1742928945727" clover="3.2.0">
+  <project timestamp="1742928945727" name="All files">
+    <metrics statements="759" coveredstatements="626" conditionals="485" coveredconditionals="338" methods="162" coveredmethods="137" elements="1406" coveredelements="1101" complexity="0" loc="759" ncloc="759" packages="10" files="35" classes="35"/>
     <package name="app.api">
       <metrics statements="214" coveredstatements="183" conditionals="129" coveredconditionals="87" methods="43" coveredmethods="34"/>
       <file name="POIDataSubject.js" path="/Users/ikramkml/Desktop/Watermelons_SOEN390/Watermelons_SOEN390/myApp/app/api/POIDataSubject.js">
@@ -244,7 +244,7 @@
       </file>
     </package>
     <package name="app.components">
-      <metrics statements="88" coveredstatements="73" conditionals="72" coveredconditionals="51" methods="24" coveredmethods="22"/>
+      <metrics statements="96" coveredstatements="81" conditionals="74" coveredconditionals="52" methods="26" coveredmethods="24"/>
       <file name="BuildingPopUp.tsx" path="/Users/ikramkml/Desktop/Watermelons_SOEN390/Watermelons_SOEN390/myApp/app/components/BuildingPopUp.tsx">
         <metrics statements="7" coveredstatements="7" conditionals="10" coveredconditionals="7" methods="3" coveredmethods="3"/>
         <line num="20" count="1" type="stmt"/>
@@ -341,6 +341,17 @@
         <line num="139" count="4" type="cond" truecount="5" falsecount="0"/>
         <line num="141" count="1" type="stmt"/>
         <line num="147" count="1" type="stmt"/>
+      </file>
+      <file name="MonthPicker.js" path="/Users/ikramkml/Desktop/Watermelons_SOEN390/Watermelons_SOEN390/myApp/app/components/MonthPicker.js">
+        <metrics statements="8" coveredstatements="8" conditionals="2" coveredconditionals="1" methods="2" coveredmethods="2"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="11" type="stmt"/>
+        <line num="8" count="11" type="stmt"/>
+        <line num="9" count="11" type="stmt"/>
+        <line num="20" count="11" type="stmt"/>
+        <line num="21" count="6" type="stmt"/>
+        <line num="24" count="11" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
       </file>
     </package>
     <package name="app.components.IndoorMap">
@@ -522,7 +533,87 @@
       </file>
     </package>
     <package name="app.screens">
-      <metrics statements="7" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="5"/>
+      <metrics statements="84" coveredstatements="36" conditionals="40" coveredconditionals="9" methods="20" coveredmethods="13"/>
+      <file name="CalendarFetching.js" path="/Users/ikramkml/Desktop/Watermelons_SOEN390/Watermelons_SOEN390/myApp/app/screens/CalendarFetching.js">
+        <metrics statements="77" coveredstatements="30" conditionals="40" coveredconditionals="9" methods="14" coveredmethods="8"/>
+        <line num="27" count="11" type="stmt"/>
+        <line num="28" count="11" type="stmt"/>
+        <line num="30" count="11" type="stmt"/>
+        <line num="31" count="11" type="stmt"/>
+        <line num="32" count="11" type="stmt"/>
+        <line num="33" count="11" type="stmt"/>
+        <line num="35" count="11" type="stmt"/>
+        <line num="36" count="11" type="stmt"/>
+        <line num="38" count="11" type="cond" truecount="1" falsecount="1"/>
+        <line num="40" count="11" type="stmt"/>
+        <line num="41" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="48" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="50" count="0" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="52" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="53" count="0" type="stmt"/>
+        <line num="55" count="0" type="stmt"/>
+        <line num="57" count="0" type="stmt"/>
+        <line num="58" count="0" type="stmt"/>
+        <line num="59" count="0" type="stmt"/>
+        <line num="61" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="62" count="0" type="stmt"/>
+        <line num="64" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="65" count="0" type="stmt"/>
+        <line num="68" count="0" type="stmt"/>
+        <line num="69" count="0" type="stmt"/>
+        <line num="72" count="0" type="stmt"/>
+        <line num="73" count="0" type="stmt"/>
+        <line num="76" count="0" type="stmt"/>
+        <line num="78" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="80" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="81" count="0" type="stmt"/>
+        <line num="84" count="0" type="stmt"/>
+        <line num="87" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="88" count="0" type="stmt"/>
+        <line num="89" count="0" type="stmt"/>
+        <line num="90" count="0" type="stmt"/>
+        <line num="93" count="0" type="stmt"/>
+        <line num="96" count="0" type="stmt"/>
+        <line num="98" count="0" type="stmt"/>
+        <line num="99" count="0" type="stmt"/>
+        <line num="103" count="0" type="stmt"/>
+        <line num="105" count="0" type="stmt"/>
+        <line num="106" count="0" type="stmt"/>
+        <line num="109" count="0" type="stmt"/>
+        <line num="113" count="11" type="stmt"/>
+        <line num="114" count="6" type="cond" truecount="1" falsecount="1"/>
+        <line num="115" count="0" type="stmt"/>
+        <line num="116" count="0" type="stmt"/>
+        <line num="119" count="0" type="stmt"/>
+        <line num="124" count="11" type="stmt"/>
+        <line num="125" count="6" type="stmt"/>
+        <line num="126" count="6" type="stmt"/>
+        <line num="127" count="6" type="stmt"/>
+        <line num="128" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="129" count="3" type="stmt"/>
+        <line num="132" count="0" type="stmt"/>
+        <line num="136" count="6" type="stmt"/>
+        <line num="139" count="11" type="cond" truecount="1" falsecount="1"/>
+        <line num="140" count="0" type="stmt"/>
+        <line num="157" count="11" type="stmt"/>
+        <line num="192" count="5" type="stmt"/>
+        <line num="195" count="1" type="stmt"/>
+        <line num="232" count="1" type="stmt"/>
+        <line num="233" count="1" type="stmt"/>
+        <line num="234" count="1" type="stmt"/>
+        <line num="236" count="0" type="stmt"/>
+        <line num="253" count="1" type="stmt"/>
+        <line num="254" count="0" type="stmt"/>
+        <line num="256" count="0" type="stmt"/>
+        <line num="264" count="0" type="stmt"/>
+        <line num="266" count="0" type="stmt"/>
+        <line num="269" count="0" type="stmt"/>
+      </file>
       <file name="HomePage.js" path="/Users/ikramkml/Desktop/Watermelons_SOEN390/Watermelons_SOEN390/myApp/app/screens/HomePage.js">
         <metrics statements="7" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="5"/>
         <line num="8" count="5" type="stmt"/>
@@ -535,7 +626,11 @@
       </file>
     </package>
     <package name="app.styles">
-      <metrics statements="11" coveredstatements="11" conditionals="2" coveredconditionals="1" methods="0" coveredmethods="0"/>
+      <metrics statements="12" coveredstatements="12" conditionals="2" coveredconditionals="1" methods="0" coveredmethods="0"/>
+      <file name="CalendarFetchingStyles.js" path="/Users/ikramkml/Desktop/Watermelons_SOEN390/Watermelons_SOEN390/myApp/app/styles/CalendarFetchingStyles.js">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="4" count="1" type="stmt"/>
+      </file>
       <file name="HomePageStyles.js" path="/Users/ikramkml/Desktop/Watermelons_SOEN390/Watermelons_SOEN390/myApp/app/styles/HomePageStyles.js">
         <metrics statements="1" coveredstatements="1" conditionals="2" coveredconditionals="1" methods="0" coveredmethods="0"/>
         <line num="4" count="1" type="stmt"/>
@@ -556,11 +651,11 @@
       </file>
       <file name="constants.js" path="/Users/ikramkml/Desktop/Watermelons_SOEN390/Watermelons_SOEN390/myApp/app/styles/constants.js">
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-        <line num="1" count="2" type="stmt"/>
-        <line num="2" count="2" type="stmt"/>
-        <line num="3" count="2" type="stmt"/>
-        <line num="4" count="2" type="stmt"/>
-        <line num="5" count="2" type="stmt"/>
+        <line num="1" count="3" type="stmt"/>
+        <line num="2" count="3" type="stmt"/>
+        <line num="3" count="3" type="stmt"/>
+        <line num="4" count="3" type="stmt"/>
+        <line num="5" count="3" type="stmt"/>
       </file>
     </package>
     <package name="app.utils">
