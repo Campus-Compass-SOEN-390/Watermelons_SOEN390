@@ -92,7 +92,10 @@ export default function ShuttleScheduleScreen() {
         {/* 🔹 Keep Header with Back Button */}
         <View style={styles.header}>
           <TouchableOpacity
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+              RNUxcam.logEvent("Shuttle Go Back Button Pressed");
+              navigation.goBack();
+            }}
             style={styles.backButton}
           >
             <Text style={styles.backText}>✖</Text>
@@ -126,7 +129,10 @@ export default function ShuttleScheduleScreen() {
       <View style={styles.header}>
         {/* Updated Back Button to Navigate to Home Page */}
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            RNUxcam.logEvent("Shuttle Home Button Pressed");
+            navigation.goBack();
+          }}
           style={styles.backButton}
         >
           <Text style={styles.backText}>✖</Text>
@@ -136,7 +142,10 @@ export default function ShuttleScheduleScreen() {
 
         {/* Warning Button */}
         <TouchableOpacity
-          onPress={handleWarningPress}
+          onPress={() => {
+            RNUxcam.logEvent("Shuttle Home Button Pressed");
+            handleWarningPress();
+          }}
           style={styles.warningButton}
         >
           <Text style={styles.warningIcon}>⚠</Text>
