@@ -1,13 +1,9 @@
-import { Text, View, TouchableOpacity } from "react-native";
+import { Text, View } from "react-native";
 import React from "react";
-import { useRouter } from 'expo-router';
-import styles from '../styles/GoogleScheduleStyles';
-import { Ionicons } from "@expo/vector-icons";
 import LayoutWrapper from "../components/LayoutWrapper";
 import HeaderButtons from "../components/HeaderButtons";
 
 export default function Settings() {
-  const router = useRouter();
 
   return (
     <LayoutWrapper>

@@ -6,7 +6,9 @@ import { formatTime } from "../utils/shuttleUtils.js";
 // import { buildingPopupStyles as styles } from "../styles/PopUpStyles.js";
 import styles from "../styles/PopUpStyles.js";
 
+
 export default function ShuttleInfoPopup({ visible, onClose, shuttleDetails }) {
+
   return (
     <Modal
       visible={visible}

@@ -1,13 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import Mapbox from "@rnmapbox/maps";
-import { View, Button } from "react-native";
+import { View } from "react-native";
 import Constants from "expo-constants";
-import polyline from "@mapbox/polyline";
 import { useLocationContext } from "../context/LocationContext";
 import { getAlternativeRoutes } from "../api/googleMapsApi";
 
-// const MAPBOX_API_KEY = Constants.expoConfig?.extra?.mapbox;
-const MAPBOX_API_KEY = "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw";
+const MAPBOX_API_KEY = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API_KEY);
 const GOOGLE_MAPS_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
