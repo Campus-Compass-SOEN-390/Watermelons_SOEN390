@@ -316,4 +316,41 @@ export default StyleSheet.create({
     color: "#555",
     marginBottom: 3,
   },
+  
+  // Added from component local styles
+  myLocationButton: {
+    backgroundColor: "white",
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    alignSelf: "flex-start",
+    marginTop: 5,
+    position: "absolute",
+    top: 45,
+    left: -15,
+    elevation: 40,
+    shadowColor: "black",
+    zIndex: 11,
+    width: 390,
+    height: 44,
+    borderBottomColor: "#ccc",
+    borderBottomWidth: 1,
+    flexDirection: "row",
+  },
+  myLocationText: {
+    fontSize: 16,
+    color: "black",
+    fontWeight: "bold",
+  },
+  loadingContainer: {
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 14,
+    color: '#555',
+    textAlign: 'center',
+  }
 });

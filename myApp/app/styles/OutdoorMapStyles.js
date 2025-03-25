@@ -234,29 +234,7 @@ export default StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  // Modal Styles
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-  },
-  modalContent: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 10,
-    width: "80%",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
+  
   stepsList: {
     maxHeight: 300,
     padding: 10,
@@ -274,19 +252,6 @@ export default StyleSheet.create({
     fontSize: 14,
     color: "gray",
   },
-  closeButton: {
-    backgroundColor: '#FF4D4D',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    marginTop: 10,
-  },
-  closeButtonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-
   cancelButtonContainer:{
     position: "absolute",
     bottom: safeAreaBottom + 85,

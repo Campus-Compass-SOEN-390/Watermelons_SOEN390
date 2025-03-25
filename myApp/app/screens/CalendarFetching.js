@@ -5,9 +5,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  FlatList,
   Alert,
-  Modal,
   ActivityIndicator,
   KeyboardAvoidingView,
   ScrollView,
@@ -37,7 +35,6 @@ export default function CalendarFetching() {
   const [calendarId, setCalendarId] = useState("");
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
   const [showSuccessScreen, setShowSuccessScreen] = useState(false);
   // Allows the storage of calendar id history for future selection
   const [storedCalendarIds, setStoredCalendarIds] = useState([]);

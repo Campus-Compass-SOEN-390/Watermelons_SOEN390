@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import { View, Text } from "react-native";
+import PropTypes from "prop-types";
 
 const MonthPicker = ({ monthsAhead, setMonthsAhead, styles }) => {
   const [open, setOpen] = useState(false);
@@ -41,6 +42,15 @@ const MonthPicker = ({ monthsAhead, setMonthsAhead, styles }) => {
       />
     </View>
   );
+};
+
+MonthPicker.propTypes = {
+  monthsAhead: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  setMonthsAhead: PropTypes.func.isRequired,
+  styles: PropTypes.object
 };
 
 export default MonthPicker;

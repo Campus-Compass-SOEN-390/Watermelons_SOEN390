@@ -7,11 +7,11 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   Keyboard,
   Modal,
   ScrollView,
   Switch,
+  ActivityIndicator,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import "react-native-get-random-values";
@@ -25,8 +25,8 @@ import TravelFacade from "../utils/TravelFacade";
 import { useIndoorMapContext } from "../context/IndoorMapContext";
 import { parseClassroomLocation } from "../utils/IndoorMapUtils";
 import { buildings } from "../api/buildingData";
-import { useRouter } from "expo-router";
 import RNUxcam from "react-native-ux-cam";
+
 
 // Define Types
 type Route = {
@@ -72,15 +72,11 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
     originText,
     destinationText,
     showTransportation,
-    renderMap,
     travelMode,
-    navigationToMap,
-    selectedRouteIndex,
     travelTime,
     travelDistance,
-    navType,
   } = useLocationContext();
-  const { selectedFloor, updateSelectedFloor, updateSelectedIndoorBuilding } =
+  const {  updateSelectedFloor, updateSelectedIndoorBuilding } =
     useIndoorMapContext();
   const { location } = useLocation();
   const originRef = useRef<any>(null);
@@ -94,7 +90,6 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
   const [loading, setLoading] = useState(false);
   const [routes, setRoutes] = useState<RouteData[] | null>(null);
   const [showFooter, setShowFooter] = useState(false);
-  const router = useRouter();
 
   //Fetch alternative routes
 
@@ -198,7 +193,6 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
     if (buildingCode && buildingCoordinates[buildingCode]) {
       const coords = buildingCoordinates[buildingCode];
       updateDestination(coords, text);
-      //destination.current?.setAddressText(text);
     } else {
       updateDestination(null, text);
     }
@@ -353,10 +347,10 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
                   console.log("User location not available.");
                 }
               }}
-              style={myLocationStyles.myLocationButton}
+              style={styles.myLocationButton}
             >
               <Icon name="target-two" size={20} color="black" />
-              <Text style={myLocationStyles.myLocationText}>My Location</Text>
+              <Text style={styles.myLocationText}>My Location</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -427,47 +421,54 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
           </TouchableOpacity>
         ) : (
           <View style={styles.buttonContainer}>
-            {[
-              { mode: "driving" as const, icon: "directions-car" as const },
-              { mode: "transit" as const, icon: "directions-bus" as const },
-              { mode: "walking" as const, icon: "directions-walk" as const },
-              { mode: "bicycling" as const, icon: "directions-bike" as const },
-            ].map(({ mode, icon }) => (
-              <TouchableOpacity
-                key={mode}
-                onPress={() => {
-                  if (origin && destination) {
-                    console.log("Get Directions Pressed");
-                    updateRenderMap(true);
-                    updateTravelMode(mode);
-                    updateShowTransportation(true);
-                    setShowFooter(true);
-                  }
-                }}
-                style={[
-                  styles.transportButton,
-                  travelMode === mode && styles.selectedButton,
-                  { flexDirection: "row", alignItems: "center" }, // Added row layout
-                ]}
-              >
-                <MaterialIcons
-                  name={icon}
-                  size={20}
-                  color={travelMode === mode ? "white" : "black"}
-                />
-                <Text
-                  style={{
-                    fontSize: 12,
-                    marginTop: 5,
-                    textAlign: "center",
-                    flexWrap: "wrap",
-                    color: travelMode === mode ? "#fff" : "black",
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#922338" />
+                <Text style={styles.loadingText}>Calculating travel times...</Text>
+              </View>
+            ) : (
+              [
+                { mode: "driving" as const, icon: "directions-car" as const },
+                { mode: "transit" as const, icon: "directions-bus" as const },
+                { mode: "walking" as const, icon: "directions-walk" as const },
+                { mode: "bicycling" as const, icon: "directions-bike" as const },
+              ].map(({ mode, icon }) => (
+                <TouchableOpacity
+                  key={mode}
+                  onPress={() => {
+                    if (origin && destination) {
+                      console.log("Get Directions Pressed");
+                      updateRenderMap(true);
+                      updateTravelMode(mode);
+                      updateShowTransportation(true);
+                      setShowFooter(true);
+                    }
                   }}
+                  style={[
+                    styles.transportButton,
+                    travelMode === mode && styles.selectedButton,
+                    { flexDirection: "row", alignItems: "center" }, // Added row layout
+                  ]}
                 >
-                  {getTravelTimeText(travelTimes, mode)}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <MaterialIcons
+                    name={icon}
+                    size={20}
+                    color={travelMode === mode ? "white" : "black"}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      marginTop: 5,
+                      textAlign: "center",
+                      flexWrap: "wrap",
+                      color: travelMode === mode ? "#fff" : "black",
+                    }}
+                  >
+                    {getTravelTimeText(travelTimes, mode)}
+                  </Text>
+                </TouchableOpacity>
+              ))
+            )}
           </View>
         )}
       </View>
@@ -523,7 +524,12 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
           </TouchableOpacity>
 
           {/* Display Alternative Routes */}
-          {routes && routes.length > 0 ? (
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#922338" />
+              <Text style={styles.loadingText}>Loading routes...</Text>
+            </View>
+          ) : routes && routes.length > 0 ? (
             <View style={styles.routesContainer}>
               {routes
                 .filter((routeData) => routeData.mode === travelMode)
@@ -594,29 +600,3 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
 };
 
 export default StartAndDestinationPoints;
-
-const myLocationStyles = StyleSheet.create({
-  myLocationButton: {
-    backgroundColor: "white",
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    alignSelf: "flex-start",
-    marginTop: 5,
-    position: "absolute",
-    top: 45,
-    left: -15,
-    elevation: 40,
-    shadowColor: "black",
-    zIndex: 11,
-    width: 390,
-    height: 44,
-    borderBottomColor: "#ccc",
-    borderBottomWidth: 1,
-    flexDirection: "row",
-  },
-  myLocationText: {
-    fontSize: 16,
-    color: "black",
-    fontWeight: "bold",
-  },
-});
