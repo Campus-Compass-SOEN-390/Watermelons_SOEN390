@@ -8,11 +8,10 @@ import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
  * @param {string} destinationCampus - "LOY" or "SGW"
  * @returns {Promise<number|null|{error:string}>}
  */
-export const estimateShuttleTravelTime = async (
-  userLocation,
-  destinationCampus
-) => {
-  const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
+export const estimateShuttleTravelTime = async (userLocation, destinationCampus) => {
+  // const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
+  const today = new Date().toLocaleString("en-US", { weekday: "long" });
+  console.log("Today is:", today); // Should say "Monday", "Tuesday", etc.
   const now = new Date();
   const currentTime = now.getHours() * 60 + now.getMinutes();
 
@@ -21,7 +20,12 @@ export const estimateShuttleTravelTime = async (
   }
 
   const schedule = await fetchShuttleScheduleByDay(today);
-  if (!schedule) return null;
+  console.log("Fetched schedule for:", today, schedule);
+
+  if (!schedule) {
+    console.error("Failed to fetch shuttle schedule.");
+    return null;
+  }
 
   const sgwStop = {
     latitude: SGWtoLoyola.geometry.coordinates[0][1],
@@ -33,13 +37,19 @@ export const estimateShuttleTravelTime = async (
   };
 
   const departureStop = destinationCampus === "LOY" ? sgwStop : loyolaStop;
-
   const travelModes = ["walking", "driving", "transit", "bicycling"];
   const travelOptions = await TravelFacade.getTravelTimes(userLocation, departureStop, travelModes);
-  if (!travelOptions.length) return null;
+
+  if (!travelOptions.length) {
+    console.error("No travel options available.");
+    return null;
+  }
 
   const validOptions = travelOptions.filter(option => option.duration !== null);
-  if (!validOptions.length) return null;
+  if (!validOptions.length) {
+    console.error("All travel options have null durations.");
+    return null;
+  }
 
   const travelTimeToStop = Math.min(...validOptions.map(option => option.duration));
 
@@ -50,7 +60,10 @@ export const estimateShuttleTravelTime = async (
   }) || [];
 
   let nextShuttleTime = stopSchedule.find((time) => time > currentTime);
-  if (nextShuttleTime === undefined) return null;
+  if (nextShuttleTime === undefined) {
+    console.error("No upcoming shuttle found after current time.");
+    return null;
+  }
 
   let waitTime = Math.max(0, nextShuttleTime - currentTime);
 
@@ -59,7 +72,10 @@ export const estimateShuttleTravelTime = async (
       ? (TravelFacade.haversineDistance(sgwStop, loyolaRegion) / 40) * 60
       : (TravelFacade.haversineDistance(loyolaStop, sgwRegion) / 40) * 60;
 
-  if (isNaN(travelTimeToStop) || isNaN(shuttleRideTime)) return null;
+  if (isNaN(travelTimeToStop) || isNaN(shuttleRideTime)) {
+    console.error("Invalid travel or shuttle ride time detected.");
+    return null;
+  }
 
   return Math.round(travelTimeToStop + waitTime + shuttleRideTime);
 };
@@ -79,17 +95,28 @@ export const estimateShuttleFromButton = async (currentStop) => {
   }
 
   const schedule = await fetchShuttleScheduleByDay(today);
-  if (!schedule) return null;
+  if (!schedule) {
+    console.error("Failed to fetch shuttle schedule.");
+    return null;
+  }
 
   const stopKey = currentStop === "SGW" ? "SGW" : "LOY";
+  console.log("Stop key:", stopKey, "Times:", schedule[stopKey]);
 
   const stopSchedule = schedule[stopKey]?.map((time) => {
     const [hours, minutes] = time.split(":").map(Number);
     return hours * 60 + minutes;
   }) || [];
 
+
+  console.log("Current time in minutes:", currentTime);
+  console.log("Available times (in minutes):", stopSchedule);
+  
   let nextShuttleTime = stopSchedule.find((time) => time > currentTime);
-  if (nextShuttleTime === undefined) return null;
+  if (nextShuttleTime === undefined) {
+    console.error("No upcoming shuttle time available for this stop.");
+    return null;
+  }
 
   let waitTime = Math.max(0, nextShuttleTime - currentTime);
 
@@ -107,7 +134,10 @@ export const estimateShuttleFromButton = async (currentStop) => {
       ? (TravelFacade.haversineDistance(sgwStop, loyolaRegion) / 40) * 60
       : (TravelFacade.haversineDistance(loyolaStop, sgwRegion) / 40) * 60;
 
-  if (isNaN(shuttleRideTime)) return null;
+  if (isNaN(shuttleRideTime)) {
+    console.error("Calculated shuttle ride time is invalid (NaN).");
+    return null;
+  }
 
   return {
     waitTime: Math.round(waitTime),

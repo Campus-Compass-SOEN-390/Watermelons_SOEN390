@@ -1,6 +1,6 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import BuildingPopup, { BuildingPopupProps } from "../components/BuildingPopUp"; // Adjust path if needed
+import BuildingPopup, { BuildingPopupProps } from "../components/BuildingPopUp";
 
 describe("BuildingPopup Component", () => {
   const mockOnClose = jest.fn();
@@ -24,7 +24,7 @@ describe("BuildingPopup Component", () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks(); // Reset all mocks before each test
+    jest.clearAllMocks();
   });
 
   it("renders building information correctly", () => {
@@ -40,9 +40,7 @@ describe("BuildingPopup Component", () => {
 
   it("calls onGetDirections when 'Get Directions' button is pressed", () => {
     const { getByText } = render(<BuildingPopup {...defaultProps} />);
-    const getDirectionsButton = getByText("Get Directions");
-
-    fireEvent.press(getDirectionsButton);
+    fireEvent.press(getByText("Get Directions"));
 
     expect(mockOnGetDirections).toHaveBeenCalledWith(mockBuilding);
     expect(mockOnClose).toHaveBeenCalled();
@@ -50,9 +48,7 @@ describe("BuildingPopup Component", () => {
 
   it("calls setAsStartingPoint when 'Use as Starting Point' button is pressed", () => {
     const { getByText } = render(<BuildingPopup {...defaultProps} />);
-    const setStartPointButton = getByText("Use as Starting Point");
-
-    fireEvent.press(setStartPointButton);
+    fireEvent.press(getByText("Use as Starting Point"));
 
     expect(mockSetAsStartingPoint).toHaveBeenCalledWith(mockBuilding);
     expect(mockOnClose).toHaveBeenCalled();
@@ -60,23 +56,23 @@ describe("BuildingPopup Component", () => {
 
   it("calls onClose when close icon is pressed", () => {
     const { getByTestId } = render(<BuildingPopup {...defaultProps} />);
-    const closeButton = getByTestId("close-button");
-
-    fireEvent.press(closeButton);
+    fireEvent.press(getByTestId("close-button"));
 
     expect(mockOnClose).toHaveBeenCalled();
   });
-  
+
   it("displays 'No department info' when departments array is empty", () => {
-    const props = {
+    const noDeptProps: BuildingPopupProps = {
       ...defaultProps,
-      building: { ...defaultProps.building, departments: [] },
+      building: {
+        ...mockBuilding,
+        departments: [],
+      },
     };
 
-    const { getByTestId } = render(<BuildingPopup {...props} />);
+    const { getByTestId } = render(<BuildingPopup {...noDeptProps} />);
     const deptText = getByTestId("departments-text");
 
     expect(deptText.children.join("")).toContain("No department info");
   });
-
 });

@@ -187,5 +187,40 @@ describe("formatTime", () => {
     expect(result).not.toBeNull();
     expect(result.waitTime).toBeGreaterThanOrEqual(0);
   });
+
+  test("should return null if shuttleRideTime is NaN", async () => {
+    fetchShuttleScheduleByDay.mockResolvedValue({
+      SGW: ["13:30", "14:00"],
+      LOY: ["13:45", "14:15"],
+    });
+  
+    getTravelTimes.mockResolvedValue([{ mode: "walking", duration: 5 }]);
+    haversineDistance.mockReturnValue(NaN);
+  
+    const result = await estimateShuttleTravelTime(
+      { latitude: 45.5, longitude: -73.6 },
+      "LOY"
+    );
+  
+    expect(result).toBeNull();
+  });
+  
+  test("should return null if travelTimeToStop is NaN", async () => {
+    fetchShuttleScheduleByDay.mockResolvedValue({
+      SGW: ["13:30", "14:00"],
+      LOY: ["13:45", "14:15"],
+    });
+  
+    getTravelTimes.mockResolvedValue([{ mode: "walking", duration: NaN }]);
+    haversineDistance.mockReturnValue(10);
+  
+    const result = await estimateShuttleTravelTime(
+      { latitude: 45.5, longitude: -73.6 },
+      "LOY"
+    );
+  
+    expect(result).toBeNull();
+  });
+  
   
 });
