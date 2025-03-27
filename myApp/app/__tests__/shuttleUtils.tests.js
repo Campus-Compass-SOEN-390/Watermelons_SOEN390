@@ -17,6 +17,7 @@ import TravelFacade from "../utils/TravelFacade";
 
 jest.mock("../api/googleMapsApi", () => ({
   getTravelTimes: jest.fn(),
+  getGoogleTravelTime: jest.fn(() => Promise.resolve(12)),
 }));
 
 jest.mock("../api/shuttleSchedule", () => ({
@@ -231,7 +232,7 @@ describe("formatTime", () => {
       mode: "walking",
       duration: 5
     }]);
-    haversineDistance.mockReturnValue(NaN);
+    jest.spyOn(TravelFacade, "getGoogleTravelTime").mockResolvedValue(NaN);
 
     const result = await estimateShuttleTravelTime({
         latitude: 45.5,
@@ -254,6 +255,7 @@ describe("formatTime", () => {
       duration: NaN
     }]);
     haversineDistance.mockReturnValue(10);
+    jest.spyOn(TravelFacade, "getGoogleTravelTime").mockResolvedValue(NaN);
 
     const result = await estimateShuttleTravelTime({
         latitude: 45.5,
@@ -329,6 +331,7 @@ describe("formatTime", () => {
     });
   
     jest.spyOn(TravelFacade, "getTravelTimes").mockResolvedValue([{ duration: 10 }]);
+    jest.spyOn(TravelFacade, "getGoogleTravelTime").mockResolvedValue(NaN);
   
     const result = await estimateShuttleTravelTime({ latitude: 0, longitude: 0 }, "LOY");
     expect(result).toBeNull();
