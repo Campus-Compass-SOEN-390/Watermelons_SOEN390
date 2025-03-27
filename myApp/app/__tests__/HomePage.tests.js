@@ -83,4 +83,21 @@ describe('Home page', () => {
         expect(mockPush).toHaveBeenCalledWith('(tabs)/interest-points');
     });
 
+    it('should navigate to Calendar Fetching screen when Connect Calendars button is pressed', () => {
+        const page = render(<HomePage />);
+        const calendarButton = page.getByTestId('calendarfetchbutton');
+        
+        fireEvent.press(calendarButton);
+        
+        expect(mockPush).toHaveBeenCalledWith('screens/CalendarFetching');
+    });
+
+    it('should display Google icon in Connect Calendars button', () => {
+        const page = render(<HomePage />);
+        const googleIcon = page.getByTestId('googleIcon');
+        const calendarButton = page.getByTestId('calendarfetchbutton');
+        
+        expect(googleIcon).toBeTruthy();
+        expect(calendarButton).toContainElement(googleIcon);
+    });
 });
