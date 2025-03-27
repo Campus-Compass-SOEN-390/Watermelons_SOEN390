@@ -148,3 +148,23 @@ test('renders calendar history box with stored calendar IDs', async () => {
   expect(await findByText('Work Calendar')).toBeTruthy();
   expect(await findByText('Personal Calendar')).toBeTruthy();
 });
+
+test('handles API error from fetch', async () => {
+  global.fetch = jest.fn(() =>
+    Promise.resolve({
+      json: () => Promise.resolve({ error: { message: 'Invalid API key' } }),
+    })
+  );
+  const alertSpy = jest.spyOn(Alert, 'alert');
+
+  const { getByPlaceholderText, getByText } = renderWithNav(<CalendarFetching />);
+  
+  fireEvent.changeText(getByPlaceholderText('Paste Calendar ID here'), 'test-calendar');
+  fireEvent.press(getByText('Connect'));
+
+  await waitFor(() => {
+    expect(alertSpy).toHaveBeenCalledWith('Error', 'API Error: Invalid API key');
+  });
+});
+
+
