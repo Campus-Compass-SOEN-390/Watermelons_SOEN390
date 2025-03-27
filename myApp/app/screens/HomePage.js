@@ -1,28 +1,12 @@
 import React from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
-import { useRouter } from 'expo-router';
 import { homepageStyles as styles } from '../styles/HomePageStyles.js';
-import { triggerVibration, triggerSound, triggerSpeech } from '../utils/feedback';
-import { useFeedback } from '../context/FeedbackContext.js';
-import { Ionicons } from '@expo/vector-icons';
+import { useButtonInteraction } from '../hooks/useButtonInteraction';
 
 export default function HomePage() {
-    const router = useRouter();
-    const { vibrationEnabled, soundEnabled, speechEnabled } = useFeedback();
-
-    const handleButtonPress = (route, buttonText) => {
-        if (vibrationEnabled) {
-            triggerVibration();
-        }
-        if (soundEnabled) {
-            triggerSound();
-        }
-        if (speechEnabled) {
-            triggerSpeech(buttonText);
-        }
-        router.push(route);
-    };
-
+    
+    const { handleButtonPress } = useButtonInteraction();
+    
     return (
         <View style={{flex:1}}>
             <Image style={styles.logo}

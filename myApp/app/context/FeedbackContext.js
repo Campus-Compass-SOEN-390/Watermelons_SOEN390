@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { setVibrationEnabled, setSoundEnabled, setSpeechEnabled } from '../utils/feedback';
 
 const FeedbackContext = createContext();
 
