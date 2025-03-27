@@ -799,7 +799,7 @@ useEffect(() => {
       if (data.routes.length > 0) {
         const stepsArray = data.routes[0].legs[0].steps.map((step, index) => ({
           id: index,
-          instruction: step.html_instructions.replace(/<[^>]+>/g, ""),
+          instruction: step.html_instructions.replace(/<[^>]{1,256}>/g, ""), //bounded repeatition to fix sonarqube hotspot issue
           distance: step.distance.text,
         }));
   
