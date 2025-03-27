@@ -1,4 +1,6 @@
-import { updatePOICache, getCachedPOIData, fetchPOIData } from '../../api/poiApi';
+import { updatePOICache, getCachedPOIData, fetchPOIData} from '../../api/poiApi';
+import poiDataSubject from '../../api/POIDataSubject'; 
+
 import Constants from 'expo-constants';
 
 // Mock expo-constants
@@ -43,6 +45,53 @@ describe('POI API Tests', () => {
       expect(cache.lastFetchTime).toBeLessThanOrEqual(Date.now());
     });
   });
+
+  // Test POIDataSubject file
+  describe('POIDataSubject Tests', () => {
+  let observer;
+
+  beforeEach(() => {
+    // Create a mock observer (this could be a spy function or a mock object)
+    observer = jest.fn();
+  });
+
+
+  test('should notify observer when cache is updated', () => {
+    const unsubscribe = poiDataSubject.subscribe(observer);
+    poiDataSubject.updateData({ coffeeShops: ['new shop'] });
+    expect(observer).toHaveBeenCalledWith(expect.objectContaining({ coffeeShops: ['new shop'] }), false);
+    unsubscribe();
+  });
+
+  test('should log an error and return empty unsubscribe function if observer is not a function', () => {
+    const unsubscribe = poiDataSubject.subscribe('invalid observer');
+    expect(console.error).toHaveBeenCalledWith('Observer must be a function');
+    expect(unsubscribe).toEqual(expect.any(Function));
+    unsubscribe();
+  });
+  
+  test('should detect region changes correctly', () => {
+    
+    // Case 1: No previous region, should return true
+    let regionChanged = poiDataSubject.hasRegionChanged({ latitude: 45.0, longitude: -73.0 });
+    expect(regionChanged).toBe(true);
+
+    // Case 2: No new region, should return true
+    poiDataSubject.updateData({ lastRegion: { latitude: 45.0, longitude: -73.0 } });
+    regionChanged = poiDataSubject.hasRegionChanged(null);  // No new region
+    expect(regionChanged).toBe(true);
+
+    // Case 3: Region change exceeds threshold, should return true
+    regionChanged = poiDataSubject.hasRegionChanged({ latitude: 45.01, longitude: -73.0 });  // 0.01 difference
+    expect(regionChanged).toBe(true);
+
+    // Case 4: Region change within threshold, should return false
+    regionChanged = poiDataSubject.hasRegionChanged({ latitude: 45.004, longitude: -73.0 });  // <0.005 difference
+    expect(regionChanged).toBe(false);
+  });
+});
+
+  
   
   // Test fetchPOIData
   describe('fetchPOIData function', () => {

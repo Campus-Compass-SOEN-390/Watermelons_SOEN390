@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1742697068187" clover="3.2.0">
-  <project timestamp="1742697068187" name="All files">
-    <metrics statements="639" coveredstatements="509" conditionals="385" coveredconditionals="255" methods="134" coveredmethods="106" elements="1158" coveredelements="870" complexity="0" loc="639" ncloc="639" packages="10" files="33" classes="33"/>
+<coverage generated="1743041272538" clover="3.2.0">
+  <project timestamp="1743041272538" name="All files">
+    <metrics statements="639" coveredstatements="522" conditionals="385" coveredconditionals="263" methods="134" coveredmethods="112" elements="1158" coveredelements="897" complexity="0" loc="639" ncloc="639" packages="10" files="33" classes="33"/>
     <package name="app.api">
-      <metrics statements="187" coveredstatements="165" conditionals="107" coveredconditionals="80" methods="36" coveredmethods="28"/>
+      <metrics statements="187" coveredstatements="178" conditionals="107" coveredconditionals="88" methods="36" coveredmethods="34"/>
       <file name="POIDataSubject.js" path="/Users/ikramkml/Desktop/Watermelons_SOEN390/Watermelons_SOEN390/myApp/app/api/POIDataSubject.js">
-        <metrics statements="23" coveredstatements="9" conditionals="8" coveredconditionals="0" methods="11" coveredmethods="4"/>
+        <metrics statements="23" coveredstatements="22" conditionals="8" coveredconditionals="8" methods="11" coveredmethods="10"/>
         <line num="13" count="1" type="stmt"/>
         <line num="20" count="1" type="stmt"/>
         <line num="21" count="1" type="stmt"/>
-        <line num="30" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="31" count="0" type="stmt"/>
-        <line num="32" count="0" type="stmt"/>
-        <line num="35" count="0" type="stmt"/>
-        <line num="38" count="0" type="stmt"/>
-        <line num="41" count="0" type="stmt"/>
-        <line num="42" count="0" type="stmt"/>
-        <line num="51" count="6" type="stmt"/>
-        <line num="52" count="6" type="stmt"/>
+        <line num="30" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="51" count="8" type="stmt"/>
+        <line num="52" count="8" type="stmt"/>
         <line num="60" count="18" type="stmt"/>
         <line num="61" count="18" type="stmt"/>
-        <line num="68" count="24" type="stmt"/>
-        <line num="69" count="0" type="stmt"/>
+        <line num="68" count="26" type="stmt"/>
+        <line num="69" count="1" type="stmt"/>
         <line num="78" count="0" type="stmt"/>
-        <line num="87" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="89" count="0" type="stmt"/>
-        <line num="90" count="0" type="stmt"/>
-        <line num="91" count="0" type="stmt"/>
-        <line num="93" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="87" count="4" type="cond" truecount="4" falsecount="0"/>
+        <line num="89" count="3" type="stmt"/>
+        <line num="90" count="3" type="stmt"/>
+        <line num="91" count="3" type="stmt"/>
+        <line num="93" count="3" type="cond" truecount="2" falsecount="0"/>
         <line num="98" count="1" type="stmt"/>
       </file>
       <file name="buildingData.ts" path="/Users/ikramkml/Desktop/Watermelons_SOEN390/Watermelons_SOEN390/myApp/app/api/buildingData.ts">
