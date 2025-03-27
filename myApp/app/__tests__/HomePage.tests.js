@@ -5,6 +5,24 @@ import HomePage from '../screens/HomePage';
 // Create a mock for the push function
 const mockPush = jest.fn();
 
+// Mock useFeedback hook
+jest.mock('../context/FeedbackContext', () => ({
+    useFeedback: () => ({
+        vibrationEnabled: true,
+        soundEnabled: true,
+        speechEnabled: true
+    })
+}));
+
+// Mock useButtonInteraction hook
+jest.mock('../hooks/useButtonInteraction', () => ({
+    useButtonInteraction: () => ({
+        handleButtonPress: (route, buttonText) => {
+            mockPush(route);
+        }
+    })
+}));
+
 // Mocking useRouter from expo-router to return the mock push function
 jest.mock('expo-router', () => ({
     useRouter: () => ({
