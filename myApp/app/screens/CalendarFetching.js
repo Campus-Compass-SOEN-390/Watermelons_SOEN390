@@ -38,73 +38,61 @@ export default function CalendarFetching() {
   const API_KEY = process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
 
   const fetchCalendarEvents = useCallback(async () => {
-    if (!calendarId.trim()) {
+    if (!isValidCalendarId(calendarId)) {
       Alert.alert("Invalid", "Please enter a valid Calendar ID");
       return;
     }
   
-    setLoading(true);
-  
-    const { timeMin, timeMax } = calculateTimeRange(monthsAhead);
-    const url = buildCalendarApiUrl(calendarId, API_KEY, timeMin, timeMax);
-  
     try {
-      let response = await fetch(url);
-      let data = await response.json();
+      setLoading(true);
   
-      if (data.error) {
-        Alert.alert("Error", `API Error: ${data.error.message}`);
-      } else if (data.items) {
-        setEvents(data.items);
-        await handleCSVExport(data.items);
-        await saveCalendarIdIfNeeded(calendarId, data.summary);
-        setShowSuccessScreen(true);
-      } else {
-        setEvents([]);
-        Alert.alert("No Events", "No upcoming events found.");
+      const response = await fetch(buildCalendarApiUrl(calendarId), {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      if (!response.ok) {
+        handleErrorResponse(response);
+        return;
       }
   
-      console.log("API Response:", data);
-    } catch (error) {
-      console.error("Error fetching calendar events:", error);
-      Alert.alert("Error", "Something went wrong while fetching the events.");
-    }
+      const data = await response.json();
   
-    setLoading(false);
-  }, [calendarId, API_KEY]);
+      if (!data.items?.length) {
+        Alert.alert("No events", "There are no events in this calendar.");
+        return;
+      }
+  
+      const csvContent = convertEventsToCSV(data.items);
+      shareCSVContent(csvContent);
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [calendarId, token]);
   
   // Helper Functions
-  const calculateTimeRange = (monthsAhead = "1") => {
-    const oneMonthAgo = new Date();
-    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-    const futureDate = new Date();
-    futureDate.setMonth(futureDate.getMonth() + parseInt(monthsAhead));
+  const isValidCalendarId = (id) => id.trim().length > 0;
   
-    return { timeMin: oneMonthAgo.toISOString(), timeMax: futureDate.toISOString() };
-  };
+  const buildCalendarApiUrl = (id) =>
+    `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
+      id
+    )}/events?maxResults=50`;
   
-  const buildCalendarApiUrl = (calendarId, API_KEY, timeMin, timeMax) =>
-    `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
-  
-  const handleCSVExport = async (items) => {
-    const csvContent = convertEventsToCSV(items);
-    const fileUri = FileSystem.documentDirectory + "calendar_events.csv";
-    await FileSystem.writeAsStringAsync(fileUri, csvContent);
-    console.log("CSV saved to:", fileUri);
-  };
-  
-  const saveCalendarIdIfNeeded = async (calendarId, calendarSummary) => {
-    if (!calendarId || !calendarSummary) return;
-  
-    const newEntry = { id: calendarId, name: calendarSummary || "Unlabelled Calendar" };
-    const existingEntries = [...storedCalendarIds];
-  
-    if (!existingEntries.some(entry => entry.id === calendarId)) {
-      const updatedCalendarIds = [newEntry, ...existingEntries];
-      setStoredCalendarIds(updatedCalendarIds);
-      await AsyncStorage.setItem("calendarIds", JSON.stringify(updatedCalendarIds));
+  const handleErrorResponse = (response) => {
+    if (response.status === 401) {
+      Alert.alert("Unauthorized", "Your session expired. Please login again.");
+    } else {
+      Alert.alert("Error", `Failed to fetch events: ${response.status}`);
     }
   };
+  
+  const shareCSVContent = async (csvContent) => {
+    const filePath = `${RNFS.DocumentDirectoryPath}/events.csv`;
+    await RNFS.writeFile(filePath, csvContent, "utf8");
+    Share.open({ url: `file://${filePath}` });
+  };
+  
 
   // Redirect user to events page upon successful entry of a calendar id
   useEffect(() => {
