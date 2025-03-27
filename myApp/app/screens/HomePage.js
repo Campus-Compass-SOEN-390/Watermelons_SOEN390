@@ -8,12 +8,16 @@ import { Ionicons } from '@expo/vector-icons';
 
 export default function HomePage() {
     const router = useRouter();
-    const { feedbackEnabled } = useFeedback();
+    const { vibrationEnabled, soundEnabled, speechEnabled } = useFeedback();
 
     const handleButtonPress = (route, buttonText) => {
-        if (feedbackEnabled) {
+        if (vibrationEnabled) {
             triggerVibration();
+        }
+        if (soundEnabled) {
             triggerSound();
+        }
+        if (speechEnabled) {
             triggerSpeech(buttonText);
         }
         router.push(route);

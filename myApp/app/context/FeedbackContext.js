@@ -4,21 +4,43 @@ import { setVibrationEnabled, setSoundEnabled, setSpeechEnabled } from '../utils
 const FeedbackContext = createContext();
 
 export function FeedbackProvider({ children }) {
-  const [feedbackEnabled, setFeedbackEnabled] = useState(true);
+  const [vibrationEnabled, setVibrationEnabled] = useState(true);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [speechEnabled, setSpeechEnabled] = useState(true);
 
-  const toggleFeedback = useCallback(() => {
-    setFeedbackEnabled(prev => {
+  const toggleVibration = useCallback(() => {
+    setVibrationEnabled(prev => {
       const newState = !prev;
       setVibrationEnabled(newState);
+      return newState;
+    });
+  }, []);
+
+  const toggleSound = useCallback(() => {
+    setSoundEnabled(prev => {
+      const newState = !prev;
       setSoundEnabled(newState);
+      return newState;
+    });
+  }, []);
+
+  const toggleSpeech = useCallback(() => {
+    setSpeechEnabled(prev => {
+      const newState = !prev;
       setSpeechEnabled(newState);
-      alert(`Feedback ${newState ? "enabled" : "disabled"}`);
       return newState;
     });
   }, []);
 
   return (
-    <FeedbackContext.Provider value={{ feedbackEnabled, toggleFeedback }}>
+    <FeedbackContext.Provider value={{ 
+      vibrationEnabled, 
+      soundEnabled, 
+      speechEnabled,
+      toggleVibration,
+      toggleSound,
+      toggleSpeech
+    }}>
       {children}
     </FeedbackContext.Provider>
   );
