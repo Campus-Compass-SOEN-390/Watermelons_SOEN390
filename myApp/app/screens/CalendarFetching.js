@@ -45,7 +45,12 @@ export default function CalendarFetching() {
   
     setLoading(true);
   
-    const { timeMin, timeMax } = calculateTimeRange(monthsAhead);
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    const timeMin = oneMonthAgo.toISOString();
+    const futureDate = new Date();
+    futureDate.setMonth(futureDate.getMonth() + parseInt(monthsAhead || "1"));
+    const timeMax = futureDate.toISOString();
   
     const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
   
@@ -55,42 +60,37 @@ export default function CalendarFetching() {
   
       if (data.error) {
         Alert.alert("Error", `API Error: ${data.error.message}`);
-        setLoading(false);
-        return;
-      }
+      } else if (data.items) {
+        setEvents(data.items);
   
-      if (!data.items) {
+        const csvContent = convertEventsToCSV(data.items);
+        const fileUri = FileSystem.documentDirectory + "calendar_events.csv";
+  
+        await FileSystem.writeAsStringAsync(fileUri, csvContent);
+        console.log("CSV saved to:", fileUri);
+  
+        try {
+          if (!calendarId || !data.summary) return;
+  
+          const newEntry = { id: calendarId, name: data.summary || "Unlabelled Calendar" };
+          const existingEntries = [...storedCalendarIds];
+  
+          const isDuplicate = existingEntries.some(entry => entry.id === calendarId);
+  
+          if (!isDuplicate) {
+            const updatedCalendarIds = [newEntry, ...existingEntries];
+            setStoredCalendarIds(updatedCalendarIds);
+            await AsyncStorage.setItem("calendarIds", JSON.stringify(updatedCalendarIds));
+          }
+        } catch (err) {
+          console.error("Failed to save calendar ID and name", err);
+        }
+  
+        setShowSuccessScreen(true);
+      } else {
         setEvents([]);
         Alert.alert("No Events", "No upcoming events found.");
-        setLoading(false);
-        return;
       }
-  
-      setEvents(data.items);
-  
-      const csvContent = convertEventsToCSV(data.items);
-      const fileUri = FileSystem.documentDirectory + "calendar_events.csv";
-  
-      await FileSystem.writeAsStringAsync(fileUri, csvContent);
-      console.log("CSV saved to:", fileUri);
-  
-      try {
-        if (!calendarId || !data.summary) return;
-        const newEntry = { id: calendarId, name: data.summary || "Unlabelled Calendar" };
-        const existingEntries = [...storedCalendarIds];
-  
-        const isDuplicate = existingEntries.some(entry => entry.id === calendarId);
-  
-        if (!isDuplicate) {
-          const updatedCalendarIds = [newEntry, ...existingEntries];
-          setStoredCalendarIds(updatedCalendarIds);
-          await AsyncStorage.setItem("calendarIds", JSON.stringify(updatedCalendarIds));
-        }
-      } catch (err) {
-        console.error("Failed to save calendar ID and name", err);
-      }
-  
-      setShowSuccessScreen(true);
   
       console.log("API Response:", data);
     } catch (error) {
@@ -100,17 +100,6 @@ export default function CalendarFetching() {
   
     setLoading(false);
   }, [calendarId, API_KEY]);
-  
-  const calculateTimeRange = (monthsAhead = "1") => {
-    const oneMonthAgo = new Date();
-    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-    const timeMin = oneMonthAgo.toISOString();
-    const futureDate = new Date();
-    futureDate.setMonth(futureDate.getMonth() + parseInt(monthsAhead));
-    const timeMax = futureDate.toISOString();
-  
-    return { timeMin, timeMax };
-  };
   
   // Redirect user to events page upon successful entry of a calendar id
   useEffect(() => {

@@ -196,7 +196,26 @@
 <a name='L131'></a><a href='#L131'>131</a>
 <a name='L132'></a><a href='#L132'>132</a>
 <a name='L133'></a><a href='#L133'>133</a>
-<a name='L134'></a><a href='#L134'>134</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a>
+<a name='L148'></a><a href='#L148'>148</a>
+<a name='L149'></a><a href='#L149'>149</a>
+<a name='L150'></a><a href='#L150'>150</a>
+<a name='L151'></a><a href='#L151'>151</a>
+<a name='L152'></a><a href='#L152'>152</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -329,17 +348,35 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { StyleSheet } from 'react-native';
+import { FONT_SIZE_1,FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4, FONT_SIZE_5 } from './constants';
 &nbsp;
 export const calendarFetchingStyles = StyleSheet.create({
   container: {
     backgroundColor: '#f5f5f5',
     justifyContent: 'center',
-    flex: 1, // You may want this if you need the full screen
+    flex: 1,
   },
   redContainer: {
     backgroundColor: '#922338',
-    margin: 20,
+    margin: 10,
     padding: 10,
     borderRadius: 10,
     justifyContent: 'center',
@@ -372,47 +409,24 @@ export const calendarFetchingStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 15,
-    marginBottom: 20,
-    fontSize: 16,
+    marginBottom: 10,
+    fontSize: FONT_SIZE_3,
     backgroundColor: '#f9f9f9',
   },
   connectButton: {
     backgroundColor: '#922338',
     padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 20,
-    width: 100,
+    borderRadius: 25,
     alignSelf: 'center',
+    minWidth: 100,
+    paddingHorizontal: 20,
+    position: 'absolute',
+    bottom: 55,
   },
   buttonText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: FONT_SIZE_4,
     fontWeight: 'bold',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 8,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-  },
-  closeButton: {
-    marginTop: 20,
-    backgroundColor: '#922338',
-    padding: 10,
-    borderRadius: 8,
-    alignItems: 'center',
   },
 &nbsp;
   // --- Success Screen Styles ---
@@ -424,7 +438,7 @@ export const calendarFetchingStyles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   successTitle: {
-    fontSize: 20,
+    fontSize: FONT_SIZE_5,
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#333',
@@ -432,7 +446,7 @@ export const calendarFetchingStyles = StyleSheet.create({
   },
   successSubtitle: {
     marginTop: 10,
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     textAlign: 'center',
     color: '#666',
   },
@@ -445,13 +459,13 @@ export const calendarFetchingStyles = StyleSheet.create({
     borderRadius: 6,
   },
   eventTitle: {
-    fontSize: 16,
+    fontSize: FONT_SIZE_3,
     fontWeight: 'bold',
     marginBottom: 4,
     color: '#333',
   },
   eventDate: {
-    fontSize: 14,
+    fontSize: FONT_SIZE_2,
     color: '#666',
   },
   logo: {
@@ -459,6 +473,46 @@ export const calendarFetchingStyles = StyleSheet.create({
     height: 150,
     marginVertical: 20,
   },
+&nbsp;
+  // --- Calendar History Track --- 
+&nbsp;
+  subtitle: {
+    fontSize: FONT_SIZE_2,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  historyItem: {
+    backgroundColor: "rgba(0, 0, 0, 0.19)",
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+    paddingVertical: 5,
+  },
+  historyText: {
+    fontSize: 10,
+    color: 'black',
+  },
+&nbsp;
+  // --- Clear History Button ---
+  clearHistoryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 25,
+    backgroundColor: '#f4f4f4',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    alignSelf: 'center',
+    position: 'absolute',
+    bottom: 10,
+  },
+  clearHistoryText: {
+    fontSize: FONT_SIZE_1,
+    color: '#444',
+    fontWeight: '500',
+  },
+&nbsp;
 });
 &nbsp;
 export default calendarFetchingStyles;
@@ -469,7 +523,7 @@ export default calendarFetchingStyles;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-03-18T17:50:55.495Z
+                at 2025-03-27T21:00:46.481Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
