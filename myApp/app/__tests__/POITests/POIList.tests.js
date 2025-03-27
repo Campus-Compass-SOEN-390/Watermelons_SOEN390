@@ -6,6 +6,34 @@ import { ActivityIndicator, FlatList, Image, Text } from 'react-native';
 import POIList from '../../components/POI/POIList';
 import Constants from 'expo-constants';
 
+// Mock expo-av
+jest.mock('expo-av', () => ({
+  Audio: {
+    Sound: {
+      createAsync: jest.fn(() => Promise.resolve({ sound: { playAsync: jest.fn() } })),
+    },
+  },
+}));
+
+// Mock expo-speech
+jest.mock('expo-speech', () => ({
+  speak: jest.fn(),
+}));
+
+// Mock react-native-toast-message
+jest.mock('react-native-toast-message', () => ({
+  show: jest.fn(),
+}));
+
+// Mock the feedback context
+jest.mock('../../context/FeedbackContext', () => ({
+  useFeedback: () => ({
+    vibrationEnabled: true,
+    soundEnabled: true,
+    speechEnabled: true,
+  }),
+}));
+
 // Ensure a dummy API key is available
 jest.mock('expo-constants', () => ({
   default: {
