@@ -118,7 +118,7 @@ export const getAlternativeRoutes = async (
                     summary: route.summary || "No summary",
                     coordinates: decodePolyline(route.overview_polyline?.points || ""),
                     steps: route.legs?.[0]?.steps?.map((step) => ({
-                        instruction: step.html_instructions?.replace(/<[^>]+>/g, "") || "No instruction",
+                        instruction: step.html_instructions?.replace(/<[^>]{1,256}>/g, "") || "No instruction", //bounded quanitifier - sonarqube
                         distance: step.distance?.text || "Unknown",
                         duration: Math.round(step.duration?.value / 60) || 0,
                     })) || [],
