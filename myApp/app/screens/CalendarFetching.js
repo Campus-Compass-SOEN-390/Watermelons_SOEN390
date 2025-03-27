@@ -55,38 +55,42 @@ export default function CalendarFetching() {
   
       if (data.error) {
         Alert.alert("Error", `API Error: ${data.error.message}`);
-      } else {
-        if (data.items) {
-          setEvents(data.items);
-  
-          const csvContent = convertEventsToCSV(data.items);
-          const fileUri = FileSystem.documentDirectory + "calendar_events.csv";
-  
-          await FileSystem.writeAsStringAsync(fileUri, csvContent);
-          console.log("CSV saved to:", fileUri);
-  
-          try {
-            if (!calendarId || !data.summary) return;
-            const newEntry = { id: calendarId, name: data.summary || "Unlabelled Calendar" };
-            const existingEntries = [...storedCalendarIds];
-  
-            const isDuplicate = existingEntries.some(entry => entry.id === calendarId);
-  
-            if (!isDuplicate) {
-              const updatedCalendarIds = [newEntry, ...existingEntries];
-              setStoredCalendarIds(updatedCalendarIds);
-              await AsyncStorage.setItem("calendarIds", JSON.stringify(updatedCalendarIds));
-            }
-          } catch (err) {
-            console.error("Failed to save calendar ID and name", err);
-          }
-  
-          setShowSuccessScreen(true);
-        } else {
-          setEvents([]);
-          Alert.alert("No Events", "No upcoming events found.");
-        }
+        setLoading(false);
+        return;
       }
+  
+      if (!data.items) {
+        setEvents([]);
+        Alert.alert("No Events", "No upcoming events found.");
+        setLoading(false);
+        return;
+      }
+  
+      setEvents(data.items);
+  
+      const csvContent = convertEventsToCSV(data.items);
+      const fileUri = FileSystem.documentDirectory + "calendar_events.csv";
+  
+      await FileSystem.writeAsStringAsync(fileUri, csvContent);
+      console.log("CSV saved to:", fileUri);
+  
+      try {
+        if (!calendarId || !data.summary) return;
+        const newEntry = { id: calendarId, name: data.summary || "Unlabelled Calendar" };
+        const existingEntries = [...storedCalendarIds];
+  
+        const isDuplicate = existingEntries.some(entry => entry.id === calendarId);
+  
+        if (!isDuplicate) {
+          const updatedCalendarIds = [newEntry, ...existingEntries];
+          setStoredCalendarIds(updatedCalendarIds);
+          await AsyncStorage.setItem("calendarIds", JSON.stringify(updatedCalendarIds));
+        }
+      } catch (err) {
+        console.error("Failed to save calendar ID and name", err);
+      }
+  
+      setShowSuccessScreen(true);
   
       console.log("API Response:", data);
     } catch (error) {
