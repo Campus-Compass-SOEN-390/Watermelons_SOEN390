@@ -7,11 +7,16 @@ import {
     setSpeechEnabled,
     triggerSpeech,
     __resetSoundCache
-  } from '../utils/feedback';
+} from '../utils/feedback';
   
 import { Vibration } from 'react-native';
 import { Audio } from 'expo-av';
 import * as Speech from 'expo-speech';
+
+// Add Toast mock
+jest.mock('react-native-toast-message', () => ({
+    show: jest.fn()
+}));
   
 jest.mock('react-native', () => ({
     Vibration: { vibrate: jest.fn() },
@@ -22,24 +27,20 @@ jest.mock('../../assets/sounds/click.wav', () => 'mocked-sound-file');
 jest.mock('expo-av', () => ({
     Audio: {
         Sound: {
-        createAsync: jest.fn(() =>
-            Promise.resolve({
-                sound: {
-                    replayAsync: jest.fn(() => Promise.resolve()),
-            },
-        })
-      ),
+            createAsync: jest.fn(() =>
+                Promise.resolve({
+                    sound: {
+                        replayAsync: jest.fn(() => Promise.resolve()),
+                    },
+                })
+            ),
+        },
     },
-  },
 }));
 
 jest.mock('expo-speech', () => ({
     speak: jest.fn(),
 }));
-  
-jest.mock('expo-speech', () => ({
-    speak: jest.fn(),
-  }));
   
 describe('Feedback Utility Functions', () => {
     beforeEach(() => {
@@ -57,6 +58,13 @@ describe('Feedback Utility Functions', () => {
         setVibrationEnabled(false);
         triggerVibration();
         expect(Vibration.vibrate).not.toHaveBeenCalled();
+    });
+    
+    test('should show toast when vibration is triggered', () => {
+        const Toast = require('react-native-toast-message');
+        setVibrationEnabled(true);
+        triggerVibration();
+        expect(Toast.show).toHaveBeenCalled();
     });
     
         // Sound Tests
@@ -81,6 +89,13 @@ describe('Feedback Utility Functions', () => {
         expect(Audio.Sound.createAsync).not.toHaveBeenCalled();
     });
     
+    test('should show toast when sound is triggered', async () => {
+        const Toast = require('react-native-toast-message');
+        setSoundEnabled(true);
+        await triggerSound();
+        expect(Toast.show).toHaveBeenCalled();
+    });
+    
         // Speech Tests
     test('should speak when speech is enabled and text is provided', () => {
         setSpeechEnabled(true);
@@ -99,5 +114,11 @@ describe('Feedback Utility Functions', () => {
         triggerSpeech('');
         expect(Speech.speak).not.toHaveBeenCalled();
     });
+    
+    test('should show toast when speech is triggered', () => {
+        const Toast = require('react-native-toast-message');
+        setSpeechEnabled(true);
+        triggerSpeech('test');
+        expect(Toast.show).toHaveBeenCalled();
+    });
 });
-  
