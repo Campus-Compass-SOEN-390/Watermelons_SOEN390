@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import Mapbox from "@rnmapbox/maps";
-import { View, Button } from "react-native";
+import { View } from "react-native";
 import Constants from "expo-constants";
-import polyline from "@mapbox/polyline";
+import { useLocationContext } from "../context/LocationContext";
+import { getAlternativeRoutes } from "../api/googleMapsApi";
 
-// const MAPBOX_API_KEY = Constants.expoConfig?.extra?.mapbox;
-const MAPBOX_API_KEY = "sk.eyJ1IjoiN2FuaW5lIiwiYSI6ImNtN3F3ZWhoZjBjOGIya3NlZjc5aWc2NmoifQ.7bRiuJDphvZiBmpK26lkQw";
+const MAPBOX_API_KEY = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken(MAPBOX_API_KEY);
 const GOOGLE_MAPS_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
@@ -22,47 +22,67 @@ const MapDirections: React.FC<Props> = ({
   mapRef,
   travelMode,
 }) => {
+  const { selectedRouteIndex } = useLocationContext(); 
   //stores all routes rather than just 1
   const [routes, setRoutes] = useState<GeoJSON.FeatureCollection[]>([]);
   //To be used when options of routes are added
-  const [selectedRouteIndex, setSelectedRouteIndex] = useState<number>(0);
   const cameraRef = useRef<Mapbox.Camera | null>(null);
 
   const prevOriginRef = useRef<{ latitude: number; longitude: number } | null>(null);
   const prevDestinationRef = useRef<{ latitude: number; longitude: number } | null>(null);
-  const prevTravelModeRef = useRef<string | null>(null);
+  const prevTravelModeRef = useRef<"driving" | "cycling" | "walking" | "transit" | undefined>(undefined);
 
   useEffect(() => {
     let isMounted = true;
-
+  
     const fetchData = async () => {
-      if (!origin || !destination || !travelMode) return;
+      if (!origin || !destination) return;
 
-      // Check if origin or destination has actually changed before fetching
       const hasOriginChanged = JSON.stringify(origin) !== JSON.stringify(prevOriginRef.current);
       const hasDestinationChanged = JSON.stringify(destination) !== JSON.stringify(prevDestinationRef.current);
       const hasTravelModeChanged = JSON.stringify(travelMode) !== JSON.stringify(prevTravelModeRef.current);
-
+    
       if (hasOriginChanged || hasDestinationChanged || hasTravelModeChanged) {
-        console.log("Origin or destination changed, fetching new routes...");
-        await fetchRoutes(travelMode, isMounted);
+        try {
+          console.log("Fetching alternative routes...");
+          const alternativeRoutes = await getAlternativeRoutes(origin, destination, [travelMode || "walking"]);
+      
+          if (!isMounted) return;
+      
+          // Check if alternativeRoutes is an array
+          if (Array.isArray(alternativeRoutes)) {
+            // Extract the first mode's routes (assuming one mode at a time for now)
+            const selectedModeRoutes = alternativeRoutes
+              .filter((r) => r.mode === travelMode)
+              .flatMap((r) => r.routes) || [];
+      
+            if (selectedModeRoutes.length > 0) {
+              setRoutes(parseAlternativeRoutes(selectedModeRoutes));
+            } else {
+              console.warn("No alternative routes found.");
+              setRoutes([]);
+            }
 
-        // Update previous values
-        prevOriginRef.current = origin;
-        prevDestinationRef.current = destination;
-        prevTravelModeRef.current = travelMode;
-      }
-
-      console.log("Travel Mode", travelMode)
+            prevOriginRef.current = origin;
+            prevDestinationRef.current = destination;
+            prevTravelModeRef.current = travelMode;
+          } else {
+            console.error("Unexpected response structure:", alternativeRoutes);
+            setRoutes([]);
+          }
+        } catch (error) {
+          console.error("Error fetching alternative routes:", error);
+        }
+    }
     };
-
+    
+  
     fetchData();
-
+  
     return () => {
       isMounted = false;
     };
   }, [travelMode, origin, destination]);
-
 
   useEffect(() => {
     if (routes.length > 0 && routes[selectedRouteIndex]) {
@@ -70,31 +90,6 @@ const MapDirections: React.FC<Props> = ({
       fitToRoute(coordinates);
     }
   }, [selectedRouteIndex, routes]);
-
-  const fetchRoutes = async (mode: string, isMounted: boolean) => {
-    if (!origin || !destination) return;
-
-    console.log(`Fetching routes from Google Maps with mode: ${mode}`);
-
-    //By setting alternatives to true in url, now get all routes rather than just 1
-    let url = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&mode=${mode}&alternatives=true&key=${GOOGLE_MAPS_API_KEY}`;
-
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      if (!isMounted) return;
-      if (data.routes && data.routes.length > 0) {
-        setRoutes(parseGoogleMapsResponse(data));
-      } else {
-        console.warn("No routes found in Google Maps API response.");
-      }
-    } catch (error) {
-      console.error("Error fetching Google Maps routes:", error);
-    }
-  };
 
   const fitToRoute = (coordinates: number[][]) => {
     if (cameraRef.current && coordinates.length > 1) {
@@ -120,26 +115,26 @@ const MapDirections: React.FC<Props> = ({
     }
   };
 
-  const parseGoogleMapsResponse = (data: any): GeoJSON.FeatureCollection[] => {
-    return data.routes.map((route: any) => {
-      const encodedPolyline = route.overview_polyline.points;
-      const decodedCoordinates = polyline.decode(encodedPolyline);
-      const geoJsonCoordinates = decodedCoordinates.map(([lat, lng]) => [lng, lat]);
-      return {
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            geometry: {
-              type: "LineString",
-              coordinates: geoJsonCoordinates,
-            },
-            properties: {},
+  const parseAlternativeRoutes = (routes: any[]): GeoJSON.FeatureCollection[] => {
+    return routes.map((route) => ({
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: {
+            type: "LineString",
+            coordinates: route.coordinates,
           },
-        ],
-      };
-    });
+          properties: {
+            duration: route.duration,
+            distance: route.distance,
+            summary: route.summary,
+          },
+        },
+      ],
+    }));
   };
+  
 
   if (!origin || !destination || routes.length === 0) return null;
 

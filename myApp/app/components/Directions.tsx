@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { View } from "react-native";
 import Mapbox from "@rnmapbox/maps";
 import ShortestPathMap from "./IndoorMap/ShortestPathMap";
 import MapDirections from "./MapDirections";
-import useLocation from "../hooks/useLocation";
 
 interface Props {
   graph: any;

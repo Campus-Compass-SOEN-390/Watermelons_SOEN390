@@ -20,7 +20,7 @@ appId: com.anonymous.myApp
     duration: 638
 
 # Open the Filter menu
-- tapOn: ", Filter"
+- tapOn: " Filter"
 
 # Select filter options
 - tapOn:
@@ -32,7 +32,7 @@ appId: com.anonymous.myApp
 - tapOn: "Apply Filters"
 
 # Select a point of interest
-- tapOn: ", Get Directions"
+- tapOn: " Get Directions"
 
 #open the poi button bottom right
 - tapOn: ""

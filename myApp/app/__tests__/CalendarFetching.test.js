@@ -222,3 +222,19 @@ All Day Event,2023-05-04,2023-05-05,Everywhere,https://calendar.google.com/event
     expect(result).toBe(expectedCSV);
   });
 });
+
+test('renders calendar history box with stored calendar IDs', async () => {
+  const AsyncStorage = require('@react-native-async-storage/async-storage');
+  AsyncStorage.getItem.mockResolvedValue(
+    JSON.stringify([
+      { id: 'calendar-1', name: 'Work Calendar' },
+      { id: 'calendar-2', name: 'Personal Calendar' },
+    ])
+  );
+
+  const { findByText } = renderWithNav(<CalendarFetching />);
+
+  // Check that history items are rendered in the box
+  expect(await findByText('Work Calendar')).toBeTruthy();
+  expect(await findByText('Personal Calendar')).toBeTruthy();
+});
