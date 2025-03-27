@@ -65,7 +65,7 @@ export default function CalendarFetching() {
           setEvents(data.items);
 
           // Keeps track of each calendar's events
-          const csvContent = convertEventsToCSV(data.items, data.summary);
+          const csvContent = convertEventsToCSV(data.items); // -- sonarqube fix
           const fileUri = FileSystem.documentDirectory + "calendar_events.csv";
 
           // All events are stored in a CSV file
