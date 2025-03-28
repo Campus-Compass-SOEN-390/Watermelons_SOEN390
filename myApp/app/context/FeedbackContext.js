@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 const FeedbackContext = createContext();
@@ -20,21 +20,29 @@ export function FeedbackProvider({ children }) {
     setSpeechEnabled(prev => !prev);
   }, []);
 
+  const value = useMemo(() => ({
+    vibrationEnabled,
+    soundEnabled,
+    speechEnabled,
+    toggleVibration,
+    toggleSound,
+    toggleSpeech
+  }), [
+    vibrationEnabled,
+    soundEnabled,
+    speechEnabled,
+    toggleVibration,
+    toggleSound,
+    toggleSpeech
+  ]);
+
   return (
-    <FeedbackContext.Provider value={{ 
-      vibrationEnabled, 
-      soundEnabled, 
-      speechEnabled,
-      toggleVibration,
-      toggleSound,
-      toggleSpeech
-    }}>
+    <FeedbackContext.Provider value={value}>
       {children}
     </FeedbackContext.Provider>
   );
 }
 
-// Add PropTypes validation
 FeedbackProvider.propTypes = {
   children: PropTypes.node.isRequired
 };
