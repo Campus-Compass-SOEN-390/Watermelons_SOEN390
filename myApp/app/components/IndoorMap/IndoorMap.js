@@ -15,9 +15,6 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
     setGeoJsonData(finalMapData);
   }, []);
 
-  const elevator = require("/Users/samhenderson/Desktop/Watermelons_SOEN390/myApp/assets/images/elevator.png"); // Use the elevator icon
-  const stairs = require("/Users/samhenderson/Desktop/Watermelons_SOEN390/myApp/assets/images/stairs.png"); // Use the stairs icon
-
   if (!geoJsonData.features.length) {
     return <Mapbox.ShapeSource id="indoor-map" testID="indoor-map" shape={{ type: "FeatureCollection", features: [] }} />;
   }  
