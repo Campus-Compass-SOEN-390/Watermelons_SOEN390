@@ -23,7 +23,6 @@ export default function Settings() {
       <HeaderButtons />
       <View style={styles.container}>
         <Text style={styles.title}>Settings</Text>
-        <Text style={styles.subtitle}>Feedback</Text>
 
         <View style={styles.settingRow}>
           <Ionicons name="invert-mode-outline" size={24} color='black' />
