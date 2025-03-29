@@ -39,7 +39,10 @@ describe("IndoorMap Component", () => {
       expect(getByTestId("path-line-layer")).toBeTruthy();
       expect(getByTestId("wall-line-layer")).toBeTruthy();
       expect(getByTestId("door-text-layer")).toBeTruthy();
-      expect(getByTestId("poi-text-layer")).toBeTruthy();
+      expect(getByTestId("poi-stairs-layer")).toBeTruthy();
+      expect(getByTestId("poi-elevator-layer")).toBeTruthy();
+      expect(getByTestId("poi-escalator-layer")).toBeTruthy();
+      expect(getByTestId("poi-bathroom-layer")).toBeTruthy();
     });
   });
 
