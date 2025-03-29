@@ -1,11 +1,13 @@
-import { useEffect, React } from "react";
+import { useEffect, React, useContext } from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { homepageStyles as styles } from "../styles/HomePageStyles.js";
+import { homepageStyles as baseStyles } from "../styles/HomePageStyles.js";
 import RNUxcam from "react-native-ux-cam";
+import { ThemeContext } from "../context/ThemeContext";
 
 export default function HomePage() {
   const router = useRouter();
+  const { theme, isDarkMode } = useContext(ThemeContext);
 
   // Add this useEffect hook for UXCam screen tagging
   useEffect(() => {
@@ -13,8 +15,34 @@ export default function HomePage() {
     RNUxcam.tagScreenName("HomePage");
   }, []);
 
+  // Create theme-aware styles by merging base styles with theme-specific overrides
+  const styles = {
+    ...baseStyles,
+    // Override specific styles based on theme
+    buttonsContainer: {
+      ...baseStyles.buttonsContainer,
+      backgroundColor: theme.cardBackground,
+    },
+    title: {
+      ...baseStyles.title,
+      color: theme.text,
+    },
+    button: {
+      ...baseStyles.button,
+      backgroundColor: theme.buttonBackground,
+    },
+    buttonText: {
+      ...baseStyles.buttonText,
+      color: theme.buttonText,
+    },
+    googleButton: {
+      ...baseStyles.googleButton,
+      backgroundColor: theme.buttonBackground,
+    },
+  };
+
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
       <Image
         style={styles.logo}
         source={require("../../assets/images/logo.png")}
