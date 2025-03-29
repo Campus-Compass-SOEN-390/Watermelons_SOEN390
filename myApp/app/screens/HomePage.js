@@ -2,6 +2,7 @@ import React from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { homepageStyles as styles } from '../styles/HomePageStyles.js';
 import { useButtonInteraction } from '../hooks/useButtonInteraction';
+import HeaderButtons from "../components/HeaderButtons.js";
 
 export default function HomePage() {
     
@@ -9,6 +10,7 @@ export default function HomePage() {
     
     return (
         <View style={{flex:1}}>
+            <HeaderButtons />
             <Image style={styles.logo}
                 source={require('../../assets/images/logo.png')}
                 resizeMode="contain"

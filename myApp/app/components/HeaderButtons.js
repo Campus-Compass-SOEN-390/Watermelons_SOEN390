@@ -16,24 +16,31 @@ export default function HeaderButtons() {
         <View style={styles.topNav}>
             {/* Left Slot (Home or Back or Placeholder) */}
             <View style={isHome ? styles.placeholder : styles.headerButtons}>
-                {isSettings ? (
-                    <TouchableOpacity 
-                        onPress={() => {
-                            handleButtonPress(null, 'Going back');
-                            router.back();
-                        }}
-                    >
-                        <Ionicons name="arrow-back" size={24} color="white" />
-                    </TouchableOpacity>
-                ) : isHome ? null : (
-                    <TouchableOpacity 
-                        onPress={() => {
-                            handleButtonPress("/", 'Going to home');
-                        }}
-                    >
-                        <Ionicons name="home" size={24} color="white" />
-                    </TouchableOpacity>
-                )}
+                {(() => {
+                    if (isSettings) {
+                        return (
+                            <TouchableOpacity 
+                                onPress={() => {
+                                    handleButtonPress(null, 'Going back');
+                                    router.back();
+                                }}
+                            >
+                                <Ionicons name="arrow-back" size={24} color="white" />
+                            </TouchableOpacity>
+                        );
+                    } else if (!isHome) {
+                        return (
+                            <TouchableOpacity 
+                                onPress={() => {
+                                    handleButtonPress("/", 'Going to home');
+                                }}
+                            >
+                                <Ionicons name="home" size={24} color="white" />
+                            </TouchableOpacity>
+                        );
+                    }
+                    return null;
+                })()}
             </View>
 
             <View style={{ flex: 1 }} />
