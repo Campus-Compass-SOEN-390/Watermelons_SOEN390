@@ -85,9 +85,6 @@ useEffect(() => {
       <View style={styles.container}>
         <HeaderButtons />
         <View style={styles.header}>
-          {/* <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-            <Text style={styles.backText}>✖</Text>
-          </TouchableOpacity> */}
           <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
         </View>
         <Text style={styles.error}>
@@ -111,10 +108,6 @@ if (!schedule) {
     <View style={styles.container}>
       <HeaderButtons />
       <View style={styles.header}>
-        {/* <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-          <Text style={styles.backText}>✖</Text>
-        </TouchableOpacity> */}
-
         <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
 
         <TouchableOpacity onPress={handleWarningPress} style={styles.warningButton}>
@@ -168,7 +161,6 @@ const splitSchedule = (times) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 50,
     paddingHorizontal: 16,
     backgroundColor: '#fff',
   },
