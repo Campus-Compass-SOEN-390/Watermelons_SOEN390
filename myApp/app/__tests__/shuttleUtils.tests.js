@@ -17,6 +17,7 @@ import TravelFacade from "../utils/TravelFacade";
 
 jest.mock("../api/googleMapsApi", () => ({
   getTravelTimes: jest.fn(),
+  getGoogleTravelTime: jest.fn(() => Promise.resolve(12)),
 }));
 
 jest.mock("../api/shuttleSchedule", () => ({
@@ -115,6 +116,24 @@ describe("estimateShuttleTravelTime", () => {
 
     expect(estimatedTime).toBeGreaterThan(0);
   });
+  test("should return null and log error if shuttleRideTime is null", async () => {
+    // Mock schedule
+    fetchShuttleScheduleByDay.mockResolvedValue({
+      SGW: ["23:59"], 
+      LOY: ["00:30"]
+    });
+  
+    const googleTravelSpy = jest.spyOn(TravelFacade, "getGoogleTravelTime").mockResolvedValue(null);
+    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    const result = await estimateShuttleFromButton("SGW");
+    expect(consoleSpy).toHaveBeenCalledWith("Google API returned invalid shuttle ride time.");
+    expect(result).toBeNull();
+
+    // Cleanup
+    googleTravelSpy.mockRestore();
+    consoleSpy.mockRestore();
+  });
+  
 });
 
 describe("estimateShuttleFromButton", () => {
@@ -231,7 +250,7 @@ describe("formatTime", () => {
       mode: "walking",
       duration: 5
     }]);
-    haversineDistance.mockReturnValue(NaN);
+    jest.spyOn(TravelFacade, "getGoogleTravelTime").mockResolvedValue(NaN);
 
     const result = await estimateShuttleTravelTime({
         latitude: 45.5,
@@ -254,6 +273,7 @@ describe("formatTime", () => {
       duration: NaN
     }]);
     haversineDistance.mockReturnValue(10);
+    jest.spyOn(TravelFacade, "getGoogleTravelTime").mockResolvedValue(NaN);
 
     const result = await estimateShuttleTravelTime({
         latitude: 45.5,
@@ -329,9 +349,11 @@ describe("formatTime", () => {
     });
   
     jest.spyOn(TravelFacade, "getTravelTimes").mockResolvedValue([{ duration: 10 }]);
+    jest.spyOn(TravelFacade, "getGoogleTravelTime").mockResolvedValue(NaN);
   
     const result = await estimateShuttleTravelTime({ latitude: 0, longitude: 0 }, "LOY");
     expect(result).toBeNull();
   });
+  
   
 });

@@ -128,10 +128,10 @@ describe("Shuttle Data Fetching Tests", () => {
    */
 
   test("fetchShuttleScheduleByDay should return null on invalid day", async () => {
-    const fallback = await fetchShuttleScheduleByDay("InvalidDay");
-    expect(fallback).toBeNull();
+    const result = await fetchShuttleScheduleByDay("InvalidDay");
+    expect(result).toBeNull();
   });
-    
+  
 
   /**
    * Test Case 9: Extracting relevant shuttle info
