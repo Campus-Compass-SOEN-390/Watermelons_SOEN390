@@ -67,11 +67,12 @@ export const estimateShuttleTravelTime = async (userLocation, destinationCampus)
 
   let waitTime = Math.max(0, nextShuttleTime - currentTime);
 
-  const shuttleRideTime =
-    destinationCampus === "LOY"
-      ? (TravelFacade.haversineDistance(sgwStop, loyolaRegion) / 40) * 60
-      : (TravelFacade.haversineDistance(loyolaStop, sgwRegion) / 40) * 60;
-
+  const shuttleRideTime = await TravelFacade.getGoogleTravelTime(
+    destinationCampus === "LOY" ? sgwStop : loyolaStop,
+    destinationCampus === "LOY" ? loyolaStop : sgwStop,
+    "driving"
+  );
+  
   if (isNaN(travelTimeToStop) || isNaN(shuttleRideTime)) {
     console.error("Invalid travel or shuttle ride time detected.");
     return null;
@@ -129,13 +130,14 @@ export const estimateShuttleFromButton = async (currentStop) => {
     longitude: SGWtoLoyola.geometry.coordinates.slice(-1)[0][0],
   };
 
-  const shuttleRideTime =
-    currentStop === "SGW"
-      ? (TravelFacade.haversineDistance(sgwStop, loyolaRegion) / 40) * 60
-      : (TravelFacade.haversineDistance(loyolaStop, sgwRegion) / 40) * 60;
+  const shuttleRideTime = await TravelFacade.getGoogleTravelTime(
+    currentStop === "SGW" ? sgwStop : loyolaStop,
+    currentStop === "SGW" ? loyolaStop : sgwStop,
+    "driving"
+  );
 
-  if (isNaN(shuttleRideTime)) {
-    console.error("Calculated shuttle ride time is invalid (NaN).");
+  if (shuttleRideTime === null || isNaN(shuttleRideTime)) {
+    console.error("Google API returned invalid shuttle ride time.");
     return null;
   }
 

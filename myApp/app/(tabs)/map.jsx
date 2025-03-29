@@ -267,12 +267,8 @@ useEffect(() => {
         updateDestination(newDestination, destinationText);
       }
       
-      //these two things above are not what is crashing the app
       if (
-        originText == "My Location" &&
-        (destinationText == "Loyola Campus, Shuttle Stop" ||
-          destinationText == "SGW Campus, Shuttle Stop") &&
-        renderMap
+        origin && (destinationText == "Loyola Campus, Shuttle Stop" || destinationText == "SGW Campus, Shuttle Stop") && renderMap
       ) {
         updateShowShuttleRoute(true);
       } else {
@@ -613,18 +609,22 @@ useEffect(() => {
   };
 
   const handleShuttleButton = async () => {
-    handleButtonPress(null, `Getting shuttle to ${activeCampus === "sgw" ? "Loyola" : "SGW"} campus`);
-    updateOrigin(coordinatesMap["My Position"], "My Location");
-    if (activeCampus === "sgw") {
-      updateDestination(
-        coordinatesMap["Loyola Campus, Shuttle Stop"],
-        "Loyola Campus, Shuttle Stop"
-      );
-    } else {
-      updateDestination(
-        coordinatesMap["SGW Campus, Shuttle Stop"],
-        "SGW Campus, Shuttle Stop"
-      );
+    console.log("Shuttle button click");
+
+    // Update origin & destination as before
+    if (shuttleDetails && !shuttleDetails.error){
+      updateOrigin(coordinatesMap["My Position"], "My Location");
+      if (activeCampus === "sgw") {
+        updateDestination(
+          coordinatesMap["Loyola Campus, Shuttle Stop"],
+          "Loyola Campus, Shuttle Stop"
+        );
+      } else {
+        updateDestination(
+          coordinatesMap["SGW Campus, Shuttle Stop"],
+          "SGW Campus, Shuttle Stop"
+        );
+      }
     }
 
     try {
@@ -677,6 +677,18 @@ useEffect(() => {
       });
     }
   };
+
+  // Center map on starting point
+  const centerMapOnStartingPoint = () => {
+    if (location && mapRef.current) {
+      mapRef.current.setCamera({
+        centerCoordinate: [origin.longitude, origin.latitude],
+        zoomLevel: 17,
+        animationMode: "flyTo",
+        animationDuration: 1000,
+      });
+    }
+  }
 
   // Switch campus
   const toggleCampus = () => {
@@ -831,7 +843,7 @@ useEffect(() => {
 
  useEffect(() => {
   if (navigationToMap) {
-    centerMapOnUser(); // Call the function when navigationToMap is true
+    centerMapOnStartingPoint(); // Call the function when navigationToMap is true
   }
   else
      centerMapOnCampus();
@@ -904,6 +916,8 @@ useEffect(() => {
               isDisabled={isDisabled}
               origin={origin}
               destination={destination}
+              originText={originText}
+              destinationText={destinationText}
               mapRef={mapRef}
               travelMode={travelMode}
               navType={navType}
