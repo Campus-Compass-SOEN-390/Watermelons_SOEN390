@@ -30,6 +30,13 @@ jest.mock('expo-router', () => ({
     }),
 }));
 
+// Mock HeaderButtons
+jest.mock('../components/HeaderButtons.js', () => {
+    const React = require('react');
+    const { View, Text } = require('react-native');
+    return () => React.createElement(View, null, React.createElement(Text, null, 'HeaderButtons Mock'));
+});
+
 describe('Home page', () => {
     beforeEach(() => {
         // Clear mock history before each test
