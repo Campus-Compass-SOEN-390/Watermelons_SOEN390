@@ -4,6 +4,7 @@ import Constants from "expo-constants";
 import PropTypes from "prop-types";
 import finalMapData from "../../../assets/floorplans/finalMap.json";
 import styles from "../../styles/IndoorMapStyles";
+import POILayer from "./POILayerComponent";
 
 const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
   const [geoJsonData, setGeoJsonData] = useState({
@@ -109,61 +110,10 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
       />
 
       {/* Labels for POIs */}
-      <Mapbox.SymbolLayer
-        id="poi-elevator-layer"
-        testID="poi-elevator-layer"
-        sourceID="indoor-map"
-        style={{
-          iconImage: require("../../../assets/images/elevator.png"),
-          iconSize: 0.3
-        }}
-        filter={[
-          "==", ["get", "name"], "Elevator"
-        ]}
-        minZoomLevel={18}
-      />
-
-      <Mapbox.SymbolLayer
-        id="poi-stairs-layer"
-        testID="poi-stairs-layer"
-        sourceID="indoor-map"
-        style={{
-          iconImage: require("../../../assets/images/stairs.png"), // Icon for Stairs POIs
-          iconSize: 0.3
-        }}
-        filter={[
-          "==", ["get", "name"], "Stairs" 
-        ]}
-        minZoomLevel={18}
-      />
-
-      <Mapbox.SymbolLayer
-        id="poi-bathroom-layer"
-        testID="poi-bathroom-layer"
-        sourceID="indoor-map"
-        style={{
-          iconImage: require("../../../assets/images/bathrooms.png"), // Icon for Bathroom POIs
-          iconSize: 0.3
-        }}
-        filter={[
-          "==", ["get", "name"], "Bathroom" 
-        ]}
-        minZoomLevel={18}
-      />
-
-        <Mapbox.SymbolLayer
-          id="poi-escalator-layer"
-          testID="poi-escalator-layer"
-          sourceID="indoor-map"
-          style={{
-            iconImage: require("../../../assets/images/escalator.png"), // Icon for Bathroom POIs
-            iconSize: 0.3
-          }}
-          filter={[
-            "==", ["get", "name"], "Escalators" 
-          ]}
-          minZoomLevel={18}
-        /> 
+      <POILayer id="poi-elevator-layer" image={require("../../../assets/images/elevator.png")} name="Elevator" testID="poi-elevator-layer"/>
+      <POILayer id="poi-stairs-layer" image={require("../../../assets/images/stairs.png")} name="Stairs" testID="poi-stairs-layer"/>
+      <POILayer id="poi-escalator-layer" image={require("../../../assets/images/escalator.png")} name="Escalators" testID="poi-escalator-layer"/>
+      <POILayer id="poi-bathroom-layer" image={require("../../../assets/images/bathrooms.png")} name="Bathroom" testID="poi-bathroom-layer"/>
     </Mapbox.ShapeSource>
   );
 };
