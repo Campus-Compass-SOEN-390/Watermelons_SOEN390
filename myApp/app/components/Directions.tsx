@@ -3,6 +3,7 @@ import { View } from "react-native";
 import Mapbox from "@rnmapbox/maps";
 import ShortestPathMap from "./IndoorMap/ShortestPathMap";
 import MapDirections from "./MapDirections";
+import MapboxMarker from "./MarkerComponent";
 
 interface Props {
   graph: any;
@@ -49,15 +50,8 @@ export const Directions : React.FC<Props> = ({
         "CC": {latitude: 45.458422, longitude: -73.640747}
     };
 
-    const startMarker = {
-        type: "Point",
-        coordinates: [origin?.longitude, origin?.latitude]
-    }
-
-    const endMarker = {
-        type: "Point",
-        coordinates: [destination?.longitude, destination?.latitude]
-      };
+    const startIcon = require("../../assets/images/start-icon.png");
+    const endIcon = require("../../assets/images/end-icon.png");
 
     const findBuildingInfo = (nodeText: string): { setNode: string | null; entranceOrExit: { latitude: number; longitude: number } | null } => {
         const buildingCode = getBuildingCode(nodeText);
@@ -100,46 +94,8 @@ export const Directions : React.FC<Props> = ({
                     travelMode={travelMode}
                 />
                 {/* Start and End Markers */}
-                <Mapbox.ShapeSource
-                    id={`start`}
-                    shape={{
-                        type: "Feature",
-                        geometry: {
-                            type: "Point",
-                            coordinates: [origin?.longitude, origin?.latitude]
-                        },
-                        properties: {}
-                    }}
-                    >
-                    <Mapbox.SymbolLayer
-                        id={`start`}
-                        style={{
-                        iconImage: require("../../assets/images/start-icon.png"),
-                        iconSize: 0.1,
-                        iconAllowOverlap: true,
-                        }}
-                    />
-                </Mapbox.ShapeSource>
-                <Mapbox.ShapeSource
-                    id={`end`}
-                    shape={{
-                        type: "Feature",
-                        geometry: {
-                            type: "Point",
-                            coordinates: [destination?.longitude, destination?.latitude]
-                        },
-                        properties: {}
-                    }}
-                    >
-                    <Mapbox.SymbolLayer
-                        id={`end`}
-                        style={{
-                        iconImage: require("../../assets/images/end-icon.png"),
-                        iconSize: 0.1,
-                        iconAllowOverlap: true,
-                        }}
-                    />
-                </Mapbox.ShapeSource>
+                <MapboxMarker id="start" coordinate={[origin.longitude, origin.latitude]} icon={startIcon} />
+                <MapboxMarker id="end" coordinate={[destination.longitude, destination.latitude]} icon={endIcon} />
             </View>
         );
     }
@@ -163,26 +119,7 @@ export const Directions : React.FC<Props> = ({
                     mapRef={mapRef}
                     travelMode={travelMode}
                 />
-                <Mapbox.ShapeSource
-                    id={`end`}
-                    shape={{
-                        type: "Feature",
-                        geometry: {
-                            type: "Point",
-                            coordinates: [destination?.longitude, destination?.latitude]
-                        },
-                        properties: {}
-                    }}
-                    >
-                    <Mapbox.SymbolLayer
-                        id={`end`}
-                        style={{
-                        iconImage: require("../../assets/images/end-icon.png"),
-                        iconSize: 0.1,
-                        iconAllowOverlap: true,
-                        }}
-                    />
-                </Mapbox.ShapeSource>
+                <MapboxMarker id="end" coordinate={[destination.longitude, destination.latitude]} icon={endIcon} />
             </View>
         )
     }
@@ -206,26 +143,7 @@ export const Directions : React.FC<Props> = ({
                     isDisabled={isDisabled}
                     pathId={"indoor"}
                 />
-                <Mapbox.ShapeSource
-                    id={`start`}
-                    shape={{
-                        type: "Feature",
-                        geometry: {
-                            type: "Point",
-                            coordinates: [origin?.longitude, origin?.latitude]
-                        },
-                        properties: {}
-                    }}
-                    >
-                    <Mapbox.SymbolLayer
-                        id={`start`}
-                        style={{
-                        iconImage: require("../../assets/images/start-icon.png"),
-                        iconSize: 0.1,
-                        iconAllowOverlap: true,
-                        }}
-                    />
-                </Mapbox.ShapeSource>
+                <MapboxMarker id="end" coordinate={[destination.longitude, destination.latitude]} icon={startIcon} />
             </View>
         )
     }
