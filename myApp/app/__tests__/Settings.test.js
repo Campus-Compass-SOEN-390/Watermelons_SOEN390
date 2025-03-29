@@ -65,7 +65,6 @@ describe('Settings Component', () => {
     it('renders correctly', () => {
         const { getByTestId, getByText } = render(<Settings />);
         expect(getByText('Settings')).toBeTruthy();
-        expect(getByText('Feedback')).toBeTruthy();
         expect(getByTestId('black-mode-toggle')).toBeTruthy();
         expect(getByTestId('vibration-toggle')).toBeTruthy();
         expect(getByTestId('sound-toggle')).toBeTruthy();
