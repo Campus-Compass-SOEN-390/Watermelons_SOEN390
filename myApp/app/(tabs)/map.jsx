@@ -678,6 +678,18 @@ useEffect(() => {
     }
   };
 
+  // Center map on starting point
+  const centerMapOnStartingPoint = () => {
+    if (location && mapRef.current) {
+      mapRef.current.setCamera({
+        centerCoordinate: [origin.longitude, origin.latitude],
+        zoomLevel: 17,
+        animationMode: "flyTo",
+        animationDuration: 1000,
+      });
+    }
+  }
+
   // Switch campus
   const toggleCampus = () => {
     setActiveCampus((prev) => {
@@ -828,7 +840,7 @@ useEffect(() => {
 
  useEffect(() => {
   if (navigationToMap) {
-    centerMapOnUser(); // Call the function when navigationToMap is true
+    centerMapOnStartingPoint(); // Call the function when navigationToMap is true
   }
   else
      centerMapOnCampus();
@@ -901,6 +913,8 @@ useEffect(() => {
               isDisabled={isDisabled}
               origin={origin}
               destination={destination}
+              originText={originText}
+              destinationText={destinationText}
               mapRef={mapRef}
               travelMode={travelMode}
               navType={navType}
