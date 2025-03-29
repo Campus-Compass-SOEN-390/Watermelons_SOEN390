@@ -15,6 +15,9 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
     setGeoJsonData(finalMapData);
   }, []);
 
+  const elevator = require("/Users/samhenderson/Desktop/Watermelons_SOEN390/myApp/assets/images/elevator.png"); // Use the elevator icon
+  const stairs = require("/Users/samhenderson/Desktop/Watermelons_SOEN390/myApp/assets/images/stairs.png"); // Use the stairs icon
+
   if (!geoJsonData.features.length) {
     return <Mapbox.ShapeSource id="indoor-map" testID="indoor-map" shape={{ type: "FeatureCollection", features: [] }} />;
   }  
@@ -130,23 +133,60 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
 
       {/* Labels for POIs */}
       <Mapbox.SymbolLayer
-        id="poi-text-layer"
-        testID="poi-text-layer"
+        id="poi-elevator-layer"
+        testID="poi-elevator-layer"
         sourceID="indoor-map"
         style={{
-          textField: ["coalesce", ["get", "name"], "Unnamed"],
-          textSize: 14,
-          textColor: "black",
-          textHaloColor: "white",
-          textHaloWidth: 1,
+          iconImage: require("../../../assets/images/elevator.png"),
+          iconSize: 0.3
         }}
         filter={[
-          "any",
-          ["==", ["get", "type"], "Point of Interest"],
-          ["==", ["get", "type"], "Points of Interest"],
+          "==", ["get", "name"], "Elevator"
         ]}
         minZoomLevel={18}
       />
+
+      <Mapbox.SymbolLayer
+        id="poi-stairs-layer"
+        testID="poi-stairs-layer"
+        sourceID="indoor-map"
+        style={{
+          iconImage: require("../../../assets/images/stairs.png"), // Icon for Stairs POIs
+          iconSize: 0.3
+        }}
+        filter={[
+          "==", ["get", "name"], "Stairs" 
+        ]}
+        minZoomLevel={18}
+      />
+
+      <Mapbox.SymbolLayer
+        id="poi-bathroom-layer"
+        testID="poi-bathroom-layer"
+        sourceID="indoor-map"
+        style={{
+          iconImage: require("../../../assets/images/bathrooms.png"), // Icon for Bathroom POIs
+          iconSize: 0.3
+        }}
+        filter={[
+          "==", ["get", "name"], "Bathroom" 
+        ]}
+        minZoomLevel={18}
+      />
+
+        <Mapbox.SymbolLayer
+          id="poi-escalator-layer"
+          testID="poi-escalator-layer"
+          sourceID="indoor-map"
+          style={{
+            iconImage: require("../../../assets/images/escalator.png"), // Icon for Bathroom POIs
+            iconSize: 0.3
+          }}
+          filter={[
+            "==", ["get", "name"], "Escalators" 
+          ]}
+          minZoomLevel={18}
+        /> 
     </Mapbox.ShapeSource>
   );
 };

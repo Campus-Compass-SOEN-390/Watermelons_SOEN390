@@ -321,7 +321,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Bathroom Men",
+        "name": "Bathroom",
         "type": "Points of Interest",
         "id": "VE2mbath",
         "floor": 2,
@@ -3097,7 +3097,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Bathroom Women",
+        "name": "Bathroom",
         "type": "Points of Interest",
         "id": "VL1wbath",
         "floor": 1,
@@ -5006,7 +5006,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Bathroom Women",
+        "name": "Bathroom",
         "type": "Points of Interest",
         "id": "VE2wbath",
         "floor": 2,
@@ -5099,7 +5099,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Escalator Up",
+        "name": "Escalators",
         "type": "Point of Interest",
         "floor": 2,
         "id": "escalator-up1H2",
@@ -6281,7 +6281,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Bathroom Women",
+        "name": "Bathroom",
         "type": "Points of Interest",
         "id": "VL2wbath",
         "floor": 2,
@@ -8891,7 +8891,7 @@
       "type": "Feature",
       "properties": {
         "type": "Rooms",
-        "name": "Bathroom Men",
+        "name": "Bathroom",
         "floor": 1,
         "id": "MB1.121",
         "building": "MB"
@@ -9257,7 +9257,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Escalator Down",
+        "name": "Escalators",
         "type": "Points of Interest",
         "floor": 9,
         "building": "H",
@@ -15217,7 +15217,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Bathroom Men",
+        "name": "Bathroom",
         "type": "Points of Interest",
         "id": "H8mbath",
         "connected_to": [
@@ -16223,7 +16223,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Bathroom Men",
+        "name": "Bathroom",
         "type": "Points of Interest",
         "id": "VL1mbath",
         "floor": 1,
@@ -17175,7 +17175,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Escalator Up",
+        "name": "Escalators",
         "type": "Points of Interest",
         "floor": 9,
         "building": "H",
@@ -20497,7 +20497,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Escalator Up",
+        "name": "Escalators",
         "type": "Points of Interest",
         "floor": 8,
         "building": "H",
@@ -21341,7 +21341,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Bathroom Women",
+        "name": "Bathroom",
         "type": "Points of Interest",
         "id": "H9wbath",
         "connected_to": [
@@ -22054,7 +22054,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Bathroom Men",
+        "name": "Bathroom",
         "type": "Points of Interest",
         "id": "VL2mbath",
         "floor": 2,
@@ -22352,7 +22352,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Escalator Up",
+        "name": "Escalators",
         "type": "Point of Interest",
         "floor": 2,
         "id": "escalator-up2H2",
@@ -22747,7 +22747,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Escalator Down",
+        "name": "Escalators",
         "type": "Point of Interest",
         "floor": 2,
         "id": "path-escalatordownH2",
@@ -24202,7 +24202,7 @@
       "type": "Feature",
       "properties": {
         "type": "Rooms",
-        "name": "Bathroom Women",
+        "name": "Bathroom",
         "floor": 1,
         "building": "MB",
         "id": "MB1.118"
@@ -25364,7 +25364,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Bathroom Women",
+        "name": "Bathroom",
         "type": "Points of Interest",
         "id": "H8wbath",
         "connected_to": [
@@ -25798,7 +25798,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Escalator Down",
+        "name": "Escalators",
         "type": "Points of Interest",
         "floor": 8,
         "building": "H",
@@ -26396,7 +26396,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Escalator Down",
+        "name": "Escalators",
         "type": "Point of Interest",
         "floor": 2,
         "id": "escalator-down2H2",
@@ -29011,7 +29011,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Escalator Up",
+        "name": "Escalators",
         "type": "Point of Interest",
         "floor": 1,
         "id": "escalator-upH1",
@@ -30362,7 +30362,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Escalator Down",
+        "name": "Escalators",
         "type": "Point of Interest",
         "floor": 1,
         "id": "escalator-downH1",
@@ -32014,7 +32014,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Bathroom Men",
+        "name": "Bathroom",
         "type": "Points of Interest",
         "id": "H9mbath",
         "connected_to": [
