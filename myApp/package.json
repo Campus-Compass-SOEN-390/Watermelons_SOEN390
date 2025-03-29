@@ -88,7 +88,8 @@
     "react-native-web": "~0.19.13",
     "react-native-web-maps": "^0.1.0",
     "react-native-webview": "13.12.5",
-    "uuid": "^11.0.5"
+    "uuid": "^11.0.5",
+    "expo-av": "~15.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
