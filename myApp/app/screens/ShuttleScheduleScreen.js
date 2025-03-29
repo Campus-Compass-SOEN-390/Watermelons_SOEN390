@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; // Import navigation
+import { useNavigation } from '@react-navigation/native';
 import { fetchShuttleScheduleByDay } from '../api/shuttleSchedule';
 import moment from 'moment';
+import { useButtonInteraction } from '../hooks/useButtonInteraction';
 
 export default function ShuttleScheduleScreen() {
-  const navigation = useNavigation(); // Get navigation object
+  const navigation = useNavigation();
+  const { handleButtonPress } = useButtonInteraction();
   const [schedule, setSchedule] = useState(null);
   const [error, setError] = useState(null);
   const [nextBus, setNextBus] = useState(null);
-  const [campus, setCampus] = useState('SGW'); // Toggle between SGW and LOY
-  //const [showWarning, setShowWarning] = useState(false); // For showing warning popup
+  const [campus, setCampus] = useState('SGW');
 
   useEffect(() => {
     const loadSchedule = async () => {
         const today = moment().format('dddd');
         console.log(`Fetching schedule for ${today}...`);
 
-        // 🚨 Prevent fetching for weekends
         if (today === "Saturday" || today === "Sunday") {
             console.warn("No schedule available on weekends.");
             setError("❌ No shuttle service on weekends.");
@@ -41,9 +41,6 @@ export default function ShuttleScheduleScreen() {
     loadSchedule();
 }, []);
 
-
-
-// Compute next available bus based on selected campus without re-fetching
 useEffect(() => {
     if (!schedule) return;
 
@@ -58,12 +55,16 @@ useEffect(() => {
     }
 
     setNextBus(nextAvailableBus);
-}, [schedule, campus]); // Runs when schedule is loaded OR campus changes
+}, [schedule, campus]);
 
+  const handleBack = () => {
+    handleButtonPress(null, 'Going back');
+    navigation.goBack();
+  };
 
-  // Function to handle warning button click
   const handleWarningPress = () => {
     const todayDate = moment().format('YYYY-MM-DD');
+    handleButtonPress(null, 'Checking bus status');
     
     if (todayDate === '2025-02-28') {
       Alert.alert("Bus Delay Warning", "⚠️ No service on February 28, 2025. Buses may be delayed.");
@@ -72,31 +73,30 @@ useEffect(() => {
     }
   };
 
+  const handleCampusToggle = () => {
+    const newCampus = campus === 'SGW' ? 'LOY' : 'SGW';
+    handleButtonPress(null, `Switching to ${newCampus} campus schedule`);
+    setCampus(newCampus);
+  };
+
   if (error) {
     return (
-        <View style={styles.container}>
-            {/* 🔹 Keep Header with Back Button */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                    <Text style={styles.backText}>✖</Text>
-                </TouchableOpacity>
-                
-                <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
-            </View>
-
-            {/* 🔹 Display Weekend or Error Message */}
-            <Text style={styles.error}>
-                {error.includes("weekends") 
-                    ? "🚍 No shuttle service on weekends. See you Monday!" 
-                    : error}
-            </Text>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+            <Text style={styles.backText}>✖</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
         </View>
+        <Text style={styles.error}>
+          {error.includes("weekends") 
+            ? "🚍 No shuttle service on weekends. See you Monday!" 
+            : error}
+        </Text>
+      </View>
     );
-}
+  }
 
-
-
-// 🔹 Check if schedule is null (LOADING STATE)
 if (!schedule) {
   return (
       <View style={styles.container}>
@@ -107,30 +107,25 @@ if (!schedule) {
 
   return (
     <View style={styles.container}>
-      {/* Header with Back Button & Warning Button */}
       <View style={styles.header}>
-        {/* Updated Back Button to Navigate to Home Page */}
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <TouchableOpacity onPress={handleBack} style={styles.backButton}>
           <Text style={styles.backText}>✖</Text>
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
 
-        {/* Warning Button */}
         <TouchableOpacity onPress={handleWarningPress} style={styles.warningButton}>
           <Text style={styles.warningIcon}>⚠</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Campus Toggle Button */}
       <TouchableOpacity 
         style={styles.switchButton}
-        onPress={() => setCampus(campus === 'SGW' ? 'LOY' : 'SGW')}
+        onPress={handleCampusToggle}
       >
         <Text style={styles.switchText}>{campus === 'SGW' ? 'SGW ➜ LOY' : 'LOY ➜ SGW'}</Text>
       </TouchableOpacity>
 
-      {/* Schedule Table with Vertical Divider */}
       <ScrollView style={styles.scheduleContainer}>
         <Text style={styles.scheduleHeader}>Schedule in effect Monday to Friday</Text>
 
@@ -156,7 +151,6 @@ if (!schedule) {
   );
 }
 
-// Function to split schedule into AM and PM
 const splitSchedule = (times) => {
   const amTimes = times.filter(time => moment(time, 'HH:mm').hour() < 12);
   const pmTimes = times.filter(time => moment(time, 'HH:mm').hour() >= 12);
@@ -168,7 +162,6 @@ const splitSchedule = (times) => {
   }));
 };
 
-// Styles (Only Back Button Fixed)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -186,7 +179,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#800020', // Burgundy
+    backgroundColor: '#800020',
     justifyContent: 'center',
     alignItems: 'center',
   },

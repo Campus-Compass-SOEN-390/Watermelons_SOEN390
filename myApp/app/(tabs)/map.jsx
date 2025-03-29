@@ -51,6 +51,7 @@ import { fetchPOIData, poiDataSubject, getCachedPOIData } from "../api/poiApi";
 import { styles as poiStyles } from "../styles/poiStyles";
 import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
 import { estimateShuttleFromButton } from "../utils/shuttleUtils";
+import { useButtonInteraction } from '../hooks/useButtonInteraction';
 
 const MAPBOX_API = Constants.expoConfig?.extra?.mapbox; 
 Mapbox.setAccessToken("MAPBOX_API");
@@ -577,24 +578,23 @@ useEffect(() => {
 
   //navbar
   const navigation = useNavigation();
+  const { handleButtonPress } = useButtonInteraction();
 
   // Handle building tap
   const handleBuildingPress = (building) => {
+    handleButtonPress(null, `Selected ${building.name} building`);
     console.log("Polygon pressed for building:", building.name);
     const fullBuilding = getBuildingById(building.id);
     if (fullBuilding) {
-      console.log("Setting popup for building:", fullBuilding.name);
       setSelectedBuilding(fullBuilding);
       setPopupVisible(true);
-    } else {
-      console.error("Building data is incomplete!", building);
     }
   };
 
   const handleBuildingGetDirections = (building) => {
+    handleButtonPress(null, `Getting directions to ${building.name}`);
     updateOrigin(coordinatesMap["My Position"], "My Location");
     const buildingFullName = building.name + ", " + building.longName;
-    console.log(buildingFullName);
     updateDestination(building.entranceCoordinates, buildingFullName);
     updateShowTransportation(true);
   };
@@ -609,23 +609,25 @@ useEffect(() => {
   };
 
   const handleShuttleButton = async () => {
+    handleButtonPress(null, `Getting shuttle to ${activeCampus === "sgw" ? "Loyola" : "SGW"} campus`);
     console.log("Shuttle button click");
 
-    // Update origin & destination as before
-    if (shuttleDetails && !shuttleDetails.error){
-      updateOrigin(coordinatesMap["My Position"], "My Location");
-      if (activeCampus === "sgw") {
-        updateDestination(
-          coordinatesMap["Loyola Campus, Shuttle Stop"],
-          "Loyola Campus, Shuttle Stop"
-        );
-      } else {
-        updateDestination(
-          coordinatesMap["SGW Campus, Shuttle Stop"],
-          "SGW Campus, Shuttle Stop"
-        );
-      }
+    // Update origin & destination only if there are no shuttle details or no error
+    if (!shuttleDetails || !shuttleDetails.error) {
+        updateOrigin(coordinatesMap["My Position"], "My Location");
+        if (activeCampus === "sgw") {
+            updateDestination(
+                coordinatesMap["Loyola Campus, Shuttle Stop"],
+                "Loyola Campus, Shuttle Stop"
+            );
+        } else {
+            updateDestination(
+                coordinatesMap["SGW Campus, Shuttle Stop"],
+                "SGW Campus, Shuttle Stop"
+            );
+        }
     }
+
 
     try {
       const currentStop = activeCampus === "sgw" ? "SGW" : "LOY";
@@ -653,6 +655,7 @@ useEffect(() => {
 
   // Center on campus
   const centerMapOnCampus = () => {
+    handleButtonPress(null, `Centering map on ${activeCampus.toUpperCase()} campus`);
     if (mapRef.current) {
       const currentRegion = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
       mapRef.current.setCamera({
@@ -666,6 +669,7 @@ useEffect(() => {
 
   // Center on user
   const centerMapOnUser = () => {
+    handleButtonPress(null, 'Centering map on your location');
     if (location && mapRef.current) {
       mapRef.current.setCamera({
         centerCoordinate: [location.longitude, location.latitude],
@@ -690,6 +694,8 @@ useEffect(() => {
 
   // Switch campus
   const toggleCampus = () => {
+    const newCampus = activeCampus === "sgw" ? "loy" : "sgw";
+    handleButtonPress(null, `Switching to ${newCampus.toUpperCase()} campus`);
     setActiveCampus((prev) => {
       const newCampus = prev === "sgw" ? "loy" : "sgw";
 
@@ -713,6 +719,7 @@ useEffect(() => {
 
   // Toggle POI display
   const togglePOI = () => {
+    handleButtonPress(null, showPOI ? 'Hiding points of interest' : 'Showing points of interest');
     // First get the new value we're about to set
     const willShowPOI = !showPOI;
 
@@ -789,9 +796,8 @@ useEffect(() => {
   }
 
   const handleStepsClick = async () => {
-
+    handleButtonPress(null, 'Showing navigation steps');
   
-    
     if (!origin || !destination) return;
   
     const originStr = `${origin.latitude},${origin.longitude}`;
@@ -829,6 +835,7 @@ useEffect(() => {
   
   
  const handleCancelButton = () =>{
+  handleButtonPress(null, 'Canceling navigation');
   updateNavigationToMap(false);
   updateOrigin(null, "");
   updateDestination(null, "");

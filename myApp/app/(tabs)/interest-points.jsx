@@ -12,6 +12,7 @@ import { fetchPOIData, poiDataSubject } from '../api/poiApi';
 import FilterModal from '../components/POI/FilterModal';
 import POIList from '../components/POI/POIList';
 import { styles } from '../styles/POIListStyle';
+import { useButtonInteraction } from '../hooks/useButtonInteraction';
 
 /**
  * InterestPoints component - Displays a list of POIs
@@ -37,6 +38,8 @@ const InterestPoints = () => {
   const [showCafes, setShowCafes] = useState(true);
   const [showRestaurants, setShowRestaurants] = useState(true);
   const [showActivities, setShowActivities] = useState(true);
+
+  const { handleButtonPress } = useButtonInteraction();
 
   /**
    * Subscribe to POI data changes (Observer pattern)
@@ -148,6 +151,7 @@ const InterestPoints = () => {
   // Handle refresh action
   const handleRefresh = async () => {
     console.log("Refreshing data...");
+    handleButtonPress(null, 'Refreshing nearby places');
     setRefreshing(true);
 
     try {
@@ -248,6 +252,16 @@ const InterestPoints = () => {
     });
   };
 
+  const handleFilterPress = () => {
+    handleButtonPress(null, 'Opening filters menu');
+    setFilterModalVisible(true);
+  };
+
+  const handleFilterClose = () => {
+    handleButtonPress(null, 'Closing filters menu');
+    setFilterModalVisible(false);
+  };
+
   const filteredData = getFilteredData();
 
   return (
@@ -257,7 +271,8 @@ const InterestPoints = () => {
         <View style={{ flex: 1 }}></View>
         <TouchableOpacity
           style={styles.filterButton}
-          onPress={() => setFilterModalVisible(true)}
+          onPress={handleFilterPress}
+          accessibilityLabel="Open filters menu"
         >
           <Ionicons name="options-outline" size={18} color="white" />
           <Text style={styles.filterButtonText}>Filter</Text>
@@ -276,7 +291,7 @@ const InterestPoints = () => {
 
       <FilterModal
         isVisible={filterModalVisible}
-        onClose={() => setFilterModalVisible(false)}
+        onClose={handleFilterClose}
         distance={distance}
         setDistance={setDistance}
         showCafes={showCafes}
