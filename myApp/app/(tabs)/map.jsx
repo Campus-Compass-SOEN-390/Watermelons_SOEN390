@@ -266,12 +266,8 @@ useEffect(() => {
         updateDestination(newDestination, destinationText);
       }
       
-      //these two things above are not what is crashing the app
       if (
-        originText == "My Location" &&
-        (destinationText == "Loyola Campus, Shuttle Stop" ||
-          destinationText == "SGW Campus, Shuttle Stop") &&
-        renderMap
+        origin && (destinationText == "Loyola Campus, Shuttle Stop" || destinationText == "SGW Campus, Shuttle Stop") && renderMap
       ) {
         updateShowShuttleRoute(true);
       } else {
@@ -616,17 +612,19 @@ useEffect(() => {
     console.log("Shuttle button click");
 
     // Update origin & destination as before
-    updateOrigin(coordinatesMap["My Position"], "My Location");
-    if (activeCampus === "sgw") {
-      updateDestination(
-        coordinatesMap["Loyola Campus, Shuttle Stop"],
-        "Loyola Campus, Shuttle Stop"
-      );
-    } else {
-      updateDestination(
-        coordinatesMap["SGW Campus, Shuttle Stop"],
-        "SGW Campus, Shuttle Stop"
-      );
+    if (shuttleDetails && !shuttleDetails.error){
+      updateOrigin(coordinatesMap["My Position"], "My Location");
+      if (activeCampus === "sgw") {
+        updateDestination(
+          coordinatesMap["Loyola Campus, Shuttle Stop"],
+          "Loyola Campus, Shuttle Stop"
+        );
+      } else {
+        updateDestination(
+          coordinatesMap["SGW Campus, Shuttle Stop"],
+          "SGW Campus, Shuttle Stop"
+        );
+      }
     }
 
     try {
