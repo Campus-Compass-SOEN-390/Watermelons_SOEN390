@@ -2,8 +2,11 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import PropTypes from 'prop-types';
+import { useButtonInteraction } from '../../hooks/useButtonInteraction';
 
 const POIPopup = ({ poi = null, distance = null, onClose, onGetDirections }) => {
+  const { handleButtonPress } = useButtonInteraction();
+  
   if (!poi) return null;
 
   // Format distance in a readable way
@@ -15,12 +18,22 @@ const POIPopup = ({ poi = null, distance = null, onClose, onGetDirections }) => 
     }
   };
 
+  const handleClose = () => {
+    handleButtonPress(null, 'Closing point of interest information');
+    onClose();
+  };
+
+  const handleDirections = () => {
+    handleButtonPress(null, `Getting directions to ${poi.name}`);
+    onGetDirections();
+  };
+
   return (
     <View style={styles.container} testID="poi-popup" accessible={true} accessibilityLabel="Point of interest information">
       {/* Close button */}
       <TouchableOpacity 
         style={styles.closeButton} 
-        onPress={onClose}
+        onPress={handleClose}
         testID="close-button"
         accessible={true}
         accessibilityLabel="Close point of interest information"
@@ -42,7 +55,7 @@ const POIPopup = ({ poi = null, distance = null, onClose, onGetDirections }) => 
       {/* Get directions button */}
       <TouchableOpacity 
         style={styles.directionsButton} 
-        onPress={onGetDirections}
+        onPress={handleDirections}
         testID="directions-button"
         accessible={true}
         accessibilityLabel="Get directions to this location"
