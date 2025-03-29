@@ -66,51 +66,49 @@ export default function CalendarFetching() {
 
       if (data.error) {
         Alert.alert("Error", `API Error: ${data.error.message}`);
-      } else {
-        if (data.items) {
-          setEvents(data.items);
+      } else if (data.items) {
+        setEvents(data.items);
 
-          // Keeps track of each calendar's events
-          const csvContent = convertEventsToCSV(data.items, data.summary);
-          const fileUri = FileSystem.documentDirectory + "calendar_events.csv";
+        // Keeps track of each calendar's events
+        const csvContent = convertEventsToCSV(data.items);
+        const fileUri = FileSystem.documentDirectory + "calendar_events.csv";
 
-          // All events are stored in a CSV file
-          await FileSystem.writeAsStringAsync(fileUri, csvContent);
-          console.log("CSV saved to:", fileUri);
+        // All events are stored in a CSV file
+        await FileSystem.writeAsStringAsync(fileUri, csvContent);
+        console.log("CSV saved to:", fileUri);
 
-          // Save calendar id if not already in store
-          try {
-            if (!calendarId || !data.summary) return;
-            // Display as unlabelled calendar if no name found for it
-            const newEntry = {
-              id: calendarId,
-              name: data.summary || "Unlabelled Calendar",
-            };
-            const existingEntries = [...storedCalendarIds];
+        // Save calendar id if not already in store
+        try {
+          if (!calendarId || !data.summary) return;
+          // Display as unlabelled calendar if no name found for it
+          const newEntry = {
+            id: calendarId,
+            name: data.summary || "Unlabelled Calendar",
+          };
+          const existingEntries = [...storedCalendarIds];
 
-            // Check if the entry already exists
-            const isDuplicate = existingEntries.some(
-              (entry) => entry.id === calendarId
+          // Check if the entry already exists
+          const isDuplicate = existingEntries.some(
+            (entry) => entry.id === calendarId
+          );
+
+          // Ensure new entry is not a duplicate by verifying the ID not the calendar name
+          if (!isDuplicate) {
+            const updatedCalendarIds = [newEntry, ...existingEntries];
+            setStoredCalendarIds(updatedCalendarIds);
+            await AsyncStorage.setItem(
+              "calendarIds",
+              JSON.stringify(updatedCalendarIds)
             );
-
-            // Ensure new entry is not a duplicate by verifying the ID not the calendar name
-            if (!isDuplicate) {
-              const updatedCalendarIds = [newEntry, ...existingEntries];
-              setStoredCalendarIds(updatedCalendarIds);
-              await AsyncStorage.setItem(
-                "calendarIds",
-                JSON.stringify(updatedCalendarIds)
-              );
-            }
-          } catch (err) {
-            console.error("Failed to save calendar ID and name", err);
           }
-
-          setShowSuccessScreen(true);
-        } else {
-          setEvents([]);
-          Alert.alert("No Events", "No upcoming events found.");
+        } catch (err) {
+          console.error("Failed to save calendar ID and name", err);
         }
+
+        setShowSuccessScreen(true);
+      } else {
+        setEvents([]);
+        Alert.alert("No Events", "No upcoming events found.");
       }
 
       console.log("API Response:", data);
@@ -120,7 +118,7 @@ export default function CalendarFetching() {
     }
 
     setLoading(false);
-  }, [calendarId, API_KEY]);
+  }, [calendarId, API_KEY, monthsAhead, storedCalendarIds]);
 
   // Redirect user to events page upon successful entry of a calendar id
   useEffect(() => {

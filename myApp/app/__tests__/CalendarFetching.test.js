@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, act } from "@testing-library/react-native";
+import { render, fireEvent, act, waitFor } from "@testing-library/react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { Alert } from "react-native";
 import RNUxcam from "react-native-ux-cam";
@@ -312,3 +312,74 @@ test("renders multiple stored calendar IDs", async () => {
   expect(element1).toBeTruthy();
   expect(element2).toBeTruthy();
 }, 10000);
+
+test("handles API error from fetch", async () => {
+  global.fetch = jest.fn(() =>
+    Promise.resolve({
+      json: () => Promise.resolve({ error: { message: "Invalid API key" } }),
+    })
+  );
+  const alertSpy = jest.spyOn(Alert, "alert");
+
+  const { getByPlaceholderText, getByText } = renderWithNav(
+    <CalendarFetching />
+  );
+
+  fireEvent.changeText(
+    getByPlaceholderText("Paste Calendar ID here"),
+    "test-calendar"
+  );
+  fireEvent.press(getByText("Connect"));
+
+  await waitFor(() => {
+    expect(alertSpy).toHaveBeenCalledWith(
+      "Error",
+      "API Error: Invalid API key"
+    );
+  });
+});
+
+test("fetches and stores calendar events successfully", async () => {
+  const mockItems = [
+    {
+      summary: "Event 1",
+      start: { dateTime: "2025-03-21T10:00:00Z" },
+      end: { dateTime: "2025-03-21T11:00:00Z" },
+      location: "Conference Room",
+      htmlLink: "http://example.com",
+    },
+  ];
+
+  global.fetch = jest.fn().mockResolvedValue({
+    json: async () => ({ items: mockItems, summary: "Test Calendar" }),
+  });
+
+  const AsyncStorage = require("@react-native-async-storage/async-storage");
+  const FileSystem = require("expo-file-system");
+
+  const { getByPlaceholderText, getByText } = renderWithNav(
+    <CalendarFetching />
+  );
+
+  fireEvent.changeText(
+    getByPlaceholderText("Paste Calendar ID here"),
+    "test-calendar"
+  );
+  fireEvent.press(getByText("Connect"));
+
+  await waitFor(() => {
+    expect(FileSystem.writeAsStringAsync).toHaveBeenCalledWith(
+      "mockedDir/calendar_events.csv",
+      expect.stringContaining("Event 1")
+    );
+
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+      "calendarIds",
+      JSON.stringify([{ id: "test-calendar", name: "Test Calendar" }])
+    );
+
+    expect(
+      getByText("Successful Connection to Google Calendar ID: test-calendar")
+    ).toBeTruthy();
+  });
+});
