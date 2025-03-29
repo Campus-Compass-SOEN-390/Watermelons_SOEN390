@@ -31,7 +31,7 @@ export default function Settings() {
           <Switch
             value={blackMode}
             onValueChange={() => setBlackMode(prevState => !prevState)}
-            trackColor={{ false: '#b0b0b0', true: 'red' }}
+            trackColor={{ false: '#b0b0b0', true: '#922338' }}
             thumbColor={'grey'}
             style={styles.switch}
             testID="black-mode-toggle"
@@ -47,7 +47,7 @@ export default function Settings() {
           <Switch
             value={vibrationEnabled}
             onValueChange={toggleVibration}
-            trackColor={{ false: '#b0b0b0', true: 'red' }}
+            trackColor={{ false: '#b0b0b0', true: '#922338' }}
             thumbColor={'grey'}
             style={styles.switch}
             testID="vibration-toggle"
@@ -60,7 +60,7 @@ export default function Settings() {
           <Switch
             value={soundEnabled}
             onValueChange={toggleSound}
-            trackColor={{ false: '#b0b0b0', true: 'red' }}
+            trackColor={{ false: '#b0b0b0', true: '#922338' }}
             thumbColor={'grey'}
             style={styles.switch}
             testID="sound-toggle"
@@ -73,7 +73,7 @@ export default function Settings() {
           <Switch
             value={speechEnabled}
             onValueChange={toggleSpeech}
-            trackColor={{ false: '#b0b0b0', true: 'red' }}
+            trackColor={{ false: '#b0b0b0', true: '#922338' }}
             thumbColor={'grey'}
             style={styles.switch}
             testID="speech-toggle"
