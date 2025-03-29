@@ -75,8 +75,8 @@ const geoJsonPath = {
       <Mapbox.LineLayer
         id={`pathLayer-${pathId}`}
         style={{
-          lineColor: "blue",
-          lineWidth: 4,
+          lineColor: "black",
+          lineWidth: 5,
           lineJoin: "round",
           lineCap: "round",
         }}

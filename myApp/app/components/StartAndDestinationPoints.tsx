@@ -222,7 +222,7 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
         const stepsArray = data.routes[0].legs[0].steps.map(
           (step: any, index: number) => ({
             id: index,
-            instruction: step.html_instructions.replace(/<[^>]+>/g, ""),
+            instruction: step.html_instructions.replace(/<[^>]*?>/g, ""), //(Safer Regex - non-greedy quantifier) old = /<[^>]+>/g
             distance: step.distance.text,
           })
         );
