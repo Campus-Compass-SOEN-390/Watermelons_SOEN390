@@ -5,6 +5,7 @@ import { fetchShuttleScheduleByDay } from '../api/shuttleSchedule';
 import moment from 'moment';
 import { useButtonInteraction } from '../hooks/useButtonInteraction';
 import HeaderButtons from '../components/HeaderButtons';
+import HeaderButtons from '../components/HeaderButtons';
 
 export default function ShuttleScheduleScreen() {
   const navigation = useNavigation();
@@ -83,10 +84,11 @@ useEffect(() => {
   if (error) {
     return (
       <View style={styles.container}>
+        <HeaderButtons />
         <View style={styles.header}>
-          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+          {/* <TouchableOpacity onPress={handleBack} style={styles.backButton}>
             <Text style={styles.backText}>✖</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
         </View>
         <Text style={styles.error}>
