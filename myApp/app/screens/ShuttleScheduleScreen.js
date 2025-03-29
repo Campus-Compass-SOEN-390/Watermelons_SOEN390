@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { fetchShuttleScheduleByDay } from '../api/shuttleSchedule';
 import moment from 'moment';
 import { useButtonInteraction } from '../hooks/useButtonInteraction';
+import HeaderButtons from '../components/HeaderButtons';
 
 export default function ShuttleScheduleScreen() {
   const navigation = useNavigation();
@@ -107,6 +108,7 @@ if (!schedule) {
 
   return (
     <View style={styles.container}>
+      <HeaderButtons />
       <View style={styles.header}>
         <TouchableOpacity onPress={handleBack} style={styles.backButton}>
           <Text style={styles.backText}>✖</Text>

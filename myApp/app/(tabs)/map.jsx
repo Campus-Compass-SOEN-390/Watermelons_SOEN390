@@ -52,6 +52,7 @@ import { styles as poiStyles } from "../styles/poiStyles";
 import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
 import { estimateShuttleFromButton } from "../utils/shuttleUtils";
 import { useButtonInteraction } from '../hooks/useButtonInteraction';
+import HeaderButtons from "../components/HeaderButtons";
 
 const MAPBOX_API = Constants.expoConfig?.extra?.mapbox; 
 Mapbox.setAccessToken("MAPBOX_API");
@@ -854,6 +855,7 @@ useEffect(() => {
 
   return (
     <View style={{ flex: 1 }}>
+      <HeaderButtons />
       <View style={styles.container}>
        
        
