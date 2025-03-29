@@ -12,7 +12,13 @@ import popupStyles from "../styles/PopUpStyles";
 export interface BuildingPopupProps {
   visible: boolean;
   onClose: () => void;
-  building: any | null;
+  building: {
+    name: string;
+    longName: string;
+    openHours?: string;
+    wheelchairAccessible?: boolean;
+    departments?: string[];
+  } | null;
   onGetDirections(building: any): void;
   setAsStartingPoint(building: any): void;
 }
@@ -62,7 +68,7 @@ export const BuildingPopup: React.FC<BuildingPopupProps> = ({
                   style={popupStyles.icon}
                 />
                 <Text style={popupStyles.text}>
-                  {building.openHours || "Hours not available"}
+                  {building.openHours ?? "Hours not available"}
                 </Text>
               </View>
 
