@@ -1,22 +1,7 @@
 import { getAllShuttleSchedules, getShuttleScheduleByDay } from "./shuttleScheduleData.js";
 import { getRealTimeShuttleData, extractShuttleInfo } from "./shuttleLiveData.js";
 
-// Enable this to simulate schedule for testing
-const TEST_MODE = true;
 
-/**
- * Return a mocked shuttle schedule for testing purposes.
- */
-const getMockSchedule = () => {
-  const now = new Date();
-  const currentHour = now.getHours();
-  const nextHour = currentHour + 1;
-
-  return {
-    SGW: [`${currentHour}:${now.getMinutes() + 2}`, `${currentHour}:${now.getMinutes() + 15}`],
-    LOY: [`${nextHour}:${now.getMinutes() + 5}`, `${nextHour}:${now.getMinutes() + 20}`],
-  };
-};
 
 // Fetch all shuttle schedules
 export const fetchAllShuttleSchedules = async () => getAllShuttleSchedules();
@@ -26,10 +11,6 @@ export const fetchAllShuttleSchedules = async () => getAllShuttleSchedules();
  * In test mode, returns a mock schedule that always has shuttles available.
  */
 export const fetchShuttleScheduleByDay = async (day) => {
-  if (TEST_MODE) {
-    console.log("[TEST_MODE] Returning mock shuttle schedule.");
-    return getMockSchedule();
-  }
 
   try {
     return getShuttleScheduleByDay(day);
