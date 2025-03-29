@@ -1,14 +1,14 @@
 import React from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
-import { useRouter } from 'expo-router';
 import { homepageStyles as styles } from '../styles/HomePageStyles.js';
+import { useButtonInteraction } from '../hooks/useButtonInteraction';
 
 export default function HomePage() {
-   
-    const router = useRouter();
-
+    
+    const { handleButtonPress } = useButtonInteraction();
+    
     return (
-        <View style ={{flex:1}}>
+        <View style={{flex:1}}>
             <Image style={styles.logo}
                 source={require('../../assets/images/logo.png')}
                 resizeMode="contain"
@@ -18,32 +18,32 @@ export default function HomePage() {
                 <Text style={styles.title}>Getting around campus</Text>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity 
-                    style={styles.button}
-                    testID="sgwButton"
-                    onPress={() => router.push('/(tabs)/map?type=sgw')}
+                        style={styles.button}
+                        testID="sgwButton"
+                        onPress={() => handleButtonPress('/(tabs)/map?type=sgw', 'SGW Campus')}
                     >
-                    <Text style={styles.buttonText}>SGW Campus</Text>
+                        <Text style={styles.buttonText}>SGW Campus</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
-                    style={styles.button}
-                    testID="loyolaButton"
-                    onPress={() => router.push('/(tabs)/map?type=loy')}
+                        style={styles.button}
+                        testID="loyolaButton"
+                        onPress={() => handleButtonPress('/(tabs)/map?type=loy', 'Loyola Campus')}
                     >
                         <Text style={styles.buttonText}>Loyola Campus</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.buttonContainer}>
-                <TouchableOpacity 
-                    style={styles.button}
-                    testID="shuttleScheduleButton"
-                    onPress={() => router.push('/screens/ShuttleScheduleScreen')}
+                    <TouchableOpacity 
+                        style={styles.button}
+                        testID="shuttleScheduleButton"
+                        onPress={() => handleButtonPress('/screens/ShuttleScheduleScreen', 'Shuttle Bus Schedule')}
                     >
-                    <Text style={styles.buttonText}>Shuttle Bus Schedule</Text>
+                        <Text style={styles.buttonText}>Shuttle Bus Schedule</Text>
                     </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.button}
-                    onPress={() => router.push('(tabs)/interest-points')}
-                    testID="interestButton"
+                    <TouchableOpacity 
+                        style={styles.button}
+                        onPress={() => handleButtonPress('(tabs)/interest-points', 'Interest Points')}
+                        testID="interestButton"
                     >
                         <Text style={styles.buttonText}>Interest Points</Text>
                     </TouchableOpacity>
@@ -51,13 +51,13 @@ export default function HomePage() {
             </View>
             <View style={styles.buttonsContainer}>
                 <Text style={styles.title}>View My Calendar</Text>
-                 <View style={styles.buttonContainer}>
+                <View style={styles.buttonContainer}>
                     <TouchableOpacity 
-                    style={styles.googleButton}
-                    testID="calendarfetchbutton"
-                    onPress={() => router.push('screens/CalendarFetching')}
+                        style={styles.googleButton}
+                        testID="calendarfetchbutton"
+                        onPress={() => handleButtonPress('screens/CalendarFetching', 'Connect Calendars')}
                     >
-                         <Image
+                        <Image
                             source={require('../../assets/images/google_logo.png')}
                             style={styles.icon}
                             testID="googleIcon"

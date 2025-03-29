@@ -14,6 +14,7 @@ import { styles } from '../../styles/POIListStyle';
 import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import { useLocationContext } from '@/app/context/LocationContext';
+import { useButtonInteraction } from '../../hooks/useButtonInteraction';
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
@@ -30,6 +31,8 @@ const getCategoryText = (category) => {
 };
 
 const POIListItem = ({ item, userLocation, calculateDistance }) => {
+    const { handleButtonPress } = useButtonInteraction();
+
     const [imageError, setImageError] = useState(false);
 
     const poiDistance = calculateDistance(
@@ -51,6 +54,7 @@ const POIListItem = ({ item, userLocation, calculateDistance }) => {
     const { updatePOILocationData } = useLocationContext();
     // Handle Get Directions button press
     const handleGetDirections = () => {
+        handleButtonPress(null, `Getting directions to ${item.name}`);
         console.log(`Get directions to: ${item.name}`);
         console.log(`Address: ${item.vicinity || 'Address not available'}`);
         console.log(`Coordinates: ${item.geometry?.location?.lat}, ${item.geometry?.location?.lng}`);
@@ -170,6 +174,8 @@ const POIList = ({
     onRefresh,
     calculateDistance
 }) => {
+    const { handleButtonPress } = useButtonInteraction();
+
     if (isLoading && !refreshing) {
         return (
             <View style={styles.loadingContainer}>
@@ -185,7 +191,10 @@ const POIList = ({
                 <Text style={styles.errorText}>{error ?? "An error occurred"}</Text>
                 <TouchableOpacity
                     style={[styles.retryButton, { marginTop: 20 }]}
-                    onPress={onRefresh}
+                    onPress={() => {
+                        handleButtonPress(null, 'Retrying to load places');
+                        onRefresh();
+                    }}
                 >
                     <Ionicons name="refresh" size={18} color="white" />
                     <Text style={styles.buttonText}>Retry</Text>
