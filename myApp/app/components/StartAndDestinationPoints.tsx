@@ -25,6 +25,8 @@ import TravelFacade from "../utils/TravelFacade";
 import { useIndoorMapContext } from "../context/IndoorMapContext";
 import { parseClassroomLocation } from "../utils/IndoorMapUtils";
 import { buildings } from "../api/buildingData";
+import RNUxcam from "react-native-ux-cam";
+
 
 // Define Types
 type Route = {
@@ -49,6 +51,11 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
   isDisabled,
   setIsDisabled,
 }) => {
+  // Add this useEffect hook for UXCam screen tagging
+  useEffect(() => {
+    // Tag this screen in UXCam
+    RNUxcam.tagScreenName("MapsPage");
+  }, []);
   const {
     updateOrigin,
     updateDestination,
@@ -293,6 +300,7 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
             }}
             onPress={(data, details = null) => {
               if (details) {
+                RNUxcam.logEvent("Set Origin Button Pressed", null);
                 const location = {
                   latitude: details.geometry.location.lat,
                   longitude: details.geometry.location.lng,
@@ -322,6 +330,7 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
           {isInputFocused && showMyLocButton && (
             <TouchableOpacity
               onPress={() => {
+                RNUxcam.logEvent("My Location Button Pressed", null);
                 Keyboard.dismiss();
                 if (location) {
                   updateShowTransportation(false);
@@ -359,6 +368,7 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
               components: "country:ca",
             }}
             onPress={(data, details = null) => {
+              RNUxcam.logEvent("Google autocomplete Button Pressed ", null);
               if (details) {
                 const location = {
                   latitude: details.geometry.location.lat,
@@ -385,6 +395,7 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
+              RNUxcam.logEvent("Get Directions Button Pressed", null);
               if (origin && destination) {
                 const parsedLocation = parseClassroomLocation(originText);
 
@@ -485,6 +496,7 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
           <View style={styles.cancelButtonTopRight}>
             <TouchableOpacity
               onPress={() => {
+                RNUxcam.logEvent("Cancel Button Pressed", null);
                 updateShowTransportation(false);
                 updateRenderMap(false);
                 updateSelectedFloor(1);
@@ -503,7 +515,10 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
           {/* Steps Button */}
           <TouchableOpacity
             style={styles.stepsButton}
-            onPress={handleStepsClick}
+            onPress={() => {
+              RNUxcam.logEvent("Steps Button Pressed", null);
+              handleStepsClick();
+            }}
           >
             <Text style={styles.footerButtonText}>Steps</Text>
           </TouchableOpacity>
@@ -534,6 +549,7 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
                         <TouchableOpacity
                           style={styles.goButton}
                           onPress={() => {
+                            RNUxcam.logEvent("Go Button Pressed", null);
                             handleGoClick();
                             updateTravelTime(route.duration);
                             updateTravelDistance(route.distance);
@@ -568,7 +584,10 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
               </ScrollView>
               <TouchableOpacity
                 style={styles.closeButton}
-                onPress={handleCloseSteps}
+                onPress={() => {
+                  RNUxcam.logEvent("Close Steps Button Pressed", null);
+                  handleCloseSteps();
+                }}
               >
                 <Text style={styles.closeButtonText}>X</Text>
               </TouchableOpacity>
