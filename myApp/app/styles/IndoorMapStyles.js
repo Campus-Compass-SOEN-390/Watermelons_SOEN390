@@ -13,8 +13,8 @@ const styles = StyleSheet.create({
   floorButtonContainer: {
     backgroundColor: "#ffffff",
     position: "absolute",
-    left: 20,
-    bottom: 225,
+    right: 20,
+    bottom: 340,
     alignItems: "center",
     borderRadius: 20,
     shadowColor: "#000",
@@ -129,6 +129,32 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+  labelPOIText: {
+    textField: ["coalesce", ["get", "name"], "Unnamed"],
+    textSize: 14,
+    textColor: "black",
+    textHaloColor: "white",
+    textHaloWidth: 1,
+  },
+  lineWall: {
+    lineColor: "#922338",
+    lineWidth: 2,
+    lineOpacity: 1.0,
+  },
+  linePath: {
+    lineColor: "black",
+    lineWidth: 2,
+    lineOpacity: 0.5,
+  },
+  roomLayer: {
+    lineColor: "#922338",
+    lineWidth: 2,
+    lineOpacity: 1.0,
+  },
+  fillLayer: {
+    fillColor: "#922338",
+    fillOpacity: 0.2,
+  }
 });
 
 export default styles;

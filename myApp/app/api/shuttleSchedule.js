@@ -2,7 +2,7 @@ import { getAllShuttleSchedules, getShuttleScheduleByDay } from "./shuttleSchedu
 import { getRealTimeShuttleData, extractShuttleInfo } from "./shuttleLiveData.js";
 
 // Enable this to simulate schedule for testing
-const TEST_MODE = true;
+const TEST_MODE = false;
 
 /**
  * Return a mocked shuttle schedule for testing purposes.

@@ -43,73 +43,65 @@ export default function CalendarFetching() {
       Alert.alert("Invalid", "Please enter a valid Calendar ID");
       return;
     }
-
+  
     setLoading(true);
-
+  
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
     const timeMin = oneMonthAgo.toISOString();
     const futureDate = new Date();
     futureDate.setMonth(futureDate.getMonth() + parseInt(monthsAhead || "1"));
     const timeMax = futureDate.toISOString();
-
+  
     const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
-
+  
     try {
       let response = await fetch(url);
       let data = await response.json();
-
+  
       if (data.error) {
         Alert.alert("Error", `API Error: ${data.error.message}`);
-      } else {
-        if (data.items) {
-          setEvents(data.items);
-
-          // Keeps track of each calendar's events
-          const csvContent = convertEventsToCSV(data.items, data.summary);
-          const fileUri = FileSystem.documentDirectory + "calendar_events.csv";
-
-          // All events are stored in a CSV file
-          await FileSystem.writeAsStringAsync(fileUri, csvContent);
-          console.log("CSV saved to:", fileUri);
-
-          // Save calendar id if not already in store
-          try {
-
-            if (!calendarId || !data.summary) return;
-            // Display as unlabelled calendar if no name found for it
-            const newEntry = { id: calendarId, name: data.summary || "Unlabelled Calendar" };
-            const existingEntries = [...storedCalendarIds];
-
-            // Check if the entry already exists
-            const isDuplicate = existingEntries.some(entry => entry.id === calendarId);
-
-            // Ensure new entry is not a duplicate by verifying the ID not the calendar name
-            if (!isDuplicate) {
-              const updatedCalendarIds = [newEntry, ...existingEntries];
-              setStoredCalendarIds(updatedCalendarIds);
-              await AsyncStorage.setItem("calendarIds", JSON.stringify(updatedCalendarIds));
-            }
-          } catch (err) {
-            console.error("Failed to save calendar ID and name", err);
+      } else if (data.items) {
+        setEvents(data.items);
+  
+        const csvContent = convertEventsToCSV(data.items);
+        const fileUri = FileSystem.documentDirectory + "calendar_events.csv";
+  
+        await FileSystem.writeAsStringAsync(fileUri, csvContent);
+        console.log("CSV saved to:", fileUri);
+  
+        try {
+          if (!calendarId || !data.summary) return;
+  
+          const newEntry = { id: calendarId, name: data.summary || "Unlabelled Calendar" };
+          const existingEntries = [...storedCalendarIds];
+  
+          const isDuplicate = existingEntries.some(entry => entry.id === calendarId);
+  
+          if (!isDuplicate) {
+            const updatedCalendarIds = [newEntry, ...existingEntries];
+            setStoredCalendarIds(updatedCalendarIds);
+            await AsyncStorage.setItem("calendarIds", JSON.stringify(updatedCalendarIds));
           }
-
-          setShowSuccessScreen(true);
-        } else {
-          setEvents([]);
-          Alert.alert("No Events", "No upcoming events found.");
+        } catch (err) {
+          console.error("Failed to save calendar ID and name", err);
         }
+  
+        setShowSuccessScreen(true);
+      } else {
+        setEvents([]);
+        Alert.alert("No Events", "No upcoming events found.");
       }
-
+  
       console.log("API Response:", data);
     } catch (error) {
       console.error("Error fetching calendar events:", error);
       Alert.alert("Error", "Something went wrong while fetching the events.");
     }
-
+  
     setLoading(false);
   }, [calendarId, API_KEY]);
-
+  
   // Redirect user to events page upon successful entry of a calendar id
   useEffect(() => {
     if (showSuccessScreen) {

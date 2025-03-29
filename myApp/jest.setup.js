@@ -1,4 +1,6 @@
 import fetchMock from "jest-fetch-mock";
+import 'setimmediate';
+
 
 // Enable mocks globally
 fetchMock.enableMocks();
