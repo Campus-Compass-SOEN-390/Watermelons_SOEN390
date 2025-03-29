@@ -62,7 +62,6 @@ export default function CalendarFetching() {
       if (data.error) {
         Alert.alert("Error", `API Error: ${data.error.message}`);
       } else if (data.items) {
-        setEvents(data.items);
   
         const csvContent = convertEventsToCSV(data.items);
         const fileUri = FileSystem.documentDirectory + "calendar_events.csv";
@@ -89,7 +88,6 @@ export default function CalendarFetching() {
   
         setShowSuccessScreen(true);
       } else {
-        setEvents([]);
         Alert.alert("No Events", "No upcoming events found.");
       }
   
@@ -183,7 +181,7 @@ export default function CalendarFetching() {
                       <ScrollView>
                         {storedCalendarIds.map((item, index) => (
                           <TouchableOpacity
-                            key={index}
+                            key={item.id}
                             style={styles.historyItem}
                             onPress={() => {
                               handleButtonPress(null, item.name);

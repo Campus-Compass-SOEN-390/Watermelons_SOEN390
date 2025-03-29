@@ -227,7 +227,7 @@ export default function CalendarSchedulePage() {
       <View style={styles.daysRow}>
         {days.map((day, index) => (
           <Text
-            key={index}
+            key={day}
             style={[
               styles.dayText,
               index === selectedDayIndex && styles.highlightedDay,
@@ -278,7 +278,7 @@ export default function CalendarSchedulePage() {
       {/* Schedule Cards */}
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
       {filteredSchedule.map((item, idx) => (
-        <View key={idx} style={styles.card}>
+        <View key={`${item.course}-${item.time}`} style={styles.card}>
           <View style={styles.cardTextContainer}>
             <Text style={styles.courseText}>{item.course}</Text>
             <Text>{item.location}</Text>
