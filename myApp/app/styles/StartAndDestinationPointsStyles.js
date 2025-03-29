@@ -121,11 +121,11 @@ export default StyleSheet.create({
 
     bottom: (() => {
       if (Dimensions.get("window").height > 930) {
-        return -640;
+        return -680;
       } else if (height > 870) {
-        return -585;
+        return -625;
       } else {
-        return -560;
+        return -600;
       }
     })(),
 

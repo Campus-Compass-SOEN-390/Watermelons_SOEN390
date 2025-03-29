@@ -13,8 +13,8 @@ const styles = StyleSheet.create({
   floorButtonContainer: {
     backgroundColor: "#ffffff",
     position: "absolute",
-    left: 20,
-    bottom: 225,
+    right: 20,
+    bottom: 340,
     alignItems: "center",
     borderRadius: 20,
     shadowColor: "#000",

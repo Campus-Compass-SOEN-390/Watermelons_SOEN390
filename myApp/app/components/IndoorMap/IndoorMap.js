@@ -73,7 +73,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         ]}
         minZoomLevel={18}
       />
-
+  
       {/* Pathways */}
       <Mapbox.LineLayer
         id="path-line-layer"
@@ -82,7 +82,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         style={{
           lineColor: "black",
           lineWidth: 2,
-          lineOpacity: 1.0,
+          lineOpacity: 0.5,
         }}
         filter={[
           "any",
@@ -90,7 +90,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         ]}
         minZoomLevel={18}
       />
-
+  
       {/* Walls */}
       <Mapbox.LineLayer
         id="wall-line-layer"
