@@ -13,10 +13,11 @@ import React, {
   Fragment,
   useEffect,
   useCallback,
+  useContext,
 } from "react";
-import styles from "../styles/IndoorMapStyles";
-import outdoorStyles from "../styles/OutdoorMapStyles";
-import { MaterialIcons } from "@expo/vector-icons";
+import { createIndoorMapStyles } from "../styles/IndoorMapStyles";
+import { createOutdoorMapStyles } from "../styles/OutdoorMapStyles";
+import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import Mapbox from "@rnmapbox/maps";
 import Constants from "expo-constants";
 import { buildings, getBuildingById } from "../api/buildingData";
@@ -24,6 +25,7 @@ import { isPointInPolygon } from "geolib";
 import useLocation from "../hooks/useLocation";
 import { useLocationContext } from "../context/LocationContext";
 import { useIndoorMapContext } from "../context/IndoorMapContext";
+import { ThemeContext } from "../context/ThemeContext";
 import { useNavigation } from "@react-navigation/native";
 import { BuildingPopup } from "../components/BuildingPopUp";
 import tabStyles from "../styles/LayoutStyles";
@@ -80,6 +82,16 @@ const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 const REGION_CHANGE_THRESHOLD = 0.005;
 
 export default function MapView() {
+  // Get theme context
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
+  // Generate theme-aware styles
+  const styles = createIndoorMapStyles({ ...theme, isDarkMode });
+  const outdoorStyles = createOutdoorMapStyles({ ...theme, isDarkMode });
+
+  // NEW: Add mapKey state to force remounting when theme changes
+  const [mapKey, setMapKey] = useState(Date.now());
+
   const { destinationString } = useLocalSearchParams();
   // Disabled on or off
   const [isDisabled, setIsDisabled] = useState(false);
@@ -220,6 +232,19 @@ export default function MapView() {
     updateSelectedIndoorBuilding,
     updateSelectedFloor,
   } = useIndoorMapContext();
+
+  // NEW: Update the useEffect for theme changes
+  useEffect(() => {
+    // Generate a new key to force the map to remount
+    const newKey = Date.now();
+    setMapKey(newKey);
+
+    console.log(
+      `Theme changed to ${
+        isDarkMode ? "dark" : "light"
+      } mode. New map key: ${newKey}`
+    );
+  }, [isDarkMode]);
 
   // Animate map to correct campus
   useEffect(() => {
@@ -875,8 +900,51 @@ export default function MapView() {
     } else centerMapOnCampus();
   }, [navigationToMap]);
 
+  // NEW: Updated ThemeToggleButton component
+  const ThemeToggleButton = () => {
+    if (!navigationToMap) return null;
+
+    const handleThemeToggle = () => {
+      // Simply toggle the theme - the useEffect will handle remounting
+      toggleTheme();
+    };
+
+    return (
+      <TouchableOpacity
+        style={{
+          position: "absolute",
+          top: 140,
+          right: 10,
+          width: 44,
+          height: 44,
+          borderRadius: 22,
+          backgroundColor: theme.buttonBackground,
+          justifyContent: "center",
+          alignItems: "center",
+          shadowColor: theme.shadowColor,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.3,
+          shadowRadius: 3,
+          elevation: 5,
+          zIndex: 100,
+        }}
+        onPress={handleThemeToggle}
+        accessibilityLabel={
+          isDarkMode ? "Switch to light mode" : "Switch to dark mode"
+        }
+        testID="mapThemeToggleButton"
+      >
+        <Ionicons
+          name={isDarkMode ? "sunny" : "moon"}
+          size={20}
+          color={theme.buttonText}
+        />
+      </TouchableOpacity>
+    );
+  };
+
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
       <View style={styles.container}>
         {!navigationToMap && (
           <StartAndDestinationPoints
@@ -885,10 +953,18 @@ export default function MapView() {
           />
         )}
 
+        {/* Theme Toggle Button */}
+        <ThemeToggleButton />
+
+        {/* NEW: Updated MapView with key prop */}
         <Mapbox.MapView
+          key={mapKey}
           style={styles.map}
-          styleURL={Mapbox.StyleURL.Light}
+          styleURL={isDarkMode ? Mapbox.StyleURL.Dark : Mapbox.StyleURL.Light}
           onRegionDidChange={(feature) => handleRegionChange(feature)}
+          onDidFinishLoadingMap={() => {
+            console.log("Map finished loading with key:", mapKey);
+          }}
         >
           <Mapbox.Camera
             ref={mapRef}
@@ -915,7 +991,7 @@ export default function MapView() {
               <Mapbox.LineLayer
                 id="linelayer1"
                 style={{
-                  lineColor: "#922338",
+                  lineColor: theme.buttonBackground,
                   lineWidth: 5,
                   lineCap: "round",
                   lineJoin: "round",
@@ -951,9 +1027,13 @@ export default function MapView() {
               const convertedCoords = convertCoordinates(building.coordinates);
               const centroid = calculateCentroid(convertedCoords);
               const fillColor =
-                highlightedBuilding === building.name ? "#f8b837" : "#922338";
+                highlightedBuilding === building.name
+                  ? "#f8b837"
+                  : theme.buttonBackground;
               const strokeColor =
-                highlightedBuilding === building.name ? "#f8b837" : "#922338";
+                highlightedBuilding === building.name
+                  ? "#f8b837"
+                  : theme.buttonBackground;
 
               return (
                 <Fragment key={building.id}>
@@ -999,10 +1079,11 @@ export default function MapView() {
               );
             })}
 
-          {/* Indoor Map Using Vector Tileset */}
+          {/* NEW: Pass mapKey to IndoorMap component */}
           <IndoorMap
             selectedBuilding={selectedIndoorBuilding}
             selectedFloor={Number(selectedFloor)}
+            mapKey={mapKey}
           />
 
           {/* Shuttle bus live location */}
@@ -1069,7 +1150,7 @@ export default function MapView() {
           onPress={centerMapOnUser}
           testID="locate-me-button"
         >
-          <MaterialIcons name="my-location" size={24} color="black" />
+          <MaterialIcons name="my-location" size={24} color={theme.text} />
         </TouchableOpacity>
 
         {/* Campus Location Button */}
@@ -1079,7 +1160,7 @@ export default function MapView() {
           onPress={centerMapOnCampus}
           testID="locate-campus-button"
         >
-          <MaterialIcons name="location-on" size={24} color="black" />
+          <MaterialIcons name="location-on" size={24} color={theme.text} />
           <Text style={styles.campusButtonText}>
             {activeCampus === "sgw" ? "SGW" : "LOY"}
           </Text>
@@ -1110,7 +1191,6 @@ export default function MapView() {
             <Text style={outdoorStyles.footerButtonText}>Steps</Text>
           </TouchableOpacity>
 
-          {/* Steps Modal */}
           {/* Steps Modal */}
           {showSteps && (
             <Modal visible={showSteps} transparent animationType="slide">
@@ -1148,7 +1228,7 @@ export default function MapView() {
         <View style={outdoorStyles.cancelButtonContainer}>
           <TouchableOpacity
             style={outdoorStyles.shuttleButton}
-            onPress={handleCancelButton} // You may want to define a separate handler for the cancel action
+            onPress={handleCancelButton}
           >
             <Text style={outdoorStyles.switchButtonText}>Cancel</Text>
           </TouchableOpacity>
@@ -1175,7 +1255,7 @@ export default function MapView() {
                 : selectedIndoorBuilding.name}
             </Text>
           ) : (
-            <MaterialIcons name="location-city" size={24} color="black" />
+            <MaterialIcons name="location-city" size={24} color={theme.text} />
           )}
         </TouchableOpacity>
 
@@ -1238,7 +1318,10 @@ export default function MapView() {
       {!navigationToMap && (
         <View style={outdoorStyles.shuttleButtonContainer}>
           <TouchableOpacity
-            style={outdoorStyles.shuttleButton}
+            style={[
+              outdoorStyles.shuttleButton,
+              { backgroundColor: theme.cardBackground },
+            ]}
             onPress={handleShuttleButton}
           >
             <Image
@@ -1246,7 +1329,12 @@ export default function MapView() {
               resizeMode="contain"
               style={outdoorStyles.shuttleIcon}
             />
-            <Text style={outdoorStyles.switchButtonText}>
+            <Text
+              style={[
+                outdoorStyles.switchButtonText,
+                { color: theme.text, fontWeight: "bold" },
+              ]}
+            >
               {activeCampus === "sgw" ? "Shuttle To Loyola" : "Shuttle To SGW"}
             </Text>
           </TouchableOpacity>
@@ -1266,17 +1354,24 @@ export default function MapView() {
       {/* POI Loading Indicator */}
       {loading && (
         <View style={outdoorStyles.loadingContainer}>
-          <ActivityIndicator size="large" color="#922338" />
+          <ActivityIndicator size="large" color={theme.buttonBackground} />
         </View>
       )}
 
       {/* POI Update Button - only visible when POI is enabled and region changed */}
       {showUpdateButton && showPOI && (
         <TouchableOpacity
-          style={poiStyles.updateButtonContainer}
+          style={[
+            poiStyles.updateButtonContainer,
+            { backgroundColor: theme.buttonBackground },
+          ]}
           onPress={() => handleFetchPlaces(region)}
         >
-          <Text style={poiStyles.updateButtonText}>Update POIs</Text>
+          <Text
+            style={[poiStyles.updateButtonText, { color: theme.buttonText }]}
+          >
+            Update POIs
+          </Text>
         </TouchableOpacity>
       )}
 
@@ -1297,7 +1392,6 @@ export default function MapView() {
       />
 
       {/* Floating Buttons */}
-
       {!navigationToMap && !travelMode && (
         <View style={outdoorStyles.buttonContainer}>
           <TouchableOpacity style={outdoorStyles.button} onPress={togglePOI}>
