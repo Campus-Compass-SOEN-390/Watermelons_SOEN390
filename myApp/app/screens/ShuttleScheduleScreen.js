@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native"; // Import navigation
 import { fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
 import moment from "moment";
 import RNUxcam from "react-native-ux-cam";
+import HeaderButtons from "../components/HeaderButtons";
 
 export default function ShuttleScheduleScreen() {
   const navigation = useNavigation();

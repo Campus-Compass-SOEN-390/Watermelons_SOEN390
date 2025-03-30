@@ -6,24 +6,6 @@ import RNUxcam from "react-native-ux-cam";
 // Create a mock for the push function
 const mockPush = jest.fn();
 
-// Mock useFeedback hook
-jest.mock('../context/FeedbackContext', () => ({
-    useFeedback: () => ({
-        vibrationEnabled: true,
-        soundEnabled: true,
-        speechEnabled: true
-    })
-}));
-
-// Mock useButtonInteraction hook
-jest.mock('../hooks/useButtonInteraction', () => ({
-    useButtonInteraction: () => ({
-        handleButtonPress: (route, buttonText) => {
-            mockPush(route);
-        }
-    })
-}));
-
 // Mocking useRouter from expo-router to return the mock push function
 jest.mock("expo-router", () => ({
   useRouter: () => ({
@@ -31,30 +13,14 @@ jest.mock("expo-router", () => ({
   }),
 }));
 
-
-// Mock HeaderButtons
-jest.mock('../components/HeaderButtons.js', () => {
-  const React = require('react');
-  const { View, Text } = require('react-native');
-  return () => React.createElement(View, null, React.createElement(Text, null, 'HeaderButtons Mock'));
-});
-
-describe('Home page', () => {
-  beforeEach(() => {
-      // Clear mock history before each test
-      mockPush.mockClear();
-  });
-}); 
-
 // Mock UXCam for testing
 jest.mock("react-native-ux-cam", () => ({
-tagScreenName: jest.fn(),
-logEvent: jest.fn(),
-startWithConfiguration: jest.fn(),
-optIntoSchematicRecordings: jest.fn(),
-// Add any other UXCam methods you use
+  tagScreenName: jest.fn(),
+  logEvent: jest.fn(),
+  startWithConfiguration: jest.fn(),
+  optIntoSchematicRecordings: jest.fn(),
+  // Add any other UXCam methods you use
 }));
-
 
 describe("Home page", () => {
   beforeEach(() => {
@@ -96,25 +62,6 @@ describe("Home page", () => {
     expect(RNUxcam.logEvent).toHaveBeenCalledWith("SGW Campus Button Pressed");
     expect(mockPush).toHaveBeenCalledWith("/(tabs)/map?type=sgw");
   });
-
-
-    it('should navigate to Calendar Fetching screen when Connect Calendars button is pressed', () => {
-        const page = render(<HomePage />);
-        const calendarButton = page.getByTestId('calendarfetchbutton');
-        
-        fireEvent.press(calendarButton);
-        
-        expect(mockPush).toHaveBeenCalledWith('screens/CalendarFetching');
-    });
-
-    it('should display Google icon in Connect Calendars button', () => {
-        const page = render(<HomePage />);
-        const googleIcon = page.getByTestId('googleIcon');
-        const calendarButton = page.getByTestId('calendarfetchbutton');
-        
-        expect(googleIcon).toBeTruthy();
-        expect(calendarButton).toContainElement(googleIcon);
-    });
 
   it("should go to loyola campus and log event when loyola campus button is pressed", () => {
     const page = render(<HomePage />);

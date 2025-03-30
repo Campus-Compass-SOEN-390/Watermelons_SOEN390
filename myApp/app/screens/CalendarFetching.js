@@ -19,9 +19,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import LayoutWrapper from "../components/LayoutWrapper.js";
 import HeaderButtons from "../components/HeaderButtons.js";
-import MonthPicker from '../components/MonthPicker';
-
-
+import MonthPicker from "../components/MonthPicker";
+import RNUxcam from "react-native-ux-cam";
 
 export default function CalendarFetching() {
   // Add this useEffect hook for UXCam screen tagging
@@ -41,7 +40,8 @@ export default function CalendarFetching() {
   const [storedCalendarIds, setStoredCalendarIds] = useState([]);
   const [monthsAhead, setMonthsAhead] = useState("1"); // default 1 month
 
-  const API_KEY = process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
+  const API_KEY =
+    process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
 
   const fetchCalendarEvents = useCallback(async () => {
     if (!calendarId.trim()) {
@@ -218,11 +218,28 @@ export default function CalendarFetching() {
                           <TouchableOpacity
                             key={index}
                             style={styles.historyItem}
-                            onPress={() => setCalendarId(item.id)}
+                            onPress={() => {
+                              RNUxcam.logEvent(
+                                "Stored Calendar Ids Button Pressed"
+                              );
+                              setCalendarId(item.id);
+                            }}
                           >
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                              <Ionicons name="timer-outline" size={20} color="#888" style={{ marginRight: 6 }} />
-                              <Text style={styles.historyText}>{item.name}</Text>
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Ionicons
+                                name="timer-outline"
+                                size={20}
+                                color="#888"
+                                style={{ marginRight: 6 }}
+                              />
+                              <Text style={styles.historyText}>
+                                {item.name}
+                              </Text>
                             </View>
                           </TouchableOpacity>
                         ))}
@@ -243,10 +260,7 @@ export default function CalendarFetching() {
                 {/* Connect Button */}
                 <TouchableOpacity
                   style={styles.connectButton}
-                  onPress={() => {
-                    handleButtonPress(null, loading ? "Connecting..." : "Connect");
-                    fetchCalendarEvents();
-                  }}                  
+                  onPress={fetchCalendarEvents}
                   disabled={loading}
                 >
                   <Text style={styles.buttonText}>
@@ -258,6 +272,7 @@ export default function CalendarFetching() {
                 <TouchableOpacity
                   style={styles.clearHistoryButton}
                   onPress={async () => {
+                    RNUxcam.logEvent("Clear History Button Pressed");
                     try {
                       await AsyncStorage.removeItem("calendarIds");
                       setStoredCalendarIds([]);
