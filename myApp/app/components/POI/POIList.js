@@ -1,4 +1,4 @@
-import React, { useState, useCallback, memo } from 'react';
+import React, { useState, useCallback, memo, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
     View,
@@ -7,7 +7,9 @@ import {
     FlatList,
     ActivityIndicator,
     TouchableOpacity,
-    RefreshControl
+    RefreshControl,
+    Platform,
+    Animated
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/POIListStyle';
@@ -16,6 +18,11 @@ import { useRouter } from "expo-router";
 import { useLocationContext } from '@/app/context/LocationContext';
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
+
+// Constants for consistent item heights (important for smooth scrolling)
+const ITEM_HEIGHT = 350; // Base height including image, content, padding
+const IMAGE_HEIGHT = 180; // Match the style definition
+const SCROLL_THRESHOLD = 300; // Show button after scrolling this much
 
 const getCategoryStyle = (category) => {
     if (category === 'cafe') return styles.cafeBadge;
@@ -88,6 +95,9 @@ const POIListItem = memo(({ item, userLocation, calculateDistance }) => {
                         console.log(`Image error for ${item.name}`);
                         setImageError(true);
                     }}
+                    // Add fast image loading
+                    fadeDuration={200}
+                    progressiveRenderingEnabled={true}
                 />
             ) : (
                 <View style={styles.noImagePlaceholder}>
@@ -157,13 +167,10 @@ const POIListItem = memo(({ item, userLocation, calculateDistance }) => {
     }
     
     // If item's relevant properties changed, re-render
-    if (prevItem.name !== nextItem.name) return false;
-    if (prevItem.vicinity !== nextItem.vicinity) return false;
-    if (prevItem.rating !== nextItem.rating) return false;
-    if (prevItem._distance !== nextItem._distance) return false;
-    
-    // If none of the above changed, prevent re-render
-    return true;
+    return !(prevItem.name === nextItem.name &&
+        prevItem.vicinity === nextItem.vicinity &&
+        prevItem.rating === nextItem.rating &&
+        prevItem._distance === nextItem._distance);
 });
 
 POIListItem.propTypes = {
@@ -205,6 +212,14 @@ const POIList = ({
     onRefresh,
     calculateDistance
 }) => {
+    // Add refs and state for scroll-to-top functionality
+    const flatListRef = useRef(null);
+    const [showScrollTopButton, setShowScrollTopButton] = useState(false);
+    const scrollButtonOpacity = useRef(new Animated.Value(0)).current;
+    
+    // Memoize data to prevent unnecessary re-renders
+    const memoizedData = useMemo(() => data, [data]);
+    
     // Memoize renderItem function to prevent recreation on each render
     const renderItem = useCallback(({ item }) => (
         <POIListItem
@@ -213,6 +228,45 @@ const POIList = ({
             calculateDistance={calculateDistance}
         />
     ), [userLocation, calculateDistance]);
+    
+    // Ensure consistent item height for getItemLayout
+    const getItemLayout = useCallback((_, index) => ({
+        length: ITEM_HEIGHT,
+        offset: ITEM_HEIGHT * index,
+        index,
+    }), []);
+    
+    // Handle scroll event to show/hide scroll-to-top button
+    const handleScroll = useCallback((event) => {
+        const scrollY = event.nativeEvent.contentOffset.y;
+        
+        // Show button when scrolled down enough
+        if (scrollY > SCROLL_THRESHOLD && !showScrollTopButton) {
+            setShowScrollTopButton(true);
+            Animated.timing(scrollButtonOpacity, {
+                toValue: 1,
+                duration: 200,
+                useNativeDriver: true
+            }).start();
+        } 
+        // Hide button when close to the top
+        else if (scrollY <= SCROLL_THRESHOLD && showScrollTopButton) {
+            Animated.timing(scrollButtonOpacity, {
+                toValue: 0,
+                duration: 200,
+                useNativeDriver: true
+            }).start(() => {
+                setShowScrollTopButton(false);
+            });
+        }
+    }, [showScrollTopButton, scrollButtonOpacity]);
+    
+    // Scroll to top function
+    const scrollToTop = useCallback(() => {
+        if (flatListRef.current) {
+            flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+        }
+    }, []);
 
     if (isLoading && !refreshing) {
         return (
@@ -252,48 +306,73 @@ const POIList = ({
     console.log(`POIList rendering ${data.length} items`);
     
     return (
-        <FlatList
-            testID="poi-flatlist"
-            data={data}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            contentContainerStyle={styles.listContainer}
-            showsVerticalScrollIndicator={true}
+        <View style={{ flex: 1 }}>
+            <FlatList
+                testID="poi-flatlist"
+                ref={flatListRef}
+                data={memoizedData}
+                renderItem={renderItem}
+                keyExtractor={keyExtractor}
+                contentContainerStyle={styles.listContainer}
+                showsVerticalScrollIndicator={true}
+                
+                // Performance optimization settings
+                initialNumToRender={5}
+                maxToRenderPerBatch={3}
+                updateCellsBatchingPeriod={100}
+                windowSize={5}
+                removeClippedSubviews={Platform.OS !== 'web'} // This helps on mobile
+                
+                // Use consistent item heights for smoother scrolling
+                getItemLayout={getItemLayout}
+                
+                // Add scroll event listener
+                onScroll={handleScroll}
+                scrollEventThrottle={16}
+                
+                // Additional optimizations
+                maintainVisibleContentPosition={{
+                    minIndexForVisible: 0,
+                    autoscrollToTopThreshold: 3
+                }}
+                
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                        colors={["#922338"]}
+                        tintColor="#922338"
+                    />
+                }
+                
+                // Progressive loading indicator
+                ListFooterComponent={
+                    data.length > 20 ? (
+                        <View style={styles.footerContainer}>
+                            <Text style={styles.footerText}>
+                                {`Showing ${data.length} places`}
+                            </Text>
+                        </View>
+                    ) : null
+                }
+            />
             
-            // Performance optimization settings
-            initialNumToRender={5}
-            maxToRenderPerBatch={5}
-            updateCellsBatchingPeriod={50}
-            windowSize={7}
-            removeClippedSubviews={true}
-            
-            // Enable memory optimization
-            getItemLayout={(data, index) => ({
-                length: 150, // Approximate height of each item
-                offset: 150 * index,
-                index,
-            })}
-            
-            refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                    colors={["#922338"]}
-                    tintColor="#922338"
-                />
-            }
-            
-            // Progressive loading indicator
-            ListFooterComponent={
-                data.length > 20 ? (
-                    <View style={styles.footerContainer}>
-                        <Text style={styles.footerText}>
-                            {`Showing ${data.length} places`}
-                        </Text>
-                    </View>
-                ) : null
-            }
-        />
+            {/* Scroll to top button */}
+            {showScrollTopButton && (
+                <Animated.View style={[
+                    styles.scrollTopButton, 
+                    { opacity: scrollButtonOpacity }
+                ]}>
+                    <TouchableOpacity
+                        onPress={scrollToTop}
+                        style={styles.scrollTopButtonTouchable}
+                        activeOpacity={0.8}
+                    >
+                        <Ionicons name="arrow-up" size={24} color="white" />
+                    </TouchableOpacity>
+                </Animated.View>
+            )}
+        </View>
     );
 };
 
