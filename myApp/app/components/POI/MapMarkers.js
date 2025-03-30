@@ -1,6 +1,8 @@
 import React from "react";
 import Mapbox from "@rnmapbox/maps";
 import { TouchableOpacity } from "react-native";
+import { getRandomBytes } from 'expo-crypto';
+
 
 // Update MapMarkers to handle coordinates correctly and make markers clickable
 export default function MapMarkers({ data, MarkerComponent, onMarkerPress }) {
@@ -11,8 +13,14 @@ export default function MapMarkers({ data, MarkerComponent, onMarkerPress }) {
     if (!lat || !lng) return null;
 
     // Generate a unique key/id using place_id or fallback to a random id
-    const pointId =
-      point.place_id || `marker-${Math.random().toString(36).substring(2, 11)}`;
+    // Secure random ID generator -- sonarqube imporvement
+    const generateSecureId = () => {
+      const randomBytes = getRandomBytes(8); // 8 bytes = 16 hex chars
+      return Array.from(randomBytes, byte => byte.toString(16).padStart(2, '0')).join('');
+    };
+
+      // Usage:
+      const pointId = point.place_id || `marker-${generateSecureId()}`;
 
     return (
       <Mapbox.MarkerView

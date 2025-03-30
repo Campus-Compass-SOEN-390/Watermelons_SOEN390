@@ -1,5 +1,4 @@
 import { Text, View, TouchableOpacity, ScrollView , Alert} from "react-native";
-import * as Location from 'expo-location';
 import React, { useState, useEffect } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import styles from '../styles/GoogleScheduleStyles';
@@ -7,7 +6,6 @@ import { useRouter } from 'expo-router';
 import LayoutWrapper from "../components/LayoutWrapper";
 import * as FileSystem from 'expo-file-system';
 import HeaderButtons from "../components/HeaderButtons";
-import Head from "next/head";
 
 export default function CalendarSchedulePage() {
   const router = useRouter();
