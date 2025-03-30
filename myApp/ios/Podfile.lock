@@ -299,7 +299,7 @@ PODS:
   - MapboxCommon (23.11.4)
   - MapboxCoreMaps (10.19.2):
     - MapboxCommon (~> 23.11)
-  - MapboxMaps (10.19.4):
+  - MapboxMaps (10.19.3):
     - MapboxCommon (= 23.11.4)
     - MapboxCoreMaps (= 10.19.2)
     - MapboxMobileEvents (= 2.0.0)
@@ -2166,28 +2166,6 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNUxcam (6.0.5):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.01.01.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - UXCam (~> 3.6.22)
-    - Yoga
   - RNVectorIcons (10.2.0):
     - DoubleConversion
     - glog
@@ -2211,7 +2189,6 @@ PODS:
     - Yoga
   - SocketRocket (0.7.1)
   - Turf (2.8.0)
-  - UXCam (3.6.23)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -2321,7 +2298,6 @@ DEPENDENCIES:
   - "rnmapbox-maps (from `../node_modules/@rnmapbox/maps`)"
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
-  - RNUxcam (from `../node_modules/react-native-ux-cam`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -2337,7 +2313,6 @@ SPEC REPOS:
     - MapboxMobileEvents
     - SocketRocket
     - Turf
-    - UXCam
 
 EXTERNAL SOURCES:
   boost:
@@ -2549,8 +2524,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
-  RNUxcam:
-    :path: "../node_modules/react-native-ux-cam"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   Yoga:
@@ -2596,7 +2569,7 @@ SPEC CHECKSUMS:
   hermes-engine: 1949ca944b195a8bde7cbf6316b9068e19cf53c6
   MapboxCommon: cc47fafe3fe5408ca49240aa80fa64f27f275711
   MapboxCoreMaps: 35685edba03e44468aed57c3dfd7f8795edafda8
-  MapboxMaps: f87023cf0d72b180b40ea0b6fb4b2d7db6b73b71
+  MapboxMaps: 429db75b136978f8b2dc2456da5d8b6b03c22cea
   MapboxMobileEvents: d044b9edbe0ec7df60f6c2c9634fe9a7f449266b
   RCT-Folly: 84578c8756030547307e4572ab1947de1685c599
   RCTDeprecation: 063fc281b30b7dc944c98fe53a7e266dab1a8706
@@ -2669,13 +2642,11 @@ SPEC CHECKSUMS:
   rnmapbox-maps: 30f2cd89187f716c6c7ed6d765debaf5e60c3b4c
   RNScreens: 351f431ef2a042a1887d4d90e1c1024b8ae9d123
   RNSVG: bbbdd17e8730c0f2a9cb416e5f37be87e29ebc90
-  RNUxcam: b923c23693b125fa50284b644e875319b635bb27
   RNVectorIcons: a24016b773380b1aa37fca501ec6b94a951890a0
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Turf: aa2ede4298009639d10db36aba1a7ebaad072a5e
-  UXCam: 95e15a95dbd225c79b77d24f39c77809ff223529
   Yoga: be6f55a028e86c83ae066f018e9b5d24ffc45436
 
-PODFILE CHECKSUM: e7c071b89d779ba607464a6158005f5f468a34e9
+PODFILE CHECKSUM: 1bc587da30fb63b12f384ea7e695e55a81058efc
 
 COCOAPODS: 1.16.2

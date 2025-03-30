@@ -5,7 +5,6 @@ export default () => ({
     name: "myApp",
     slug: "myApp",
     extra: {
-      uxcamApiKey: process.env.UXCAM_API_KEY,
       apiKey: process.env.GOOGLE_MAPS_API_KEY,
       mapbox: process.env.MAPBOX_ACCESS_TOKEN,
     },
@@ -51,10 +50,10 @@ export default () => ({
         },
       ],
       [
-        "@rnmapbox/maps",
-        {
-          RNMapboxMapsImpl: "mapbox",
-        },
+        "@rnmapbox/maps", 
+        { 
+          RNMapboxMapsImpl: "mapbox" 
+        }
       ],
     ],
     experiments: { typedRoutes: true },

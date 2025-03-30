@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import { fetchShuttleScheduleByDay } from '../api/shuttleSchedule';
 import moment from 'moment';
 import { useButtonInteraction } from '../hooks/useButtonInteraction';
-import RNUxcam from "react-native-ux-cam";
 
 export default function ShuttleScheduleScreen() {
   const navigation = useNavigation();
@@ -15,63 +14,57 @@ export default function ShuttleScheduleScreen() {
   const [campus, setCampus] = useState('SGW');
 
   useEffect(() => {
-    RNUxcam.tagScreenName("ShuttleScheduleScreen");
-  }, []);
-
-  useEffect(() => {
     const loadSchedule = async () => {
-      const today = moment().format("dddd");
-      console.log(`Fetching schedule for ${today}...`);
+        const today = moment().format('dddd');
+        console.log(`Fetching schedule for ${today}...`);
 
-      if (today === "Saturday" || today === "Sunday") {
-        console.warn("No schedule available on weekends.");
-        setError("❌ No shuttle service on weekends.");
-        return;
-      }
-
-      try {
-        const data = await fetchShuttleScheduleByDay(today);
-        if (!data) {
-          throw new Error("No schedule data available.");
+        if (today === "Saturday" || today === "Sunday") {
+            console.warn("No schedule available on weekends.");
+            setError("❌ No shuttle service on weekends.");
+            return;
         }
 
-        console.log("Schedule data loaded:", data);
-        setSchedule(data);
-      } catch (err) {
-        console.error("API Fetch Error:", err.message);
-        setError("❌ Unable to load shuttle schedule. Please try again later.");
-      }
+        try {
+            const data = await fetchShuttleScheduleByDay(today);
+            if (!data) {
+                throw new Error("No schedule data available.");
+            }
+
+            console.log("Schedule data loaded:", data);
+            setSchedule(data);
+        } catch (err) {
+            console.error("API Fetch Error:", err.message);
+            setError("❌ Unable to load shuttle schedule. Please try again later.");
+        }
     };
 
     loadSchedule();
-  }, []);
+}, []);
 
-  useEffect(() => {
+useEffect(() => {
     if (!schedule) return;
 
     const currentTime = moment();
     let nextAvailableBus = null;
 
     for (const time of schedule[campus]) {
-      if (moment(time, "HH:mm").isAfter(currentTime)) {
-        nextAvailableBus = time;
-        break;
-      }
+        if (moment(time, 'HH:mm').isAfter(currentTime)) {
+            nextAvailableBus = time;
+            break;
+        }
     }
 
     setNextBus(nextAvailableBus);
-  }, [schedule, campus]);
+}, [schedule, campus]);
 
   const handleBack = () => {
     handleButtonPress(null, 'Going back');
-    RNUxcam.logEvent("Shuttle Go Back Button Pressed");
     navigation.goBack();
   };
 
   const handleWarningPress = () => {
     const todayDate = moment().format('YYYY-MM-DD');
     handleButtonPress(null, 'Checking bus status');
-    RNUxcam.logEvent("Shuttle Warning Button Pressed");
     
     if (todayDate === '2025-02-28') {
       Alert.alert("Bus Delay Warning", "⚠️ No service on February 28, 2025. Buses may be delayed.");
@@ -83,7 +76,6 @@ export default function ShuttleScheduleScreen() {
   const handleCampusToggle = () => {
     const newCampus = campus === 'SGW' ? 'LOY' : 'SGW';
     handleButtonPress(null, `Switching to ${newCampus} campus schedule`);
-    RNUxcam.logEvent(`Switch to ${newCampus} Schedule Button Pressed`);
     setCampus(newCampus);
   };
 
@@ -105,13 +97,13 @@ export default function ShuttleScheduleScreen() {
     );
   }
 
-  if (!schedule) {
-    return (
+if (!schedule) {
+  return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+          <Text>Loading...</Text>
       </View>
-    );
-  }
+  );
+}
 
   return (
     <View style={styles.container}>
@@ -131,15 +123,11 @@ export default function ShuttleScheduleScreen() {
         style={styles.switchButton}
         onPress={handleCampusToggle}
       >
-        <Text style={styles.switchText}>
-          {campus === "SGW" ? "SGW ➜ LOY" : "LOY ➜ SGW"}
-        </Text>
+        <Text style={styles.switchText}>{campus === 'SGW' ? 'SGW ➜ LOY' : 'LOY ➜ SGW'}</Text>
       </TouchableOpacity>
 
       <ScrollView style={styles.scheduleContainer}>
-        <Text style={styles.scheduleHeader}>
-          Schedule in effect Monday to Friday
-        </Text>
+        <Text style={styles.scheduleHeader}>Schedule in effect Monday to Friday</Text>
 
         <View style={styles.table}>
           <Text style={styles.tableHeader}>AM</Text>
@@ -149,16 +137,12 @@ export default function ShuttleScheduleScreen() {
 
         {splitSchedule(schedule[campus]).map(({ am, pm }, index) => (
           <View key={`${am}-${pm}-${index}`} style={styles.tableRow}>
-            <Text
-              style={[styles.tableText, am === nextBus && styles.highlight]}
-            >
-              {am || ""}
+            <Text style={[styles.tableText, am === nextBus && styles.highlight]}>
+              {am || ''}
             </Text>
             <View style={styles.verticalDividerDashed}></View>
-            <Text
-              style={[styles.tableText, pm === nextBus && styles.highlight]}
-            >
-              {pm || ""}
+            <Text style={[styles.tableText, pm === nextBus && styles.highlight]}>
+              {pm || ''}
             </Text>
           </View>
         ))}
@@ -168,13 +152,13 @@ export default function ShuttleScheduleScreen() {
 }
 
 const splitSchedule = (times) => {
-  const amTimes = times.filter((time) => moment(time, "HH:mm").hour() < 12);
-  const pmTimes = times.filter((time) => moment(time, "HH:mm").hour() >= 12);
+  const amTimes = times.filter(time => moment(time, 'HH:mm').hour() < 12);
+  const pmTimes = times.filter(time => moment(time, 'HH:mm').hour() >= 12);
 
   const maxLength = Math.max(amTimes.length, pmTimes.length);
   return Array.from({ length: maxLength }, (_, i) => ({
-    am: amTimes[i] || "",
-    pm: pmTimes[i] || "",
+    am: amTimes[i] || '',
+    pm: pmTimes[i] || ''
   }));
 };
 
@@ -183,12 +167,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 16,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 10,
   },
   backButton: {
@@ -201,30 +185,30 @@ const styles = StyleSheet.create({
   },
   backText: {
     fontSize: 20,
-    color: "white",
-    fontWeight: "bold",
+    color: 'white',
+    fontWeight: 'bold',
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontWeight: 'bold',
+    textAlign: 'center',
     flex: 1,
   },
   warningButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#800020",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#800020',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   warningIcon: {
     fontSize: 20,
-    color: "white",
+    color: 'white',
   },
   switchButton: {
-    alignSelf: "center",
-    backgroundColor: "#800020",
+    alignSelf: 'center',
+    backgroundColor: '#800020',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
@@ -232,52 +216,52 @@ const styles = StyleSheet.create({
   },
   switchText: {
     fontSize: 16,
-    color: "white",
-    fontWeight: "bold",
+    color: 'white',
+    fontWeight: 'bold',
   },
   scheduleContainer: {
     marginTop: 10,
   },
   scheduleHeader: {
     fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontWeight: 'bold',
+    textAlign: 'center',
     marginBottom: 10,
   },
   table: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     borderBottomWidth: 1,
     paddingBottom: 5,
     marginBottom: 5,
   },
   tableHeader: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     flex: 1,
-    textAlign: "center",
+    textAlign: 'center',
   },
   tableRow: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     marginVertical: 5,
   },
   tableText: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
     flex: 1,
   },
   highlight: {
-    fontWeight: "bold",
-    color: "green",
+    fontWeight: 'bold',
+    color: 'green',
   },
   verticalDividerDashed: {
     width: 1,
-    backgroundColor: "black",
-    height: "100%",
+    backgroundColor: 'black',
+    height: '100%',
     marginHorizontal: 10,
-    borderStyle: "dashed",
+    borderStyle: 'dashed',
   },
 });
