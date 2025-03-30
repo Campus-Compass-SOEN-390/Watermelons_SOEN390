@@ -158,6 +158,30 @@ class POIDataSubject {
     const mergedRestaurants = [...this.data.restaurants];
     const mergedActivities = [...this.data.activities];
     
+    // Helper to get the appropriate array for a category
+    const getArrayForCategory = (category) => {
+      if (category === 'coffee') return mergedCoffee;
+      if (category === 'restaurant') return mergedRestaurants;
+      return mergedActivities;
+    };
+    
+    // Helper to add a new POI
+    const addNewPOI = (poi, category) => {
+      const targetArray = getArrayForCategory(category);
+      targetArray.push(poi);
+      existingPlaceIds.set(poi.place_id, { type: category, data: poi });
+    };
+    
+    // Helper to update an existing POI
+    const updateExistingPOI = (poi, category) => {
+      const targetArray = getArrayForCategory(category);
+      const index = targetArray.findIndex(p => p.place_id === poi.place_id);
+      
+      if (index !== -1) {
+        targetArray[index] = { ...targetArray[index], ...poi };
+      }
+    };
+    
     // Helper to merge new POIs into appropriate category
     const mergePOIs = (pois, category) => {
       if (!pois || !Array.isArray(pois)) return;
@@ -165,29 +189,13 @@ class POIDataSubject {
       pois.forEach(poi => {
         if (!poi.place_id) return;
         
-        // If this POI doesn't exist yet or is in a different category, add it
         const existing = existingPlaceIds.get(poi.place_id);
+        
         if (!existing) {
-          if (category === 'coffee') mergedCoffee.push(poi);
-          else if (category === 'restaurant') mergedRestaurants.push(poi);
-          else if (category === 'activity') mergedActivities.push(poi);
-          
-          existingPlaceIds.set(poi.place_id, { type: category, data: poi });
+          addNewPOI(poi, category);
         } 
-        // If existing and same category, update with newer data
         else if (existing.type === category) {
-          const index = 
-            category === 'coffee' 
-              ? mergedCoffee.findIndex(p => p.place_id === poi.place_id)
-              : category === 'restaurant'
-                ? mergedRestaurants.findIndex(p => p.place_id === poi.place_id)
-                : mergedActivities.findIndex(p => p.place_id === poi.place_id);
-                
-          if (index !== -1) {
-            if (category === 'coffee') mergedCoffee[index] = { ...mergedCoffee[index], ...poi };
-            else if (category === 'restaurant') mergedRestaurants[index] = { ...mergedRestaurants[index], ...poi };
-            else if (category === 'activity') mergedActivities[index] = { ...mergedActivities[index], ...poi };
-          }
+          updateExistingPOI(poi, category);
         }
       });
     };

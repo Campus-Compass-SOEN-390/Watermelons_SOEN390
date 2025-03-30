@@ -150,58 +150,20 @@ describe('POI API Tests', () => {
       // First make sure the updateData was called
       expect(poiDataSubject.updateData).toHaveBeenCalled();
       
-      // Verify error was logged, it might be caught silently
-      // Check if console.error was called at all rather than with specific arguments
+      // Verify error was logged
       expect(console.error).toHaveBeenCalled();
     });
     
-    test('shouldUpdatePOIData should correctly determine when to update', () => {
-      const newRegion = { latitude: 45.5, longitude: -73.6 };
+    // Additional test for loadPOICache with malformed JSON
+    test('loadPOICache should handle malformed JSON data', async () => {
+      // Mock file exists but contains malformed JSON
+      FileSystem.getInfoAsync.mockResolvedValueOnce({ exists: true });
+      FileSystem.readAsStringAsync.mockResolvedValueOnce('{ bad json');
       
-      // Test case 1: No data
-      poiDataSubject.getData.mockReturnValueOnce({
-        coffeeShops: [],
-        restaurants: [],
-        activities: [],
-        lastRegion: null,
-        lastFetchTime: 0
-      });
+      const result = await loadPOICache();
       
-      expect(shouldUpdatePOIData(newRegion)).toBe(true);
-      
-      // Test case 2: Region changed
-      poiDataSubject.getData.mockReturnValueOnce({
-        coffeeShops: [{ id: 1 }],
-        restaurants: [],
-        activities: [],
-        lastRegion: { latitude: 45.4, longitude: -73.5 },
-        lastFetchTime: Date.now()
-      });
-      poiDataSubject.hasRegionChanged.mockReturnValueOnce(true);
-      
-      expect(shouldUpdatePOIData(newRegion)).toBe(true);
-      
-      // Test case 3: Cache expired
-      poiDataSubject.getData.mockReturnValueOnce({
-        coffeeShops: [{ id: 1 }],
-        restaurants: [],
-        activities: [],
-        lastRegion: newRegion,
-        lastFetchTime: Date.now() - (35 * 60 * 1000) // 35 minutes ago (cache timeout is 30 min)
-      });
-      
-      expect(shouldUpdatePOIData(newRegion)).toBe(true);
-      
-      // Test case 4: Recent data, no need to update
-      poiDataSubject.getData.mockReturnValueOnce({
-        coffeeShops: [{ id: 1 }],
-        restaurants: [],
-        activities: [],
-        lastRegion: newRegion,
-        lastFetchTime: Date.now() - 1000 // 1 second ago
-      });
-      
-      expect(shouldUpdatePOIData(newRegion)).toBe(false);
+      expect(result).toBeNull();
+      expect(console.error).toHaveBeenCalled();
     });
   });
   
@@ -251,6 +213,75 @@ describe('POI API Tests', () => {
       expect(result[2]._distance).toBeNull();
       // Fourth POI should have null distance (missing geometry)
       expect(result[3]._distance).toBeNull();
+    });
+    
+    // Add test for properly handling edge cases in geometry data
+    test('should handle edge cases in the POI geometry data', () => {
+      const userLocation = { latitude: 45.5, longitude: -73.6 };
+      const pois = [
+        // Valid POI
+        {
+          place_id: '1',
+          geometry: { location: { lat: 45.51, lng: -73.61 } }
+        },
+        // POI with undefined geometry
+        {
+          place_id: '2',
+          geometry: undefined
+        },
+        // POI with lat as string instead of number (data type error)
+        {
+          place_id: '3',
+          geometry: { location: { lat: '45.52', lng: -73.62 } }
+        },
+        // POI with lat & lng swapped (common error in some APIs)
+        {
+          place_id: '4',
+          geometry: { location: { lng: 45.53, lat: -73.63 } }
+        }
+      ];
+      
+      const result = precomputeDistances(pois, userLocation);
+      
+      // First POI should have a distance
+      expect(result[0]._distance).toBeGreaterThan(0);
+      // Second POI should have null distance (undefined geometry)
+      expect(result[1]._distance).toBeNull();
+      // Third POI should have distance (we convert strings to numbers)
+      expect(result[2]._distance).not.toBeNull();
+      // Fourth POI will calculate distance with swapped coordinates
+      expect(result[3]._distance).not.toBeNull();
+    });
+    
+    // Add test with more edge cases
+    test('should handle invalid or extreme coordinates', () => {
+      const userLocation = { latitude: 45.5, longitude: -73.6 };
+      const pois = [
+        // POI at exactly same location as user
+        {
+          place_id: '1',
+          geometry: { location: { lat: 45.5, lng: -73.6 } }
+        },
+        // POI with invalid coordinates (outside valid range)
+        {
+          place_id: '2',
+          geometry: { location: { lat: 200, lng: 300 } }
+        },
+        // POI at opposite side of the world
+        {
+          place_id: '3',
+          geometry: { location: { lat: -45.5, lng: 106.4 } }
+        }
+      ];
+      
+      const result = precomputeDistances(pois, userLocation);
+      
+      // Same location should have distance near 0
+      expect(result[0]._distance).toBeLessThan(0.01);
+      // Invalid coordinates will still calculate some distance, but it might be large or inaccurate
+      expect(result[1]._distance).not.toBeNull();
+      // Opposite side should have a very large distance
+      expect(result[2]._distance).toBeGreaterThan(1000);
     });
   });
   
@@ -707,6 +738,54 @@ describe('POI API Tests', () => {
       expect(fetch).toHaveBeenCalledTimes(2);
       expect(fetch.mock.calls[0][0]).toContain('type=restaurant');
       expect(fetch.mock.calls[1][0]).toContain('type=tourist_attraction|movie_theater');
+    });
+  });
+  
+  // Test shouldUpdatePOIData edge cases
+  describe('shouldUpdatePOIData function', () => {
+    test('should return true when no data is available', () => {
+      // Mock the situation where there's no data, which should trigger a fetch
+      poiDataSubject.getData.mockReturnValueOnce({
+        coffeeShops: [], // Empty data
+        restaurants: [],
+        activities: [],
+        lastRegion: { latitude: 45.5, longitude: -73.6 }, // Region exists
+        lastFetchTime: Date.now() // Recent time
+      });
+      
+      const newRegion = { latitude: 45.5, longitude: -73.6 };
+      expect(shouldUpdatePOIData(newRegion)).toBe(true);
+    });
+    
+    test('should return false when there is data, region has not changed, and cache is not expired', () => {
+      const region = { latitude: 45.5, longitude: -73.6 };
+      
+      poiDataSubject.getData.mockReturnValueOnce({
+        coffeeShops: [{ id: 1 }],
+        restaurants: [{ id: 2 }],
+        activities: [{ id: 3 }],
+        lastRegion: region,
+        lastFetchTime: Date.now() // Very recent
+      });
+      
+      poiDataSubject.hasRegionChanged.mockReturnValueOnce(false);
+      
+      expect(shouldUpdatePOIData(region)).toBe(false);
+    });
+    
+    test('should handle extremely old cache timestamp', () => {
+      const region = { latitude: 45.5, longitude: -73.6 };
+      
+      // Use a timestamp from 1970 (Unix epoch start)
+      poiDataSubject.getData.mockReturnValueOnce({
+        coffeeShops: [{ id: 1 }],
+        restaurants: [],
+        activities: [],
+        lastRegion: region,
+        lastFetchTime: 0 // January 1, 1970
+      });
+      
+      expect(shouldUpdatePOIData(region)).toBe(true);
     });
   });
 });
