@@ -2,45 +2,44 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import React, { useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, usePathname } from "expo-router";
-import { ThemeContext } from "../context/ThemeContext"; // Import ThemeContext
+import { ThemeContext } from "../context/ThemeContext";
 
 export default function HeaderButtons() {
   const router = useRouter();
   const pathname = usePathname();
-  const { isDarkMode, toggleTheme, theme } = useContext(ThemeContext); // Get theme context
+
+  // Get theme context properly
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
 
   const isHome = pathname === "/";
   const isSettings = pathname === "/screens/SettingsPage";
 
+  // Create dynamic styles based on theme
+  const dynamicStyles = StyleSheet.create({
+    headerButtons: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: theme.navButtonBackground,
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 100,
+    },
+  });
+
   return (
-    <View style={[styles.topNav, { backgroundColor: theme.background }]}>
+    <View style={styles.topNav}>
       {/* Left Slot (Home or Back or Placeholder) */}
-      <View
-        style={
-          isHome
-            ? styles.placeholder
-            : [
-                styles.headerButtons,
-                { backgroundColor: theme.buttonBackground },
-              ]
-        }
-      >
-        {(() => {
-          if (isSettings) {
-            return (
-              <TouchableOpacity onPress={() => router.back()}>
-                <Ionicons name="arrow-back" size={24} color={theme.iconColor} />
-              </TouchableOpacity>
-            );
-          } else if (!isHome) {
-            return (
-              <TouchableOpacity onPress={() => router.push("/")}>
-                <Ionicons name="home" size={24} color={theme.iconColor} />
-              </TouchableOpacity>
-            );
-          }
-          return null;
-        })()}
+      <View style={isHome ? styles.placeholder : dynamicStyles.headerButtons}>
+        {isSettings ? (
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color={theme.iconColor} />
+          </TouchableOpacity>
+        ) : isHome ? null : (
+          <TouchableOpacity onPress={() => router.push("/")}>
+            <Ionicons name="home" size={24} color={theme.iconColor} />
+          </TouchableOpacity>
+        )}
       </View>
 
       <View style={{ flex: 1 }} />
@@ -49,10 +48,7 @@ export default function HeaderButtons() {
       <View style={styles.rightButtons}>
         {/* Theme toggle button */}
         <TouchableOpacity
-          style={[
-            styles.headerButtons,
-            { backgroundColor: theme.buttonBackground, marginRight: 8 },
-          ]}
+          style={[dynamicStyles.headerButtons, { marginRight: 8 }]}
           onPress={toggleTheme}
         >
           <Ionicons
@@ -65,10 +61,7 @@ export default function HeaderButtons() {
         {/* Settings button (only shown when not on Settings page) */}
         {!isSettings && (
           <TouchableOpacity
-            style={[
-              styles.headerButtons,
-              { backgroundColor: theme.buttonBackground },
-            ]}
+            style={dynamicStyles.headerButtons}
             onPress={() => router.push("/screens/SettingsPage")}
           >
             <Ionicons name="settings" size={24} color={theme.iconColor} />
@@ -86,15 +79,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     marginBottom: 12,
-  },
-  headerButtons: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "rgba(0, 0, 0, 0.6)", // This will be overridden by theme
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 100,
   },
   rightButtons: {
     flexDirection: "row",

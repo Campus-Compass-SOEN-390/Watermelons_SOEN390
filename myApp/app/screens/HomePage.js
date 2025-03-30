@@ -1,13 +1,17 @@
 import { useEffect, React, useContext } from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { homepageStyles as baseStyles } from "../styles/HomePageStyles.js";
+import { createHomePageStyles } from "../styles/HomePageStyles.js";
 import RNUxcam from "react-native-ux-cam";
 import { ThemeContext } from "../context/ThemeContext";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function HomePage() {
   const router = useRouter();
-  const { theme, isDarkMode } = useContext(ThemeContext);
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
+  // Create styles based on current theme
+  const styles = createHomePageStyles(theme);
 
   // Add this useEffect hook for UXCam screen tagging
   useEffect(() => {
@@ -15,34 +19,21 @@ export default function HomePage() {
     RNUxcam.tagScreenName("HomePage");
   }, []);
 
-  // Create theme-aware styles by merging base styles with theme-specific overrides
-  const styles = {
-    ...baseStyles,
-    // Override specific styles based on theme
-    buttonsContainer: {
-      ...baseStyles.buttonsContainer,
-      backgroundColor: theme.cardBackground,
-    },
-    title: {
-      ...baseStyles.title,
-      color: theme.text,
-    },
-    button: {
-      ...baseStyles.button,
-      backgroundColor: theme.buttonBackground,
-    },
-    buttonText: {
-      ...baseStyles.buttonText,
-      color: theme.buttonText,
-    },
-    googleButton: {
-      ...baseStyles.googleButton,
-      backgroundColor: theme.buttonBackground,
-    },
-  };
-
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
+      {/* Theme Toggle Button */}
+      <TouchableOpacity
+        style={styles.themeToggle}
+        onPress={toggleTheme}
+        testID="themeToggleButton"
+      >
+        <Ionicons
+          name={isDarkMode ? "sunny" : "moon"}
+          size={22}
+          color={theme.buttonText}
+        />
+      </TouchableOpacity>
+
       <Image
         style={styles.logo}
         source={require("../../assets/images/logo.png")}
@@ -60,7 +51,9 @@ export default function HomePage() {
               router.push("/(tabs)/map?type=sgw");
             }}
           >
-            <Text style={styles.buttonText}>SGW Campus</Text>
+            <Text style={[styles.buttonText, { color: theme.text }]}>
+              SGW Campus
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
@@ -70,7 +63,9 @@ export default function HomePage() {
               router.push("/(tabs)/map?type=loy");
             }}
           >
-            <Text style={styles.buttonText}>Loyola Campus</Text>
+            <Text style={[styles.buttonText, { color: theme.text }]}>
+              Loyola Campus
+            </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.buttonContainer}>
@@ -79,7 +74,9 @@ export default function HomePage() {
             testID="shuttleScheduleButton"
             onPress={() => router.push("/screens/ShuttleScheduleScreen")}
           >
-            <Text style={styles.buttonText}>Shuttle Bus Schedule</Text>
+            <Text style={[styles.buttonText, { color: theme.text }]}>
+              Shuttle Bus Schedule
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -90,7 +87,9 @@ export default function HomePage() {
             }}
             testID="interestButton"
           >
-            <Text style={styles.buttonText}>Interest Points</Text>
+            <Text style={[styles.buttonText, { color: theme.text }]}>
+              Interest Points
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -110,7 +109,9 @@ export default function HomePage() {
               style={styles.icon}
               testID="googleIcon"
             />
-            <Text style={styles.buttonText}>Connect Calendars</Text>
+            <Text style={[styles.buttonText, { color: theme.text }]}>
+              Connect Calendars
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

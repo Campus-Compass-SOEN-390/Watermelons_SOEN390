@@ -1,37 +1,45 @@
-// app/myApp/components/ThemeToggle.js
 import React, { useContext } from "react";
-import { View, Switch, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { ThemeContext } from "../context/ThemeContext";
 
-const ThemeToggle = () => {
+const ThemeToggle = ({ style }) => {
   const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
 
+  const styles = StyleSheet.create({
+    toggleButton: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: theme.navButtonBackground,
+      justifyContent: "center",
+      alignItems: "center",
+      // Shadow for iOS
+      shadowColor: theme.shadowColor,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 3,
+      // Shadow for Android
+      elevation: 5,
+    },
+  });
+
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <Text style={[styles.text, { color: theme.text }]}>
-        {isDarkMode ? "Dark Mode" : "Light Mode"}
-      </Text>
-      <Switch
-        value={isDarkMode}
-        onValueChange={toggleTheme}
-        trackColor={{ false: "#767577", true: "#81b0ff" }}
-        thumbColor={isDarkMode ? "#f5dd4b" : "#f4f3f4"}
+    <TouchableOpacity
+      style={[styles.toggleButton, style]}
+      onPress={toggleTheme}
+      accessibilityLabel={
+        isDarkMode ? "Switch to light mode" : "Switch to dark mode"
+      }
+      testID="themeToggleButton"
+    >
+      <Ionicons
+        name={isDarkMode ? "sunny" : "moon"}
+        size={22}
+        color={theme.iconColor}
       />
-    </View>
+    </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: 10,
-  },
-  text: {
-    fontSize: 16,
-    marginRight: 10,
-  },
-});
 
 export default ThemeToggle;
