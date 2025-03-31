@@ -2,6 +2,35 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import POIPopup from '../../components/POI/POIPopup';
 
+// Add these mocks at the top of your test file
+jest.mock('../../hooks/useButtonInteraction', () => ({
+  useButtonInteraction: () => ({
+    handleButtonPress: jest.fn()
+  })
+}));
+
+jest.mock('../../context/FeedbackContext', () => ({
+  useFeedback: () => ({
+    vibrationEnabled: true,
+    soundEnabled: true,
+    speechEnabled: true
+  })
+}));
+
+// Mock expo-av
+jest.mock('expo-av', () => ({
+  Audio: {
+    Sound: {
+      createAsync: jest.fn(() => Promise.resolve({ sound: { playAsync: jest.fn() } }))
+    }
+  }
+}));
+
+// Mock expo-speech
+jest.mock('expo-speech', () => ({
+  speak: jest.fn()
+}));
+
 describe('POIPopup Component', () => {
   // Test data
   const mockPoi = {
