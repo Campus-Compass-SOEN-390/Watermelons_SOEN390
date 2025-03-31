@@ -5,8 +5,7 @@ import { homepageStyles as styles } from '../styles/HomePageStyles.js';
 import HeaderButtons from "../components/HeaderButtons";
 import { Ionicons } from '@expo/vector-icons';
 import { useButtonInteraction } from '../hooks/useButtonInteraction'; 
-
-
+import RNUxcam from 'react-native-ux-cam'; 
 
 export default function HomePage() {
     const router = useRouter();
@@ -31,7 +30,6 @@ export default function HomePage() {
             <Image
                 style={styles.logo}
                 source={require('../../assets/images/logo.png')}
-
                 resizeMode="contain"
                 testID="logo"
             />
@@ -43,18 +41,14 @@ export default function HomePage() {
                     <TouchableOpacity 
                         style={styles.button}
                         testID="sgwButton"
-
                         onPress={() => router.push('/(tabs)/map?type=sgw')}
-
                     >
                         <Text style={styles.buttonText}>SGW Campus</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
                         style={styles.button}
                         testID="loyolaButton"
-
                         onPress={() => router.push('/(tabs)/map?type=loy')}
-
                     >
                         <Text style={styles.buttonText}>Loyola Campus</Text>
                     </TouchableOpacity>
@@ -86,7 +80,6 @@ export default function HomePage() {
                         style={styles.googleButton}
                         testID="calendarfetchbutton"
                         onPress={() => router.push('screens/CalendarFetching')}
-
                     >
                         <Image
                             source={require('../../assets/images/google_logo.png')}
@@ -106,7 +99,6 @@ export default function HomePage() {
             >
                 <Ionicons name="information-circle-outline" size={30} color="white" />
             </TouchableOpacity>
-
         </View>
     );
 }
