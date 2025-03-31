@@ -10,9 +10,9 @@ export default function HomePage() {
   const router = useRouter();
   const { handleButtonPress } = useButtonInteraction();
 
-  useEffect(() => {
-    RNUxcam.tagScreenName("HomePage");
-  }, []);
+  // useEffect(() => {
+  //   RNUxcam.tagScreenName("HomePage");
+  // }, []);
 
   const handleNavigationPress = (route, label) => {
     RNUxcam.logEvent(`${label} Button Pressed`);

@@ -74,14 +74,14 @@ export default function ShuttleScheduleScreen() {
 
   const handleBack = () => {
     handleButtonPress(null, "Going back");
-    RNUxcam.logEvent("Shuttle Back Button Pressed");
+    // RNUxcam.logEvent("Shuttle Back Button Pressed");
     navigation.goBack();
   };
 
   const handleWarningPress = () => {
     const todayDate = moment().format("YYYY-MM-DD");
     handleButtonPress(null, "Checking bus status");
-    RNUxcam.logEvent("Shuttle Warning Button Pressed");
+    // RNUxcam.logEvent("Shuttle Warning Button Pressed");
 
     if (todayDate === "2025-02-28") {
       Alert.alert(
@@ -96,7 +96,7 @@ export default function ShuttleScheduleScreen() {
   const handleCampusToggle = () => {
     const newCampus = campus === "SGW" ? "LOY" : "SGW";
     handleButtonPress(null, `Switching to ${newCampus} campus schedule`);
-    RNUxcam.logEvent(`Switch to ${newCampus} Schedule Button Pressed`);
+    // RNUxcam.logEvent(`Switch to ${newCampus} Schedule Button Pressed`);
     setCampus(newCampus);
   };
 
