@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.42% </span>
+                <span class="strong">80.95% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>15/21</span>
+                <span class='fraction'>17/21</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.42% </span>
+                <span class="strong">78.94% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>13/19</span>
+                <span class='fraction'>15/19</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -130,11 +130,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -149,15 +149,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -181,17 +181,17 @@
 import { getRealTimeShuttleData, extractShuttleInfo } from "./shuttleLiveData.js";
 &nbsp;
 // Enable this to simulate schedule for testing
-const TEST_MODE = false;
+const TEST_MODE = true;
 &nbsp;
 /**
  * Return a mocked shuttle schedule for testing purposes.
  */
-const getMockSchedule = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
-  const now = <span class="cstat-no" title="statement not covered" >new Date();</span>
-  const currentHour = <span class="cstat-no" title="statement not covered" >now.getHours();</span>
-  const nextHour = <span class="cstat-no" title="statement not covered" >currentHour + 1;</span>
+const getMockSchedule = () =&gt; {
+  const now = new Date();
+  const currentHour = now.getHours();
+  const nextHour = currentHour + 1;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return {</span>
+  return {
     SGW: [`${currentHour}:${now.getMinutes() + 2}`, `${currentHour}:${now.getMinutes() + 15}`],
     LOY: [`${nextHour}:${now.getMinutes() + 5}`, `${nextHour}:${now.getMinutes() + 20}`],
   };
@@ -205,16 +205,16 @@ export const fetchAllShuttleSchedules = async () =&gt; getAllShuttleSchedules();
  * In test mode, returns a mock schedule that always has shuttles available.
  */
 export const fetchShuttleScheduleByDay = async (day) =&gt; {
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (TEST_MODE) {
-<span class="cstat-no" title="statement not covered" >    console.log("[TEST_MODE] Returning mock shuttle schedule.");</span>
-<span class="cstat-no" title="statement not covered" >    return getMockSchedule();</span>
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (TEST_MODE) {
+    console.log("[TEST_MODE] Returning mock shuttle schedule.");
+    return getMockSchedule();
   }
 &nbsp;
-  try {
-    return getShuttleScheduleByDay(day);
+<span class="cstat-no" title="statement not covered" >  try {</span>
+<span class="cstat-no" title="statement not covered" >    return getShuttleScheduleByDay(day);</span>
   } catch (error) {
-    console.warn("Error fetching schedule:", error.message);
-    return null;
+<span class="cstat-no" title="statement not covered" >    console.warn("Error fetching schedule:", error.message);</span>
+<span class="cstat-no" title="statement not covered" >    return null;</span>
   }
 };
 &nbsp;
@@ -241,7 +241,7 @@ export default {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-03-31T18:01:12.263Z
+                at 2025-03-27T21:20:19.330Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
