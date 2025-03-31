@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useRouter } from 'expo-router';
 import { homepageStyles as styles } from '../styles/HomePageStyles.js';
@@ -8,6 +8,17 @@ import { Ionicons } from '@expo/vector-icons';
 
 export default function HomePage() {
     const router = useRouter();
+    const { handleButtonPress } = useButtonInteraction();
+
+    useEffect(() => {
+        RNUxcam.tagScreenName("HomePage");
+    }, []);
+
+    const handleNavigationPress = (route, label) => {
+        RNUxcam.logEvent(`${label} Button Pressed`);
+        handleButtonPress(route, label);
+        router.push(route);
+    };
 
     return (
         <View style={{ flex: 1 }}>
@@ -18,6 +29,7 @@ export default function HomePage() {
             <Image
                 style={styles.logo}
                 source={require('../../assets/images/logo.png')}
+
                 resizeMode="contain"
                 testID="logo"
             />
@@ -29,14 +41,18 @@ export default function HomePage() {
                     <TouchableOpacity 
                         style={styles.button}
                         testID="sgwButton"
+
                         onPress={() => router.push('/(tabs)/map?type=sgw')}
+
                     >
                         <Text style={styles.buttonText}>SGW Campus</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
                         style={styles.button}
                         testID="loyolaButton"
+
                         onPress={() => router.push('/(tabs)/map?type=loy')}
+
                     >
                         <Text style={styles.buttonText}>Loyola Campus</Text>
                     </TouchableOpacity>
@@ -68,6 +84,7 @@ export default function HomePage() {
                         style={styles.googleButton}
                         testID="calendarfetchbutton"
                         onPress={() => router.push('screens/CalendarFetching')}
+
                     >
                         <Image
                             source={require('../../assets/images/google_logo.png')}
