@@ -610,47 +610,48 @@ useEffect(() => {
   };
 
   const handleShuttleButton = async () => {
+    handleButtonPress(null, `Getting shuttle to ${activeCampus === "sgw" ? "Loyola" : "SGW"} campus`);
     console.log("Shuttle button click");
 
-    // Update origin & destination as before
-    if (shuttleDetails && !shuttleDetails.error){
-      updateOrigin(coordinatesMap["My Position"], "My Location");
-      if (activeCampus === "sgw") {
-        updateDestination(
-          coordinatesMap["Loyola Campus, Shuttle Stop"],
-          "Loyola Campus, Shuttle Stop"
-        );
-      } else {
-        updateDestination(
-          coordinatesMap["SGW Campus, Shuttle Stop"],
-          "SGW Campus, Shuttle Stop"
-        );
-      }
+    // Update origin & destination only if there are no shuttle details or no error
+    if (!shuttleDetails || !shuttleDetails.error) {
+        updateOrigin(coordinatesMap["My Position"], "My Location");
+        if (activeCampus === "sgw") {
+            updateDestination(
+                coordinatesMap["Loyola Campus, Shuttle Stop"],
+                "Loyola Campus, Shuttle Stop"
+            );
+        } else {
+            updateDestination(
+                coordinatesMap["SGW Campus, Shuttle Stop"],
+                "SGW Campus, Shuttle Stop"
+            );
+        }
     }
 
     try {
-      const currentStop = activeCampus === "sgw" ? "SGW" : "LOY";
-      const shuttleResult = await estimateShuttleFromButton(currentStop);
+        const currentStop = activeCampus === "sgw" ? "SGW" : "LOY";
+        const shuttleResult = await estimateShuttleFromButton(currentStop);
 
-      // If the utility returned an object with "error", store it directly.
-      if (shuttleResult?.error) {
-        setShuttleDetails({ error: shuttleResult.error });
-      } else if (!shuttleResult) {
-        // If it's null or undefined for some reason
-        setShuttleDetails({ error: "No bus available." });
-      } else {
-        // If valid times
-        setShuttleDetails(shuttleResult);
-      }
+        // If the utility returned an object with "error", store it directly
+        if (shuttleResult?.error) {
+            setShuttleDetails({ error: shuttleResult.error });
+        } else if (!shuttleResult) {
+            // If it's null or undefined for some reason
+            setShuttleDetails({ error: "No bus available." });
+        } else {
+            // If valid times
+            setShuttleDetails(shuttleResult);
+        }
     } catch (error) {
-      // If something truly unexpected happens
-      console.warn("Error estimating shuttle time:", error);
-      setShuttleDetails({ error: error.message });
+        // If something truly unexpected happens
+        console.warn("Error estimating shuttle time:", error);
+        setShuttleDetails({ error: error.message });
     }
 
     // Show the popup
     setShuttlePopupVisible(true);
-  };
+};
 
   // Center on campus
   const centerMapOnCampus = () => {
