@@ -88,7 +88,7 @@ describe('TabLayout', () => {
         expect(mockPush).toHaveBeenCalledWith("./(tabs)/outdoor-map");
     })
 
-    it('should go to upcmoing class page when calendar button is pressed', () => {
+    it('should go to upcoming class page when calendar button is pressed', () => {
         const page = render(<TabLayout />);
         const upcomingButton = page.getByTestId("upcomingButton");
         fireEvent.press(upcomingButton);
