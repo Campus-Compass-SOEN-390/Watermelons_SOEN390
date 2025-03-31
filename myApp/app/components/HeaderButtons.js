@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         paddingHorizontal: 16,
         marginBottom: 12,
+        padding:35,
     },
     headerButtons: {
         width: 40,
