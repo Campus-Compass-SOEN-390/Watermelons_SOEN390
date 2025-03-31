@@ -16,6 +16,7 @@ export default function PoiInfoPage() {
           style={styles.iconButton}
           onPress={() => router.push('/')}
           accessibilityRole="button"
+          testID="homeButton"
         >
           <Ionicons name="home" size={24} color="white" />
         </TouchableOpacity>
@@ -23,6 +24,7 @@ export default function PoiInfoPage() {
           style={styles.iconButton}
           onPress={() => router.push('/screens/SettingsPage')}
           accessibilityRole="button"
+          testID="settingsButton"
         >
           <Ionicons name="settings" size={24} color="white" />
         </TouchableOpacity>
@@ -42,7 +44,7 @@ export default function PoiInfoPage() {
             resizeMode="contain"
             isLooping
             shouldPlay
-            accessibilityRole="image" // <-- Helps Jest identify it
+            accessibilityRole="image"
           />
         </View>
 
@@ -53,13 +55,18 @@ export default function PoiInfoPage() {
 
       {/* Footer Navigation */}
       <View style={styles.footer}>
-        <TouchableOpacity onPress={() => router.back()} accessibilityRole="button">
+        <TouchableOpacity
+          onPress={() => router.back()}
+          accessibilityRole="button"
+          testID="backButton"
+        >
           <Ionicons name="chevron-back-circle" size={32} color="white" />
         </TouchableOpacity>
         <Text style={styles.pageName}>Points Of Interest</Text>
         <TouchableOpacity
           onPress={() => router.push('/screens/AccessibilityInfoPage')}
           accessibilityRole="button"
+          testID="nextButton"
         >
           <Ionicons name="chevron-forward-circle" size={32} color="white" />
         </TouchableOpacity>

@@ -11,10 +11,18 @@ export default function MapFeaturesInfoPage() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.topNav}>
-        <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/')}>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => router.push('/')}
+          testID="homeButton"
+        >
           <Ionicons name="home" size={24} color="white" accessibilityRole="button" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/screens/SettingsPage')}>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => router.push('/screens/SettingsPage')}
+          testID="settingsButton"
+        >
           <Ionicons name="settings" size={24} color="white" accessibilityRole="button" />
         </TouchableOpacity>
       </View>
@@ -58,11 +66,19 @@ export default function MapFeaturesInfoPage() {
 
       {/* Footer Navigation */}
       <View style={styles.footer}>
-        <TouchableOpacity accessibilityRole="button" onPress={() => router.back()}>
+        <TouchableOpacity
+          accessibilityRole="button"
+          onPress={() => router.back()}
+          testID="backButton"
+        >
           <Ionicons name="chevron-back-circle" size={32} color="white" />
         </TouchableOpacity>
         <Text style={styles.pageName}>Campus Map</Text>
-        <TouchableOpacity accessibilityRole="button" onPress={() => router.push('/screens/PoiInfoPage')}>
+        <TouchableOpacity
+          accessibilityRole="button"
+          onPress={() => router.push('/screens/PoiInfoPage')}
+          testID="nextButton"
+        >
           <Ionicons name="chevron-forward-circle" size={32} color="white" />
         </TouchableOpacity>
       </View>
