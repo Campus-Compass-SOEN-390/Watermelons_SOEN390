@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import { homepageStyles as styles } from "../styles/HomePageStyles.js";
 import RNUxcam from "react-native-ux-cam";
 import { useButtonInteraction } from '../hooks/useButtonInteraction';
+import HeaderButtons from "../components/HeaderButtons.js";
 
 export default function HomePage() {
     const router = useRouter();
@@ -21,6 +22,7 @@ export default function HomePage() {
 
     return (
         <View style={{ flex: 1 }}>
+          <HeaderButtons />
             <Image
                 style={styles.logo}
                 source={require("../../assets/images/logo.png")}

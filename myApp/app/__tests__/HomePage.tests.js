@@ -26,7 +26,19 @@ jest.mock('expo-router', () => ({
         push: mockPush
     })
 }));
+// Correctly mock LayoutWrapper
+jest.mock('../components/LayoutWrapper.js', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return ({ children }) => React.createElement(View, null, children);
+});
 
+// Correctly mock HeaderButtons
+jest.mock('../components/HeaderButtons.js', () => {
+  const React = require('react');
+  const { View, Text } = require('react-native');
+  return () => React.createElement(View, null, React.createElement(Text, null, 'HeaderButtons Mock'));
+});
 describe('Home page', () => {
     beforeEach(() => {
         // Clear all mocks before each test
