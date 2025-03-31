@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { useRouter } from 'expo-router';
+import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { infoPageStyles as styles } from '../styles/InfoPageStyles';
 
-export default function InfoPage4() {
+export default function InfoPage6() {
   const router = useRouter();
 
   return (
@@ -19,35 +19,30 @@ export default function InfoPage4() {
         </TouchableOpacity>
       </View>
 
-      {/* Content */}
+      {/* Scrollable Content */}
       <ScrollView contentContainerStyle={styles.scroll}>
         <Text style={styles.title}>Campus Map Features</Text>
-        <Text style={styles.description}>Interactive building pop up.</Text>
+        <Text style={styles.description}>Accessibility-Friendly Routes</Text>
 
+        {/* Screenshot(s) Section */}
         <View style={imageRow.container}>
+          {/* Before screenshot */}
           <Image
-            source={require('../../assets/images/buildings.png')}
+            source={require('../../assets/images/accessibility_before.png')}
             style={imageRow.image}
           />
+          {/* After screenshot */}
           <Image
-            source={require('../../assets/images/PopUp.png')}
+            source={require('../../assets/images/accessibility_after.png')}
             style={imageRow.image}
           />
         </View>
 
-        {/* Extra info at the bottom */}
-        <View style={styles.extraInfo}>
-          <Text style={styles.subtitle}>How to Use the Interactive Map</Text>
-          <Text style={styles.instructions}>
-            1. Tap on any building to see its name, location, and more info.
-          </Text>
-          <Text style={styles.instructions}>
-            2. Use "Get Directions" to open navigation from your current location.
-          </Text>
-          <Text style={styles.instructions}>
-            3. Choose "Use as Starting Point" if you want to plan a route from that building.
-          </Text>
-        </View>
+        <Text style={styles.description}>
+          On the left is the standard route. On the right is the route 
+          after toggling the accessibility button, showing an 
+          accessibility-friendly path for your convenience.
+        </Text>
       </ScrollView>
 
       {/* Footer Navigation */}
@@ -55,8 +50,8 @@ export default function InfoPage4() {
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="chevron-back-circle" size={32} color="white" />
         </TouchableOpacity>
-        <Text style={styles.pageName}>Campus Map</Text>
-        <TouchableOpacity onPress={() => router.push('/screens/InfoPage5')}>
+        <Text style={styles.pageName}>Accessibility</Text>
+        <TouchableOpacity onPress={() => router.push('/screens/ShuttleInfoPage')}>
           <Ionicons name="chevron-forward-circle" size={32} color="white" />
         </TouchableOpacity>
       </View>
@@ -64,20 +59,22 @@ export default function InfoPage4() {
   );
 }
 
-// Inline style just for this horizontal layout
+// Inline or local style for the image row
 const imageRow = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 10,
+    justifyContent: 'space-evenly',  // Even spacing between images
+    alignItems: 'center',
     marginTop: 10,
     marginBottom: 20,
   },
   image: {
-    flex: 1,
-    aspectRatio: 9 / 16,
+    width: '50%',             // Each image takes up half the container's width
+    aspectRatio: 9 / 16,       // Maintain the portrait aspect ratio
     borderRadius: 10,
-    marginHorizontal: 5,
     resizeMode: 'contain',
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
 });
+

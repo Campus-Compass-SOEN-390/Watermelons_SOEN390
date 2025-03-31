@@ -55,7 +55,7 @@ export default function InfoPage() {
           <Ionicons name="chevron-back-circle" size={32} color="white" />
         </TouchableOpacity>
         <Text style={styles.pageName}>Campus Compass Features</Text>
-        <TouchableOpacity onPress={() => router.push('/screens/InfoPage2')}>
+        <TouchableOpacity onPress={() => router.push('/screens/CalenderInfoPage')}>
           <Ionicons name="chevron-forward-circle" size={32} color="white" />
         </TouchableOpacity>
       </View>

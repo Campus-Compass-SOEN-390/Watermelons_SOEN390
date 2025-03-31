@@ -1,16 +1,16 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Video } from 'expo-av';           
+import { Ionicons } from '@expo/vector-icons';
+import { Video } from 'expo-av';
 import { infoPageStyles as styles } from '../styles/InfoPageStyles';
 
-export default function InfoPage5() {
+export default function InfoPage3() {
   const router = useRouter();
 
   return (
     <View style={styles.container}>
-      {/* Header */}
+      {/* Header Icons */}
       <View style={styles.topNav}>
         <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/')}>
           <Ionicons name="home" size={24} color="white" />
@@ -20,40 +20,36 @@ export default function InfoPage5() {
         </TouchableOpacity>
       </View>
 
-      {/* Scrollable Content */}
+      {/* Content */}
       <ScrollView contentContainerStyle={styles.scroll}>
-        <Text style={styles.title}>Campus Map Features</Text>
-        <Text style={styles.description}>Points of Interest</Text>
+        <Text style={styles.title}>Smart Navigation</Text>
 
-        {/* Video Section */}
-        <View style={styles.videoWrapper2}>
+        <View style={styles.videoWrapper}>
           <Video
-            source={require('../../assets/videos/POI.mp4')} 
+            source={require('../../assets/videos/SmartNavigation.mp4')} // Place your video in assets/videos
             style={styles.video}
-            useNativeControls
-            resizeMode="contain"
+            resizeMode="contain" 
             isLooping
             shouldPlay
+            useNativeControls={false}       
           />
         </View>
 
         <Text style={styles.description}>
-          Explore nearby points of interest and filter them by distance.
+          Get directions to your next event on campus in seconds.
         </Text>
       </ScrollView>
 
-      {/* Footer Navigation */}
+      {/* Navigation Footer */}
       <View style={styles.footer}>
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="chevron-back-circle" size={32} color="white" />
         </TouchableOpacity>
-        <Text style={styles.pageName}>Points Of Interest</Text>
-        <TouchableOpacity onPress={() => router.push('/screens/InfoPage6')}>
+        <Text style={styles.pageName}>Smart Navigation</Text>
+        <TouchableOpacity onPress={() => router.push('/screens/MapFeaturesInfoPage')}>
           <Ionicons name="chevron-forward-circle" size={32} color="white" />
         </TouchableOpacity>
       </View>
     </View>
   );
 }
-
-

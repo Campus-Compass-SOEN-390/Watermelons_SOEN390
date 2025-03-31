@@ -147,10 +147,7 @@ export const infoPageStyles = StyleSheet.create({
   //InfoPage 3 / video styles
   videoWrapper: {
     width: '90%',
-    // aspectRatio: 3 / 5, // matches portrait video
-    // aspectRatio: width / height,
-    // aspectRatio: 9 / 13.5,
-    aspectRatio: 410 / 598,
+    aspectRatio: 372 / 658,
     backgroundColor: 'transparent',
     borderRadius: 10,
     overflow: 'hidden',
@@ -224,6 +221,57 @@ export const infoPageStyles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 4,
+},
+
+
+horizontalImageRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  width: '100%',
+  marginBottom: 16,
+  gap: 8,
+},
+
+squareImageWrapper: {
+  width: '48%',
+  aspectRatio: 3 / 4,
+  backgroundColor: '#fff',
+  borderRadius: 10,
+  overflow: 'hidden',
+  elevation: 3,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 4,
+},
+
+squareImage: {
+  width: '100%',
+  height: '100%',
+  resizeMode: 'cover',
+},
+
+horizontalButtonRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  width: '100%',
+  marginTop: 10,
+  gap: 10,
+},
+
+squareButton: {
+  backgroundColor: '#eee',
+  width: '48%',
+  aspectRatio: 1,
+  borderRadius: 10,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+
+buttonText: {
+  fontSize: 16,
+  fontWeight: '600',
+  color: '#333',
 },
 
   

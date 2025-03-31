@@ -43,7 +43,7 @@ export default function InfoPage2() {
           <Ionicons name="chevron-back-circle" size={32} color="white" />
         </TouchableOpacity>
         <Text style={styles.pageName}>Google Calendar</Text>
-        <TouchableOpacity onPress={() => router.push('/screens/InfoPage3')}>
+        <TouchableOpacity onPress={() => router.push('/screens/SmartNavigationInfoPage')}>
           <Ionicons name="chevron-forward-circle" size={32} color="white" />
         </TouchableOpacity>
       </View>
