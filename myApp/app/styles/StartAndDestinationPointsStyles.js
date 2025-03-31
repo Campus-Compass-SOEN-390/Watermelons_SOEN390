@@ -354,7 +354,7 @@ export const createStartAndDestinationStyles = (theme) => {
     },
     themeToggleButton: {
       position: "absolute",
-      top: -30,
+      top: 110,
       right: 10,
       width: 36,
       height: 36,

@@ -112,6 +112,7 @@ export const createOutdoorMapStyles = (theme) => {
     // Switch Button Container now placed above the bottom safe area
     switchButtonContainer: {
       position: "absolute",
+      Color: theme.buttonBackground,
       bottom: safeAreaBottom + 15,
       left: 20,
       zIndex: 2,
@@ -123,7 +124,7 @@ export const createOutdoorMapStyles = (theme) => {
       marginBottom: 10,
     },
     switchButtonText: {
-      fontSize: 16,
+      fontSize: 14,
       color: theme.text,
       fontWeight: "bold",
       // Add text shadow for better visibility
