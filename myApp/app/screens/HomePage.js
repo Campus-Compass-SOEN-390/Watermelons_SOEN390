@@ -15,7 +15,7 @@ export default function HomePage() {
   // }, []);
 
   const handleNavigationPress = (route, label) => {
-    RNUxcam.logEvent(`${label} Button Pressed`);
+    // RNUxcam.logEvent(`${label} Button Pressed`);
     handleButtonPress(route, label);
     router.push(route);
   };
