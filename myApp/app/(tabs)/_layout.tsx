@@ -68,14 +68,6 @@ export default function TabLayout() {
             <Tabs.Screen name="favorites" />
             <Tabs.Screen name="index" />
           </Tabs>
-
-          {/* Custom Home Button overlay */}
-          <TouchableOpacity
-            style={styles.homeButton}
-            onPress={() => router.push("/")}
-          >
-            <Ionicons name="home" size={24} color="white" />
-          </TouchableOpacity>
         </View>
       </LocationProvider>
     </IndoorMapProvider>

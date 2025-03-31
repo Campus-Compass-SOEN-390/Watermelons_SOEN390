@@ -3,6 +3,25 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { Alert, View, Text } from 'react-native';
 
+// Mock expo-av
+jest.mock('expo-av', () => ({
+  Audio: {
+    Sound: {
+      createAsync: jest.fn(() => Promise.resolve({ sound: { playAsync: jest.fn() } })),
+    },
+  },
+}));
+
+// Mock expo-speech
+jest.mock('expo-speech', () => ({
+  speak: jest.fn(),
+}));
+
+// Mock react-native-toast-message
+jest.mock('react-native-toast-message', () => ({
+  show: jest.fn(),
+}));
+
 // Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () => ({
   setItem: jest.fn(),
@@ -26,6 +45,19 @@ jest.mock('expo-router', () => ({
   useRouter: () => ({ push: jest.fn() }),
 }));
 
+// Mock RNUxcam
+jest.mock('react-native-ux-cam', () => ({
+  logEvent: jest.fn(),
+  tagScreenName: jest.fn()
+}));
+
+// Mock useButtonInteraction
+jest.mock('../hooks/useButtonInteraction', () => ({
+  useButtonInteraction: () => ({
+    handleButtonPress: jest.fn()
+  })
+}));
+
 // Correctly mock LayoutWrapper
 jest.mock('../components/LayoutWrapper.js', () => {
   const React = require('react');
@@ -38,6 +70,28 @@ jest.mock('../components/HeaderButtons.js', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
   return () => React.createElement(View, null, React.createElement(Text, null, 'HeaderButtons Mock'));
+});
+
+// Correctly mock MonthPicker with interactive props
+jest.mock("../components/MonthPicker.js", () => {
+  const React = require("react");
+  const { View, Text, TextInput } = require("react-native");
+
+  return ({ monthsAhead, setMonthsAhead }) => {
+    return React.createElement(View, { testID: "month-picker" }, [
+      React.createElement(Text, { key: "title" }, "Select months ahead:"),
+      React.createElement(
+        TextInput,
+        {
+          key: "input",
+          testID: "months-input",
+          value: monthsAhead,
+          onChangeText: setMonthsAhead,
+        },
+        null
+      ),
+    ]);
+  };
 });
 
 // Correctly mock Ionicons
