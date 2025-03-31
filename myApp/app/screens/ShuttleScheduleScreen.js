@@ -1,172 +1,133 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native"; // Import navigation
-import { fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
-import moment from "moment";
-import RNUxcam from "react-native-ux-cam";
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { fetchShuttleScheduleByDay } from '../api/shuttleSchedule';
+import moment from 'moment';
+import { useButtonInteraction } from '../hooks/useButtonInteraction';
 
 export default function ShuttleScheduleScreen() {
-  const navigation = useNavigation(); // Get navigation object
+  const navigation = useNavigation();
+  const { handleButtonPress } = useButtonInteraction();
   const [schedule, setSchedule] = useState(null);
   const [error, setError] = useState(null);
   const [nextBus, setNextBus] = useState(null);
-  const [campus, setCampus] = useState("SGW"); // Toggle between SGW and LOY
-  //const [showWarning, setShowWarning] = useState(false); // For showing warning popup
-
-  // Add this useEffect hook for UXCam screen tagging
-  useEffect(() => {
-    // Tag this screen in UXCam
-    RNUxcam.tagScreenName("ShuttleScheduleScreen");
-  }, []);
+  const [campus, setCampus] = useState('SGW');
 
   useEffect(() => {
     const loadSchedule = async () => {
-      const today = moment().format("dddd");
-      console.log(`Fetching schedule for ${today}...`);
+        const today = moment().format('dddd');
+        console.log(`Fetching schedule for ${today}...`);
 
-      // 🚨 Prevent fetching for weekends
-      if (today === "Saturday" || today === "Sunday") {
-        console.warn("No schedule available on weekends.");
-        setError("❌ No shuttle service on weekends.");
-        return;
-      }
-
-      try {
-        const data = await fetchShuttleScheduleByDay(today);
-        if (!data) {
-          throw new Error("No schedule data available.");
+        if (today === "Saturday" || today === "Sunday") {
+            console.warn("No schedule available on weekends.");
+            setError("❌ No shuttle service on weekends.");
+            return;
         }
 
-        console.log("Schedule data loaded:", data);
-        setSchedule(data);
-      } catch (err) {
-        console.error("API Fetch Error:", err.message);
-        setError("❌ Unable to load shuttle schedule. Please try again later.");
-      }
+        try {
+            const data = await fetchShuttleScheduleByDay(today);
+            if (!data) {
+                throw new Error("No schedule data available.");
+            }
+
+            console.log("Schedule data loaded:", data);
+            setSchedule(data);
+        } catch (err) {
+            console.error("API Fetch Error:", err.message);
+            setError("❌ Unable to load shuttle schedule. Please try again later.");
+        }
     };
 
     loadSchedule();
-  }, []);
+}, []);
 
-  // Compute next available bus based on selected campus without re-fetching
-  useEffect(() => {
+useEffect(() => {
     if (!schedule) return;
 
     const currentTime = moment();
     let nextAvailableBus = null;
 
     for (const time of schedule[campus]) {
-      if (moment(time, "HH:mm").isAfter(currentTime)) {
-        nextAvailableBus = time;
-        break;
-      }
+        if (moment(time, 'HH:mm').isAfter(currentTime)) {
+            nextAvailableBus = time;
+            break;
+        }
     }
 
     setNextBus(nextAvailableBus);
-  }, [schedule, campus]); // Runs when schedule is loaded OR campus changes
+}, [schedule, campus]);
 
-  // Function to handle warning button click
+  const handleBack = () => {
+    handleButtonPress(null, 'Going back');
+    navigation.goBack();
+  };
+
   const handleWarningPress = () => {
-    const todayDate = moment().format("YYYY-MM-DD");
-
-    if (todayDate === "2025-02-28") {
-      Alert.alert(
-        "Bus Delay Warning",
-        "⚠️ No service on February 28, 2025. Buses may be delayed."
-      );
+    const todayDate = moment().format('YYYY-MM-DD');
+    handleButtonPress(null, 'Checking bus status');
+    
+    if (todayDate === '2025-02-28') {
+      Alert.alert("Bus Delay Warning", "⚠️ No service on February 28, 2025. Buses may be delayed.");
     } else {
       Alert.alert("Bus Status", "✅ No expected bus delays.");
     }
   };
 
+  const handleCampusToggle = () => {
+    const newCampus = campus === 'SGW' ? 'LOY' : 'SGW';
+    handleButtonPress(null, `Switching to ${newCampus} campus schedule`);
+    setCampus(newCampus);
+  };
+
   if (error) {
     return (
       <View style={styles.container}>
-        {/* 🔹 Keep Header with Back Button */}
         <View style={styles.header}>
-          <TouchableOpacity
-            onPress={() => {
-              RNUxcam.logEvent("Shuttle Go Back Button Pressed");
-              navigation.goBack();
-            }}
-            style={styles.backButton}
-          >
+          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
             <Text style={styles.backText}>✖</Text>
           </TouchableOpacity>
-
           <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
         </View>
-
-        {/* 🔹 Display Weekend or Error Message */}
         <Text style={styles.error}>
-          {error.includes("weekends")
-            ? "🚍 No shuttle service on weekends. See you Monday!"
+          {error.includes("weekends") 
+            ? "🚍 No shuttle service on weekends. See you Monday!" 
             : error}
         </Text>
       </View>
     );
   }
 
-  // 🔹 Check if schedule is null (LOADING STATE)
-  if (!schedule) {
-    return (
+if (!schedule) {
+  return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+          <Text>Loading...</Text>
       </View>
-    );
-  }
+  );
+}
 
   return (
     <View style={styles.container}>
-      {/* Header with Back Button & Warning Button */}
       <View style={styles.header}>
-        {/* Updated Back Button to Navigate to Home Page */}
-        <TouchableOpacity
-          onPress={() => {
-            RNUxcam.logEvent("Shuttle Home Button Pressed");
-            navigation.goBack();
-          }}
-          style={styles.backButton}
-        >
+        <TouchableOpacity onPress={handleBack} style={styles.backButton}>
           <Text style={styles.backText}>✖</Text>
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
 
-        {/* Warning Button */}
-        <TouchableOpacity
-          onPress={() => {
-            RNUxcam.logEvent("Shuttle Home Button Pressed");
-            handleWarningPress();
-          }}
-          style={styles.warningButton}
-        >
+        <TouchableOpacity onPress={handleWarningPress} style={styles.warningButton}>
           <Text style={styles.warningIcon}>⚠</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Campus Toggle Button */}
-      <TouchableOpacity
+      <TouchableOpacity 
         style={styles.switchButton}
-        onPress={() => setCampus(campus === "SGW" ? "LOY" : "SGW")}
+        onPress={handleCampusToggle}
       >
-        <Text style={styles.switchText}>
-          {campus === "SGW" ? "SGW ➜ LOY" : "LOY ➜ SGW"}
-        </Text>
+        <Text style={styles.switchText}>{campus === 'SGW' ? 'SGW ➜ LOY' : 'LOY ➜ SGW'}</Text>
       </TouchableOpacity>
 
-      {/* Schedule Table with Vertical Divider */}
       <ScrollView style={styles.scheduleContainer}>
-        <Text style={styles.scheduleHeader}>
-          Schedule in effect Monday to Friday
-        </Text>
+        <Text style={styles.scheduleHeader}>Schedule in effect Monday to Friday</Text>
 
         <View style={styles.table}>
           <Text style={styles.tableHeader}>AM</Text>
@@ -176,16 +137,12 @@ export default function ShuttleScheduleScreen() {
 
         {splitSchedule(schedule[campus]).map(({ am, pm }, index) => (
           <View key={`${am}-${pm}-${index}`} style={styles.tableRow}>
-            <Text
-              style={[styles.tableText, am === nextBus && styles.highlight]}
-            >
-              {am || ""}
+            <Text style={[styles.tableText, am === nextBus && styles.highlight]}>
+              {am || ''}
             </Text>
             <View style={styles.verticalDividerDashed}></View>
-            <Text
-              style={[styles.tableText, pm === nextBus && styles.highlight]}
-            >
-              {pm || ""}
+            <Text style={[styles.tableText, pm === nextBus && styles.highlight]}>
+              {pm || ''}
             </Text>
           </View>
         ))}
@@ -194,66 +151,64 @@ export default function ShuttleScheduleScreen() {
   );
 }
 
-// Function to split schedule into AM and PM
 const splitSchedule = (times) => {
-  const amTimes = times.filter((time) => moment(time, "HH:mm").hour() < 12);
-  const pmTimes = times.filter((time) => moment(time, "HH:mm").hour() >= 12);
+  const amTimes = times.filter(time => moment(time, 'HH:mm').hour() < 12);
+  const pmTimes = times.filter(time => moment(time, 'HH:mm').hour() >= 12);
 
   const maxLength = Math.max(amTimes.length, pmTimes.length);
   return Array.from({ length: maxLength }, (_, i) => ({
-    am: amTimes[i] || "",
-    pm: pmTimes[i] || "",
+    am: amTimes[i] || '',
+    pm: pmTimes[i] || ''
   }));
 };
 
-// Styles (Only Back Button Fixed)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 16,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 10,
   },
   backButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#800020", // Burgundy
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#800020',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   backText: {
     fontSize: 20,
-    color: "white",
-    fontWeight: "bold",
+    color: 'white',
+    fontWeight: 'bold',
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontWeight: 'bold',
+    textAlign: 'center',
     flex: 1,
   },
   warningButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#800020",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#800020',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   warningIcon: {
     fontSize: 20,
-    color: "white",
+    color: 'white',
   },
   switchButton: {
-    alignSelf: "center",
-    backgroundColor: "#800020",
+    alignSelf: 'center',
+    backgroundColor: '#800020',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
@@ -261,52 +216,52 @@ const styles = StyleSheet.create({
   },
   switchText: {
     fontSize: 16,
-    color: "white",
-    fontWeight: "bold",
+    color: 'white',
+    fontWeight: 'bold',
   },
   scheduleContainer: {
     marginTop: 10,
   },
   scheduleHeader: {
     fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontWeight: 'bold',
+    textAlign: 'center',
     marginBottom: 10,
   },
   table: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     borderBottomWidth: 1,
     paddingBottom: 5,
     marginBottom: 5,
   },
   tableHeader: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     flex: 1,
-    textAlign: "center",
+    textAlign: 'center',
   },
   tableRow: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     marginVertical: 5,
   },
   tableText: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
     flex: 1,
   },
   highlight: {
-    fontWeight: "bold",
-    color: "green",
+    fontWeight: 'bold',
+    color: 'green',
   },
   verticalDividerDashed: {
     width: 1,
-    backgroundColor: "black",
-    height: "100%",
+    backgroundColor: 'black',
+    height: '100%',
     marginHorizontal: 10,
-    borderStyle: "dashed",
+    borderStyle: 'dashed',
   },
 });

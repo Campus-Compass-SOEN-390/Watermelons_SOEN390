@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">95.45% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>14/14</span>
+                <span class='fraction'>21/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85% </span>
+                <span class="strong">79.16% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>17/20</span>
+                <span class='fraction'>19/24</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>13/13</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
@@ -116,7 +116,18 @@
 <a name='L51'></a><a href='#L51'>51</a>
 <a name='L52'></a><a href='#L52'>52</a>
 <a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -124,6 +135,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
@@ -137,6 +153,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -152,6 +173,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -178,15 +200,25 @@ import styles from "../styles/IndoorMapStyles";
 const FloorNavigation = ({ selectedBuilding, selectedFloor, onChangeFloor }) =&gt; {
   if (!selectedBuilding?.floors || selectedBuilding.floors.length === 0) return null;
 &nbsp;
-  const floors = selectedBuilding.floors;
-  const currentIndex = floors.indexOf(selectedFloor || <span class="branch-1 cbranch-no" title="branch not covered" >floors[0])</span>;
+  const floors = [...selectedBuilding.floors]
+    .map(floor =&gt; Number(floor)) 
+    .filter(floor =&gt; !isNaN(floor)) 
+    .sort((a, b) =&gt; a - b); 
+&nbsp;
+  const defaultFloor = floors.includes(1) ? 1 : <span class="branch-1 cbranch-no" title="branch not covered" >floors[0];</span>
+  const currentIndex = floors.indexOf(Number(selectedFloor) || <span class="branch-1 cbranch-no" title="branch not covered" >defaultFloor)</span>;
 &nbsp;
   const handleChangeFloor = (direction) =&gt; {
     if (direction === "up" &amp;&amp; currentIndex &lt; floors.length - 1) {
-      onChangeFloor(floors[currentIndex + 1]);
+      onChangeFloor(String(floors[currentIndex + 1])); 
     } else <span class="missing-if-branch" title="else path not taken" >E</span>if (direction === "down" &amp;&amp; currentIndex &gt; 0) {
-      onChangeFloor(floors[currentIndex - 1]);
+      onChangeFloor(String(floors[currentIndex - 1])); 
     }
+  };
+&nbsp;
+  const formatFloorName = (floor) =&gt; {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (Number(floor) === -2) <span class="cstat-no" title="statement not covered" >return "S2"; </span>
+    return String(floor);
   };
 &nbsp;
   return (
@@ -200,7 +232,7 @@ const FloorNavigation = ({ selectedBuilding, selectedFloor, onChangeFloor }) =&g
         &lt;MaterialIcons name="keyboard-arrow-up" size={24} color="black" /&gt;
       &lt;/TouchableOpacity&gt;
 &nbsp;
-      &lt;Text style={styles.text}&gt;{selectedFloor || <span class="branch-1 cbranch-no" title="branch not covered" >floors[0]}</span>&lt;/Text&gt;
+      &lt;Text style={styles.text}&gt;{formatFloorName(selectedFloor || <span class="branch-1 cbranch-no" title="branch not covered" >defaultFloor)</span>}&lt;/Text&gt;
 &nbsp;
       &lt;TouchableOpacity
         style={[styles.button, currentIndex === 0 &amp;&amp; styles.disabledButton]}
@@ -213,12 +245,13 @@ const FloorNavigation = ({ selectedBuilding, selectedFloor, onChangeFloor }) =&g
     &lt;/View&gt;
   );
 };
+&nbsp;
 FloorNavigation.propTypes = {
   selectedBuilding: PropTypes.shape({
-    floors: PropTypes.array
+    floors: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])), 
   }),
-  selectedFloor: PropTypes.string,
-  onChangeFloor: PropTypes.func.isRequired
+  selectedFloor: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  onChangeFloor: PropTypes.func.isRequired,
 };
 &nbsp;
 export default FloorNavigation;
@@ -229,7 +262,7 @@ export default FloorNavigation;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-03-18T17:50:55.495Z
+                at 2025-03-27T21:20:19.330Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
