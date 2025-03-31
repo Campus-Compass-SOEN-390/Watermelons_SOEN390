@@ -2,16 +2,16 @@ import { useEffect, React } from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { homepageStyles as styles } from "../styles/HomePageStyles.js";
-import RNUxcam from "react-native-ux-cam";
+// import RNUxcam from "react-native-ux-cam";
 
 export default function HomePage() {
   const router = useRouter();
 
   // Add this useEffect hook for UXCam screen tagging
-  useEffect(() => {
-    // Tag this screen in UXCam
-    RNUxcam.tagScreenName("HomePage");
-  }, []);
+  // useEffect(() => {
+  //   // Tag this screen in UXCam
+  //   RNUxcam.tagScreenName("HomePage");
+  // }, []);
 
   return (
     <View style={{ flex: 1 }}>
@@ -28,7 +28,7 @@ export default function HomePage() {
             style={styles.button}
             testID="sgwButton"
             onPress={() => {
-              RNUxcam.logEvent("SGW Campus Button Pressed");
+              // RNUxcam.logEvent("SGW Campus Button Pressed");
               router.push("/(tabs)/map?type=sgw");
             }}
           >
@@ -38,7 +38,7 @@ export default function HomePage() {
             style={styles.button}
             testID="loyolaButton"
             onPress={() => {
-              RNUxcam.logEvent("Loyola Campus Button Pressed");
+              // RNUxcam.logEvent("Loyola Campus Button Pressed");
               router.push("/(tabs)/map?type=loy");
             }}
           >
@@ -57,7 +57,7 @@ export default function HomePage() {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              RNUxcam.logEvent("Interest point Button Pressed");
+              // RNUxcam.logEvent("Interest point Button Pressed");
               router.push("(tabs)/interest-points");
             }}
             testID="interestButton"
@@ -73,7 +73,7 @@ export default function HomePage() {
             style={styles.googleButton}
             testID="calendarfetchbutton"
             onPress={() => {
-              RNUxcam.logEvent("Google Calendar Button Pressed");
+              // RNUxcam.logEvent("Google Calendar Button Pressed");
               router.push("screens/CalendarFetching");
             }}
           >

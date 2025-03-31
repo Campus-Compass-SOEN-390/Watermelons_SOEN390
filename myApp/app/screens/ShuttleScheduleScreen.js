@@ -10,7 +10,7 @@ import {
 import { useNavigation } from "@react-navigation/native"; // Import navigation
 import { fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
 import moment from "moment";
-import RNUxcam from "react-native-ux-cam";
+// import RNUxcam from "react-native-ux-cam";
 
 export default function ShuttleScheduleScreen() {
   const navigation = useNavigation(); // Get navigation object
@@ -21,10 +21,10 @@ export default function ShuttleScheduleScreen() {
   //const [showWarning, setShowWarning] = useState(false); // For showing warning popup
 
   // Add this useEffect hook for UXCam screen tagging
-  useEffect(() => {
-    // Tag this screen in UXCam
-    RNUxcam.tagScreenName("ShuttleScheduleScreen");
-  }, []);
+  // useEffect(() => {
+  //   // Tag this screen in UXCam
+  //   RNUxcam.tagScreenName("ShuttleScheduleScreen");
+  // }, []);
 
   useEffect(() => {
     const loadSchedule = async () => {
@@ -93,7 +93,7 @@ export default function ShuttleScheduleScreen() {
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => {
-              RNUxcam.logEvent("Shuttle Go Back Button Pressed");
+              // RNUxcam.logEvent("Shuttle Go Back Button Pressed");
               navigation.goBack();
             }}
             style={styles.backButton}
@@ -130,7 +130,7 @@ export default function ShuttleScheduleScreen() {
         {/* Updated Back Button to Navigate to Home Page */}
         <TouchableOpacity
           onPress={() => {
-            RNUxcam.logEvent("Shuttle Home Button Pressed");
+            // RNUxcam.logEvent("Shuttle Home Button Pressed");
             navigation.goBack();
           }}
           style={styles.backButton}
@@ -143,7 +143,7 @@ export default function ShuttleScheduleScreen() {
         {/* Warning Button */}
         <TouchableOpacity
           onPress={() => {
-            RNUxcam.logEvent("Shuttle Home Button Pressed");
+            // RNUxcam.logEvent("Shuttle Home Button Pressed");
             handleWarningPress();
           }}
           style={styles.warningButton}

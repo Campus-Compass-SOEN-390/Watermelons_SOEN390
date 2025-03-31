@@ -20,14 +20,14 @@ import { Ionicons } from "@expo/vector-icons";
 import LayoutWrapper from "../components/LayoutWrapper.js";
 import HeaderButtons from "../components/HeaderButtons.js";
 import MonthPicker from "../components/MonthPicker";
-import RNUxcam from "react-native-ux-cam";
+// import RNUxcam from "react-native-ux-cam";
 
 export default function CalendarFetching() {
   // Add this useEffect hook for UXCam screen tagging
-  useEffect(() => {
-    // Tag this screen in UXCam
-    RNUxcam.tagScreenName("Calendar Fetching");
-  }, []);
+  // useEffect(() => {
+  //   // Tag this screen in UXCam
+  //   RNUxcam.tagScreenName("Calendar Fetching");
+  // }, []);
 
   const navigation = useNavigation();
   const router = useRouter();
@@ -219,9 +219,9 @@ export default function CalendarFetching() {
                             key={index}
                             style={styles.historyItem}
                             onPress={() => {
-                              RNUxcam.logEvent(
-                                "Stored Calendar Ids Button Pressed"
-                              );
+                              // RNUxcam.logEvent(
+                              //   "Stored Calendar Ids Button Pressed"
+                              // );
                               setCalendarId(item.id);
                             }}
                           >
@@ -272,7 +272,7 @@ export default function CalendarFetching() {
                 <TouchableOpacity
                   style={styles.clearHistoryButton}
                   onPress={async () => {
-                    RNUxcam.logEvent("Clear History Button Pressed");
+                    // RNUxcam.logEvent("Clear History Button Pressed");
                     try {
                       await AsyncStorage.removeItem("calendarIds");
                       setStoredCalendarIds([]);
