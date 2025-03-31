@@ -16,6 +16,7 @@ import { styles } from '../../styles/POIListStyle';
 import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import { useLocationContext } from '@/app/context/LocationContext';
+import { useButtonInteraction } from '../../hooks/useButtonInteraction';
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
@@ -38,6 +39,8 @@ const getCategoryText = (category) => {
 
 // Memo-ize the POIListItem component to prevent unnecessary re-renders
 const POIListItem = memo(({ item, userLocation, calculateDistance }) => {
+    const { handleButtonPress } = useButtonInteraction();
+
     const [imageError, setImageError] = useState(false);
     
     // Use the pre-computed distance if available
@@ -63,6 +66,7 @@ const POIListItem = memo(({ item, userLocation, calculateDistance }) => {
     
     // Memoize the handler function to prevent recreation on each render
     const handleGetDirections = useCallback(() => {
+        handleButtonPress(null, `Getting directions to ${item.name}`);
         console.log(`Get directions to: ${item.name}`);
         
         const name = item.name;
@@ -268,6 +272,8 @@ const POIList = ({
         }
     }, []);
 
+    const { handleButtonPress } = useButtonInteraction();
+
     if (isLoading && !refreshing) {
         return (
             <View style={styles.loadingContainer}>
@@ -283,7 +289,10 @@ const POIList = ({
                 <Text style={styles.errorText}>{error ?? "An error occurred"}</Text>
                 <TouchableOpacity
                     style={[styles.retryButton, { marginTop: 20 }]}
-                    onPress={onRefresh}
+                    onPress={() => {
+                        handleButtonPress(null, 'Retrying to load places');
+                        onRefresh();
+                    }}
                 >
                     <Ionicons name="refresh" size={18} color="white" />
                     <Text style={styles.buttonText}>Retry</Text>

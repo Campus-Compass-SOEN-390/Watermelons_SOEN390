@@ -133,6 +133,7 @@
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
 <a name='L70'></a><a href='#L70'>70</a>
+<<<<<<< HEAD
 <a name='L71'></a><a href='#L71'>71</a>
 <a name='L72'></a><a href='#L72'>72</a>
 <a name='L73'></a><a href='#L73'>73</a>
@@ -155,6 +156,9 @@
 <a name='L90'></a><a href='#L90'>90</a>
 <a name='L91'></a><a href='#L91'>91</a>
 <a name='L92'></a><a href='#L92'>92</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+=======
+<a name='L71'></a><a href='#L71'>71</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+>>>>>>> main
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -227,10 +231,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<<<<<<< HEAD
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+=======
+<span class="cline-any cline-no">&nbsp;</span>
+>>>>>>> main
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -243,6 +251,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<<<<<<< HEAD
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useEffect, React } from "react";
@@ -250,10 +259,17 @@ import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { homepageStyles as styles } from "../styles/HomePageStyles.js";
 import RNUxcam from "react-native-ux-cam";
+=======
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
+import { View, Image, Text, TouchableOpacity } from "react-native";
+import { useRouter } from 'expo-router';
+import { homepageStyles as styles } from '../styles/HomePageStyles.js';
+>>>>>>> main
 &nbsp;
 export default function HomePage() {
   const router = useRouter();
 &nbsp;
+<<<<<<< HEAD
   // Add this useEffect hook for UXCam screen tagging
   useEffect(() =&gt; {
     // Tag this screen in UXCam
@@ -291,6 +307,67 @@ export default function HomePage() {
           &gt;
             &lt;Text style={styles.buttonText}&gt;Loyola Campus&lt;/Text&gt;
           &lt;/TouchableOpacity&gt;
+=======
+    return (
+        &lt;View style ={{flex:1}}&gt;
+            &lt;Image style={styles.logo}
+                source={require('../../assets/images/logo.png')}
+                resizeMode="contain"
+                testID="logo"
+            /&gt;
+            &lt;View style={styles.buttonsContainer}&gt;
+                &lt;Text style={styles.title}&gt;Getting around campus&lt;/Text&gt;
+                &lt;View style={styles.buttonContainer}&gt;
+                    &lt;TouchableOpacity 
+                    style={styles.button}
+                    testID="sgwButton"
+                    onPress={() =&gt; router.push('/(tabs)/map?type=sgw')}
+                    &gt;
+                    &lt;Text style={styles.buttonText}&gt;SGW Campus&lt;/Text&gt;
+                    &lt;/TouchableOpacity&gt;
+                    &lt;TouchableOpacity 
+                    style={styles.button}
+                    testID="loyolaButton"
+                    onPress={() =&gt; router.push('/(tabs)/map?type=loy')}
+                    &gt;
+                        &lt;Text style={styles.buttonText}&gt;Loyola Campus&lt;/Text&gt;
+                    &lt;/TouchableOpacity&gt;
+                &lt;/View&gt;
+                &lt;View style={styles.buttonContainer}&gt;
+                &lt;TouchableOpacity 
+                    style={styles.button}
+                    testID="shuttleScheduleButton"
+                    onPress={() =&gt; router.push('/screens/ShuttleScheduleScreen')}
+                    &gt;
+                    &lt;Text style={styles.buttonText}&gt;Shuttle Bus Schedule&lt;/Text&gt;
+                    &lt;/TouchableOpacity&gt;
+&nbsp;
+                    &lt;TouchableOpacity style={styles.button}
+                    onPress={() =&gt; router.push('(tabs)/interest-points')}
+                    testID="interestButton"
+                    &gt;
+                        &lt;Text style={styles.buttonText}&gt;Interest Points&lt;/Text&gt;
+                    &lt;/TouchableOpacity&gt;
+                &lt;/View&gt;
+            &lt;/View&gt;
+            &lt;View style={styles.buttonsContainer}&gt;
+                &lt;Text style={styles.title}&gt;View My Calendar&lt;/Text&gt;
+                 &lt;View style={styles.buttonContainer}&gt;
+                    &lt;TouchableOpacity 
+                    style={styles.googleButton}
+                    testID="calendarfetchbutton"
+                    onPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >router.push('screens/CalendarFetching')}</span>
+                    &gt;
+                         &lt;Image
+                            source={require('../../assets/images/google_logo.png')}
+                            style={styles.icon}
+                            testID="googleIcon"
+                        /&gt;
+                        &lt;Text style={styles.buttonText}&gt;Connect Calendars&lt;/Text&gt;
+                    &lt;/TouchableOpacity&gt;
+                &lt;/View&gt;
+            &lt;/View&gt;
+>>>>>>> main
         &lt;/View&gt;
         &lt;View style={styles.buttonContainer}&gt;
           &lt;TouchableOpacity
@@ -343,7 +420,11 @@ export default function HomePage() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+<<<<<<< HEAD
                 at 2025-03-30T19:05:56.009Z
+=======
+                at 2025-03-27T21:20:19.330Z
+>>>>>>> main
             </div>
         <script src="../../prettify.js"></script>
         <script>
