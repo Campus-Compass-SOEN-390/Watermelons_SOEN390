@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { infoPageStyles as styles } from '../styles/InfoPageStyles';
 
-export default function InfoPage6() {
+export default function AccessibilityInfoPage() {
   const router = useRouter();
 
   return (
@@ -12,10 +12,10 @@ export default function InfoPage6() {
       {/* Header */}
       <View style={styles.topNav}>
         <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/')}>
-          <Ionicons name="home" size={24} color="white" />
+          <Ionicons name="home" size={24} color="white" accessibilityRole="button" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/screens/SettingsPage')}>
-          <Ionicons name="settings" size={24} color="white" />
+          <Ionicons name="settings" size={24} color="white" accessibilityRole="button" />
         </TouchableOpacity>
       </View>
 
@@ -26,15 +26,19 @@ export default function InfoPage6() {
 
         {/* Screenshot(s) Section */}
         <View style={imageRow.container}>
-          {/* Before screenshot */}
           <Image
             source={require('../../assets/images/accessibility_before.png')}
             style={imageRow.image}
+            accessibilityRole="image"
+            accessible={true}
+            testID="accessibility-before-image"
           />
-          {/* After screenshot */}
           <Image
             source={require('../../assets/images/accessibility_after.png')}
             style={imageRow.image}
+            accessibilityRole="image"
+            accessible={true}
+            testID="accessibility-after-image"
           />
         </View>
 
@@ -47,11 +51,11 @@ export default function InfoPage6() {
 
       {/* Footer Navigation */}
       <View style={styles.footer}>
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity accessibilityRole="button" onPress={() => router.back()}>
           <Ionicons name="chevron-back-circle" size={32} color="white" />
         </TouchableOpacity>
         <Text style={styles.pageName}>Accessibility</Text>
-        <TouchableOpacity onPress={() => router.push('/screens/ShuttleInfoPage')}>
+        <TouchableOpacity accessibilityRole="button" onPress={() => router.push('/screens/ShuttleInfoPage')}>
           <Ionicons name="chevron-forward-circle" size={32} color="white" />
         </TouchableOpacity>
       </View>
@@ -63,18 +67,17 @@ export default function InfoPage6() {
 const imageRow = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',  // Even spacing between images
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     marginTop: 10,
     marginBottom: 20,
   },
   image: {
-    width: '50%',             // Each image takes up half the container's width
-    aspectRatio: 9 / 16,       // Maintain the portrait aspect ratio
+    width: '50%',
+    aspectRatio: 9 / 16,
     borderRadius: 10,
     resizeMode: 'contain',
     borderWidth: 1,
     borderColor: '#ccc',
   },
 });
-

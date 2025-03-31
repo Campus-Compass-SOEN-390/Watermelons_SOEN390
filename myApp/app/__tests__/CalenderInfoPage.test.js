@@ -1,33 +1,49 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import InfoPage2 from '../app/screens/CalenderInfoPage'; 
+import CalenderInfoPage from '../../app/screens/CalenderInfoPage';
 
-// Mock the router
+
+// Mock expo-router
+const mockPush = jest.fn();
+const mockBack = jest.fn();
+
 jest.mock('expo-router', () => ({
   useRouter: () => ({
-    push: jest.fn(),
-    back: jest.fn(),
+    push: mockPush,
+    back: mockBack,
   }),
 }));
 
 describe('CalenderInfoPage', () => {
-  it('renders title, description, and image', () => {
-    const { getByText, getByRole } = render(<InfoPage2 />);
+  beforeEach(() => {
+    mockPush.mockClear();
+    mockBack.mockClear();
+  });
 
-    expect(getByText('Google Calendar')).toBeTruthy();
+  it('renders title, description, and image', () => {
+    const { getAllByText, getByTestId } = render(<CalenderInfoPage />);
+
+    const titles = getAllByText('Google Calendar');
+    expect(titles.length).toBeGreaterThanOrEqual(1);
+
     expect(
-      getByText(/Import your events from Google Calendar seamlessly/i)
+      getAllByText(/Import your events from Google Calendar seamlessly/i)[0]
     ).toBeTruthy();
 
-    // Image: basic check via accessibility role
-    const image = getByRole('image');
+    const image = getByTestId('calendar-image');
     expect(image).toBeTruthy();
   });
 
   it('has working navigation buttons', () => {
-    const { getAllByRole } = render(<InfoPage2 />);
-    const buttons = getAllByRole('button');
+    const { getByTestId } = render(<CalenderInfoPage />);
 
-    expect(buttons.length).toBeGreaterThanOrEqual(2); // Back + Forward
+    const backButton = getByTestId('back-button');
+    const nextButton = getByTestId('next-button');
+
+    fireEvent.press(backButton);
+    fireEvent.press(nextButton);
+
+    expect(mockBack).toHaveBeenCalled();
+    expect(mockPush).toHaveBeenCalledWith('/screens/SmartNavigationInfoPage');
   });
 });

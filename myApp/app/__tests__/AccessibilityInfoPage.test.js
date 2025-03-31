@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import InfoPage6 from '../app/screens/AccessibilityInfoPage';
+import AccessibilityInfoPage from '../../app/screens/AccessibilityInfoPage';
 
 // Mock router
 jest.mock('expo-router', () => ({
@@ -12,7 +12,7 @@ jest.mock('expo-router', () => ({
 
 describe('AccessibilityInfoPage', () => {
   it('renders title, section label, and descriptive text', () => {
-    const { getByText } = render(<InfoPage6 />);
+    const { getByText } = render(<AccessibilityInfoPage />);
 
     expect(getByText('Campus Map Features')).toBeTruthy();
     expect(getByText('Accessibility-Friendly Routes')).toBeTruthy();
@@ -22,13 +22,13 @@ describe('AccessibilityInfoPage', () => {
   });
 
   it('renders two accessibility screenshots', () => {
-    const { getAllByRole } = render(<InfoPage6 />);
+    const { getAllByRole } = render(<AccessibilityInfoPage />);
     const images = getAllByRole('image');
     expect(images.length).toBeGreaterThanOrEqual(2);
   });
 
   it('displays navigation buttons', () => {
-    const { getAllByRole } = render(<InfoPage6 />);
+    const { getAllByRole } = render(<AccessibilityInfoPage />);
     const buttons = getAllByRole('button');
     expect(buttons.length).toBeGreaterThanOrEqual(2);
   });

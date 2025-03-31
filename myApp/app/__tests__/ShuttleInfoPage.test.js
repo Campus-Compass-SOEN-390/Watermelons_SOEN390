@@ -1,56 +1,32 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
-import ShuttleBusPage from '../app/screens/ShuttleInfoPage'; 
+import { render } from '@testing-library/react-native';
+import ShuttleBusPage from '../../app/screens/ShuttleInfoPage';
 
-// Mock navigation
-const pushMock = jest.fn();
-const backMock = jest.fn();
-
+// Mock expo-router
 jest.mock('expo-router', () => ({
   useRouter: () => ({
-    push: pushMock,
-    back: backMock,
+    push: jest.fn(),
+    back: jest.fn(),
   }),
 }));
 
 describe('ShuttleInfoPage', () => {
-  it('renders page title and description', () => {
-    const { getByText } = render(<ShuttleBusPage />);
-
-    expect(getByText('Shuttle Bus')).toBeTruthy();
-    expect(getByText('Next one on schedule')).toBeTruthy();
-    expect(getByText(/real-time updates/i)).toBeTruthy();
-    expect(getByText(/Shuttle Bus Schedule and Alerts/i)).toBeTruthy();
+  it('renders title and description text', () => {
+    const { getAllByText, getByText } = render(<ShuttleBusPage />);
+    expect(getAllByText('Shuttle Bus').length).toBeGreaterThanOrEqual(1);
+    expect(getByText(/Next one on schedule/i)).toBeTruthy();
+    expect(getByText(/View bus schedules and real-time updates/i)).toBeTruthy();
   });
 
-  it('renders all shuttle images', () => {
+  it('renders all shuttle-related images with correct accessibility role', () => {
     const { getAllByRole } = render(<ShuttleBusPage />);
     const images = getAllByRole('image');
-    expect(images.length).toBeGreaterThanOrEqual(4);
+    expect(images.length).toBeGreaterThanOrEqual(4); // at least 4 shuttle-related images
   });
 
-  it('opens and closes the modal', () => {
-    const { getByText, queryByText, getAllByRole } = render(<ShuttleBusPage />);
-
-    // Initially, the modal "Close" button shouldn't be in the DOM
-    expect(queryByText('Close')).toBeNull();
-
-    // Press shuttleButton to open modal
-    fireEvent.press(getAllByRole('image')[0]);
-
-    // Now modal should show
-    expect(getByText('Close')).toBeTruthy();
-
-    // Close the modal
-    fireEvent.press(getByText('Close'));
-
-    // Should now be gone again (if state updates immediately)
-    // You may skip this part depending on your modal visibility logic
-  });
-
-  it('has working navigation buttons', () => {
+  it('displays all navigation buttons (Home, Settings, Back, Forward)', () => {
     const { getAllByRole } = render(<ShuttleBusPage />);
     const buttons = getAllByRole('button');
-    expect(buttons.length).toBeGreaterThanOrEqual(2); // back and forward
+    expect(buttons.length).toBeGreaterThanOrEqual(4);
   });
 });

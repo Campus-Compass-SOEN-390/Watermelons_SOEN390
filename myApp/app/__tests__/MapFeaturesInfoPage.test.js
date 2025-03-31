@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import InfoPage4 from '../app/screens/MapFeaturesInfoPage';
+import MapFeaturesInfoPage from '../../app/screens/MapFeaturesInfoPage';
 
 // Mock the router
 jest.mock('expo-router', () => ({
@@ -12,7 +12,7 @@ jest.mock('expo-router', () => ({
 
 describe('MapFeaturesInfoPage', () => {
   it('renders title, description, and instructions', () => {
-    const { getByText } = render(<InfoPage4 />);
+    const { getByText } = render(<MapFeaturesInfoPage />);
 
     expect(getByText('Campus Map Features')).toBeTruthy();
     expect(getByText('Interactive building pop up.')).toBeTruthy();
@@ -24,7 +24,7 @@ describe('MapFeaturesInfoPage', () => {
   });
 
   it('renders the two popup images', () => {
-    const { getAllByRole } = render(<InfoPage4 />);
+    const { getAllByRole } = render(<MapFeaturesInfoPage />);
     const images = getAllByRole('image');
     expect(images.length).toBeGreaterThanOrEqual(2);
   });

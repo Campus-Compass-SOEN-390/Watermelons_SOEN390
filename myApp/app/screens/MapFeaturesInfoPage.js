@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { infoPageStyles as styles } from '../styles/InfoPageStyles';
 
-export default function InfoPage4() {
+export default function MapFeaturesInfoPage() {
   const router = useRouter();
 
   return (
@@ -12,10 +12,10 @@ export default function InfoPage4() {
       {/* Header */}
       <View style={styles.topNav}>
         <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/')}>
-          <Ionicons name="home" size={24} color="white" />
+          <Ionicons name="home" size={24} color="white" accessibilityRole="button" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/screens/SettingsPage')}>
-          <Ionicons name="settings" size={24} color="white" />
+          <Ionicons name="settings" size={24} color="white" accessibilityRole="button" />
         </TouchableOpacity>
       </View>
 
@@ -28,10 +28,16 @@ export default function InfoPage4() {
           <Image
             source={require('../../assets/images/buildings.png')}
             style={imageRow.image}
+            accessibilityRole="image"
+            accessible={true}
+            testID="map-feature-image-1"
           />
           <Image
             source={require('../../assets/images/PopUp.png')}
             style={imageRow.image}
+            accessibilityRole="image"
+            accessible={true}
+            testID="map-feature-image-2"
           />
         </View>
 
@@ -52,11 +58,11 @@ export default function InfoPage4() {
 
       {/* Footer Navigation */}
       <View style={styles.footer}>
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity accessibilityRole="button" onPress={() => router.back()}>
           <Ionicons name="chevron-back-circle" size={32} color="white" />
         </TouchableOpacity>
         <Text style={styles.pageName}>Campus Map</Text>
-        <TouchableOpacity onPress={() => router.push('/screens/PoiInfoPage')}>
+        <TouchableOpacity accessibilityRole="button" onPress={() => router.push('/screens/PoiInfoPage')}>
           <Ionicons name="chevron-forward-circle" size={32} color="white" />
         </TouchableOpacity>
       </View>

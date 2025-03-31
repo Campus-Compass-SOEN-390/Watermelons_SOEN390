@@ -5,17 +5,25 @@ import { Ionicons } from '@expo/vector-icons';
 import { Video } from 'expo-av';
 import { infoPageStyles as styles } from '../styles/InfoPageStyles';
 
-export default function InfoPage3() {
+export default function SmartNavigationInfoPage() {
   const router = useRouter();
 
   return (
     <View style={styles.container}>
       {/* Header Icons */}
       <View style={styles.topNav}>
-        <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/')}>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => router.push('/')}
+          accessibilityRole="button"
+        >
           <Ionicons name="home" size={24} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/screens/SettingsPage')}>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => router.push('/screens/SettingsPage')}
+          accessibilityRole="button"
+        >
           <Ionicons name="settings" size={24} color="white" />
         </TouchableOpacity>
       </View>
@@ -26,12 +34,13 @@ export default function InfoPage3() {
 
         <View style={styles.videoWrapper}>
           <Video
-            source={require('../../assets/videos/SmartNavigation.mp4')} // Place your video in assets/videos
+            source={require('../../assets/videos/SmartNavigation.mp4')}
             style={styles.video}
-            resizeMode="contain" 
+            resizeMode="contain"
             isLooping
             shouldPlay
-            useNativeControls={false}       
+            useNativeControls={false}
+            accessibilityRole="image" // Treat video as visual media
           />
         </View>
 
@@ -42,11 +51,17 @@ export default function InfoPage3() {
 
       {/* Navigation Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          accessibilityRole="button"
+        >
           <Ionicons name="chevron-back-circle" size={32} color="white" />
         </TouchableOpacity>
         <Text style={styles.pageName}>Smart Navigation</Text>
-        <TouchableOpacity onPress={() => router.push('/screens/MapFeaturesInfoPage')}>
+        <TouchableOpacity
+          onPress={() => router.push('/screens/MapFeaturesInfoPage')}
+          accessibilityRole="button"
+        >
           <Ionicons name="chevron-forward-circle" size={32} color="white" />
         </TouchableOpacity>
       </View>

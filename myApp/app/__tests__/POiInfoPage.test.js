@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import InfoPage5 from '../app/screens/PoiInfoPage';
+import PoiInfoPage from '../../app/screens/PoiInfoPage';
 
 // Mock expo-router
 jest.mock('expo-router', () => ({
@@ -20,7 +20,7 @@ jest.mock('expo-av', () => {
 
 describe('PoiInfoPage', () => {
   it('renders title, section name, and description', () => {
-    const { getByText } = render(<InfoPage5 />);
+    const { getByText } = render(<PoiInfoPage />);
 
     expect(getByText('Campus Map Features')).toBeTruthy();
     expect(getByText('Points of Interest')).toBeTruthy();
@@ -28,7 +28,7 @@ describe('PoiInfoPage', () => {
   });
 
   it('displays navigation buttons', () => {
-    const { getAllByRole } = render(<InfoPage5 />);
+    const { getAllByRole } = render(<PoiInfoPage />);
     const buttons = getAllByRole('button');
     expect(buttons.length).toBeGreaterThanOrEqual(2);
   });

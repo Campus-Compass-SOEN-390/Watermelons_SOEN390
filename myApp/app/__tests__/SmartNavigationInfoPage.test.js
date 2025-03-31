@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import InfoPage3 from '../app/screens/SmartNavigationInfoPage'; 
+import SmartNavigationInfoPage from '../screens/SmartNavigationInfoPage'; // ✅ Fixed path
 
-// Mock the router
+// ✅ Mock the router
 jest.mock('expo-router', () => ({
   useRouter: () => ({
     push: jest.fn(),
@@ -10,25 +10,27 @@ jest.mock('expo-router', () => ({
   }),
 }));
 
-// Optional: Mock expo-av Video
+// ✅ Optional: Mock expo-av's <Video /> to prevent rendering during test
 jest.mock('expo-av', () => {
   const React = require('react');
   return {
-    Video: (props) => <></>, // Render an empty placeholder
+    Video: () => <></>, // Empty component
   };
 });
 
 describe('SmartNavigationInfoPage', () => {
   it('renders the Smart Navigation title and description', () => {
-    const { getByText } = render(<InfoPage3 />);
-    expect(getByText('Smart Navigation')).toBeTruthy();
+    const { getByText, getAllByText } = render(<SmartNavigationInfoPage />);
+    const headings = getAllByText('Smart Navigation');
+    expect(headings.length).toBeGreaterThanOrEqual(1);
+
     expect(
       getByText('Get directions to your next event on campus in seconds.')
     ).toBeTruthy();
   });
 
   it('has working navigation buttons', () => {
-    const { getAllByRole } = render(<InfoPage3 />);
+    const { getAllByRole } = render(<SmartNavigationInfoPage />);
     const buttons = getAllByRole('button');
     expect(buttons.length).toBeGreaterThanOrEqual(2);
   });

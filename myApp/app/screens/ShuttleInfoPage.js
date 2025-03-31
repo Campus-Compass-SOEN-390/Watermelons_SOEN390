@@ -18,21 +18,25 @@ export default function ShuttleBusPage() {
   const [modalVisible, setModalVisible] = useState(false);
 
   const showBusAlert = () => {
-    Alert.alert(
-      'Bus Status',
-      '✅ No expected bus delays.',
-      [{ text: 'OK' }]
-    );
+    Alert.alert('Bus Status', '✅ No expected bus delays.', [{ text: 'OK' }]);
   };
 
   return (
     <View style={styles.container}>
       {/* Top Navigation */}
       <View style={styles.topNav}>
-        <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/')}>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => router.push('/')}
+          accessibilityRole="button"
+        >
           <Ionicons name="home" size={24} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/screens/SettingsPage')}>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => router.push('/screens/SettingsPage')}
+          accessibilityRole="button"
+        >
           <Ionicons name="settings" size={24} color="white" />
         </TouchableOpacity>
       </View>
@@ -43,51 +47,71 @@ export default function ShuttleBusPage() {
 
         {/* Two Images Side-by-Side */}
         <View style={styles.horizontalImageRow}>
-          <TouchableOpacity style={styles.squareImageWrapper} onPress={() => setModalVisible(true)}>
+          <TouchableOpacity
+            style={styles.squareImageWrapper}
+            onPress={() => setModalVisible(true)}
+            accessibilityRole="button"
+          >
             <Image
               source={require('../../assets/images/shuttleButton.png')}
               style={styles.squareImage}
+              accessibilityRole="image"
+              accessible={true}
+              testID="shuttle-image-1"
             />
           </TouchableOpacity>
           <View style={styles.squareImageWrapper}>
             <Image
               source={require('../../assets/images/shuttlePopUp.png')}
               style={styles.squareImage}
+              accessibilityRole="image"
+              accessible={true}
+              testID="shuttle-image-2"
             />
           </View>
         </View>
 
-        {/* Description */}
         <Text style={styles.description}>
           View bus schedules and real-time updates on delays or changes
         </Text>
 
         <Text style={styles.subtitle}>Shuttle Bus Schedule and Alerts</Text>
 
-          <View style={styles.horizontalImageRow}>
-            <View style={styles.squareImageWrapper}>
-              <Image
-                source={require('../../assets/images/shuttleSchedule.png')}
-                style={styles.squareImage}
-              />
-            </View>
-            <View style={styles.squareImageWrapper}>
-              <Image
-                source={require('../../assets/images/shuttleAlert.png')}
-                style={styles.squareImage}
-              />
-            </View>
+        <View style={styles.horizontalImageRow}>
+          <View style={styles.squareImageWrapper}>
+            <Image
+              source={require('../../assets/images/shuttleSchedule.png')}
+              style={styles.squareImage}
+              accessibilityRole="image"
+              accessible={true}
+              testID="shuttle-image-3"
+            />
           </View>
-
+          <View style={styles.squareImageWrapper}>
+            <Image
+              source={require('../../assets/images/shuttleAlert.png')}
+              style={styles.squareImage}
+              accessibilityRole="image"
+              accessible={true}
+              testID="shuttle-image-4"
+            />
+          </View>
+        </View>
       </ScrollView>
 
       {/* Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          accessibilityRole="button"
+        >
           <Ionicons name="chevron-back-circle" size={32} color="white" />
         </TouchableOpacity>
         <Text style={styles.pageName}>Shuttle Bus</Text>
-        <TouchableOpacity onPress={() => router.push('/screens/SettingsInfoPage')}>
+        <TouchableOpacity
+          onPress={() => router.push('/screens/SettingsInfoPage')}
+          accessibilityRole="button"
+        >
           <Ionicons name="chevron-forward-circle" size={32} color="white" />
         </TouchableOpacity>
       </View>
@@ -104,10 +128,14 @@ export default function ShuttleBusPage() {
             <Image
               source={require('../../assets/images/shuttleSchedule.png')}
               style={modalStyles.modalImage}
+              accessibilityRole="image"
+              accessible={true}
+              testID="shuttle-modal-image"
             />
             <TouchableOpacity
               style={modalStyles.closeButton}
               onPress={() => setModalVisible(false)}
+              accessibilityRole="button"
             >
               <Text style={modalStyles.closeButtonText}>Close</Text>
             </TouchableOpacity>

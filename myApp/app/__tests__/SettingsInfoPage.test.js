@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import SettingsInfoPage from '../app/screens/SettingsInfoPage'; 
+import SettingsInfoPage from '../../app/screens/SettingsInfoPage';
 
 // Mock router
 jest.mock('expo-router', () => ({
@@ -28,9 +28,9 @@ describe('SettingsInfoPage', () => {
     expect(getByRole('image')).toBeTruthy();
   });
 
-  it('displays only the back navigation button', () => {
+  it('displays all navigation buttons', () => {
     const { getAllByRole } = render(<SettingsInfoPage />);
     const buttons = getAllByRole('button');
-    expect(buttons.length).toBe(1); // Only "Back" button should be visible
+    expect(buttons.length).toBe(3); // Home, Settings, Back
   });
 });

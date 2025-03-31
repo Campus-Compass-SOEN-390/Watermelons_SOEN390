@@ -11,10 +11,18 @@ export default function InfoPage() {
     <View style={styles.container}>
       {/* Header Icons */}
       <View style={styles.topNav}>
-        <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/')}>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => router.push('/')}
+          accessibilityRole="button"
+        >
           <Ionicons name="home" size={24} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/screens/SettingsPage')}>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => router.push('/screens/SettingsPage')}
+          accessibilityRole="button"
+        >
           <Ionicons name="settings" size={24} color="white" />
         </TouchableOpacity>
       </View>
@@ -26,6 +34,7 @@ export default function InfoPage() {
             source={require('../../assets/images/logo.png')}
             style={styles.logo}
             resizeMode="contain"
+            accessibilityRole="image"
           />
         </View>
 
@@ -51,11 +60,11 @@ export default function InfoPage() {
 
       {/* Navigation Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity onPress={() => { /* optional: handle previous */ }}>
+        <TouchableOpacity onPress={() => {}} accessibilityRole="button">
           <Ionicons name="chevron-back-circle" size={32} color="white" />
         </TouchableOpacity>
         <Text style={styles.pageName}>Campus Compass Features</Text>
-        <TouchableOpacity onPress={() => router.push('/screens/CalenderInfoPage')}>
+        <TouchableOpacity onPress={() => router.push('/screens/CalenderInfoPage')} accessibilityRole="button">
           <Ionicons name="chevron-forward-circle" size={32} color="white" />
         </TouchableOpacity>
       </View>
