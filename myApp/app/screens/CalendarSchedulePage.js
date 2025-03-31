@@ -1,13 +1,22 @@
-import { Text, View, TouchableOpacity, ScrollView , Alert} from "react-native";
-import React, { useState, useEffect } from "react";
+import { Text, View, TouchableOpacity, ScrollView, Alert } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import styles from '../styles/GoogleScheduleStyles';
-import { useRouter } from 'expo-router';
+import defaultStyles, {
+  createGoogleScheduleStyles,
+} from "../styles/GoogleScheduleStyles";
+import { useRouter } from "expo-router";
 import LayoutWrapper from "../components/LayoutWrapper";
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from "expo-file-system";
 import HeaderButtons from "../components/HeaderButtons";
+import { ThemeContext } from "../context/ThemeContext";
 
 export default function CalendarSchedulePage() {
+  // Get theme context
+  const { theme, isDarkMode } = useContext(ThemeContext);
+
+  // Create theme-aware styles
+  const styles = createGoogleScheduleStyles({ theme, isDarkMode });
+
   const router = useRouter();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const selectedDayIndex = selectedDate.getDay(); // Sunday = 0
@@ -17,7 +26,7 @@ export default function CalendarSchedulePage() {
 
   // Will allow to display event on proper date
   const filteredSchedule = schedule.filter(
-    item => item.date === selectedDate.toDateString()
+    (item) => item.date === selectedDate.toDateString()
   );
 
   const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -47,7 +56,7 @@ export default function CalendarSchedulePage() {
     const headers = lines[0].split(",");
     const rows = lines.slice(1);
 
-    return rows.map(row => {
+    return rows.map((row) => {
       const values = row.split(",");
       const obj = {};
       headers.forEach((header, index) => {
@@ -60,130 +69,142 @@ export default function CalendarSchedulePage() {
       const formatTime = (datetime) => {
         const date = new Date(datetime);
         if (isNaN(date.getTime())) return datetime;
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        return date.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        });
       };
 
       return {
         course: obj["Title"],
         location: obj["Location"],
         time: `${formatTime(startDate)} - ${formatTime(endDate)}`,
-        date: new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()).toDateString(),
+        date: new Date(
+          startDate.getFullYear(),
+          startDate.getMonth(),
+          startDate.getDate()
+        ).toDateString(),
       };
     });
   };
+
   const handleGetDirections = (location) => {
-    console.log("Getting directions to:", location);    
-      
+    console.log("Getting directions to:", location);
+
     // Navigate to map with destination parameter
     router.push({
-      pathname: '/(tabs)/map',
+      pathname: "/(tabs)/map",
       params: {
-        destinationString: location  // Pass the location string (H967)
-      }
+        destinationString: location, // Pass the location string (H967)
+      },
     });
   };
+
   const findNextClass = () => {
     const now = new Date();
     const currentTime = now.getTime();
-    
+
     console.log("Current time:", now.toLocaleString());
-    
+
     // Get all classes for today and future dates
-    const upcomingClasses = schedule.filter(item => {
+    const upcomingClasses = schedule.filter((item) => {
       const classDate = new Date(item.date);
-      const [startTime] = item.time.split(' - ');
-      const [hours, minutes] = startTime.split(':');
+      const [startTime] = item.time.split(" - ");
+      const [hours, minutes] = startTime.split(":");
       const classTime = new Date(classDate);
       classTime.setHours(parseInt(hours), parseInt(minutes), 0);
-      
+
       console.log("Checking class:", {
         course: item.course,
         date: classDate.toLocaleDateString(),
         time: startTime,
         classTimestamp: classTime.getTime(),
         currentTimestamp: currentTime,
-        isUpcoming: classTime.getTime() >= currentTime
+        isUpcoming: classTime.getTime() >= currentTime,
       });
-      
+
       if (classDate < now && classDate.getDate() !== now.getDate()) {
         return false;
       }
-      
+
       return classTime.getTime() >= currentTime;
     });
-    
+
     console.log("Found upcoming classes:", upcomingClasses);
-  
+
     upcomingClasses.sort((a, b) => {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
-      const [startTimeA] = a.time.split(' - ');
-      const [startTimeB] = b.time.split(' - ');
-      const [hoursA, minutesA] = startTimeA.split(':');
-      const [hoursB, minutesB] = startTimeB.split(':');
-      
+      const [startTimeA] = a.time.split(" - ");
+      const [startTimeB] = b.time.split(" - ");
+      const [hoursA, minutesA] = startTimeA.split(":");
+      const [hoursB, minutesB] = startTimeB.split(":");
+
       // Set the hours and minutes for comparison
       dateA.setHours(parseInt(hoursA), parseInt(minutesA), 0, 0);
       dateB.setHours(parseInt(hoursB), parseInt(minutesB), 0, 0);
-      
+
       console.log("Comparing times:", {
         classA: { course: a.course, time: dateA.toLocaleString() },
-        classB: { course: b.course, time: dateB.toLocaleString() }
+        classB: { course: b.course, time: dateB.toLocaleString() },
       });
-      
+
       return dateA.getTime() - dateB.getTime();
     });
-      
-  
+
     if (upcomingClasses.length > 0) {
       console.log("Selected next class:", {
         course: upcomingClasses[0].course,
         location: upcomingClasses[0].location,
         time: upcomingClasses[0].time,
-        date: upcomingClasses[0].date
+        date: upcomingClasses[0].date,
       });
       handleGetDirections(upcomingClasses[0].location);
     } else {
       console.log("No upcoming classes found");
-      Alert.alert("No Upcoming Classes", "There are no upcoming classes on your schedule. Please add classes or select a different schedule.");
+      Alert.alert(
+        "No Upcoming Classes",
+        "There are no upcoming classes on your schedule. Please add classes or select a different schedule."
+      );
     }
   };
 
   const getUpcomingClasses = () => {
     const now = new Date();
     const currentTime = now.getTime();
-    
-    return schedule.filter(item => {
+
+    return schedule.filter((item) => {
       const classDate = new Date(item.date);
-      const [startTime] = item.time.split(' - ');
-      const [hours, minutes] = startTime.split(':');
+      const [startTime] = item.time.split(" - ");
+      const [hours, minutes] = startTime.split(":");
       const classTime = new Date(classDate);
       classTime.setHours(parseInt(hours), parseInt(minutes), 0);
-      
+
       if (classDate < now && classDate.getDate() !== now.getDate()) {
         return false;
       }
-      
+
       return classTime.getTime() >= currentTime;
     });
   };
-  
+
   const sortClassesByStartTime = (classes) => {
     return [...classes].sort((a, b) => {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
-      const [startTimeA] = a.time.split(' - ');
-      const [startTimeB] = b.time.split(' - ');
-      const [hoursA, minutesA] = startTimeA.split(':');
-      const [hoursB, minutesB] = startTimeB.split(':');
-      
+      const [startTimeA] = a.time.split(" - ");
+      const [startTimeB] = b.time.split(" - ");
+      const [hoursA, minutesA] = startTimeA.split(":");
+      const [hoursB, minutesB] = startTimeB.split(":");
+
       dateA.setHours(parseInt(hoursA), parseInt(minutesA), 0, 0);
       dateB.setHours(parseInt(hoursB), parseInt(minutesB), 0, 0);
-      
+
       return dateA.getTime() - dateB.getTime();
     });
   };
-  
+
   const findNextClassInfo = () => {
     try {
       if (!schedule || schedule.length === 0) {
@@ -191,24 +212,24 @@ export default function CalendarSchedulePage() {
         setNextClass(null);
         return;
       }
-  
+
       const upcomingClasses = getUpcomingClasses();
       if (upcomingClasses.length === 0) {
         console.log("No upcoming classes found");
         setNextClass(null);
         return;
       }
-  
+
       const sortedClasses = sortClassesByStartTime(upcomingClasses);
       const nextClass = sortedClasses[0];
-      
+
       console.log("Next class found:", {
         course: nextClass.course,
         date: nextClass.date,
         time: nextClass.time,
-        location: nextClass.location
+        location: nextClass.location,
       });
-      
+
       setNextClass(nextClass);
     } catch (error) {
       console.error("Error finding next class:", error);
@@ -219,7 +240,8 @@ export default function CalendarSchedulePage() {
   return (
     <LayoutWrapper>
       {/* Top Navigation */}
-      <HeaderButtons/>
+      <HeaderButtons isDarkMode={isDarkMode} theme={theme} />
+
       {/* Days Navigation */}
       <View style={styles.daysRow}>
         {days.map((day, index) => (
@@ -234,17 +256,19 @@ export default function CalendarSchedulePage() {
           </Text>
         ))}
       </View>
+
       <View style={styles.nextClassContainer}>
         {nextClass ? (
           <>
             <Text style={styles.nextClassInfoText}>
               {`Your next class is: ${nextClass.course}, ${
-                new Date(nextClass.date).toDateString() === new Date().toDateString()
-                  ? 'today'
-                  : new Date(nextClass.date).toLocaleDateString('en-US', {
-                      weekday: 'long',
-                      month: 'long',
-                      day: 'numeric'
+                new Date(nextClass.date).toDateString() ===
+                new Date().toDateString()
+                  ? "today"
+                  : new Date(nextClass.date).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      month: "long",
+                      day: "numeric",
                     })
               } ${nextClass.time} at ${nextClass.location}`}
             </Text>
@@ -253,16 +277,19 @@ export default function CalendarSchedulePage() {
               onPress={findNextClass}
               testID="get-directions-button"
             >
-              <MaterialIcons name="directions" size={24} color="white" style={{ marginRight: 8 }} />
+              <MaterialIcons
+                name="directions"
+                size={24}
+                color="white"
+                style={{ marginRight: 8 }}
+              />
               <Text style={styles.nextClassButtonText}>
                 Get directions to next class
               </Text>
             </TouchableOpacity>
           </>
         ) : (
-          <Text style={styles.noClassText}>
-            No upcoming classes scheduled
-          </Text>
+          <Text style={styles.noClassText}>No upcoming classes scheduled</Text>
         )}
       </View>
 
@@ -271,24 +298,23 @@ export default function CalendarSchedulePage() {
 
       {/* Schedule Cards */}
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-      {filteredSchedule.map((item, idx) => (
-        <View key={idx} style={styles.card}>
-          <View style={styles.cardTextContainer}>
-            <Text style={styles.courseText}>{item.course}</Text>
-            <Text>{item.location}</Text>
-            <Text>{item.time}</Text>
+        {filteredSchedule.map((item, idx) => (
+          <View key={idx} style={styles.card}>
+            <View style={styles.cardTextContainer}>
+              <Text style={styles.courseText}>{item.course}</Text>
+              <Text style={styles.courseLocation}>{item.location}</Text>
+              <Text style={styles.courseTime}>{item.time}</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.iconContainer}
+              onPress={() => handleGetDirections(item.location)}
+            >
+              <MaterialIcons name="directions" size={28} color="white" />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity 
-            style={styles.iconContainer}
-            onPress={() => handleGetDirections(item.location)}
-          >
-            <MaterialIcons name="directions" size={28} color="white" />
-          </TouchableOpacity>
-        </View>
-      ))}
+        ))}
       </ScrollView>
 
-        
       {/* Bottom Navigation Buttons */}
       <View style={styles.todayButtonContainer}>
         <TouchableOpacity
@@ -311,10 +337,10 @@ export default function CalendarSchedulePage() {
           <Text style={styles.todayText}>
             {selectedDate.toDateString() !== new Date().toDateString()
               ? selectedDate.toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              })
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })
               : "Today"}
           </Text>
         </TouchableOpacity>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import {
   View,
   Image,
@@ -9,20 +9,39 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   ScrollView,
+  Platform,
+  StatusBar,
+  SafeAreaView,
 } from "react-native";
 import Constants from "expo-constants";
-import { calendarFetchingStyles as styles } from "../styles/CalendarFetchingStyles.js";
+import { createCalendarFetchingStyles } from "../styles/CalendarFetchingStyles.js";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
-import LayoutWrapper from "../components/LayoutWrapper.js";
 import HeaderButtons from "../components/HeaderButtons.js";
 import MonthPicker from "../components/MonthPicker";
 import RNUxcam from "react-native-ux-cam";
+import { ThemeContext } from "../context/ThemeContext";
 
 export default function CalendarFetching() {
+  // Get theme context
+  const { theme, isDarkMode } = useContext(ThemeContext);
+
+  // Create theme-aware styles
+  const styles = createCalendarFetchingStyles({
+    theme: {
+      darkBg: "#333333",
+      darkCard: "#333333",
+      darkText: "#FFFFFF",
+      darkSecondaryText: "rgba(255, 255, 255, 0.7)",
+      darkBorder: "#555555",
+      darkInput: "rgba(51, 51, 51, 0.8)",
+    },
+    isDarkMode,
+  });
+
   // Add this useEffect hook for UXCam screen tagging
   useEffect(() => {
     // Tag this screen in UXCam
@@ -159,7 +178,11 @@ export default function CalendarFetching() {
         <Text style={styles.successTitle}>
           Successful Connection to Google Calendar ID: {calendarId}
         </Text>
-        <ActivityIndicator size="large" style={{ marginVertical: 20 }} />
+        <ActivityIndicator
+          size="large"
+          color={isDarkMode ? "#fff" : "#922338"}
+          style={{ marginVertical: 20 }}
+        />
         <Text style={styles.successSubtitle}>
           Redirecting to Events Page...
         </Text>
@@ -168,15 +191,27 @@ export default function CalendarFetching() {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior="padding"
-      keyboardVerticalOffset={20}
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: isDarkMode ? "#333333" : "#FFFFFF",
+      }}
     >
-      <LayoutWrapper>
-        {/* Header */}
+      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
+
+      {/* Header buttons */}
+      <View
+        style={{ marginTop: Platform.OS === "ios" ? 10 : 5, marginBottom: 10 }}
+      >
         <HeaderButtons />
-        {/* Events Scroll */}
+      </View>
+
+      {/* Main Content */}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+      >
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
@@ -193,25 +228,15 @@ export default function CalendarFetching() {
                   placeholder="Paste Calendar ID here"
                   value={calendarId}
                   onChangeText={setCalendarId}
-                  placeholderTextColor="#666"
+                  placeholderTextColor={styles.placeholderTextColor.color}
                 />
 
                 {/* Calendar History */}
                 <View style={{ marginTop: 10 }}>
                   <Text style={styles.subtitle}>Calendars History:</Text>
-                  <View
-                    style={{
-                      height: 100,
-                      borderWidth: 1,
-                      borderColor: "#ccc",
-                      borderRadius: 8,
-                      padding: 5,
-                    }}
-                  >
+                  <View style={styles.calendarHistoryContainer}>
                     {storedCalendarIds.length === 0 ? (
-                      <Text style={{ color: "#888", fontStyle: "italic" }}>
-                        No history yet.
-                      </Text>
+                      <Text style={styles.noHistoryText}>No history yet.</Text>
                     ) : (
                       <ScrollView>
                         {storedCalendarIds.map((item, index) => (
@@ -234,7 +259,7 @@ export default function CalendarFetching() {
                               <Ionicons
                                 name="timer-outline"
                                 size={20}
-                                color="#888"
+                                color={styles.iconColor}
                                 style={{ marginRight: 6 }}
                               />
                               <Text style={styles.historyText}>
@@ -249,11 +274,13 @@ export default function CalendarFetching() {
                 </View>
 
                 {/* Months Ahead Input */}
-                <View style={{ marginTop: 10 }}>
+                <View style={{ marginTop: 10, marginBottom: 60 }}>
                   <MonthPicker
                     monthsAhead={monthsAhead}
                     setMonthsAhead={setMonthsAhead}
                     styles={styles}
+                    isDarkMode={isDarkMode}
+                    theme={theme}
                   />
                 </View>
 
@@ -284,7 +311,7 @@ export default function CalendarFetching() {
                   <Ionicons
                     name="trash-outline"
                     size={10}
-                    color="#888"
+                    color={styles.iconColor}
                     style={{ marginRight: 6 }}
                   />
                   <Text style={styles.clearHistoryText}>Clear History</Text>
@@ -293,8 +320,8 @@ export default function CalendarFetching() {
             </View>
           </View>
         </ScrollView>
-      </LayoutWrapper>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 

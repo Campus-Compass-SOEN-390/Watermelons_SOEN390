@@ -20,7 +20,9 @@ export default function HeaderButtons() {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: theme.navButtonBackground,
+      backgroundColor:
+        theme.navButtonBackground ||
+        (isDarkMode ? "rgba(80, 80, 80, 0.5)" : "rgba(255, 255, 255, 0.2)"),
       justifyContent: "center",
       alignItems: "center",
       zIndex: 100,
@@ -33,11 +35,19 @@ export default function HeaderButtons() {
       <View style={isHome ? styles.placeholder : dynamicStyles.headerButtons}>
         {isSettings ? (
           <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color={theme.iconColor} />
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              color={theme.iconColor || "#FFFFFF"}
+            />
           </TouchableOpacity>
         ) : isHome ? null : (
           <TouchableOpacity onPress={() => router.push("/")}>
-            <Ionicons name="home" size={24} color={theme.iconColor} />
+            <Ionicons
+              name="home"
+              size={24}
+              color={theme.iconColor || "#FFFFFF"}
+            />
           </TouchableOpacity>
         )}
       </View>
@@ -54,7 +64,7 @@ export default function HeaderButtons() {
           <Ionicons
             name={isDarkMode ? "sunny" : "moon"}
             size={22}
-            color={theme.iconColor}
+            color={theme.iconColor || "#FFFFFF"}
           />
         </TouchableOpacity>
 
@@ -64,7 +74,11 @@ export default function HeaderButtons() {
             style={dynamicStyles.headerButtons}
             onPress={() => router.push("/screens/SettingsPage")}
           >
-            <Ionicons name="settings" size={24} color={theme.iconColor} />
+            <Ionicons
+              name="settings"
+              size={24}
+              color={theme.iconColor || "#FFFFFF"}
+            />
           </TouchableOpacity>
         )}
       </View>

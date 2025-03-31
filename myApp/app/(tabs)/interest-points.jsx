@@ -1,25 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import * as Location from 'expo-location';
-import { fetchPOIData, poiDataSubject } from '../api/poiApi';
-import FilterModal from '../components/POI/FilterModal';
-import POIList from '../components/POI/POIList';
-import { styles } from '../styles/POIListStyle';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import * as Location from "expo-location";
+import { fetchPOIData, poiDataSubject } from "../api/poiApi";
+import FilterModal from "../components/POI/FilterModal";
+import POIList from "../components/POI/POIList";
+import { styles, createPOIListStyles } from "../styles/POIListStyle";
+import { ThemeContext } from "../context/ThemeContext";
 
 /**
  * InterestPoints component - Displays a list of POIs
- * 
+ *
  * This component implements the Observer pattern by subscribing to
  * the poiDataSubject and updating its state when the data changes.
  */
 const InterestPoints = () => {
+  // Get theme context
+  const { theme, isDarkMode } = useContext(ThemeContext);
+
+  // Create theme-aware styles
+  const themeStyles = createPOIListStyles({ theme, isDarkMode });
+
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
@@ -52,10 +59,10 @@ const InterestPoints = () => {
       });
       setIsLoading(isLoading);
     };
-    
+
     // Subscribe this component as an observer
     const unsubscribe = poiDataSubject.subscribe(updatePOIData);
-    
+
     // Cleanup subscription when component unmounts
     return () => unsubscribe();
   }, []);
@@ -71,9 +78,9 @@ const InterestPoints = () => {
       try {
         console.log("Getting location permissions...");
         let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
+        if (status !== "granted") {
           if (isMounted) {
-            setError('Location permission denied. Cannot show nearby places.');
+            setError("Location permission denied. Cannot show nearby places.");
             setIsLoading(false);
           }
           return;
@@ -81,7 +88,7 @@ const InterestPoints = () => {
 
         console.log("Getting current location...");
         const location = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced
+          accuracy: Location.Accuracy.Balanced,
         });
 
         if (!isMounted) return;
@@ -96,11 +103,12 @@ const InterestPoints = () => {
 
         // Always fetch fresh data from current location
         await fetchPOIs(coords);
-
       } catch (err) {
         console.error("Error in location and data loading:", err);
         if (isMounted) {
-          setError('Failed to get your location or nearby places. Please try again.');
+          setError(
+            "Failed to get your location or nearby places. Please try again."
+          );
           setIsLoading(false);
         }
       }
@@ -108,14 +116,16 @@ const InterestPoints = () => {
 
     loadLocationAndData();
 
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Function to fetch POIs
   const fetchPOIs = async (coords) => {
     if (!coords) {
       console.error("No coordinates provided to fetchPOIs");
-      setError('Location unavailable. Cannot fetch places.');
+      setError("Location unavailable. Cannot fetch places.");
       setIsLoading(false);
       return;
     }
@@ -134,12 +144,12 @@ const InterestPoints = () => {
       // This will update the POIDataSubject which will notify all observers
       await fetchPOIData(region, abortController.signal);
       console.log("POI data fetched and observers notified");
-      
+
       // Error state is reset as data has loaded successfully
       setError(null);
     } catch (err) {
       console.error("Error fetching POI data:", err);
-      setError('Failed to load places of interest. Pull down to refresh.');
+      setError("Failed to load places of interest. Pull down to refresh.");
     } finally {
       setRefreshing(false);
     }
@@ -152,7 +162,7 @@ const InterestPoints = () => {
 
     try {
       const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced
+        accuracy: Location.Accuracy.Balanced,
       });
 
       const coords = {
@@ -164,7 +174,7 @@ const InterestPoints = () => {
       await fetchPOIs(coords);
     } catch (err) {
       console.error("Error refreshing location:", err);
-      setError('Failed to refresh your location.');
+      setError("Failed to refresh your location.");
       setRefreshing(false);
     }
   };
@@ -177,8 +187,10 @@ const InterestPoints = () => {
     const dLon = deg2rad(lon2 - lon1);
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c; // Distance in km
     return d;
@@ -194,40 +206,54 @@ const InterestPoints = () => {
     let allPOIs = [];
 
     if (showCafes) {
-      allPOIs = [...allPOIs, ...poiData.coffeeShops.map(poi => ({ ...poi, category: 'cafe' }))]
+      allPOIs = [
+        ...allPOIs,
+        ...poiData.coffeeShops.map((poi) => ({ ...poi, category: "cafe" })),
+      ];
     }
     if (showRestaurants) {
-      allPOIs = [...allPOIs, ...poiData.restaurants.map(poi => ({ ...poi, category: 'restaurant' }))]
+      allPOIs = [
+        ...allPOIs,
+        ...poiData.restaurants.map((poi) => ({
+          ...poi,
+          category: "restaurant",
+        })),
+      ];
     }
     if (showActivities) {
-      allPOIs = [...allPOIs, ...poiData.activities.map(poi => ({ ...poi, category: 'activity' }))]
+      allPOIs = [
+        ...allPOIs,
+        ...poiData.activities.map((poi) => ({ ...poi, category: "activity" })),
+      ];
     }
 
     // Only filter by distance if useDistance is true
     if (useDistance) {
-      return allPOIs.filter(poi => {
-        const poiDistance = calculateDistance(
-          userLocation.latitude,
-          userLocation.longitude,
-          poi.geometry?.location?.lat,
-          poi.geometry?.location?.lng
-        );
-        return poiDistance !== null && poiDistance <= distance;
-      }).sort((a, b) => {
-        const distA = calculateDistance(
-          userLocation.latitude,
-          userLocation.longitude,
-          a.geometry?.location?.lat,
-          a.geometry?.location?.lng
-        );
-        const distB = calculateDistance(
-          userLocation.latitude,
-          userLocation.longitude,
-          b.geometry?.location?.lat,
-          b.geometry?.location?.lng
-        );
-        return distA - distB;
-      });
+      return allPOIs
+        .filter((poi) => {
+          const poiDistance = calculateDistance(
+            userLocation.latitude,
+            userLocation.longitude,
+            poi.geometry?.location?.lat,
+            poi.geometry?.location?.lng
+          );
+          return poiDistance !== null && poiDistance <= distance;
+        })
+        .sort((a, b) => {
+          const distA = calculateDistance(
+            userLocation.latitude,
+            userLocation.longitude,
+            a.geometry?.location?.lat,
+            a.geometry?.location?.lng
+          );
+          const distB = calculateDistance(
+            userLocation.latitude,
+            userLocation.longitude,
+            b.geometry?.location?.lat,
+            b.geometry?.location?.lng
+          );
+          return distA - distB;
+        });
     }
 
     // If useDistance is false, return all POIs, still sorted by distance
@@ -251,16 +277,19 @@ const InterestPoints = () => {
   const filteredData = getFilteredData();
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      <View style={styles.headerContainer}>
+    <SafeAreaView style={themeStyles.container}>
+      <StatusBar
+        barStyle={isDarkMode ? "light-content" : "dark-content"}
+        backgroundColor={isDarkMode ? theme.background : "#fff"}
+      />
+      <View style={themeStyles.headerContainer}>
         <View style={{ flex: 1 }}></View>
         <TouchableOpacity
-          style={styles.filterButton}
+          style={themeStyles.filterButton}
           onPress={() => setFilterModalVisible(true)}
         >
           <Ionicons name="options-outline" size={18} color="white" />
-          <Text style={styles.filterButtonText}>Filter</Text>
+          <Text style={themeStyles.filterButtonText}>Filter</Text>
         </TouchableOpacity>
       </View>
 
@@ -272,6 +301,9 @@ const InterestPoints = () => {
         refreshing={refreshing}
         onRefresh={handleRefresh}
         calculateDistance={calculateDistance}
+        themeStyles={themeStyles}
+        isDarkMode={isDarkMode}
+        theme={theme}
       />
 
       <FilterModal
@@ -287,6 +319,8 @@ const InterestPoints = () => {
         setShowActivities={setShowActivities}
         useDistance={useDistance}
         setUseDistance={setUseDistance}
+        isDarkMode={isDarkMode}
+        theme={theme}
       />
     </SafeAreaView>
   );
