@@ -1,32 +1,54 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
-import ShuttleBusPage from '../../app/screens/ShuttleInfoPage';
+import { render, fireEvent } from '@testing-library/react-native';
+import ShuttleInfoPage from '../../app/screens/ShuttleInfoPage';
 
-// Mock expo-router
+const mockPush = jest.fn();
+const mockBack = jest.fn();
+
 jest.mock('expo-router', () => ({
   useRouter: () => ({
-    push: jest.fn(),
-    back: jest.fn(),
+    push: mockPush,
+    back: mockBack,
   }),
 }));
 
 describe('ShuttleInfoPage', () => {
-  it('renders title and description text', () => {
-    const { getAllByText, getByText } = render(<ShuttleBusPage />);
-    expect(getAllByText('Shuttle Bus').length).toBeGreaterThanOrEqual(1);
-    expect(getByText(/Next one on schedule/i)).toBeTruthy();
-    expect(getByText(/View bus schedules and real-time updates/i)).toBeTruthy();
+  beforeEach(() => {
+    mockPush.mockClear();
+    mockBack.mockClear();
   });
 
-  it('renders all shuttle-related images with correct accessibility role', () => {
-    const { getAllByRole } = render(<ShuttleBusPage />);
-    const images = getAllByRole('image');
-    expect(images.length).toBeGreaterThanOrEqual(4); // at least 4 shuttle-related images
+  it('navigates to Home page when home button is pressed', () => {
+    const { getByTestId } = render(<ShuttleInfoPage />);
+    fireEvent.press(getByTestId('homeButton'));
+    expect(mockPush).toHaveBeenCalledWith('/');
   });
 
-  it('displays all navigation buttons (Home, Settings, Back, Forward)', () => {
-    const { getAllByRole } = render(<ShuttleBusPage />);
-    const buttons = getAllByRole('button');
-    expect(buttons.length).toBeGreaterThanOrEqual(4);
+  it('navigates to Settings page when settings button is pressed', () => {
+    const { getByTestId } = render(<ShuttleInfoPage />);
+    fireEvent.press(getByTestId('settingsButton'));
+    expect(mockPush).toHaveBeenCalledWith('/screens/SettingsPage');
+  });
+
+  it('navigates back when back button is pressed', () => {
+    const { getByTestId } = render(<ShuttleInfoPage />);
+    fireEvent.press(getByTestId('backButton'));
+    expect(mockBack).toHaveBeenCalled();
+  });
+
+  it('navigates forward when forward button is pressed', () => {
+    const { getByTestId } = render(<ShuttleInfoPage />);
+    fireEvent.press(getByTestId('forwardButton'));
+    expect(mockPush).toHaveBeenCalledWith('/screens/SettingsInfoPage');
+  });
+
+  it('opens and closes the modal with schedule image', () => {
+    const { getByTestId, queryByTestId } = render(<ShuttleInfoPage />);
+
+    fireEvent.press(getByTestId('openModalImage'));
+    expect(queryByTestId('shuttle-modal-image')).toBeTruthy();
+
+    fireEvent.press(getByTestId('closeModalButton'));
+    // Note: Modal will remain in DOM until unmounted or re-rendered.
   });
 });

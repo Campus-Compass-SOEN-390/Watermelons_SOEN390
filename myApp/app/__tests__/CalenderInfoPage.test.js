@@ -2,7 +2,6 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import CalenderInfoPage from '../../app/screens/CalenderInfoPage';
 
-
 // Mock expo-router
 const mockPush = jest.fn();
 const mockBack = jest.fn();
@@ -34,16 +33,26 @@ describe('CalenderInfoPage', () => {
     expect(image).toBeTruthy();
   });
 
-  it('has working navigation buttons', () => {
+  it('has working footer navigation buttons', () => {
     const { getByTestId } = render(<CalenderInfoPage />);
 
-    const backButton = getByTestId('back-button');
-    const nextButton = getByTestId('next-button');
-
-    fireEvent.press(backButton);
-    fireEvent.press(nextButton);
-
+    fireEvent.press(getByTestId('back-button'));
     expect(mockBack).toHaveBeenCalled();
+
+    fireEvent.press(getByTestId('next-button'));
     expect(mockPush).toHaveBeenCalledWith('/screens/SmartNavigationInfoPage');
+  });
+
+  it('has working header navigation buttons', () => {
+    const { getAllByRole } = render(<CalenderInfoPage />);
+    const buttons = getAllByRole('button');
+
+    // Home button (first in header)
+    fireEvent.press(buttons[0]);
+    expect(mockPush).toHaveBeenCalledWith('/');
+
+    // Settings button (second in header)
+    fireEvent.press(buttons[1]);
+    expect(mockPush).toHaveBeenCalledWith('/screens/SettingsPage');
   });
 });

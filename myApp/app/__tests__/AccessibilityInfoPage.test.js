@@ -1,19 +1,24 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import AccessibilityInfoPage from '../../app/screens/AccessibilityInfoPage';
 
-// Mock router
+const mockPush = jest.fn();
+const mockBack = jest.fn();
+
 jest.mock('expo-router', () => ({
   useRouter: () => ({
-    push: jest.fn(),
-    back: jest.fn(),
+    push: mockPush,
+    back: mockBack,
   }),
 }));
 
 describe('AccessibilityInfoPage', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('renders title, section label, and descriptive text', () => {
     const { getByText } = render(<AccessibilityInfoPage />);
-
     expect(getByText('Campus Map Features')).toBeTruthy();
     expect(getByText('Accessibility-Friendly Routes')).toBeTruthy();
     expect(
@@ -27,9 +32,23 @@ describe('AccessibilityInfoPage', () => {
     expect(images.length).toBeGreaterThanOrEqual(2);
   });
 
-  it('displays navigation buttons', () => {
-    const { getAllByRole } = render(<AccessibilityInfoPage />);
-    const buttons = getAllByRole('button');
-    expect(buttons.length).toBeGreaterThanOrEqual(2);
+  it('renders and interacts with all navigation buttons', () => {
+    const { getByTestId } = render(<AccessibilityInfoPage />);
+
+    // Press home button
+    fireEvent.press(getByTestId('backToHomeButton'));
+    expect(mockPush).toHaveBeenCalledWith('/');
+
+    // Press settings button
+    fireEvent.press(getByTestId('settingsButton'));
+    expect(mockPush).toHaveBeenCalledWith('/screens/SettingsPage');
+
+    // Press back button
+    fireEvent.press(getByTestId('backButton'));
+    expect(mockBack).toHaveBeenCalled();
+
+    // Press next page button
+    fireEvent.press(getByTestId('nextPageButton'));
+    expect(mockPush).toHaveBeenCalledWith('/screens/ShuttleInfoPage');
   });
 });

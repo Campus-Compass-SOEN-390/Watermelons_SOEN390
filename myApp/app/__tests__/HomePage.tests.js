@@ -1,8 +1,8 @@
-// ✅ Mocks MUST go first
 jest.mock('react-native-ux-cam', () => ({
     __esModule: true,
     default: {
       tagScreenName: jest.fn(),
+      logEvent: jest.fn(),
     },
   }), { virtual: true });
   
@@ -34,7 +34,6 @@ jest.mock('react-native-ux-cam', () => ({
       React.createElement(View, null, React.createElement(Text, null, 'HeaderButtons Mock'));
   });
   
-  // ✅ Import after mocks
   import React from 'react';
   import { render, fireEvent } from '@testing-library/react-native';
   import HomePage from '../screens/HomePage';
@@ -53,6 +52,7 @@ jest.mock('react-native-ux-cam', () => ({
       expect(page.getByTestId('shuttleScheduleButton')).toBeTruthy();
       expect(page.getByTestId('interestButton')).toBeTruthy();
       expect(page.getByTestId('calendarfetchbutton')).toBeTruthy();
+      expect(page.getByTestId('infoButton')).toBeTruthy();
     });
   
     it('should go to sgw campus when sgw campus button is pressed', () => {
@@ -77,6 +77,18 @@ jest.mock('react-native-ux-cam', () => ({
       const page = render(<HomePage />);
       fireEvent.press(page.getByTestId('interestButton'));
       expect(mockPush).toHaveBeenCalledWith('(tabs)/interest-points');
+    });
+  
+    it('should navigate to Calendar Fetching Page when calendarfetchbutton is pressed', () => {
+      const page = render(<HomePage />);
+      fireEvent.press(page.getByTestId('calendarfetchbutton'));
+      expect(mockPush).toHaveBeenCalledWith('screens/CalendarFetching');
+    });
+  
+    it('should navigate to Info Page when infoButton is pressed', () => {
+      const page = render(<HomePage />);
+      fireEvent.press(page.getByTestId('infoButton'));
+      expect(mockPush).toHaveBeenCalledWith('/screens/InfoPage');
     });
   });
   

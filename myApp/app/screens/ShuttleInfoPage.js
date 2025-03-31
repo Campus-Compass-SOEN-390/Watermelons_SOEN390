@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   Image,
   StyleSheet,
   Modal,
-  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -15,11 +14,7 @@ import { infoPageStyles as styles } from '../styles/InfoPageStyles';
 
 export default function ShuttleBusPage() {
   const router = useRouter();
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const showBusAlert = () => {
-    Alert.alert('Bus Status', '✅ No expected bus delays.', [{ text: 'OK' }]);
-  };
+  const [modalVisible, setModalVisible] = React.useState(false);
 
   return (
     <View style={styles.container}>
@@ -29,6 +24,7 @@ export default function ShuttleBusPage() {
           style={styles.iconButton}
           onPress={() => router.push('/')}
           accessibilityRole="button"
+          testID="homeButton"
         >
           <Ionicons name="home" size={24} color="white" />
         </TouchableOpacity>
@@ -36,6 +32,7 @@ export default function ShuttleBusPage() {
           style={styles.iconButton}
           onPress={() => router.push('/screens/SettingsPage')}
           accessibilityRole="button"
+          testID="settingsButton"
         >
           <Ionicons name="settings" size={24} color="white" />
         </TouchableOpacity>
@@ -51,6 +48,7 @@ export default function ShuttleBusPage() {
             style={styles.squareImageWrapper}
             onPress={() => setModalVisible(true)}
             accessibilityRole="button"
+            testID="openModalImage"
           >
             <Image
               source={require('../../assets/images/shuttleButton.png')}
@@ -104,6 +102,7 @@ export default function ShuttleBusPage() {
         <TouchableOpacity
           onPress={() => router.back()}
           accessibilityRole="button"
+          testID="backButton"
         >
           <Ionicons name="chevron-back-circle" size={32} color="white" />
         </TouchableOpacity>
@@ -111,6 +110,7 @@ export default function ShuttleBusPage() {
         <TouchableOpacity
           onPress={() => router.push('/screens/SettingsInfoPage')}
           accessibilityRole="button"
+          testID="forwardButton"
         >
           <Ionicons name="chevron-forward-circle" size={32} color="white" />
         </TouchableOpacity>
@@ -136,6 +136,7 @@ export default function ShuttleBusPage() {
               style={modalStyles.closeButton}
               onPress={() => setModalVisible(false)}
               accessibilityRole="button"
+              testID="closeModalButton"
             >
               <Text style={modalStyles.closeButtonText}>Close</Text>
             </TouchableOpacity>

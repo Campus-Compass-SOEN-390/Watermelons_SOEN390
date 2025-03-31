@@ -1,27 +1,32 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import PoiInfoPage from '../../app/screens/PoiInfoPage';
 
-// Mock expo-router
+const mockPush = jest.fn();
+const mockBack = jest.fn();
+
 jest.mock('expo-router', () => ({
   useRouter: () => ({
-    push: jest.fn(),
-    back: jest.fn(),
+    push: mockPush,
+    back: mockBack,
   }),
 }));
 
-// Mock expo-av Video
 jest.mock('expo-av', () => {
   const React = require('react');
   return {
-    Video: () => <></>, // Placeholder for video during tests
+    Video: () => <></>, // Mock Video component
   };
 });
 
 describe('PoiInfoPage', () => {
+  beforeEach(() => {
+    mockPush.mockClear();
+    mockBack.mockClear();
+  });
+
   it('renders title, section name, and description', () => {
     const { getByText } = render(<PoiInfoPage />);
-
     expect(getByText('Campus Map Features')).toBeTruthy();
     expect(getByText('Points of Interest')).toBeTruthy();
     expect(getByText(/Explore nearby points of interest/i)).toBeTruthy();
@@ -31,5 +36,29 @@ describe('PoiInfoPage', () => {
     const { getAllByRole } = render(<PoiInfoPage />);
     const buttons = getAllByRole('button');
     expect(buttons.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('navigates home when Home button is pressed', () => {
+    const { getByTestId } = render(<PoiInfoPage />);
+    fireEvent.press(getByTestId('homeButton'));
+    expect(mockPush).toHaveBeenCalledWith('/');
+  });
+
+  it('navigates to SettingsPage when Settings button is pressed', () => {
+    const { getByTestId } = render(<PoiInfoPage />);
+    fireEvent.press(getByTestId('settingsButton'));
+    expect(mockPush).toHaveBeenCalledWith('/screens/SettingsPage');
+  });
+
+  it('navigates back when Back button is pressed', () => {
+    const { getByTestId } = render(<PoiInfoPage />);
+    fireEvent.press(getByTestId('backButton'));
+    expect(mockBack).toHaveBeenCalled();
+  });
+
+  it('navigates to AccessibilityInfoPage when Next button is pressed', () => {
+    const { getByTestId } = render(<PoiInfoPage />);
+    fireEvent.press(getByTestId('nextButton'));
+    expect(mockPush).toHaveBeenCalledWith('/screens/AccessibilityInfoPage');
   });
 });
