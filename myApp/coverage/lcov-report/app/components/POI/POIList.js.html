@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.55% </span>
+                <span class="strong">96% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>43/45</span>
+                <span class='fraction'>48/50</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.12% </span>
+                <span class="strong">95.65% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>39/41</span>
+                <span class='fraction'>44/46</span>
             </div>
         
             
@@ -318,7 +318,17 @@
 <a name='L253'></a><a href='#L253'>253</a>
 <a name='L254'></a><a href='#L254'>254</a>
 <a name='L255'></a><a href='#L255'>255</a>
-<a name='L256'></a><a href='#L256'>256</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L256'></a><a href='#L256'>256</a>
+<a name='L257'></a><a href='#L257'>257</a>
+<a name='L258'></a><a href='#L258'>258</a>
+<a name='L259'></a><a href='#L259'>259</a>
+<a name='L260'></a><a href='#L260'>260</a>
+<a name='L261'></a><a href='#L261'>261</a>
+<a name='L262'></a><a href='#L262'>262</a>
+<a name='L263'></a><a href='#L263'>263</a>
+<a name='L264'></a><a href='#L264'>264</a>
+<a name='L265'></a><a href='#L265'>265</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -354,6 +364,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -371,6 +383,7 @@
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -491,6 +504,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -505,6 +520,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -589,6 +607,7 @@ import { styles } from '../../styles/POIListStyle';
 import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import { useLocationContext } from '@/app/context/LocationContext';
+import { useButtonInteraction } from '../../hooks/useButtonInteraction';
 &nbsp;
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 &nbsp;
@@ -605,6 +624,8 @@ const getCategoryText = (category) =&gt; {
 };
 &nbsp;
 const POIListItem = ({ item, userLocation, calculateDistance }) =&gt; {
+    const { handleButtonPress } = useButtonInteraction();
+&nbsp;
     const [imageError, setImageError] = useState(false);
 &nbsp;
     const poiDistance = calculateDistance(
@@ -626,6 +647,7 @@ const POIListItem = ({ item, userLocation, calculateDistance }) =&gt; {
     const { updatePOILocationData } = useLocationContext();
     // Handle Get Directions button press
     const handleGetDirections = () =&gt; {
+        handleButtonPress(null, `Getting directions to ${item.name}`);
         console.log(`Get directions to: ${item.name}`);
         console.log(`Address: ${item.vicinity || <span class="branch-1 cbranch-no" title="branch not covered" >'Address not available'}</span>`);
         console.log(`Coordinates: ${item.geometry?.location?.lat}, ${item.geometry?.location?.lng}`);
@@ -745,6 +767,8 @@ const POIList = ({
     onRefresh,
     calculateDistance
 }) =&gt; {
+    const { handleButtonPress } = useButtonInteraction();
+&nbsp;
     if (isLoading &amp;&amp; !refreshing) {
         return (
             &lt;View style={styles.loadingContainer}&gt;
@@ -760,7 +784,10 @@ const POIList = ({
                 &lt;Text style={styles.errorText}&gt;{error ?? <span class="branch-1 cbranch-no" title="branch not covered" >"An error occurred"}</span>&lt;/Text&gt;
                 &lt;TouchableOpacity
                     style={[styles.retryButton, { marginTop: 20 }]}
-                    onPress={onRefresh}
+                    onPress={() =&gt; {
+                        handleButtonPress(null, 'Retrying to load places');
+                        onRefresh();
+                    }}
                 &gt;
                     &lt;Ionicons name="refresh" size={18} color="white" /&gt;
                     &lt;Text style={styles.buttonText}&gt;Retry&lt;/Text&gt;
@@ -835,7 +862,7 @@ export default POIList;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-03-27T21:20:19.330Z
+                at 2025-03-31T18:01:12.263Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
