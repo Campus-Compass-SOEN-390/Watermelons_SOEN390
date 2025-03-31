@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for app/components/POI/Markers.js</title>
+    <title>Code coverage report for app/hooks/useButtonInteraction.js</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../../prettify.css" />
-    <link rel="stylesheet" href="../../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../../sort-arrow-sprite.png);
+            background-image: url(../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">app/components/POI</a> Markers.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">app/hooks</a> useButtonInteraction.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">92.3% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>12/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>4/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">92.3% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>12/13</span>
             </div>
         
             
@@ -91,51 +91,51 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">80x</span>
+<span class="cline-any cline-yes">80x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">80x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// src/components/Markers.js
-import React from "react";
-import { View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+<span class="cline-any cline-yes">80x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useRouter } from 'expo-router';
+import { useFeedback } from '../context/FeedbackContext';
+import { triggerVibration, triggerSound, triggerSpeech } from '../utils/feedback';
 &nbsp;
-// Custom marker components
-const CoffeeMarker = () =&gt; (
-  &lt;View style={{ backgroundColor: 'white', padding: 5, borderRadius: 5 }}&gt;
-    &lt;MaterialCommunityIcons name="coffee" size={24} color="black" /&gt;
-  &lt;/View&gt;
-);
+export const useButtonInteraction = () =&gt; {
+  const router = useRouter();
+  const { vibrationEnabled, soundEnabled, speechEnabled } = useFeedback();
 &nbsp;
-const RestaurantMarker = () =&gt; (
-  &lt;View style={{ backgroundColor: 'white', padding: 5, borderRadius: 5 }}&gt;
-    &lt;MaterialCommunityIcons name="silverware-fork-knife" size={24} color="orange" /&gt;
-  &lt;/View&gt;
-);
+  const handleButtonPress = (route, buttonText) =&gt; {
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (vibrationEnabled) {
+      triggerVibration();
+    }
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (soundEnabled) {
+      triggerSound();
+    }
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (speechEnabled) {
+      triggerSpeech(buttonText);
+    }
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (route) {
+<span class="cstat-no" title="statement not covered" >      router.push(route);</span>
+    }
+  };
 &nbsp;
-const ActivityMarker = () =&gt; (
-  &lt;View style={{ backgroundColor: 'white', padding: 5, borderRadius: 5 }}&gt;
-    &lt;MaterialCommunityIcons name="run" size={20} color="green" /&gt;
-  &lt;/View&gt;
-);
-&nbsp;
-export { CoffeeMarker, RestaurantMarker, ActivityMarker };</pre></td></tr></table></pre>
+  return { handleButtonPress };
+};</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
@@ -144,14 +144,14 @@ export { CoffeeMarker, RestaurantMarker, ActivityMarker };</pre></td></tr></tabl
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
                 at 2025-03-31T15:54:26.568Z
             </div>
-        <script src="../../../prettify.js"></script>
+        <script src="../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../../sorter.js"></script>
-        <script src="../../../block-navigation.js"></script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
     </body>
 </html>
     
