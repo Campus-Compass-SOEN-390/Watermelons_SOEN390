@@ -4,7 +4,13 @@ import HomePage from '../screens/HomePage';
 import RNUxcam from 'react-native-ux-cam';
 
 const mockPush = jest.fn();
-const mockHandleButtonPress = jest.fn();
+
+// ✅ Mock the hook properly
+jest.mock('../hooks/useButtonInteraction', () => ({
+  useButtonInteraction: () => ({
+    handleButtonPress: jest.fn(),
+  }),
+}));
 
 jest.mock('expo-router', () => ({
   useRouter: () => ({
@@ -12,6 +18,7 @@ jest.mock('expo-router', () => ({
   }),
   usePathname: () => '/', // Mock current path if used in component
 }));
+
 // Correctly mock LayoutWrapper
 jest.mock('../components/LayoutWrapper.js', () => {
   const React = require('react');
@@ -25,6 +32,7 @@ jest.mock('../components/HeaderButtons.js', () => {
   const { View, Text } = require('react-native');
   return () => React.createElement(View, null, React.createElement(Text, null, 'HeaderButtons Mock'));
 });
+
 describe('Home page', () => {
   beforeEach(() => {
     mockPush.mockClear();

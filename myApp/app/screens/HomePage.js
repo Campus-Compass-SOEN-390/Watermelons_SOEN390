@@ -4,7 +4,8 @@ import { useRouter } from 'expo-router';
 import { homepageStyles as styles } from '../styles/HomePageStyles.js';
 import HeaderButtons from "../components/HeaderButtons";
 import { Ionicons } from '@expo/vector-icons';
-import useButtonInteraction from '../hooks/useButtonInteraction';
+import { useButtonInteraction } from '../hooks/useButtonInteraction'; 
+
 
 
 export default function HomePage() {
