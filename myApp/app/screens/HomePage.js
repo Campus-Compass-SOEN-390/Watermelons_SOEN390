@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
-import { homepageStyles as styles } from '../styles/HomePageStyles.js';
+import { useRouter } from "expo-router";
+import { homepageStyles as styles } from "../styles/HomePageStyles.js";
+import RNUxcam from "react-native-ux-cam";
 import { useButtonInteraction } from '../hooks/useButtonInteraction';
+import HeaderButtons from "../components/HeaderButtons.js";
 
 export default function HomePage() {
-    
+    const router = useRouter();
     const { handleButtonPress } = useButtonInteraction();
-    
+
+    useEffect(() => {
+        RNUxcam.tagScreenName("HomePage");
+    }, []);
+
+    const handleNavigationPress = (route, label) => {
+        RNUxcam.logEvent(`${label} Button Pressed`);
+        handleButtonPress(route, label);
+        router.push(route);
+    };
+
     return (
-        <View style={{flex:1}}>
-            <Image style={styles.logo}
-                source={require('../../assets/images/logo.png')}
+        <View style={{ flex: 1 }}>
+          <HeaderButtons />
+            <Image
+                style={styles.logo}
+                source={require("../../assets/images/logo.png")}
                 resizeMode="contain"
                 testID="logo"
             />
@@ -20,14 +35,14 @@ export default function HomePage() {
                     <TouchableOpacity 
                         style={styles.button}
                         testID="sgwButton"
-                        onPress={() => handleButtonPress('/(tabs)/map?type=sgw', 'SGW Campus')}
+                        onPress={() => handleNavigationPress('/(tabs)/map?type=sgw', 'SGW Campus')}
                     >
                         <Text style={styles.buttonText}>SGW Campus</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
                         style={styles.button}
                         testID="loyolaButton"
-                        onPress={() => handleButtonPress('/(tabs)/map?type=loy', 'Loyola Campus')}
+                        onPress={() => handleNavigationPress('/(tabs)/map?type=loy', 'Loyola Campus')}
                     >
                         <Text style={styles.buttonText}>Loyola Campus</Text>
                     </TouchableOpacity>
@@ -36,13 +51,13 @@ export default function HomePage() {
                     <TouchableOpacity 
                         style={styles.button}
                         testID="shuttleScheduleButton"
-                        onPress={() => handleButtonPress('/screens/ShuttleScheduleScreen', 'Shuttle Bus Schedule')}
+                        onPress={() => handleNavigationPress('/screens/ShuttleScheduleScreen', 'Shuttle Bus Schedule')}
                     >
                         <Text style={styles.buttonText}>Shuttle Bus Schedule</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
                         style={styles.button}
-                        onPress={() => handleButtonPress('(tabs)/interest-points', 'Interest Points')}
+                        onPress={() => handleNavigationPress('(tabs)/interest-points', 'Interest Points')}
                         testID="interestButton"
                     >
                         <Text style={styles.buttonText}>Interest Points</Text>
@@ -55,7 +70,7 @@ export default function HomePage() {
                     <TouchableOpacity 
                         style={styles.googleButton}
                         testID="calendarfetchbutton"
-                        onPress={() => handleButtonPress('screens/CalendarFetching', 'Connect Calendars')}
+                        onPress={() => handleNavigationPress('screens/CalendarFetching', 'Connect Calendars')}
                     >
                         <Image
                             source={require('../../assets/images/google_logo.png')}

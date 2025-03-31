@@ -52,6 +52,7 @@ import { styles as poiStyles } from "../styles/poiStyles";
 import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
 import { estimateShuttleFromButton } from "../utils/shuttleUtils";
 import { useButtonInteraction } from '../hooks/useButtonInteraction';
+import HeaderButtons from "../components/HeaderButtons";
 
 const MAPBOX_API = Constants.expoConfig?.extra?.mapbox; 
 Mapbox.setAccessToken("MAPBOX_API");
@@ -628,30 +629,29 @@ useEffect(() => {
         }
     }
 
-
     try {
-      const currentStop = activeCampus === "sgw" ? "SGW" : "LOY";
-      const shuttleResult = await estimateShuttleFromButton(currentStop);
+        const currentStop = activeCampus === "sgw" ? "SGW" : "LOY";
+        const shuttleResult = await estimateShuttleFromButton(currentStop);
 
-      // If the utility returned an object with "error", store it directly.
-      if (shuttleResult?.error) {
-        setShuttleDetails({ error: shuttleResult.error });
-      } else if (!shuttleResult) {
-        // If it's null or undefined for some reason
-        setShuttleDetails({ error: "No bus available." });
-      } else {
-        // If valid times
-        setShuttleDetails(shuttleResult);
-      }
+        // If the utility returned an object with "error", store it directly
+        if (shuttleResult?.error) {
+            setShuttleDetails({ error: shuttleResult.error });
+        } else if (!shuttleResult) {
+            // If it's null or undefined for some reason
+            setShuttleDetails({ error: "No bus available." });
+        } else {
+            // If valid times
+            setShuttleDetails(shuttleResult);
+        }
     } catch (error) {
-      // If something truly unexpected happens
-      console.warn("Error estimating shuttle time:", error);
-      setShuttleDetails({ error: error.message });
+        // If something truly unexpected happens
+        console.warn("Error estimating shuttle time:", error);
+        setShuttleDetails({ error: error.message });
     }
 
     // Show the popup
     setShuttlePopupVisible(true);
-  };
+};
 
   // Center on campus
   const centerMapOnCampus = () => {
@@ -856,6 +856,7 @@ useEffect(() => {
 
   return (
     <View style={{ flex: 1 }}>
+      <HeaderButtons />
       <View style={styles.container}>
        
        

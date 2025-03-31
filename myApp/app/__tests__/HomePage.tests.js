@@ -1,39 +1,48 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import HomePage from '../screens/HomePage';
+import RNUxcam from 'react-native-ux-cam';
 
-// Create a mock for the push function
+// Create mocks
 const mockPush = jest.fn();
+const mockHandleButtonPress = jest.fn();
 
-// Mock useFeedback hook
-jest.mock('../context/FeedbackContext', () => ({
-    useFeedback: () => ({
-        vibrationEnabled: true,
-        soundEnabled: true,
-        speechEnabled: true
-    })
+// Mock RNUxcam
+jest.mock('react-native-ux-cam', () => ({
+    logEvent: jest.fn(),
+    tagScreenName: jest.fn()
 }));
 
-// Mock useButtonInteraction hook
+// Mock useButtonInteraction
 jest.mock('../hooks/useButtonInteraction', () => ({
     useButtonInteraction: () => ({
-        handleButtonPress: (route, buttonText) => {
-            mockPush(route);
-        }
+        handleButtonPress: mockHandleButtonPress
     })
 }));
 
-// Mocking useRouter from expo-router to return the mock push function
+// Mock useRouter
 jest.mock('expo-router', () => ({
     useRouter: () => ({
-        push: mockPush,
-    }),
+        push: mockPush
+    })
 }));
+// Correctly mock LayoutWrapper
+jest.mock('../components/LayoutWrapper.js', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return ({ children }) => React.createElement(View, null, children);
+});
 
+// Correctly mock HeaderButtons
+jest.mock('../components/HeaderButtons.js', () => {
+  const React = require('react');
+  const { View, Text } = require('react-native');
+  return () => React.createElement(View, null, React.createElement(Text, null, 'HeaderButtons Mock'));
+});
 describe('Home page', () => {
     beforeEach(() => {
-        // Clear mock history before each test
-        mockPush.mockClear();
+        // Clear all mocks before each test
+        jest.clearAllMocks();
     });
 
     it('should load homepage and buttons on startup', () => {
@@ -53,42 +62,61 @@ describe('Home page', () => {
         expect(shuttleScheduleButton).toBeTruthy();
         expect(interestButton).toBeTruthy();
         expect(googleButton).toBeTruthy();
+        expect(RNUxcam.tagScreenName).toHaveBeenCalledWith('HomePage');
     });
 
-    it('should go to sgw campus when sgw campus button is pressed', () => {
+    it('should go to sgw campus and log event when sgw campus button is pressed', () => {
         const page = render(<HomePage />);
         const sgwButton = page.getByTestId('sgwButton');
+        
         fireEvent.press(sgwButton);
+        
+        expect(RNUxcam.logEvent).toHaveBeenCalledWith('SGW Campus Button Pressed');
+        expect(mockHandleButtonPress).toHaveBeenCalledWith('/(tabs)/map?type=sgw', 'SGW Campus');
         expect(mockPush).toHaveBeenCalledWith('/(tabs)/map?type=sgw');
     });
 
-    it('should go to loyola campus when loyola campus button is pressed', () => {
+    it('should go to loyola campus and log event when loyola campus button is pressed', () => {
         const page = render(<HomePage />);
         const loyolaButton = page.getByTestId('loyolaButton');
+        
         fireEvent.press(loyolaButton);
+        
+        expect(RNUxcam.logEvent).toHaveBeenCalledWith('Loyola Campus Button Pressed');
+        expect(mockHandleButtonPress).toHaveBeenCalledWith('/(tabs)/map?type=loy', 'Loyola Campus');
         expect(mockPush).toHaveBeenCalledWith('/(tabs)/map?type=loy');
     });
 
     it('should navigate to Shuttle Bus Schedule when shuttle schedule button is pressed', () => {
         const page = render(<HomePage />);
         const shuttleScheduleButton = page.getByTestId('shuttleScheduleButton');
+        
         fireEvent.press(shuttleScheduleButton);
+        
+        expect(RNUxcam.logEvent).toHaveBeenCalledWith('Shuttle Bus Schedule Button Pressed');
+        expect(mockHandleButtonPress).toHaveBeenCalledWith('/screens/ShuttleScheduleScreen', 'Shuttle Bus Schedule');
         expect(mockPush).toHaveBeenCalledWith('/screens/ShuttleScheduleScreen');
     });
 
-    it('should navigate to Point of Interest Page when point of interest button is pressed', () => {
+    it('should navigate to Point of Interest Page and log event when point of interest button is pressed', () => {
         const page = render(<HomePage />);
         const interestButton = page.getByTestId('interestButton');
+        
         fireEvent.press(interestButton);
+        
+        expect(RNUxcam.logEvent).toHaveBeenCalledWith('Interest Points Button Pressed');
+        expect(mockHandleButtonPress).toHaveBeenCalledWith('(tabs)/interest-points', 'Interest Points');
         expect(mockPush).toHaveBeenCalledWith('(tabs)/interest-points');
     });
 
-    it('should navigate to Calendar Fetching screen when Connect Calendars button is pressed', () => {
+    it('should navigate to calendar fetching and log event when calendar button is pressed', () => {
         const page = render(<HomePage />);
         const calendarButton = page.getByTestId('calendarfetchbutton');
         
         fireEvent.press(calendarButton);
         
+        expect(RNUxcam.logEvent).toHaveBeenCalledWith('Connect Calendars Button Pressed');
+        expect(mockHandleButtonPress).toHaveBeenCalledWith('screens/CalendarFetching', 'Connect Calendars');
         expect(mockPush).toHaveBeenCalledWith('screens/CalendarFetching');
     });
 

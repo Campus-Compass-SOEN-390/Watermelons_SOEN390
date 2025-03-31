@@ -13,6 +13,7 @@ import FilterModal from '../components/POI/FilterModal';
 import POIList from '../components/POI/POIList';
 import { styles } from '../styles/POIListStyle';
 import { useButtonInteraction } from '../hooks/useButtonInteraction';
+import HeaderButtons from '../components/HeaderButtons';
 
 /**
  * InterestPoints component - Displays a list of POIs
@@ -267,6 +268,7 @@ const InterestPoints = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <HeaderButtons />
       <View style={styles.headerContainer}>
         <View style={{ flex: 1 }}></View>
         <TouchableOpacity

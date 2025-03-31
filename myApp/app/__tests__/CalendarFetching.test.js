@@ -45,11 +45,17 @@ jest.mock('expo-router', () => ({
   useRouter: () => ({ push: jest.fn() }),
 }));
 
-// Mock useButtonInteraction hook
+// Mock RNUxcam
+jest.mock('react-native-ux-cam', () => ({
+  logEvent: jest.fn(),
+  tagScreenName: jest.fn()
+}));
+
+// Mock useButtonInteraction
 jest.mock('../hooks/useButtonInteraction', () => ({
   useButtonInteraction: () => ({
-    handleButtonPress: jest.fn(),
-  }),
+    handleButtonPress: jest.fn()
+  })
 }));
 
 // Correctly mock LayoutWrapper
@@ -66,11 +72,26 @@ jest.mock('../components/HeaderButtons.js', () => {
   return () => React.createElement(View, null, React.createElement(Text, null, 'HeaderButtons Mock'));
 });
 
-// Mock MonthPicker component
-jest.mock('../components/MonthPicker', () => {
-  const React = require('react');
-  const { View } = require('react-native');
-  return () => React.createElement(View, null);
+// Correctly mock MonthPicker with interactive props
+jest.mock("../components/MonthPicker.js", () => {
+  const React = require("react");
+  const { View, Text, TextInput } = require("react-native");
+
+  return ({ monthsAhead, setMonthsAhead }) => {
+    return React.createElement(View, { testID: "month-picker" }, [
+      React.createElement(Text, { key: "title" }, "Select months ahead:"),
+      React.createElement(
+        TextInput,
+        {
+          key: "input",
+          testID: "months-input",
+          value: monthsAhead,
+          onChangeText: setMonthsAhead,
+        },
+        null
+      ),
+    ]);
+  };
 });
 
 // Correctly mock Ionicons
