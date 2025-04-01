@@ -16,6 +16,7 @@ export default function SmartNavigationInfoPage() {
           style={styles.iconButton}
           onPress={() => router.push('/')}
           accessibilityRole="button"
+          testID="homeButton"
         >
           <Ionicons name="home" size={24} color="white" />
         </TouchableOpacity>
@@ -23,6 +24,7 @@ export default function SmartNavigationInfoPage() {
           style={styles.iconButton}
           onPress={() => router.push('/screens/SettingsPage')}
           accessibilityRole="button"
+          testID="settingsButton"
         >
           <Ionicons name="settings" size={24} color="white" />
         </TouchableOpacity>
@@ -54,6 +56,7 @@ export default function SmartNavigationInfoPage() {
         <TouchableOpacity
           onPress={() => router.back()}
           accessibilityRole="button"
+          testID="backButton"
         >
           <Ionicons name="chevron-back-circle" size={32} color="white" />
         </TouchableOpacity>
@@ -61,6 +64,7 @@ export default function SmartNavigationInfoPage() {
         <TouchableOpacity
           onPress={() => router.push('/screens/MapFeaturesInfoPage')}
           accessibilityRole="button"
+          testID="nextButton"
         >
           <Ionicons name="chevron-forward-circle" size={32} color="white" />
         </TouchableOpacity>

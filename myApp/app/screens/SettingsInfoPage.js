@@ -17,10 +17,10 @@ export default function SettingsInfoPage() {
     <View style={styles.container}>
       {/* Top Navigation */}
       <View style={styles.topNav}>
-        <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/')} accessibilityRole="button">
+        <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/')} accessibilityRole="button" testID="homeButton" >
           <Ionicons name="home" size={24} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/screens/SettingsPage')} accessibilityRole="button">
+        <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/screens/SettingsPage')} accessibilityRole="button" testID="settingsButton">
           <Ionicons name="settings" size={24} color="white" />
         </TouchableOpacity>
       </View>
@@ -52,7 +52,7 @@ export default function SettingsInfoPage() {
 
       {/* Footer Navigation */}
       <View style={styles.footer}>
-        <TouchableOpacity accessibilityRole="button" onPress={() => router.back()}>
+        <TouchableOpacity accessibilityRole="button" onPress={() => router.back()} testID="backButton">
           <Ionicons name="chevron-back-circle" size={32} color="white" />
         </TouchableOpacity>
         <Text style={styles.pageName}>Settings</Text>

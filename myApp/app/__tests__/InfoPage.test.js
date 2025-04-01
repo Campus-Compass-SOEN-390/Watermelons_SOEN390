@@ -45,4 +45,11 @@ describe('InfoPage', () => {
     fireEvent.press(dummyButton); // should not throw
     expect(dummyButton).toBeTruthy();
   });
+  it('navigates to Home when Home button is pressed', () => {
+    const { getByTestId } = render(<InfoPage />);
+    const homeButton = getByTestId('homeButton');
+    fireEvent.press(homeButton);
+    expect(mockPush).toHaveBeenCalledWith('/');
+  });
+  
 });
