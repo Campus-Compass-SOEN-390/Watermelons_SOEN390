@@ -2,7 +2,7 @@ import { StyleSheet, Dimensions } from "react-native";
 import { FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4 } from "./constants";
 const { width, height } = Dimensions.get("window");
 
-export const createStartAndDestinationStyles = (theme) => {
+export const createStartAndDestinationStyles = (theme, isDarkMode) => {
   return StyleSheet.create({
     tabBarStyle: {
       height: 80,
@@ -368,6 +368,28 @@ export const createStartAndDestinationStyles = (theme) => {
       shadowRadius: 3,
       elevation: 5,
       zIndex: 100,
+    },
+    // Header buttons styles
+    headerContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      paddingHorizontal: 15,
+      paddingVertical: 10,
+      backgroundColor: isDarkMode ? "#333333" : "#922338",
+      width: "100%",
+      borderBottomWidth: 1,
+      borderBottomColor: isDarkMode ? "#555555" : "rgba(0, 0, 0, 0.1)",
+    },
+    headerButton: {
+      padding: 8,
+      borderRadius: 20,
+      backgroundColor: isDarkMode
+        ? "rgba(80, 80, 80, 0.5)"
+        : "rgba(255, 255, 255, 0.2)",
+    },
+    headerButtonText: {
+      color: "#FFFFFF",
+      fontWeight: "bold",
     },
   });
 };

@@ -24,9 +24,13 @@ const createGoogleScheduleStyles = ({ isDarkMode, theme }) => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: backgroundColor,
+      backgroundColor: isDarkMode ? "#333333" : backgroundColor,
       paddingTop: 40,
       paddingHorizontal: 16,
+    },
+    outerContainer: {
+      flex: 1,
+      backgroundColor: isDarkMode ? "#333333" : "#FFFFFF",
     },
     daysRow: {
       flexDirection: "row",
@@ -36,7 +40,7 @@ const createGoogleScheduleStyles = ({ isDarkMode, theme }) => {
     dayText: {
       fontSize: FONT_SIZE_2,
       fontWeight: "bold",
-      color: grayTextColor,
+      color: isDarkMode ? "#BBBBBB" : grayTextColor,
     },
     highlightedDay: {
       color: highlightColor,
@@ -47,7 +51,7 @@ const createGoogleScheduleStyles = ({ isDarkMode, theme }) => {
       fontSize: FONT_SIZE_5,
       fontWeight: "bold",
       marginBottom: 8,
-      color: textColor,
+      color: isDarkMode ? "#FFFFFF" : textColor,
     },
     card: {
       flexDirection: "row",
@@ -117,7 +121,7 @@ const createGoogleScheduleStyles = ({ isDarkMode, theme }) => {
     nextClassContainer: {
       marginVertical: 12,
       padding: 16,
-      backgroundColor: cardBackground,
+      backgroundColor: "#242424", // Always dark for this container
       borderRadius: 12,
       alignItems: "center",
       // Enhanced shadows for dark mode
@@ -129,7 +133,7 @@ const createGoogleScheduleStyles = ({ isDarkMode, theme }) => {
     },
     nextClassInfoText: {
       fontSize: FONT_SIZE_2,
-      color: textColor,
+      color: "#FFFFFF", // Always white text in dark container
       textAlign: "center",
       marginBottom: 12,
       fontWeight: "500",
@@ -158,7 +162,7 @@ const createGoogleScheduleStyles = ({ isDarkMode, theme }) => {
     },
     noClassText: {
       fontSize: FONT_SIZE_3,
-      color: subTextColor,
+      color: "#CCCCCC", // Light gray for dark container
       textAlign: "center",
       padding: 20,
       fontStyle: "italic",

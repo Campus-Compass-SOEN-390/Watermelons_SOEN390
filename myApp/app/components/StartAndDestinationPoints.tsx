@@ -12,6 +12,7 @@ import {
   ScrollView,
   Switch,
   ActivityIndicator,
+  Platform,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import "react-native-get-random-values";
@@ -26,6 +27,7 @@ import TravelFacade from "../utils/TravelFacade";
 import { useIndoorMapContext } from "../context/IndoorMapContext";
 import { parseClassroomLocation } from "../utils/IndoorMapUtils";
 import { buildings } from "../api/buildingData";
+import HeaderButtons from "../components/HeaderButtons";
 
 // Define Types
 type Route = {
@@ -51,7 +53,7 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
   setIsDisabled,
 }) => {
   // Get theme context
-  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const { theme, isDarkMode } = useContext(ThemeContext);
 
   // Generate theme-aware styles
   const styles = createStartAndDestinationStyles({
@@ -292,7 +294,10 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
   return (
     <View style={styles.container}>
       {/* Theme Toggle Button */}
-      <TouchableOpacity
+      {/* Header buttons */}
+      {/* Header buttons */}
+      <HeaderButtons />
+      {/* <TouchableOpacity
         style={styles.themeToggleButton}
         onPress={toggleTheme}
         accessibilityLabel={
@@ -305,7 +310,7 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
           size={20}
           color={theme.buttonText}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <View style={styles.card}>
         {/* From Input with Google Places Autocomplete */}

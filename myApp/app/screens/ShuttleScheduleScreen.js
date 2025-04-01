@@ -123,9 +123,9 @@ export default function ShuttleScheduleScreen() {
         <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
         <HeaderButtons />
         <View style={styles.header}>
-          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+          {/* <TouchableOpacity onPress={handleBack} style={styles.backButton}>
             <Text style={styles.backText}>✖</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
         </View>
         <Text style={styles.error}>
@@ -159,9 +159,9 @@ export default function ShuttleScheduleScreen() {
       <HeaderButtons />
 
       <View style={styles.header}>
-        <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+        {/* <TouchableOpacity onPress={handleBack} style={styles.backButton}>
           <Text style={styles.backText}>✖</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
 

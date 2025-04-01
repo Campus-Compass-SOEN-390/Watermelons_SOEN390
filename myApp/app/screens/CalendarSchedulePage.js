@@ -5,6 +5,8 @@ import {
   ScrollView,
   Alert,
   Platform,
+  StatusBar,
+  SafeAreaView,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -12,7 +14,6 @@ import defaultStyles, {
   createGoogleScheduleStyles,
 } from "../styles/GoogleScheduleStyles";
 import { useRouter } from "expo-router";
-import LayoutWrapper from "../components/LayoutWrapper";
 import * as FileSystem from "expo-file-system";
 import HeaderButtons from "../components/HeaderButtons";
 import { ThemeContext } from "../context/ThemeContext";
@@ -23,7 +24,16 @@ export default function CalendarSchedulePage() {
   const { theme, isDarkMode } = useContext(ThemeContext);
 
   // Create theme-aware styles
-  const styles = createGoogleScheduleStyles({ theme, isDarkMode });
+  const styles = createGoogleScheduleStyles({
+    theme: {
+      background: isDarkMode ? "#333333" : "#FFFFFF",
+      cardBackground: isDarkMode ? "#242424" : "#E5E5E5",
+      buttonBackground: "#800020",
+      text: isDarkMode ? "#FFFFFF" : "#000000",
+      subText: isDarkMode ? "#CCCCCC" : "#666666",
+    },
+    isDarkMode,
+  });
 
   const router = useRouter();
   const { handleButtonPress } = useButtonInteraction();
@@ -248,13 +258,24 @@ export default function CalendarSchedulePage() {
   };
 
   return (
-    <LayoutWrapper>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: isDarkMode ? "#333333" : "#FFFFFF",
+      }}
+    >
+      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
+
       {/* Header buttons */}
       <View
         style={{ marginTop: Platform.OS === "ios" ? 10 : 5, marginBottom: 10 }}
       >
-        <HeaderButtons isDarkMode={isDarkMode} theme={theme} />
+        {/* Header buttons */}
+        <View style={{ marginTop: 50, marginBottom: 10 }}>
+          <HeaderButtons />
+        </View>{" "}
       </View>
+
       {/* Days Navigation */}
       <View style={styles.daysRow}>
         {days.map((day, index) => (
@@ -270,6 +291,7 @@ export default function CalendarSchedulePage() {
         ))}
       </View>
 
+      {/* Next class info section with dark background */}
       <View style={styles.nextClassContainer}>
         {nextClass ? (
           <>
@@ -381,6 +403,6 @@ export default function CalendarSchedulePage() {
           <Ionicons name="chevron-forward" size={20} color="white" />
         </TouchableOpacity>
       </View>
-    </LayoutWrapper>
+    </View>
   );
 }
