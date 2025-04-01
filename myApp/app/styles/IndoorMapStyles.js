@@ -193,7 +193,7 @@ export const createIndoorMapStyles = (theme) => {
       color: theme.text,
     },
     closeButton: {
-      backgroundColor: "#ff5252",
+      backgroundColor: COLORS.RED_CLOSE_BUTTON,
       padding: 8,
       borderRadius: 20,
       width: 30,

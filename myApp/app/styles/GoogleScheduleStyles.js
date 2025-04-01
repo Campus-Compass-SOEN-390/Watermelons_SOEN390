@@ -19,7 +19,7 @@ const createGoogleScheduleStyles = ({ isDarkMode, theme }) => {
     : COLORS.LIGHT_GREY_INPUT_BOXES;
   const textColor = isDarkMode ? theme?.text || COLORS.WHITE : COLORS.BLACK_OR_SHADOW;
   const subTextColor = isDarkMode ? theme?.subText || COLORS.LIGHT_GREY : COLORS.DARK_MODE_LIGHT_GREY;
-  const highlightColor = isDarkMode ? "#ff5252" : COLORS.CONCORDIA_RED;
+  const highlightColor = isDarkMode ? COLORS.RED_CLOSE_BUTTON : COLORS.CONCORDIA_RED;
   const grayTextColor = isDarkMode ? COLORS.LIGHT_GREY : "gray";
 
   return StyleSheet.create({
@@ -163,7 +163,7 @@ const createGoogleScheduleStyles = ({ isDarkMode, theme }) => {
     },
     noClassText: {
       fontSize: FONT_SIZE_3,
-      color: "#CCCCCC", // Light gray for dark container
+      color: COLORS.LIGHT_GREY_INPUT_BOXES, // Light gray for dark container
       textAlign: "center",
       padding: 20,
       fontStyle: "italic",

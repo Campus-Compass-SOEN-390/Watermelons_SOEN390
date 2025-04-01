@@ -100,7 +100,7 @@ const createPOIListStyles = ({ isDarkMode, theme }) => {
       width: "100%",
       borderTopLeftRadius: 28,
       borderTopRightRadius: 28,
-      backgroundColor: isDarkMode ? "#333" : "#f0f0f0",
+      backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.OFF_WHITE,
     },
     noImagePlaceholder: {
       height: 120,
@@ -163,7 +163,7 @@ const createPOIListStyles = ({ isDarkMode, theme }) => {
     categoryText: {
       fontSize: FONT_SIZE_1,
       fontWeight: "600",
-      color: isDarkMode ? "#fff" : "#333",
+      color: isDarkMode ? COLORS.WHITE : COLORS.DARK_GREY_TITLE,
     },
     loadingContainer: {
       flex: 1,
