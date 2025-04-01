@@ -203,12 +203,12 @@ export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
 // Keep the original styles for backward compatibility
 export const calendarFetchingStyles = StyleSheet.create({
   container: {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: COLORS.OFF_WHITE,
     justifyContent: "center",
     flex: 1,
   },
   redContainer: {
-    backgroundColor: "#922338",
+    backgroundColor: COLORS.CONCORDIA_RED,
     margin: 10,
     padding: 10,
     borderRadius: 10,
@@ -218,13 +218,13 @@ export const calendarFetchingStyles = StyleSheet.create({
     minHeight: 100,
   },
   whiteContainer: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: COLORS.WHITE,
     width: "90%",
     height: "90%",
     padding: 20,
     borderRadius: 8,
     elevation: 4,
-    shadowColor: "#000",
+    shadowColor: COLORS.BLACK_OR_SHADOW,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -234,20 +234,20 @@ export const calendarFetchingStyles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
-    color: "#333",
+    color: COLORS.DARK_GREY_TITLE,
   },
   input: {
     height: 50,
-    borderColor: "#ddd",
+    borderColor: COLORS.LIGHT_GREY_INPUT_BOXES,
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 15,
     marginBottom: 10,
     fontSize: FONT_SIZE_3,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: COLORS.OFF_WHITE,
   },
   connectButton: {
-    backgroundColor: "#922338",
+    backgroundColor: COLORS.CONCORDIA_RED,
     padding: 15,
     borderRadius: 25,
     alignSelf: "center",
@@ -257,7 +257,7 @@ export const calendarFetchingStyles = StyleSheet.create({
     bottom: 55,
   },
   buttonText: {
-    color: "white",
+    color: COLORS.WHITE,
     fontSize: FONT_SIZE_4,
     fontWeight: "bold",
   },
@@ -268,38 +268,38 @@ export const calendarFetchingStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: COLORS.OFF_WHITE,
   },
   successTitle: {
     fontSize: FONT_SIZE_5,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#333",
+    color: COLORS.DARK_GREY_TITLE,
     marginHorizontal: 20,
   },
   successSubtitle: {
     marginTop: 10,
     fontSize: FONT_SIZE_3,
     textAlign: "center",
-    color: "#666",
+    color: COLORS.DARK_MODE_LIGHT_GREY,
   },
 
   // --- Event Item Styles ---
   eventItem: {
     marginBottom: 10,
     padding: 10,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: COLORS.OFF_WHITE,
     borderRadius: 6,
   },
   eventTitle: {
     fontSize: FONT_SIZE_3,
     fontWeight: "bold",
     marginBottom: 4,
-    color: "#333",
+    color: COLORS.DARK_GREY_TITLE,
   },
   eventDate: {
     fontSize: FONT_SIZE_2,
-    color: "#666",
+    color: COLORS.DARK_MODE_LIGHT_GREY,
   },
   logo: {
     width: 150,
@@ -322,7 +322,7 @@ export const calendarFetchingStyles = StyleSheet.create({
   },
   historyText: {
     fontSize: 10,
-    color: "black",
+    color: COLORS.BLACK_OR_SHADOW,
   },
 
   // --- Clear History Button ---
@@ -332,16 +332,16 @@ export const calendarFetchingStyles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
     borderRadius: 25,
-    backgroundColor: "#f4f4f4",
+    backgroundColor: COLORS.OFF_WHITE,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: COLORS.LIGHT_GREY_INPUT_BOXES,
     alignSelf: "center",
     position: "absolute",
     bottom: 10,
   },
   clearHistoryText: {
     fontSize: FONT_SIZE_1,
-    color: "#444",
+    color: COLORS.DARK_MODE_GREY,
     fontWeight: "500",
   },
 });
