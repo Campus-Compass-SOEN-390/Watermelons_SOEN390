@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import { View, Image, Text, TouchableOpacity } from "react-native";
+import { View, Image, Text, TouchableOpacity, Platform } from "react-native";
 import { useRouter } from "expo-router";
 import { createHomePageStyles } from "../styles/HomePageStyles.js";
 import RNUxcam from "react-native-ux-cam";
@@ -29,7 +29,16 @@ export default function HomePage() {
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* Use HeaderButtons component which includes theme toggle */}
-      <HeaderButtons />
+      {/* Header buttons */}
+      <View
+        style={{
+          marginTop: Platform.OS === "ios" ? 10 : 5,
+          marginBottom: 20,
+          marginTop: 40,
+        }}
+      >
+        <HeaderButtons />
+      </View>
 
       <Image
         style={styles.logo}

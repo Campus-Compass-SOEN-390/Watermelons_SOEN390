@@ -1,4 +1,11 @@
-import { Text, View, TouchableOpacity, ScrollView, Alert } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  Platform,
+} from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import defaultStyles, {
@@ -242,9 +249,12 @@ export default function CalendarSchedulePage() {
 
   return (
     <LayoutWrapper>
-      {/* Top Navigation */}
-      <HeaderButtons isDarkMode={isDarkMode} theme={theme} />
-
+      {/* Header buttons */}
+      <View
+        style={{ marginTop: Platform.OS === "ios" ? 10 : 5, marginBottom: 10 }}
+      >
+        <HeaderButtons isDarkMode={isDarkMode} theme={theme} />
+      </View>
       {/* Days Navigation */}
       <View style={styles.daysRow}>
         {days.map((day, index) => (
