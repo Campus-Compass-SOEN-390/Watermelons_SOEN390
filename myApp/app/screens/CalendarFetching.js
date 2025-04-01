@@ -192,13 +192,7 @@ export default function CalendarFetching() {
       }}
     >
       <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-
-      {/* Header buttons */}
-      <View
-        style={{ marginTop: Platform.OS === "ios" ? 10 : 5, marginBottom: 10 }}
-      >
-        <HeaderButtons />
-      </View>
+      <HeaderButtons/>
 
       {/* Main Content */}
       <KeyboardAvoidingView

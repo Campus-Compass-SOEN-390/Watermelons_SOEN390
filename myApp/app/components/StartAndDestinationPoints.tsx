@@ -287,24 +287,6 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Theme Toggle Button */}
-      {/* Header buttons */}
-      {/* Header buttons */}
-      <HeaderButtons />
-      {/* <TouchableOpacity
-        style={styles.themeToggleButton}
-        onPress={toggleTheme}
-        accessibilityLabel={
-          isDarkMode ? "Switch to light mode" : "Switch to dark mode"
-        }
-        testID="themeToggleButton"
-      >
-        <Ionicons
-          name={isDarkMode ? "sunny" : "moon"}
-          size={20}
-          color={theme.buttonText}
-        />
-      </TouchableOpacity> */}
 
       <View style={styles.card}>
         {/* From Input with Google Places Autocomplete */}

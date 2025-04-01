@@ -116,11 +116,13 @@ export default function HeaderButtons() {
 
 const styles = StyleSheet.create({
   topNav: {
+    position: "absolute",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
     marginBottom: 12,
+    paddingTop: 45
   },
   rightButtons: {
     flexDirection: "row",

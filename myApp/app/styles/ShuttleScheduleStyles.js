@@ -34,6 +34,12 @@ export const createShuttleScheduleStyles = ({ theme, isDarkMode }) => {
       textAlign: "center",
       flex: 1,
       color: isDarkMode ? "#FFFFFF" : "#000000",
+      paddingLeft: 30,
+      paddingTop: 40
+    },
+    warningContainer: {
+      paddingTop: 30,
+      paddingRight: 15
     },
     warningButton: {
       width: 40,

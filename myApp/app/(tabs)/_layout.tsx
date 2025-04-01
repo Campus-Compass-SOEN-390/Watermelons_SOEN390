@@ -5,6 +5,7 @@ import styles from "../styles/LayoutStyles";
 import { LocationProvider } from "../context/LocationContext";
 import { IndoorMapProvider } from "../context/IndoorMapContext";
 import React from "react";
+import HeaderButtons from "../components/HeaderButtons";
 
 interface TabBarIconProps {
   route: any;
@@ -53,6 +54,7 @@ export default function TabLayout() {
     <IndoorMapProvider>
       <LocationProvider>
         <View style={{ flex: 1 }}>
+          <HeaderButtons/>
           <Tabs
             screenOptions={({ route }) => ({
               headerShown: false, // Remove the top header bar

@@ -294,7 +294,6 @@ const InterestPoints = () => {
           marginTop: 40,
         }}
       >
-        <HeaderButtons />
       </View>
       <StatusBar
         barStyle={isDarkMode ? "light-content" : "dark-content"}
