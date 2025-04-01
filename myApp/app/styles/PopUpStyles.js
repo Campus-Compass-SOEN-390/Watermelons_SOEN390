@@ -10,8 +10,7 @@ const createPopupStyles = ({ isDarkMode, theme }) => {
   const titleColor = isDarkMode ? theme?.text || "#fff" : "#000";
   const subTextColor = isDarkMode ? theme?.subText || "#aaa" : "#444";
   const iconColor = isDarkMode ? theme?.text || "#fff" : "#333";
-  const closeIconColor = isDarkMode ? theme?.text || "#ddd" : "#555";
-  const shadowColor = isDarkMode ? "#000" : "#000";
+  const shadowColor = "#000";
   const redButtonColor = isDarkMode
     ? theme?.buttonBackground || "#aa0000"
     : "#8b0000";

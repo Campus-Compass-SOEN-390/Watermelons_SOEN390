@@ -74,7 +74,6 @@ import { styles as poiStyles } from "../styles/poiStyles";
 import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
 import { estimateShuttleFromButton } from "../utils/shuttleUtils";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
-import HeaderButtons from "../components/HeaderButtons";
 
 const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken("MAPBOX_API");

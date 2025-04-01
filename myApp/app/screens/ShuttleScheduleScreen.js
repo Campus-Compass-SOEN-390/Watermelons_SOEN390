@@ -7,9 +7,7 @@ import {
   Alert,
   StatusBar,
   SafeAreaView,
-  StyleSheet,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
 import moment from "moment";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
@@ -20,8 +18,7 @@ import HeaderButtons from "../components/HeaderButtons";
 
 export default function ShuttleScheduleScreen() {
   // Get theme context - this ensures the same context is used across the app
-  const { theme, isDarkMode } = useContext(ThemeContext);
-  const navigation = useNavigation();
+  const { isDarkMode } = useContext(ThemeContext);
   const { handleButtonPress } = useButtonInteraction();
   const [schedule, setSchedule] = useState(null);
   const [error, setError] = useState(null);
@@ -87,12 +84,6 @@ export default function ShuttleScheduleScreen() {
 
     setNextBus(nextAvailableBus);
   }, [schedule, campus]);
-
-  const handleBack = () => {
-    handleButtonPress(null, "Going back");
-    RNUxcam.logEvent("Shuttle Back Button Pressed");
-    navigation.goBack();
-  };
 
   const handleWarningPress = () => {
     const todayDate = moment().format("YYYY-MM-DD");

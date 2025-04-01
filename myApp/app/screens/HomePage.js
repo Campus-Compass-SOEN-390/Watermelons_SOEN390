@@ -1,16 +1,15 @@
 import React, { useEffect, useContext } from "react";
-import { View, Image, Text, TouchableOpacity, Platform } from "react-native";
+import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { createHomePageStyles } from "../styles/HomePageStyles.js";
 import RNUxcam from "react-native-ux-cam";
 import { ThemeContext } from "../context/ThemeContext";
-import { Ionicons } from "@expo/vector-icons";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
 import HeaderButtons from "../components/HeaderButtons.js";
 
 export default function HomePage() {
   const router = useRouter();
-  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const { handleButtonPress } = useButtonInteraction();
 
   // Create styles based on current theme
@@ -32,7 +31,6 @@ export default function HomePage() {
       {/* Header buttons */}
       <View
         style={{
-          marginTop: Platform.OS === "ios" ? 10 : 5,
           marginBottom: 20,
           marginTop: 40,
         }}

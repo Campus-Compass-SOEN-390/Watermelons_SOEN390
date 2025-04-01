@@ -6,13 +6,10 @@ import {
   Alert,
   Platform,
   StatusBar,
-  SafeAreaView,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import defaultStyles, {
-  createGoogleScheduleStyles,
-} from "../styles/GoogleScheduleStyles";
+import { createGoogleScheduleStyles } from "../styles/GoogleScheduleStyles";
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
 import HeaderButtons from "../components/HeaderButtons";
@@ -21,7 +18,7 @@ import { useButtonInteraction } from "../hooks/useButtonInteraction";
 
 export default function CalendarSchedulePage() {
   // Get theme context
-  const { theme, isDarkMode } = useContext(ThemeContext);
+  const { isDarkMode } = useContext(ThemeContext);
 
   // Create theme-aware styles
   const styles = createGoogleScheduleStyles({

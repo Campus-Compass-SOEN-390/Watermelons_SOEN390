@@ -1,23 +1,14 @@
 import React, { useState, useContext } from "react";
-import {
-  Switch,
-  Text,
-  View,
-  Image,
-  Platform,
-  SafeAreaView,
-  StatusBar,
-} from "react-native";
+import { Switch, Text, View, Image, Platform, StatusBar } from "react-native";
 import { useFeedback } from "../context/FeedbackContext";
 import { ThemeContext } from "../context/ThemeContext";
-import LayoutWrapper from "../components/LayoutWrapper";
 import HeaderButtons from "../components/HeaderButtons";
 import { Ionicons } from "@expo/vector-icons";
-import { styles, createSettingsPageStyles } from "../styles/SettingsPageStyles";
+import { createSettingsPageStyles } from "../styles/SettingsPageStyles";
 
 export default function Settings() {
   // Get theme context
-  const { theme, isDarkMode } = useContext(ThemeContext);
+  const { isDarkMode } = useContext(ThemeContext);
 
   // Create theme-aware styles
   const themedStyles = createSettingsPageStyles({

@@ -12,12 +12,11 @@ import {
   ScrollView,
   Switch,
   ActivityIndicator,
-  Platform,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import "react-native-get-random-values";
 import Constants from "expo-constants";
-import { MaterialIcons, Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { createStartAndDestinationStyles } from "../styles/StartAndDestinationPointsStyles";
 import useLocation from "../hooks/useLocation";
 import Icon from "react-native-vector-icons/Foundation";
@@ -61,11 +60,6 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
     isDarkMode,
   });
 
-  // // Add this useEffect hook for UXCam screen tagging
-  // useEffect(() => {
-  //   // Tag this screen in UXCam
-  //   RNUxcam.tagScreenName("MapsPage");
-  // }, []);
   const {
     updateOrigin,
     updateDestination,

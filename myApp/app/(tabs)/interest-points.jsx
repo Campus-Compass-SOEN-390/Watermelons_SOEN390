@@ -11,7 +11,7 @@ import * as Location from "expo-location";
 import { fetchPOIData, poiDataSubject } from "../api/poiApi";
 import FilterModal from "../components/POI/FilterModal";
 import POIList from "../components/POI/POIList";
-import { styles, createPOIListStyles } from "../styles/POIListStyle";
+import { createPOIListStyles } from "../styles/POIListStyle";
 import { ThemeContext } from "../context/ThemeContext";
 import HeaderButtons from "../components/HeaderButtons";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
@@ -279,11 +279,6 @@ const InterestPoints = () => {
     });
   };
 
-  const handleFilterPress = () => {
-    handleButtonPress(null, "Opening filters menu");
-    setFilterModalVisible(true);
-  };
-
   const handleFilterClose = () => {
     handleButtonPress(null, "Closing filters menu");
     setFilterModalVisible(false);
@@ -293,6 +288,14 @@ const InterestPoints = () => {
 
   return (
     <SafeAreaView style={themeStyles.container}>
+      <View
+        style={{
+          marginBottom: 20,
+          marginTop: 40,
+        }}
+      >
+        <HeaderButtons />
+      </View>
       <StatusBar
         barStyle={isDarkMode ? "light-content" : "dark-content"}
         backgroundColor={isDarkMode ? theme.background : "#fff"}
