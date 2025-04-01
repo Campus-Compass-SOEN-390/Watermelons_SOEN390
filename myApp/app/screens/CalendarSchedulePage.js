@@ -9,6 +9,7 @@ import LayoutWrapper from "../components/LayoutWrapper";
 import * as FileSystem from "expo-file-system";
 import HeaderButtons from "../components/HeaderButtons";
 import { ThemeContext } from "../context/ThemeContext";
+import { useButtonInteraction } from "../hooks/useButtonInteraction";
 
 export default function CalendarSchedulePage() {
   // Get theme context
@@ -18,6 +19,7 @@ export default function CalendarSchedulePage() {
   const styles = createGoogleScheduleStyles({ theme, isDarkMode });
 
   const router = useRouter();
+  const { handleButtonPress } = useButtonInteraction();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const selectedDayIndex = selectedDate.getDay(); // Sunday = 0
 
@@ -90,6 +92,7 @@ export default function CalendarSchedulePage() {
   };
 
   const handleGetDirections = (location) => {
+    handleButtonPress(null, "Getting directions");
     console.log("Getting directions to:", location);
 
     // Navigate to map with destination parameter
@@ -274,7 +277,10 @@ export default function CalendarSchedulePage() {
             </Text>
             <TouchableOpacity
               style={styles.nextClassDirections}
-              onPress={findNextClass}
+              onPress={() => {
+                handleButtonPress(null, "Getting directions to next class");
+                findNextClass();
+              }}
               testID="get-directions-button"
             >
               <MaterialIcons
@@ -307,7 +313,10 @@ export default function CalendarSchedulePage() {
             </View>
             <TouchableOpacity
               style={styles.iconContainer}
-              onPress={() => handleGetDirections(item.location)}
+              onPress={() => {
+                handleButtonPress(null, `Getting directions to ${item.course}`);
+                handleGetDirections(item.location);
+              }}
             >
               <MaterialIcons name="directions" size={28} color="white" />
             </TouchableOpacity>
@@ -320,11 +329,12 @@ export default function CalendarSchedulePage() {
         <TouchableOpacity
           testID="prev-day-button"
           style={styles.todayNavButton}
-          onPress={() =>
+          onPress={() => {
+            handleButtonPress(null, "Previous day");
             setSelectedDate(
               new Date(selectedDate.setDate(selectedDate.getDate() - 1))
-            )
-          }
+            );
+          }}
         >
           <Ionicons name="chevron-back" size={20} color="white" />
         </TouchableOpacity>
@@ -332,7 +342,10 @@ export default function CalendarSchedulePage() {
         <TouchableOpacity
           testID="today-button"
           style={styles.todayLabelWrapper}
-          onPress={() => setSelectedDate(new Date())}
+          onPress={() => {
+            handleButtonPress(null, "Go to today");
+            setSelectedDate(new Date());
+          }}
         >
           <Text style={styles.todayText}>
             {selectedDate.toDateString() !== new Date().toDateString()
@@ -348,11 +361,12 @@ export default function CalendarSchedulePage() {
         <TouchableOpacity
           testID="next-day-button"
           style={styles.todayNavButton}
-          onPress={() =>
+          onPress={() => {
+            handleButtonPress(null, "Next day");
             setSelectedDate(
               new Date(selectedDate.setDate(selectedDate.getDate() + 1))
-            )
-          }
+            );
+          }}
         >
           <Ionicons name="chevron-forward" size={20} color="white" />
         </TouchableOpacity>

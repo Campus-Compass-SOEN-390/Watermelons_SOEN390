@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import PropTypes from "prop-types";
 import { ThemeContext } from "../../context/ThemeContext"; // Update this path if needed
+import { useButtonInteraction } from "../../hooks/useButtonInteraction";
 
 const POIPopup = ({
   poi = null,
@@ -14,6 +15,7 @@ const POIPopup = ({
 }) => {
   // Get theme from context
   const themeContext = useContext(ThemeContext);
+  const { handleButtonPress } = useButtonInteraction();
 
   if (!poi) return null;
 
@@ -33,6 +35,16 @@ const POIPopup = ({
     }
   };
 
+  const handleClose = () => {
+    handleButtonPress(null, "Closing point of interest information");
+    onClose();
+  };
+
+  const handleDirections = () => {
+    handleButtonPress(null, `Getting directions to ${poi.name}`);
+    onGetDirections();
+  };
+
   return (
     <View
       style={themedStyles.container}
@@ -43,7 +55,7 @@ const POIPopup = ({
       {/* Close button */}
       <TouchableOpacity
         style={themedStyles.closeButton}
-        onPress={onClose}
+        onPress={handleClose}
         testID="close-button"
         accessible={true}
         accessibilityLabel="Close point of interest information"
@@ -71,7 +83,7 @@ const POIPopup = ({
       {/* Get directions button */}
       <TouchableOpacity
         style={themedStyles.directionsButton}
-        onPress={onGetDirections}
+        onPress={handleDirections}
         testID="directions-button"
         accessible={true}
         accessibilityLabel="Get directions to this location"

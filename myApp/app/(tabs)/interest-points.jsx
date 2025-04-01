@@ -13,6 +13,8 @@ import FilterModal from "../components/POI/FilterModal";
 import POIList from "../components/POI/POIList";
 import { styles, createPOIListStyles } from "../styles/POIListStyle";
 import { ThemeContext } from "../context/ThemeContext";
+import HeaderButtons from "../components/HeaderButtons";
+import { useButtonInteraction } from "../hooks/useButtonInteraction";
 
 /**
  * InterestPoints component - Displays a list of POIs
@@ -44,6 +46,8 @@ const InterestPoints = () => {
   const [showCafes, setShowCafes] = useState(true);
   const [showRestaurants, setShowRestaurants] = useState(true);
   const [showActivities, setShowActivities] = useState(true);
+
+  const { handleButtonPress } = useButtonInteraction();
 
   /**
    * Subscribe to POI data changes (Observer pattern)
@@ -158,6 +162,7 @@ const InterestPoints = () => {
   // Handle refresh action
   const handleRefresh = async () => {
     console.log("Refreshing data...");
+    handleButtonPress(null, "Refreshing nearby places");
     setRefreshing(true);
 
     try {
@@ -274,6 +279,16 @@ const InterestPoints = () => {
     });
   };
 
+  const handleFilterPress = () => {
+    handleButtonPress(null, "Opening filters menu");
+    setFilterModalVisible(true);
+  };
+
+  const handleFilterClose = () => {
+    handleButtonPress(null, "Closing filters menu");
+    setFilterModalVisible(false);
+  };
+
   const filteredData = getFilteredData();
 
   return (
@@ -308,7 +323,7 @@ const InterestPoints = () => {
 
       <FilterModal
         isVisible={filterModalVisible}
-        onClose={() => setFilterModalVisible(false)}
+        onClose={handleFilterClose}
         distance={distance}
         setDistance={setDistance}
         showCafes={showCafes}

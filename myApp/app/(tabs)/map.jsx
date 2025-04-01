@@ -73,6 +73,8 @@ import { fetchPOIData, poiDataSubject, getCachedPOIData } from "../api/poiApi";
 import { styles as poiStyles } from "../styles/poiStyles";
 import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
 import { estimateShuttleFromButton } from "../utils/shuttleUtils";
+import { useButtonInteraction } from "../hooks/useButtonInteraction";
+import HeaderButtons from "../components/HeaderButtons";
 
 const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
 Mapbox.setAccessToken("MAPBOX_API");
@@ -642,24 +644,23 @@ export default function MapView() {
 
   //navbar
   const navigation = useNavigation();
+  const { handleButtonPress } = useButtonInteraction();
 
   // Handle building tap
   const handleBuildingPress = (building) => {
+    handleButtonPress(null, `Selected ${building.name} building`);
     console.log("Polygon pressed for building:", building.name);
     const fullBuilding = getBuildingById(building.id);
     if (fullBuilding) {
-      console.log("Setting popup for building:", fullBuilding.name);
       setSelectedBuilding(fullBuilding);
       setPopupVisible(true);
-    } else {
-      console.error("Building data is incomplete!", building);
     }
   };
 
   const handleBuildingGetDirections = (building) => {
+    handleButtonPress(null, `Getting directions to ${building.name}`);
     updateOrigin(coordinatesMap["My Position"], "My Location");
     const buildingFullName = building.name + ", " + building.longName;
-    console.log(buildingFullName);
     updateDestination(building.entranceCoordinates, buildingFullName);
     updateShowTransportation(true);
   };
@@ -674,10 +675,14 @@ export default function MapView() {
   };
 
   const handleShuttleButton = async () => {
+    handleButtonPress(
+      null,
+      `Getting shuttle to ${activeCampus === "sgw" ? "Loyola" : "SGW"} campus`
+    );
     console.log("Shuttle button click");
 
-    // Update origin & destination as before
-    if (shuttleDetails && !shuttleDetails.error) {
+    // Update origin & destination only if there are no shuttle details or no error
+    if (!shuttleDetails || !shuttleDetails.error) {
       updateOrigin(coordinatesMap["My Position"], "My Location");
       if (activeCampus === "sgw") {
         updateDestination(
@@ -696,7 +701,7 @@ export default function MapView() {
       const currentStop = activeCampus === "sgw" ? "SGW" : "LOY";
       const shuttleResult = await estimateShuttleFromButton(currentStop);
 
-      // If the utility returned an object with "error", store it directly.
+      // If the utility returned an object with "error", store it directly
       if (shuttleResult?.error) {
         setShuttleDetails({ error: shuttleResult.error });
       } else if (!shuttleResult) {
@@ -718,6 +723,10 @@ export default function MapView() {
 
   // Center on campus
   const centerMapOnCampus = () => {
+    handleButtonPress(
+      null,
+      `Centering map on ${activeCampus.toUpperCase()} campus`
+    );
     if (mapRef.current) {
       const currentRegion = activeCampus === "sgw" ? sgwRegion : loyolaRegion;
       mapRef.current.setCamera({
@@ -731,6 +740,7 @@ export default function MapView() {
 
   // Center on user
   const centerMapOnUser = () => {
+    handleButtonPress(null, "Centering map on your location");
     if (location && mapRef.current) {
       mapRef.current.setCamera({
         centerCoordinate: [location.longitude, location.latitude],
@@ -755,6 +765,8 @@ export default function MapView() {
 
   // Switch campus
   const toggleCampus = () => {
+    const newCampus = activeCampus === "sgw" ? "loy" : "sgw";
+    handleButtonPress(null, `Switching to ${newCampus.toUpperCase()} campus`);
     setActiveCampus((prev) => {
       const newCampus = prev === "sgw" ? "loy" : "sgw";
 
@@ -778,6 +790,10 @@ export default function MapView() {
 
   // Toggle POI display
   const togglePOI = () => {
+    handleButtonPress(
+      null,
+      showPOI ? "Hiding points of interest" : "Showing points of interest"
+    );
     // First get the new value we're about to set
     const willShowPOI = !showPOI;
 
@@ -854,6 +870,8 @@ export default function MapView() {
   };
 
   const handleStepsClick = async () => {
+    handleButtonPress(null, "Showing navigation steps");
+
     if (!origin || !destination) return;
 
     const originStr = `${origin.latitude},${origin.longitude}`;
@@ -887,6 +905,7 @@ export default function MapView() {
   };
 
   const handleCancelButton = () => {
+    handleButtonPress(null, "Canceling navigation");
     updateNavigationToMap(false);
     updateOrigin(null, "");
     updateDestination(null, "");

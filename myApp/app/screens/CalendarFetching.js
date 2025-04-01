@@ -24,6 +24,7 @@ import HeaderButtons from "../components/HeaderButtons.js";
 import MonthPicker from "../components/MonthPicker";
 import RNUxcam from "react-native-ux-cam";
 import { ThemeContext } from "../context/ThemeContext";
+import { useButtonInteraction } from "../hooks/useButtonInteraction";
 
 export default function CalendarFetching() {
   // Get theme context
@@ -42,25 +43,25 @@ export default function CalendarFetching() {
     isDarkMode,
   });
 
-  // Add this useEffect hook for UXCam screen tagging
-  useEffect(() => {
-    // Tag this screen in UXCam
-    RNUxcam.tagScreenName("Calendar Fetching");
-  }, []);
-
   const navigation = useNavigation();
   const router = useRouter();
+  const { handleButtonPress } = useButtonInteraction();
 
   const [calendarId, setCalendarId] = useState("");
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showSuccessScreen, setShowSuccessScreen] = useState(false);
-  // Allows the storage of calendar id history for future selection
   const [storedCalendarIds, setStoredCalendarIds] = useState([]);
-  const [monthsAhead, setMonthsAhead] = useState("1"); // default 1 month
+  const [monthsAhead, setMonthsAhead] = useState("1");
 
   const API_KEY =
     process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
+
+  // Add this useEffect hook for UXCam screen tagging
+  useEffect(() => {
+    // Tag this screen in UXCam
+    RNUxcam.tagScreenName("Calendar Fetching");
+  }, []);
 
   const fetchCalendarEvents = useCallback(async () => {
     if (!calendarId.trim()) {
@@ -88,30 +89,25 @@ export default function CalendarFetching() {
       } else if (data.items) {
         setEvents(data.items);
 
-        // Keeps track of each calendar's events
         const csvContent = convertEventsToCSV(data.items);
         const fileUri = FileSystem.documentDirectory + "calendar_events.csv";
 
-        // All events are stored in a CSV file
         await FileSystem.writeAsStringAsync(fileUri, csvContent);
         console.log("CSV saved to:", fileUri);
 
-        // Save calendar id if not already in store
         try {
           if (!calendarId || !data.summary) return;
-          // Display as unlabelled calendar if no name found for it
+
           const newEntry = {
             id: calendarId,
             name: data.summary || "Unlabelled Calendar",
           };
           const existingEntries = [...storedCalendarIds];
 
-          // Check if the entry already exists
           const isDuplicate = existingEntries.some(
             (entry) => entry.id === calendarId
           );
 
-          // Ensure new entry is not a duplicate by verifying the ID not the calendar name
           if (!isDuplicate) {
             const updatedCalendarIds = [newEntry, ...existingEntries];
             setStoredCalendarIds(updatedCalendarIds);
@@ -139,7 +135,6 @@ export default function CalendarFetching() {
     setLoading(false);
   }, [calendarId, API_KEY, monthsAhead, storedCalendarIds]);
 
-  // Redirect user to events page upon successful entry of a calendar id
   useEffect(() => {
     if (showSuccessScreen) {
       const timer = setTimeout(() => {
@@ -148,9 +143,8 @@ export default function CalendarFetching() {
 
       return () => clearTimeout(timer);
     }
-  }, [showSuccessScreen, navigation]);
+  }, [showSuccessScreen, navigation, router]);
 
-  // Allows the display of calendar history
   useEffect(() => {
     const loadStoredCalendarIds = async () => {
       try {
@@ -221,7 +215,6 @@ export default function CalendarFetching() {
           <View style={styles.container}>
             <View style={styles.redContainer}>
               <View style={styles.whiteContainer}>
-                {/* Calendar ID Input */}
                 <Text style={styles.title}>Enter your Google Calendar ID</Text>
                 <TextInput
                   style={styles.input}
@@ -231,7 +224,6 @@ export default function CalendarFetching() {
                   placeholderTextColor={styles.placeholderTextColor.color}
                 />
 
-                {/* Calendar History */}
                 <View style={{ marginTop: 10 }}>
                   <Text style={styles.subtitle}>Calendars History:</Text>
                   <View style={styles.calendarHistoryContainer}>
@@ -247,6 +239,7 @@ export default function CalendarFetching() {
                               RNUxcam.logEvent(
                                 "Stored Calendar Ids Button Pressed"
                               );
+                              handleButtonPress(null, item.name);
                               setCalendarId(item.id);
                             }}
                           >
@@ -284,10 +277,12 @@ export default function CalendarFetching() {
                   />
                 </View>
 
-                {/* Connect Button */}
                 <TouchableOpacity
                   style={styles.connectButton}
-                  onPress={fetchCalendarEvents}
+                  onPress={() => {
+                    handleButtonPress(null, "Connecting to Calendar");
+                    fetchCalendarEvents();
+                  }}
                   disabled={loading}
                 >
                   <Text style={styles.buttonText}>
@@ -295,11 +290,11 @@ export default function CalendarFetching() {
                   </Text>
                 </TouchableOpacity>
 
-                {/* Clear History Button */}
                 <TouchableOpacity
                   style={styles.clearHistoryButton}
                   onPress={async () => {
                     RNUxcam.logEvent("Clear History Button Pressed");
+                    handleButtonPress(null, "Clear History");
                     try {
                       await AsyncStorage.removeItem("calendarIds");
                       setStoredCalendarIds([]);
@@ -325,7 +320,6 @@ export default function CalendarFetching() {
   );
 }
 
-// Helper function to store events in a CSV file
 const convertEventsToCSV = (events) => {
   const headers = ["Title", "Start", "End", "Location", "CalendarID"];
 

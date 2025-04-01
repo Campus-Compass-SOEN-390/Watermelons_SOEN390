@@ -7,10 +7,12 @@ import {
   Alert,
   StatusBar,
   SafeAreaView,
+  StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
 import moment from "moment";
+import { useButtonInteraction } from "../hooks/useButtonInteraction";
 import RNUxcam from "react-native-ux-cam";
 import { ThemeContext } from "../context/ThemeContext";
 import { createShuttleScheduleStyles } from "../styles/ShuttleScheduleStyles";
@@ -19,6 +21,12 @@ import HeaderButtons from "../components/HeaderButtons";
 export default function ShuttleScheduleScreen() {
   // Get theme context - this ensures the same context is used across the app
   const { theme, isDarkMode } = useContext(ThemeContext);
+  const navigation = useNavigation();
+  const { handleButtonPress } = useButtonInteraction();
+  const [schedule, setSchedule] = useState(null);
+  const [error, setError] = useState(null);
+  const [nextBus, setNextBus] = useState(null);
+  const [campus, setCampus] = useState("SGW"); // Toggle between SGW and LOY
 
   // Create theme-aware styles
   const styles = createShuttleScheduleStyles({
@@ -30,24 +38,17 @@ export default function ShuttleScheduleScreen() {
     isDarkMode,
   });
 
-  const navigation = useNavigation();
-  const [schedule, setSchedule] = useState(null);
-  const [error, setError] = useState(null);
-  const [nextBus, setNextBus] = useState(null);
-  const [campus, setCampus] = useState("SGW"); // Toggle between SGW and LOY
-
-  // Add this useEffect hook for UXCam screen tagging
+  // Add UXCam screen tagging
   useEffect(() => {
-    // Tag this screen in UXCam
     RNUxcam.tagScreenName("ShuttleScheduleScreen");
   }, []);
 
+  // Load schedule data
   useEffect(() => {
     const loadSchedule = async () => {
       const today = moment().format("dddd");
       console.log(`Fetching schedule for ${today}...`);
 
-      // 🚨 Prevent fetching for weekends
       if (today === "Saturday" || today === "Sunday") {
         console.warn("No schedule available on weekends.");
         setError("❌ No shuttle service on weekends.");
@@ -59,7 +60,6 @@ export default function ShuttleScheduleScreen() {
         if (!data) {
           throw new Error("No schedule data available.");
         }
-
         console.log("Schedule data loaded:", data);
         setSchedule(data);
       } catch (err) {
@@ -71,7 +71,7 @@ export default function ShuttleScheduleScreen() {
     loadSchedule();
   }, []);
 
-  // Compute next available bus based on selected campus without re-fetching
+  // Calculate next available bus
   useEffect(() => {
     if (!schedule) return;
 
@@ -86,11 +86,18 @@ export default function ShuttleScheduleScreen() {
     }
 
     setNextBus(nextAvailableBus);
-  }, [schedule, campus]); // Runs when schedule is loaded OR campus changes
+  }, [schedule, campus]);
 
-  // Function to handle warning button click
+  const handleBack = () => {
+    handleButtonPress(null, "Going back");
+    RNUxcam.logEvent("Shuttle Back Button Pressed");
+    navigation.goBack();
+  };
+
   const handleWarningPress = () => {
     const todayDate = moment().format("YYYY-MM-DD");
+    handleButtonPress(null, "Checking bus status");
+    RNUxcam.logEvent("Shuttle Warning Button Pressed");
 
     if (todayDate === "2025-02-28") {
       Alert.alert(
@@ -102,17 +109,25 @@ export default function ShuttleScheduleScreen() {
     }
   };
 
+  const handleCampusToggle = () => {
+    const newCampus = campus === "SGW" ? "LOY" : "SGW";
+    handleButtonPress(null, `Switching to ${newCampus} campus schedule`);
+    RNUxcam.logEvent(`Switch to ${newCampus} Schedule Button Pressed`);
+    setCampus(newCampus);
+  };
+
+  // Error state
   if (error) {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-        {/* Add HeaderButtons component to include theme toggle */}
         <HeaderButtons />
-        {/* 🔹 Keep Header with Back Button */}
         <View style={styles.header}>
+          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+            <Text style={styles.backText}>✖</Text>
+          </TouchableOpacity>
           <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
         </View>
-        {/* 🔹 Display Weekend or Error Message */}
         <Text style={styles.error}>
           {error.includes("weekends")
             ? "🚍 No shuttle service on weekends. See you Monday!"
@@ -122,12 +137,11 @@ export default function ShuttleScheduleScreen() {
     );
   }
 
-  // 🔹 Check if schedule is null (LOADING STATE)
+  // Loading state
   if (!schedule) {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-        {/* Add HeaderButtons component to include theme toggle */}
         <HeaderButtons />
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -138,36 +152,36 @@ export default function ShuttleScheduleScreen() {
     );
   }
 
+  // Main render
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-      {/* Add HeaderButtons component to include theme toggle */}
       <HeaderButtons />
-      {/* Header with Back Button & Warning Button */}
+
       <View style={styles.header}>
+        <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+          <Text style={styles.backText}>✖</Text>
+        </TouchableOpacity>
+
         <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
 
-        {/* Warning Button */}
         <TouchableOpacity
-          onPress={() => {
-            RNUxcam.logEvent("Shuttle Home Button Pressed");
-            handleWarningPress();
-          }}
+          onPress={handleWarningPress}
           style={styles.warningButton}
         >
           <Text style={styles.warningIcon}>⚠</Text>
         </TouchableOpacity>
       </View>
-      {/* Campus Toggle Button */}
+
       <TouchableOpacity
         style={styles.switchButton}
-        onPress={() => setCampus(campus === "SGW" ? "LOY" : "SGW")}
+        onPress={handleCampusToggle}
       >
         <Text style={styles.switchText}>
           {campus === "SGW" ? "SGW ➜ LOY" : "LOY ➜ SGW"}
         </Text>
       </TouchableOpacity>
-      {/* Schedule Table with Vertical Divider */}
+
       <ScrollView style={styles.scheduleContainer}>
         <Text style={styles.scheduleHeader}>
           Schedule in effect Monday to Friday
@@ -199,7 +213,6 @@ export default function ShuttleScheduleScreen() {
   );
 }
 
-// Function to split schedule into AM and PM
 const splitSchedule = (times) => {
   const amTimes = times.filter((time) => moment(time, "HH:mm").hour() < 12);
   const pmTimes = times.filter((time) => moment(time, "HH:mm").hour() >= 12);

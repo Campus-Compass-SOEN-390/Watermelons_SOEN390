@@ -3,10 +3,12 @@ import React, { useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, usePathname } from "expo-router";
 import { ThemeContext } from "../context/ThemeContext";
+import { useButtonInteraction } from "../hooks/useButtonInteraction";
 
 export default function HeaderButtons() {
   const router = useRouter();
   const pathname = usePathname();
+  const { handleButtonPress } = useButtonInteraction();
 
   // Get theme context properly
   const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
@@ -33,23 +35,40 @@ export default function HeaderButtons() {
     <View style={styles.topNav}>
       {/* Left Slot (Home or Back or Placeholder) */}
       <View style={isHome ? styles.placeholder : dynamicStyles.headerButtons}>
-        {isSettings ? (
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons
-              name="arrow-back"
-              size={24}
-              color={theme.iconColor || "#FFFFFF"}
-            />
-          </TouchableOpacity>
-        ) : isHome ? null : (
-          <TouchableOpacity onPress={() => router.push("/")}>
-            <Ionicons
-              name="home"
-              size={24}
-              color={theme.iconColor || "#FFFFFF"}
-            />
-          </TouchableOpacity>
-        )}
+        {(() => {
+          if (isSettings) {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  handleButtonPress(null, "Going back");
+                  router.back();
+                }}
+              >
+                <Ionicons
+                  name="arrow-back"
+                  size={24}
+                  color={theme.iconColor || "#FFFFFF"}
+                />
+              </TouchableOpacity>
+            );
+          } else if (!isHome) {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  handleButtonPress("/", "Going to home");
+                  router.push("/");
+                }}
+              >
+                <Ionicons
+                  name="home"
+                  size={24}
+                  color={theme.iconColor || "#FFFFFF"}
+                />
+              </TouchableOpacity>
+            );
+          }
+          return null;
+        })()}
       </View>
 
       <View style={{ flex: 1 }} />
@@ -59,7 +78,13 @@ export default function HeaderButtons() {
         {/* Theme toggle button */}
         <TouchableOpacity
           style={[dynamicStyles.headerButtons, { marginRight: 8 }]}
-          onPress={toggleTheme}
+          onPress={() => {
+            handleButtonPress(
+              null,
+              isDarkMode ? "Switching to light mode" : "Switching to dark mode"
+            );
+            toggleTheme();
+          }}
         >
           <Ionicons
             name={isDarkMode ? "sunny" : "moon"}
@@ -72,7 +97,10 @@ export default function HeaderButtons() {
         {!isSettings && (
           <TouchableOpacity
             style={dynamicStyles.headerButtons}
-            onPress={() => router.push("/screens/SettingsPage")}
+            onPress={() => {
+              handleButtonPress("/screens/SettingsPage", "Opening settings");
+              router.push("/screens/SettingsPage");
+            }}
           >
             <Ionicons
               name="settings"

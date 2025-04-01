@@ -12,6 +12,7 @@ import Slider from "@react-native-community/slider";
 import PropTypes from "prop-types";
 import { styles as defaultStyles } from "../../styles/poiStyles";
 import { ThemeContext } from "../../context/ThemeContext";
+import { useButtonInteraction } from "../../hooks/useButtonInteraction";
 
 // Create theme-aware styles for the FilterModal
 const getThemedStyles = (isDarkMode, theme, styles) => {
@@ -82,6 +83,9 @@ const FilterModal = ({
   isDarkMode,
   theme,
 }) => {
+  // Use ButtonInteraction hook from second version
+  const { handleButtonPress } = useButtonInteraction();
+
   // If theme/isDarkMode weren't passed as props, get from context
   const themeContext = useContext(ThemeContext);
   const effectiveIsDarkMode =
@@ -107,12 +111,33 @@ const FilterModal = ({
     return value ? "#922338" : "#f4f3f4";
   };
 
+  // Handler functions from second version
+  const handleClose = () => {
+    handleButtonPress(null, "Closing filter modal");
+    onClose();
+  };
+
+  const handleApplyFilters = () => {
+    handleButtonPress(null, "Applying POI filters");
+    onClose();
+  };
+
+  const handleDistanceChange = (value) => {
+    handleButtonPress(null, `Setting distance to ${value} kilometers`);
+    setDistance(value);
+  };
+
+  const handleCategoryToggle = (category, value, setter) => {
+    handleButtonPress(null, `${value ? "Showing" : "Hiding"} ${category}`);
+    setter(value);
+  };
+
   return (
     <Modal
       visible={isVisible}
       transparent
       animationType="slide"
-      onRequestClose={onClose}
+      onRequestClose={handleClose}
     >
       <View style={themedStyles.filterModalContainer}>
         <SafeAreaView>
@@ -124,7 +149,8 @@ const FilterModal = ({
               </Text>
               <TouchableOpacity
                 style={themedStyles.closeModalButton}
-                onPress={onClose}
+                onPress={handleClose}
+                accessibilityLabel="Close filter modal"
               >
                 <Text style={themedStyles.closeModalIcon}>×</Text>
               </TouchableOpacity>
@@ -143,7 +169,13 @@ const FilterModal = ({
                 <Switch
                   testID="distanceSwitch"
                   value={useDistance}
-                  onValueChange={setUseDistance}
+                  onValueChange={(value) =>
+                    handleCategoryToggle(
+                      "distance filter",
+                      value,
+                      setUseDistance
+                    )
+                  }
                   trackColor={trackColor}
                   thumbColor={thumbColor(useDistance)}
                   ios_backgroundColor={effectiveIsDarkMode ? "#555" : "#e0e0e0"}
@@ -161,7 +193,7 @@ const FilterModal = ({
                     maximumValue={10}
                     step={0.5}
                     value={distance}
-                    onValueChange={setDistance}
+                    onValueChange={handleDistanceChange}
                     minimumTrackTintColor="#922338"
                     maximumTrackTintColor={
                       effectiveIsDarkMode ? "#555" : "#e0e0e0"
@@ -181,7 +213,9 @@ const FilterModal = ({
                 <Switch
                   testID="cafeSwitch"
                   value={showCafes}
-                  onValueChange={setShowCafes}
+                  onValueChange={(value) =>
+                    handleCategoryToggle("cafes", value, setShowCafes)
+                  }
                   trackColor={trackColor}
                   thumbColor={thumbColor(showCafes)}
                   ios_backgroundColor={effectiveIsDarkMode ? "#555" : "#e0e0e0"}
@@ -193,7 +227,13 @@ const FilterModal = ({
                 <Switch
                   testID="restaurantSwitch"
                   value={showRestaurants}
-                  onValueChange={setShowRestaurants}
+                  onValueChange={(value) =>
+                    handleCategoryToggle(
+                      "restaurants",
+                      value,
+                      setShowRestaurants
+                    )
+                  }
                   trackColor={trackColor}
                   thumbColor={thumbColor(showRestaurants)}
                   ios_backgroundColor={effectiveIsDarkMode ? "#555" : "#e0e0e0"}
@@ -205,7 +245,9 @@ const FilterModal = ({
                 <Switch
                   testID="activitySwitch"
                   value={showActivities}
-                  onValueChange={setShowActivities}
+                  onValueChange={(value) =>
+                    handleCategoryToggle("activities", value, setShowActivities)
+                  }
                   trackColor={trackColor}
                   thumbColor={thumbColor(showActivities)}
                   ios_backgroundColor={effectiveIsDarkMode ? "#555" : "#e0e0e0"}
@@ -216,7 +258,8 @@ const FilterModal = ({
             {/* Apply Button */}
             <TouchableOpacity
               style={themedStyles.applyButton}
-              onPress={onClose}
+              onPress={handleApplyFilters}
+              accessibilityLabel="Apply filters"
             >
               <Text style={themedStyles.applyButtonText}>Apply Filters</Text>
             </TouchableOpacity>

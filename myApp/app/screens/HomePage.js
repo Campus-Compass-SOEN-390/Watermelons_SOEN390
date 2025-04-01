@@ -1,38 +1,35 @@
-import { useEffect, React, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { createHomePageStyles } from "../styles/HomePageStyles.js";
 import RNUxcam from "react-native-ux-cam";
 import { ThemeContext } from "../context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
+import { useButtonInteraction } from "../hooks/useButtonInteraction";
+import HeaderButtons from "../components/HeaderButtons.js";
 
 export default function HomePage() {
   const router = useRouter();
   const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const { handleButtonPress } = useButtonInteraction();
 
   // Create styles based on current theme
   const styles = createHomePageStyles(theme);
 
-  // Add this useEffect hook for UXCam screen tagging
   useEffect(() => {
-    // Tag this screen in UXCam
     RNUxcam.tagScreenName("HomePage");
   }, []);
 
+  const handleNavigationPress = (route, label) => {
+    RNUxcam.logEvent(`${label} Button Pressed`);
+    handleButtonPress(route, label);
+    router.push(route);
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
-      {/* Theme Toggle Button */}
-      <TouchableOpacity
-        style={styles.themeToggle}
-        onPress={toggleTheme}
-        testID="themeToggleButton"
-      >
-        <Ionicons
-          name={isDarkMode ? "sunny" : "moon"}
-          size={22}
-          color={theme.buttonText}
-        />
-      </TouchableOpacity>
+      {/* Use HeaderButtons component which includes theme toggle */}
+      <HeaderButtons />
 
       <Image
         style={styles.logo}
@@ -40,16 +37,16 @@ export default function HomePage() {
         resizeMode="contain"
         testID="logo"
       />
+
       <View style={styles.buttonsContainer}>
         <Text style={styles.title}>Getting around campus</Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
             testID="sgwButton"
-            onPress={() => {
-              RNUxcam.logEvent("SGW Campus Button Pressed");
-              router.push("/(tabs)/map?type=sgw");
-            }}
+            onPress={() =>
+              handleNavigationPress("/(tabs)/map?type=sgw", "SGW Campus")
+            }
           >
             <Text style={[styles.buttonText, { color: theme.text }]}>
               SGW Campus
@@ -58,10 +55,9 @@ export default function HomePage() {
           <TouchableOpacity
             style={styles.button}
             testID="loyolaButton"
-            onPress={() => {
-              RNUxcam.logEvent("Loyola Campus Button Pressed");
-              router.push("/(tabs)/map?type=loy");
-            }}
+            onPress={() =>
+              handleNavigationPress("/(tabs)/map?type=loy", "Loyola Campus")
+            }
           >
             <Text style={[styles.buttonText, { color: theme.text }]}>
               Loyola Campus
@@ -72,7 +68,12 @@ export default function HomePage() {
           <TouchableOpacity
             style={styles.button}
             testID="shuttleScheduleButton"
-            onPress={() => router.push("/screens/ShuttleScheduleScreen")}
+            onPress={() =>
+              handleNavigationPress(
+                "/screens/ShuttleScheduleScreen",
+                "Shuttle Bus Schedule"
+              )
+            }
           >
             <Text style={[styles.buttonText, { color: theme.text }]}>
               Shuttle Bus Schedule
@@ -81,10 +82,9 @@ export default function HomePage() {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => {
-              RNUxcam.logEvent("Interest point Button Pressed");
-              router.push("(tabs)/interest-points");
-            }}
+            onPress={() =>
+              handleNavigationPress("(tabs)/interest-points", "Interest Points")
+            }
             testID="interestButton"
           >
             <Text style={[styles.buttonText, { color: theme.text }]}>
@@ -93,16 +93,19 @@ export default function HomePage() {
           </TouchableOpacity>
         </View>
       </View>
+
       <View style={styles.buttonsContainer}>
         <Text style={styles.title}>View My Calendar</Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.googleButton}
             testID="calendarfetchbutton"
-            onPress={() => {
-              RNUxcam.logEvent("Google Calendar Button Pressed");
-              router.push("screens/CalendarFetching");
-            }}
+            onPress={() =>
+              handleNavigationPress(
+                "screens/CalendarFetching",
+                "Connect Calendars"
+              )
+            }
           >
             <Image
               source={require("../../assets/images/google_logo.png")}

@@ -18,6 +18,7 @@ import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import { useLocationContext } from "@/app/context/LocationContext";
 import { ThemeContext } from "@/app/context/ThemeContext";
+import { useButtonInteraction } from "../../hooks/useButtonInteraction";
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
@@ -30,6 +31,7 @@ const POIListItem = ({
   theme,
 }) => {
   const [imageError, setImageError] = useState(false);
+  const { handleButtonPress } = useButtonInteraction();
 
   // Use provided styles or fall back to defaults
   const styles = themeStyles || defaultStyles;
@@ -54,6 +56,7 @@ const POIListItem = ({
 
   // Handle Get Directions button press
   const handleGetDirections = () => {
+    handleButtonPress(null, `Getting directions to ${item.name}`);
     console.log(`Get directions to: ${item.name}`);
     console.log(`Address: ${item.vicinity || "Address not available"}`);
     console.log(
@@ -203,6 +206,7 @@ const POIList = ({
   const isDarkMode =
     propIsDarkMode !== undefined ? propIsDarkMode : themeContext?.isDarkMode;
   const theme = propTheme || themeContext?.theme;
+  const { handleButtonPress } = useButtonInteraction();
 
   // Use provided styles or create theme-aware styles
   const styles =
@@ -235,7 +239,10 @@ const POIList = ({
         <Text style={styles.errorText}>{error ?? "An error occurred"}</Text>
         <TouchableOpacity
           style={[styles.retryButton, { marginTop: 20 }]}
-          onPress={onRefresh}
+          onPress={() => {
+            handleButtonPress(null, "Retrying to load places");
+            onRefresh();
+          }}
         >
           <Ionicons name="refresh" size={18} color="white" />
           <Text style={styles.buttonText}>Retry</Text>
