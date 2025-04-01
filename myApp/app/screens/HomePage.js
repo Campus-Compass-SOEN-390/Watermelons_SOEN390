@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
-import { useRouter } from 'expo-router';
-import { homepageStyles as styles } from '../styles/HomePageStyles.js';
-import HeaderButtons from "../components/HeaderButtons";
-import { Ionicons } from '@expo/vector-icons';
-import { useButtonInteraction } from '../hooks/useButtonInteraction'; 
-import RNUxcam from 'react-native-ux-cam'; 
+import { useRouter } from "expo-router";
+import { homepageStyles as styles } from "../styles/HomePageStyles.js";
+import RNUxcam from "react-native-ux-cam";
+import { useButtonInteraction } from '../hooks/useButtonInteraction';
+import HeaderButtons from "../components/HeaderButtons.js";
 
 export default function HomePage() {
     const router = useRouter();
@@ -23,32 +22,27 @@ export default function HomePage() {
 
     return (
         <View style={{ flex: 1 }}>
-            {/* Top navigation with Settings button */}
-            <HeaderButtons />
-
-            {/* Logo */}
+          <HeaderButtons />
             <Image
                 style={styles.logo}
-                source={require('../../assets/images/logo.png')}
+                source={require("../../assets/images/logo.png")}
                 resizeMode="contain"
                 testID="logo"
             />
-
-            {/* Getting around campus section */}
             <View style={styles.buttonsContainer}>
                 <Text style={styles.title}>Getting around campus</Text>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity 
                         style={styles.button}
                         testID="sgwButton"
-                        onPress={() => router.push('/(tabs)/map?type=sgw')}
+                        onPress={() => handleNavigationPress('/(tabs)/map?type=sgw', 'SGW Campus')}
                     >
                         <Text style={styles.buttonText}>SGW Campus</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
                         style={styles.button}
                         testID="loyolaButton"
-                        onPress={() => router.push('/(tabs)/map?type=loy')}
+                        onPress={() => handleNavigationPress('/(tabs)/map?type=loy', 'Loyola Campus')}
                     >
                         <Text style={styles.buttonText}>Loyola Campus</Text>
                     </TouchableOpacity>
@@ -57,29 +51,26 @@ export default function HomePage() {
                     <TouchableOpacity 
                         style={styles.button}
                         testID="shuttleScheduleButton"
-                        onPress={() => router.push('/screens/ShuttleScheduleScreen')}
+                        onPress={() => handleNavigationPress('/screens/ShuttleScheduleScreen', 'Shuttle Bus Schedule')}
                     >
                         <Text style={styles.buttonText}>Shuttle Bus Schedule</Text>
                     </TouchableOpacity>
-
                     <TouchableOpacity 
                         style={styles.button}
-                        onPress={() => router.push('(tabs)/interest-points')}
+                        onPress={() => handleNavigationPress('(tabs)/interest-points', 'Interest Points')}
                         testID="interestButton"
                     >
                         <Text style={styles.buttonText}>Interest Points</Text>
                     </TouchableOpacity>
                 </View>
             </View>
-
-            {/* Calendar section */}
             <View style={styles.buttonsContainer}>
                 <Text style={styles.title}>View My Calendar</Text>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity 
                         style={styles.googleButton}
                         testID="calendarfetchbutton"
-                        onPress={() => router.push('screens/CalendarFetching')}
+                        onPress={() => handleNavigationPress('screens/CalendarFetching', 'Connect Calendars')}
                     >
                         <Image
                             source={require('../../assets/images/google_logo.png')}
@@ -90,15 +81,6 @@ export default function HomePage() {
                     </TouchableOpacity>
                 </View>
             </View>
-
-            {/* Info button in bottom right corner */}
-            <TouchableOpacity
-                style={styles.infoButton}
-                onPress={() => router.push('/screens/InfoPage')}
-                testID="infoButton"
-            >
-                <Ionicons name="information-circle-outline" size={30} color="white" />
-            </TouchableOpacity>
         </View>
     );
 }

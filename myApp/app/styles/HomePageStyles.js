@@ -89,19 +89,6 @@ export const homepageStyles = StyleSheet.create({
         // Shadow for android
         elevation: 5, // Android shadow
     },
-    infoButton: {
-        position: 'absolute',
-        bottom: 20,
-        right: 20,
-        backgroundColor: 'rgba(0, 0, 0, 0.6)',
-        borderRadius: 24,
-        width: 48,
-        height: 48,
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 10,
-      },
-        
     buttonText: {
         color: '#000000',
         textAlign: 'center',
