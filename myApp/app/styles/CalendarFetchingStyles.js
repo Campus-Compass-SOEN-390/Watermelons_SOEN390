@@ -1,12 +1,5 @@
-import { StyleSheet } from "react-native";
-import {
-  FONT_SIZE_1,
-  FONT_SIZE_2,
-  FONT_SIZE_3,
-  FONT_SIZE_4,
-  FONT_SIZE_5,
-  COLORS,
-} from "./constants";
+import { StyleSheet } from 'react-native';
+import { FONT_SIZE_1,FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4, FONT_SIZE_5, COLORS } from './constants';
 
 // Create a function that generates styles based on theme and mode
 export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
@@ -203,12 +196,12 @@ export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
 // Keep the original styles for backward compatibility
 export const calendarFetchingStyles = StyleSheet.create({
   container: {
-    backgroundColor: "#f5f5f5",
-    justifyContent: "center",
+    backgroundColor: COLORS.WHITE,
+    justifyContent: 'center',
     flex: 1,
   },
   redContainer: {
-    backgroundColor: "#922338",
+    backgroundColor: COLORS.CONCORDIA_RED,
     margin: 10,
     padding: 10,
     borderRadius: 10,
@@ -218,13 +211,13 @@ export const calendarFetchingStyles = StyleSheet.create({
     minHeight: 100,
   },
   whiteContainer: {
-    backgroundColor: "#FFFFFF",
-    width: "90%",
-    height: "90%",
+    backgroundColor: COLORS.WHITE,
+    width: '90%',
+    height: '90%',
     padding: 20,
     borderRadius: 8,
     elevation: 4,
-    shadowColor: "#000",
+    shadowColor: COLORS.SHADOW_COLOR_OR_BLACK,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -233,21 +226,21 @@ export const calendarFetchingStyles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    textAlign: "center",
-    color: "#333",
+    textAlign: 'center',
+    color: COLORS.DARK_GREY_TITLE,
   },
   input: {
     height: 50,
-    borderColor: "#ddd",
+    borderColor: COLORS.LIGHT_GREY_INPUT_BOXES,
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 15,
     marginBottom: 10,
     fontSize: FONT_SIZE_3,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: COLORS.WHITE,
   },
   connectButton: {
-    backgroundColor: "#922338",
+    backgroundColor: COLORS.CONCORDIA_RED,
     padding: 15,
     borderRadius: 25,
     alignSelf: "center",
@@ -268,7 +261,7 @@ export const calendarFetchingStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: COLORS.WHITE,
   },
   successTitle: {
     fontSize: FONT_SIZE_5,
