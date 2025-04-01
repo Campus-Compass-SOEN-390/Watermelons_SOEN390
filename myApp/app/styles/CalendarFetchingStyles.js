@@ -1,12 +1,5 @@
-import { StyleSheet } from "react-native";
-import {
-  FONT_SIZE_1,
-  FONT_SIZE_2,
-  FONT_SIZE_3,
-  FONT_SIZE_4,
-  FONT_SIZE_5,
-  COLORS,
-} from "./constants";
+import { StyleSheet } from 'react-native';
+import { FONT_SIZE_1,FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4, FONT_SIZE_5, COLORS } from './constants';
 
 // Create a function that generates styles based on theme and mode
 export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
