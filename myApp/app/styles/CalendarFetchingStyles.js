@@ -208,7 +208,7 @@ export const calendarFetchingStyles = StyleSheet.create({
     flex: 1,
   },
   redContainer: {
-    backgroundColor: "#922338",
+    backgroundColor: COLORS.CONCORDIA_RED,
     margin: 10,
     padding: 10,
     borderRadius: 10,
@@ -238,7 +238,7 @@ export const calendarFetchingStyles = StyleSheet.create({
   },
   input: {
     height: 50,
-    borderColor: "#ddd",
+    borderColor: COLORS.LIGHT_GREY_INPUT_BOXES,
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 15,
@@ -247,7 +247,7 @@ export const calendarFetchingStyles = StyleSheet.create({
     backgroundColor: COLORS.OFF_WHITE,
   },
   connectButton: {
-    backgroundColor: "#922338",
+    backgroundColor: COLORS.CONCORDIA_RED,
     padding: 15,
     borderRadius: 25,
     alignSelf: "center",
