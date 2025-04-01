@@ -1,5 +1,12 @@
-import { StyleSheet } from 'react-native';
-import { FONT_SIZE_1,FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4, FONT_SIZE_5, COLORS } from './constants';
+import { StyleSheet } from "react-native";
+import {
+  FONT_SIZE_1,
+  FONT_SIZE_2,
+  FONT_SIZE_3,
+  FONT_SIZE_4,
+  FONT_SIZE_5,
+  COLORS,
+} from "./constants";
 
 // Create a function that generates styles based on theme and mode
 export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
@@ -201,7 +208,7 @@ export const calendarFetchingStyles = StyleSheet.create({
     flex: 1,
   },
   redContainer: {
-    backgroundColor: COLORS.CONCORDIA_RED,
+    backgroundColor: "#922338",
     margin: 10,
     padding: 10,
     borderRadius: 10,
@@ -231,7 +238,7 @@ export const calendarFetchingStyles = StyleSheet.create({
   },
   input: {
     height: 50,
-    borderColor: COLORS.LIGHT_GREY_INPUT_BOXES,
+    borderColor: "#ddd",
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 15,
@@ -240,7 +247,7 @@ export const calendarFetchingStyles = StyleSheet.create({
     backgroundColor: COLORS.OFF_WHITE,
   },
   connectButton: {
-    backgroundColor: COLORS.CONCORDIA_RED,
+    backgroundColor: "#922338",
     padding: 15,
     borderRadius: 25,
     alignSelf: "center",
