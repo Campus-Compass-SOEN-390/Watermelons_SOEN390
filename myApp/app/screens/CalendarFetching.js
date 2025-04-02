@@ -22,7 +22,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import HeaderButtons from "../components/HeaderButtons.js";
 import MonthPicker from "../components/MonthPicker";
-import RNUxcam from "react-native-ux-cam";
+// import RNUxcam from "react-native-ux-cam";
 import { ThemeContext } from "../context/ThemeContext";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
 
@@ -58,10 +58,10 @@ export default function CalendarFetching() {
     process.env.GOOGLE_MAPS_API_KEY || Constants.expoConfig?.extra?.apiKey;
 
   // Add this useEffect hook for UXCam screen tagging
-  useEffect(() => {
-    // Tag this screen in UXCam
-    RNUxcam.tagScreenName("Calendar Fetching");
-  }, []);
+  // useEffect(() => {
+  //   // Tag this screen in UXCam
+  //   RNUxcam.tagScreenName("Calendar Fetching");
+  // }, []);
 
   const fetchCalendarEvents = useCallback(async () => {
     if (!calendarId.trim()) {
@@ -192,7 +192,7 @@ export default function CalendarFetching() {
       }}
     >
       <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-      <HeaderButtons/>
+      <HeaderButtons />
 
       {/* Main Content */}
       <KeyboardAvoidingView
@@ -230,9 +230,9 @@ export default function CalendarFetching() {
                             key={index}
                             style={styles.historyItem}
                             onPress={() => {
-                              RNUxcam.logEvent(
-                                "Stored Calendar Ids Button Pressed"
-                              );
+                              // RNUxcam.logEvent(
+                              //   "Stored Calendar Ids Button Pressed"
+                              // );
                               handleButtonPress(null, item.name);
                               setCalendarId(item.id);
                             }}
@@ -287,7 +287,7 @@ export default function CalendarFetching() {
                 <TouchableOpacity
                   style={styles.clearHistoryButton}
                   onPress={async () => {
-                    RNUxcam.logEvent("Clear History Button Pressed");
+                    // RNUxcam.logEvent("Clear History Button Pressed");
                     handleButtonPress(null, "Clear History");
                     try {
                       await AsyncStorage.removeItem("calendarIds");
