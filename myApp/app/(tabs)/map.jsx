@@ -54,7 +54,6 @@ import { estimateShuttleFromButton } from "../utils/shuttleUtils";
 import { useButtonInteraction } from '../hooks/useButtonInteraction';
 import HeaderButtons from "../components/HeaderButtons";
 
-const MAPBOX_API = Constants.expoConfig?.extra?.mapbox; 
 Mapbox.setAccessToken("MAPBOX_API");
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
@@ -831,7 +830,6 @@ useEffect(() => {
   const handleCloseSteps = () => {
     setShowSteps(false);
   };
-  
   
   
  const handleCancelButton = () =>{
