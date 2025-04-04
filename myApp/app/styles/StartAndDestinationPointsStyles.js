@@ -329,7 +329,7 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
       elevation: 40,
       shadowColor: theme.shadowColor,
       zIndex: 11,
-      width: 390,
+      width: width*0.868,
       height: 44,
       borderBottomColor: theme.borderColor,
       borderBottomWidth: 1,
