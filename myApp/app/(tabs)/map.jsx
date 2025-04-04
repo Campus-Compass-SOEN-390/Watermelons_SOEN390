@@ -75,7 +75,7 @@ import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
 import { estimateShuttleFromButton } from "../utils/shuttleUtils";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
 
-const MAPBOX_API = Constants.expoConfig?.extra?.mapbox;
+
 Mapbox.setAccessToken("MAPBOX_API");
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 

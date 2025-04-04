@@ -3,7 +3,7 @@ import { View } from "react-native";
 import Mapbox from "@rnmapbox/maps";
 import ShortestPathMap from "./IndoorMap/ShortestPathMap";
 import MapDirections from "./MapDirections";
-import MapboxMarker from "./MarkerComponent";
+
 
 interface Props {
   graph: any;
@@ -38,7 +38,7 @@ export const Directions : React.FC<Props> = ({
       }, [travelMode]);
       
     const getBuildingCode = (room: string) => {
-        const match = room.match(/^[A-Za-z]+/);
+        const match = /^[A-Za-z]+/.exec(room);
         return match ? match[0] : null;
       };
     

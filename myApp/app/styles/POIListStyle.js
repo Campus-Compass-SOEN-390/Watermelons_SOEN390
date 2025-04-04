@@ -233,10 +233,61 @@ const createPOIListStyles = ({ isDarkMode, theme }) => {
       marginLeft: 8,
       fontSize: FONT_SIZE_2,
     },
+    // Footer component styles (from newer version)
+    footerContainer: {
+      padding: 16,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: backgroundColor,
+    },
+    footerText: {
+      fontSize: FONT_SIZE_2,
+      color: subTextColor,
+    },
+    // Scroll to top button styles (from newer version)
+    scrollTopButton: {
+      position: 'absolute',
+      bottom: 90, // Position above tab bar
+      right: 20,
+      backgroundColor: primaryColor,
+      borderRadius: 30,
+      width: 50,
+      height: 50,
+      justifyContent: 'center',
+      alignItems: 'center',
+      shadowColor: shadowColor,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: isDarkMode ? 0.4 : 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+      zIndex: 100,
+    },
+    scrollTopButtonTouchable: {
+      width: '100%',
+      height: '100%',
+      borderRadius: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    // Placeholder for loading state
+    placeholderContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: backgroundColor,
+    },
+    placeholderText: {
+      fontSize: FONT_SIZE_3,
+      color: subTextColor,
+      marginTop: 12,
+    },
   });
 };
 
-// Export the default light mode styles for backward compatibility
+// Export the default styles using the theme-aware creator function
 export const styles = createPOIListStyles({ isDarkMode: false, theme: null });
 
 // Export the theme-aware styles creator function
