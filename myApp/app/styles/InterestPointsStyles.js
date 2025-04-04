@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
-import { FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4 } from "./constants";
+import { FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4, COLORS } from "./constants";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -8,7 +8,7 @@ export default StyleSheet.create({
   // Container for the entire screen
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.WHITE,
   },
   // Map fills the entire container
   map: {
@@ -29,12 +29,12 @@ export default StyleSheet.create({
   },
   // Center on user location button
   centerButton: {
-    backgroundColor: "#1E88E5", 
+    backgroundColor: COLORS.BLUE_BUTTONS, 
     width: 56,
     height: 56,
     borderRadius: 28,
     elevation: 8,
-    shadowColor: "#000",
+    shadowColor: COLORS.BLACK_OR_SHADOW,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
@@ -45,11 +45,11 @@ export default StyleSheet.create({
   // Container for the zoom buttons 
   zoomContainer: {
     flexDirection: "column",
-    backgroundColor: "#1E88E5",
+    backgroundColor: COLORS.BLUE_BUTTONS,
     borderRadius: 28,
     overflow: "hidden",
     elevation: 8,
-    shadowColor: "#000",
+    shadowColor: COLORS.BLACK_OR_SHADOW,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
@@ -68,16 +68,16 @@ export default StyleSheet.create({
     padding: 6,
     borderRadius: 15,
     borderWidth: 2,
-    borderColor: "#fff",
+    borderColor: COLORS.WHITE,
     elevation: 4,
   },
   // Custom marker style for coffee shops
   coffeeMarker: {
-    backgroundColor: "black", 
+    backgroundColor: COLORS.BLACK_OR_SHADOW, 
     padding: 6,
     borderRadius: 15,
     borderWidth: 2,
-    borderColor: "#fff",
+    borderColor: COLORS.WHITE,
     elevation: 4,
   },
   // Update Results button container (placed at top center under the notch)
@@ -88,14 +88,14 @@ export default StyleSheet.create({
   },
   // Update Results button styling
   updateButton: {
-    backgroundColor: "#1E88E5",
+    backgroundColor: COLORS.BLUE_BUTTONS,
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 25,
     elevation: 6,
   },
   updateButtonText: {
-    color: "#fff",
+    color: COLORS.WHITE,
     fontSize: FONT_SIZE_3,
     fontWeight: "bold",
   },
@@ -108,11 +108,11 @@ export default StyleSheet.create({
   },
   modalContent: {
     width: "80%",
-    backgroundColor: "white",
+    backgroundColor: COLORS.WHITE,
     borderRadius: 10,
     padding: 20,
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: COLORS.BLACK_OR_SHADOW,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
@@ -128,7 +128,7 @@ export default StyleSheet.create({
     marginBottom: 15,
   },
   closeButton: {
-    backgroundColor: "#ff5252",
+    backgroundColor: COLORS.RED_CLOSE_BUTTON,
     padding: 8,
     borderRadius: 20,
     width: 30,
@@ -140,18 +140,18 @@ export default StyleSheet.create({
     right: 10,
   },
   closeButtonText: {
-    color: "#fff",
+    color: COLORS.WHITE,
     fontWeight: "bold",
     fontSize: FONT_SIZE_3,
   },
   // Toggle button (for switching between map and list views)
   listButton: {
-    backgroundColor: "#1E88E5",
+    backgroundColor: COLORS.BLUE_BUTTONS,
     width: 56,
     height: 56,
     borderRadius: 28,
     elevation: 8,
-    shadowColor: "#000",
+    shadowColor: COLORS.BLACK_OR_SHADOW,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
@@ -162,7 +162,7 @@ export default StyleSheet.create({
   // List view container (full screen within the tab)
   listViewContainer: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.WHITE,
     paddingTop: 70,
     marginBottom: 90,
   },
@@ -172,7 +172,7 @@ export default StyleSheet.create({
   listItem: {
     padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomColor: COLORS.LIGHT_GREY_INPUT_BOXES,
   },
   listItemText: {
     fontSize: FONT_SIZE_3,
@@ -180,11 +180,11 @@ export default StyleSheet.create({
   },
   listItemDistance: {
     fontSize: FONT_SIZE_2,
-    color: "#666",
+    color: COLORS.DARK_MODE_LIGHT_GREY,
   },
 
   filterButton: {
-    backgroundColor: "#007AFF",
+    backgroundColor: COLORS.BLUE_BUTTONS,
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
@@ -194,7 +194,7 @@ export default StyleSheet.create({
     width: "50%",
   },
   filterButtonText: {
-    color: "white",
+    color: COLORS.WHITE,
     fontWeight: "bold",
   },
   

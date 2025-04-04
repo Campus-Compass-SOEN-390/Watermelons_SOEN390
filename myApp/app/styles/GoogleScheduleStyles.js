@@ -1,126 +1,178 @@
 import { StyleSheet } from "react-native";
-import { FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_5, FONT_SIZE_1 } from "./constants";
+import {
+  FONT_SIZE_1,
+  FONT_SIZE_2,
+  FONT_SIZE_3,
+  FONT_SIZE_5,
+  COLORS,
+} from "./constants";
 
-const styles = StyleSheet.create({
+// Create theme-aware styles
+const createGoogleScheduleStyles = ({ isDarkMode, theme }) => {
+  // Theme properties with defaults
+  const primaryColor = theme?.buttonBackground || COLORS.CONCORDIA_RED;
+  const backgroundColor = isDarkMode
+    ? theme?.background || COLORS.BLACK_OR_SHADOW
+    : COLORS.OFF_WHITE;
+  const cardBackground = isDarkMode
+    ? theme?.cardBackground || COLORS.DARK_MODE_DEEP_GREY
+    : COLORS.LIGHT_GREY_INPUT_BOXES;
+  const textColor = isDarkMode ? theme?.text || COLORS.WHITE : COLORS.BLACK_OR_SHADOW;
+  const subTextColor = isDarkMode ? theme?.subText || COLORS.LIGHT_GREY : COLORS.DARK_MODE_LIGHT_GREY;
+  const highlightColor = isDarkMode ? COLORS.RED_CLOSE_BUTTON : COLORS.CONCORDIA_RED;
+  const grayTextColor = isDarkMode ? COLORS.LIGHT_GREY : "gray";
+
+  return StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: "#f5f5f5",
-        paddingTop: 40,
-        paddingHorizontal: 16,
+      flex: 1,
+      backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : backgroundColor,
+      paddingTop: 40,
+      paddingHorizontal: 16,
+    },
+    outerContainer: {
+      flex: 1,
+      backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.WHITE,
     },
     daysRow: {
-        flexDirection: "row",
-        justifyContent: "space-around",
-        marginBottom: 16,
+      flexDirection: "row",
+      justifyContent: "space-around",
+      marginBottom: 16,
     },
     dayText: {
-        fontSize: FONT_SIZE_2,
-        fontWeight: "bold",
-        color: "gray",
+      fontSize: FONT_SIZE_2,
+      fontWeight: "bold",
+      color: isDarkMode ? COLORS.LIGHT_GREY : grayTextColor,
     },
     highlightedDay: {
-        color: "#800020",
-        textDecorationLine: "underline",
-        fontWeight: "bold",
+      color: highlightColor,
+      textDecorationLine: "underline",
+      fontWeight: "bold",
     },
     scheduleTitle: {
-        fontSize: FONT_SIZE_5,
-        fontWeight: "bold",
-        marginBottom: 8,
+      fontSize: FONT_SIZE_5,
+      fontWeight: "bold",
+      marginBottom: 8,
+      color: isDarkMode ? COLORS.WHITE : textColor,
     },
     card: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        backgroundColor: "#E5E5E5",
-        borderRadius: 16,
-        padding: 16,
-        marginVertical: 6,
-        alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      backgroundColor: cardBackground,
+      borderRadius: 16,
+      padding: 16,
+      marginVertical: 6,
+      alignItems: "center",
+      // Enhanced shadows for dark mode
+      shadowColor: COLORS.BLACK_OR_SHADOW,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: isDarkMode ? 0.5 : 0.2,
+      shadowRadius: 3,
+      elevation: 4,
     },
     cardTextContainer: {
-        flex: 1,
+      flex: 1,
     },
     courseText: {
-        fontWeight: "bold",
-        fontSize: FONT_SIZE_3,
-        marginBottom: 4,
+      fontWeight: "bold",
+      fontSize: FONT_SIZE_3,
+      marginBottom: 4,
+      color: textColor,
+    },
+    courseLocation: {
+      color: subTextColor,
+      fontSize: FONT_SIZE_2,
+    },
+    courseTime: {
+      color: subTextColor,
+      fontSize: FONT_SIZE_2,
     },
     iconContainer: {
-        backgroundColor: "#800020",
-        padding: 10,
-        borderRadius: 12,
-        marginLeft: 8,
+      backgroundColor: primaryColor,
+      padding: 10,
+      borderRadius: 12,
+      marginLeft: 8,
     },
     todayButtonContainer: {
-        position: "absolute",
-        bottom: 20,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        alignSelf: "center",
+      position: "absolute",
+      bottom: 20,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      alignSelf: "center",
     },
     todayNavButton: {
-        backgroundColor: "#800020",
-        padding: 10,
-        borderRadius: 20
+      backgroundColor: primaryColor,
+      padding: 10,
+      borderRadius: 20,
     },
     todayLabelWrapper: {
-        backgroundColor: "#800020",
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-        borderRadius: 25,
-        marginHorizontal: 8,
-        width: 150,
+      backgroundColor: primaryColor,
+      paddingHorizontal: 10,
+      paddingVertical: 10,
+      borderRadius: 25,
+      marginHorizontal: 8,
+      width: 150,
     },
     todayText: {
-        color: "white",
-        fontWeight: "bold",
-        fontSize: FONT_SIZE_3,
-        textAlign: "center",
+      color: "white",
+      fontWeight: "bold",
+      fontSize: FONT_SIZE_3,
+      textAlign: "center",
     },
     nextClassContainer: {
-        marginVertical: 12,
-        padding: 16,
-        backgroundColor: '#f5f5f5',
-        borderRadius: 12,
-        alignItems: 'center',
+      marginVertical: 12,
+      padding: 16,
+      backgroundColor: COLORS.DARK_MODE_GREY, // Always dark for this container
+      borderRadius: 12,
+      alignItems: "center",
+      // Enhanced shadows for dark mode
+      shadowColor: COLORS.BLACK_OR_SHADOW,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: isDarkMode ? 0.5 : 0.2,
+      shadowRadius: 3,
+      elevation: 4,
     },
     nextClassInfoText: {
-        fontSize: FONT_SIZE_2,
-        color: '#333',
-        textAlign: 'center',
-        marginBottom: 12,
-        fontWeight: '500',
+      fontSize: FONT_SIZE_2,
+      color: COLORS.WHITE, // Always white text in dark container
+      textAlign: "center",
+      marginBottom: 12,
+      fontWeight: "500",
     },
     nextClassDirections: {
-        backgroundColor: '#800020',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        borderRadius: 25,
-        marginTop: 8,
+      backgroundColor: primaryColor,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      borderRadius: 25,
+      marginTop: 8,
     },
     nextClassDetailsText: {
-        color: 'white',
-        fontSize: FONT_SIZE_1,
-        marginTop: 6,
-        textAlign: 'center',
-        paddingHorizontal: 10,
+      color: "white",
+      fontSize: FONT_SIZE_1,
+      marginTop: 6,
+      textAlign: "center",
+      paddingHorizontal: 10,
     },
     nextClassButtonText: {
-        color: 'white',
-        fontSize: FONT_SIZE_3,
-        fontWeight: 'bold',
+      color: "white",
+      fontSize: FONT_SIZE_3,
+      fontWeight: "bold",
     },
     noClassText: {
-        fontSize: FONT_SIZE_3,
-        color: '#666',
-        textAlign: 'center',
-        padding: 20,
-        fontStyle: 'italic'
-    }
-});
+      fontSize: FONT_SIZE_3,
+      color: COLORS.LIGHT_GREY_INPUT_BOXES, // Light gray for dark container
+      textAlign: "center",
+      padding: 20,
+      fontStyle: "italic",
+    },
+  });
+};
+
+// Default styles for backward compatibility
+const styles = createGoogleScheduleStyles({ isDarkMode: false, theme: null });
 
 export default styles;
+export { createGoogleScheduleStyles };

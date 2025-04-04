@@ -1,6 +1,6 @@
 // poiStyles.js
 import { StyleSheet, Dimensions } from "react-native";
-import { FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4, FONT_SIZE_5 } from "./constants";
+import { FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4, FONT_SIZE_5, COLORS } from "./constants";
 
 // Set safe area variables (adjust as needed)
 const safeAreaTop = 20;
@@ -20,12 +20,12 @@ export const styles = StyleSheet.create({
     paddingBottom: safeAreaBottom,
   },
   modalContent: {
-    backgroundColor: "#ffffff",
+    backgroundColor: COLORS.WHITE,
     padding: 20,
     borderRadius: 10,
     width: "80%",
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: COLORS.BLACK_OR_SHADOW,
     elevation: 8,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -42,7 +42,7 @@ export const styles = StyleSheet.create({
     marginBottom: 15,
   },
   closeButton: {
-    backgroundColor: "#ff5252",
+    backgroundColor: COLORS.RED_CLOSE_BUTTON,
     padding: 8,
     borderRadius: 20,
     width: 30,
@@ -52,7 +52,7 @@ export const styles = StyleSheet.create({
     marginTop: 20,
   },
   closeButtonText: {
-    color: "#ffffff",
+    color: COLORS.WHITE,
     fontWeight: "bold",
     fontSize: FONT_SIZE_3,
   },
@@ -63,11 +63,11 @@ export const styles = StyleSheet.create({
     position: "absolute",
     top: safeAreaTop + 230, // Positioned below other top buttons
     alignSelf: "center",
-    backgroundColor: "#922338", // Team's primary color
+    backgroundColor: COLORS.CONCORDIA_RED, // Team's primary color
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    shadowColor: "#000",
+    shadowColor: COLORS.BLACK_OR_SHADOW,
     elevation: 8,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -75,7 +75,7 @@ export const styles = StyleSheet.create({
     zIndex: 10,
   },
   updateButtonText: {
-    color: "#fff",
+    color: COLORS.WHITE,
     fontSize: FONT_SIZE_2,
     fontWeight: "bold",
   },
@@ -87,13 +87,13 @@ export const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
   },
   filterModalContent: {
-    backgroundColor: "#ffffff",
+    backgroundColor: COLORS.WHITE,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     paddingHorizontal: 24,
     paddingTop: 24,
     paddingBottom: 40,
-    shadowColor: "#000",
+    shadowColor: COLORS.BLACK_OR_SHADOW,
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
@@ -109,7 +109,7 @@ export const styles = StyleSheet.create({
   filterModalTitle: {
     fontSize: 22,
     fontWeight: "700",
-    color: "#333",
+    color: COLORS.DARK_GREY_TITLE,
   },
   filterSection: {
     marginVertical: 12,
@@ -117,13 +117,13 @@ export const styles = StyleSheet.create({
   filterSectionTitle: {
     fontSize: FONT_SIZE_4,
     fontWeight: "600",
-    color: "#555",
+    color: COLORS.DARK_MODE_LIGHT_GREY,
     marginBottom: 8,
   },
   distanceValue: {
     fontSize: FONT_SIZE_3,
     fontWeight: "bold",
-    color: "#922338", // App's primary color
+    color: COLORS.CONCORDIA_RED, // App's primary color
     textAlign: "center",
     marginTop: 8,
   },
@@ -133,11 +133,11 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: COLORS.OFF_WHITE,
   },
   filterOptionText: {
     fontSize: FONT_SIZE_3,
-    color: "#333",
+    color: COLORS.DARK_GREY_TITLE,
     fontWeight: "500",
   },
   customSlider: {
@@ -155,20 +155,20 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   applyButton: {
-    backgroundColor: "#922338", // App's primary color
+    backgroundColor: COLORS.CONCORDIA_RED, // App's primary color
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 24,
-    shadowColor: "#000",
+    shadowColor: COLORS.BLACK_OR_SHADOW,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 3,
   },
   applyButtonText: {
-    color: "#ffffff",
+    color: COLORS.WHITE,
     fontSize: FONT_SIZE_4,
     fontWeight: "700",
   },
@@ -183,11 +183,11 @@ export const styles = StyleSheet.create({
   closeModalIcon: {
     fontSize: FONT_SIZE_5,
     fontWeight: "bold",
-    color: "#555",
+    color: COLORS.DARK_MODE_LIGHT_GREY,
   },
   distanceSliderContainer: {
     marginTop: 10,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: COLORS.OFF_WHITE,
     padding: 15,
     borderRadius: 10,
     width: '100%',
@@ -195,7 +195,7 @@ export const styles = StyleSheet.create({
   distanceRangeLabel: {
     fontSize: FONT_SIZE_3,
     fontWeight: "500",
-    color: "#555",
+    color: COLORS.DARK_MODE_LIGHT_GREY,
     marginBottom: 10,
     textAlign: "center",
   },
