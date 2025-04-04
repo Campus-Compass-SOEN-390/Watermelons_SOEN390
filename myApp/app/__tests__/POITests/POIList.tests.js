@@ -322,7 +322,8 @@ describe("POIList Component", () => {
 
     expect(getByText("No Image Available")).toBeTruthy();
     expect(consoleSpy).toHaveBeenCalledWith(
-      `Image error for ${sampleData[0].name}`
+      "Image error for Test Place 1:",
+      "error loading image"
     );
     consoleSpy.mockRestore();
   });
@@ -790,7 +791,7 @@ describe("POIList Component", () => {
 
     // The first POI has a photo reference, so its source should include the API key
     expect(imageComponents[0].props.source.uri).toContain(
-      "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=ref1&key=undefined"
+      "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=ref1&key=dummy-key"
     );
   });
 });
