@@ -6,6 +6,7 @@ import RNUxcam from "react-native-ux-cam";
 import { ThemeContext } from "../context/ThemeContext";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function HomePage() {
   const router = useRouter();
@@ -125,6 +126,14 @@ export default function HomePage() {
             </TouchableOpacity>
           </View>
         </View>
+        {/* Info button in bottom right corner */}
+        <TouchableOpacity
+          style={styles.infoButton}
+          onPress={() => router.push("/screens/InfoPage")}
+          testID="infoButton"
+        >
+          <Ionicons name="information-circle-outline" size={30} color="white" />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
