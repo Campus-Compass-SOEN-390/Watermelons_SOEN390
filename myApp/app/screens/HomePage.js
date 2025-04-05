@@ -9,7 +9,6 @@ import HeaderButtons from "../components/HeaderButtons.js";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomePage() {
-  const router = useRouter();
   const { theme } = useContext(ThemeContext);
   const { handleButtonPress } = useButtonInteraction();
 
@@ -19,7 +18,6 @@ export default function HomePage() {
   const handleNavigationPress = (route, label) => {
     RNUxcam.logEvent(`${label} Button Pressed`);
     handleButtonPress(route, label);
-    router.push(route);
   };
    
   return (

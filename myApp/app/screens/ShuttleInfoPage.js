@@ -11,7 +11,6 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { infoPageStyles as styles } from '../styles/InfoPageStyles';
-import HeaderButtons from '../components/HeaderButtons';
 
 export default function ShuttleBusPage() {
   const router = useRouter();

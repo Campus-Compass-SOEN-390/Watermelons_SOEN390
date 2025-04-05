@@ -48,7 +48,7 @@ export default function CalendarFetching() {
   const { handleButtonPress } = useButtonInteraction();
 
   const [calendarId, setCalendarId] = useState("");
-  const [setEvents] = useState([]);
+  const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showSuccessScreen, setShowSuccessScreen] = useState(false);
   const [storedCalendarIds, setStoredCalendarIds] = useState([]);

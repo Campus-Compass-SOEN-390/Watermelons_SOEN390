@@ -43,23 +43,6 @@ export default function Settings() {
       {/* Status bar */}
       <StatusBar barStyle="light-content" />
 
-      {/* Header buttons */}
-      <View
-        style={{
-          marginTop: Platform.OS === "ios" ? 10 : 5,
-          marginBottom: 10,
-        }}
-      >
-        {/* Header buttons */}
-        <View
-          style={{
-            marginTop: 50,
-            marginBottom: 10,
-          }}
-        >
-        </View>{" "}
-      </View>
-
       <View style={themedStyles.container}>
         <Text style={themedStyles.title}>Settings</Text>
 
