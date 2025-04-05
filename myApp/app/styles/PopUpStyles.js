@@ -10,17 +10,18 @@ const popupStyles = StyleSheet.create({
   popup: {
     backgroundColor: "#fff",
     borderRadius: 20,
-    padding: 24,
-    width: "95%",           // ⬆ increase width percentage
-    maxHeight: "85%",       // ⬆ allow more vertical room
-    maxWidth: 400,          // ⬆ slight bump for longer text lines
+    padding: 20,
+    width: "95%",
+    maxHeight: "85%",
+    maxWidth: 400,
     position: "relative",
     elevation: 5,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-  },  
+  },
+  
   closeIcon: {
     position: "absolute",
     top: 10,
@@ -78,19 +79,24 @@ const popupStyles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 10,
+    justifyContent: "space-evenly", // better spacing across devices
+    flexWrap: "wrap",               // allow wrapping on smaller screens
     marginTop: 20,
+    gap: 10,
+  
   },
   button: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 12,
-    paddingHorizontal: 18,
+    paddingHorizontal: 16,          // slightly less to avoid overflow
     borderRadius: 30,
-    minWidth: 155, 
-    flexWrap: "wrap",
+    flexGrow: 1,                    // let buttons stretch evenly
+    flexBasis: "48%",              // responsive two-column layout
+    flexWrap: "nowrap",
+    minWidth: 140,                 // slightly smaller for narrow screens
+    maxWidth: "100%",
   },
   redButton: {
     backgroundColor: "#8b0000",
