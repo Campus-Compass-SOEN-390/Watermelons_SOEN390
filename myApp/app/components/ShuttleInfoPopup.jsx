@@ -3,7 +3,6 @@ import { View, Text, Modal, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import PropTypes from "prop-types";
 import { formatTime } from "../utils/shuttleUtils.js";
-// import { buildingPopupStyles as styles } from "../styles/PopUpStyles.js";
 import styles from "../styles/PopUpStyles.js";
 
 
