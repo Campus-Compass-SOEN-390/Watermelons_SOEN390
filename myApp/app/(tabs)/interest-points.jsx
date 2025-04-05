@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import {
   View,
   Text,
@@ -6,29 +6,45 @@ import {
   SafeAreaView,
   StatusBar,
   ActivityIndicator,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import * as Location from 'expo-location';
-import { 
-  fetchPOIData, 
-  poiDataSubject, 
-  shouldUpdatePOIData, 
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import * as Location from "expo-location";
+import {
+  fetchPOIData,
+  poiDataSubject,
+  shouldUpdatePOIData,
   loadPOICache,
-  precomputeDistances 
-} from '../api/poiApi';
-import FilterModal from '../components/POI/FilterModal';
-import POIList from '../components/POI/POIList';
-import { styles } from '../styles/POIListStyle';
-import { useButtonInteraction } from '../hooks/useButtonInteraction';
-import HeaderButtons from '../components/HeaderButtons';
+  precomputeDistances,
+} from "../api/poiApi";
+import FilterModal from "../components/POI/FilterModal";
+import POIList from "../components/POI/POIList";
+import { createPOIListStyles } from "../styles/POIListStyle";
+import { useButtonInteraction } from "../hooks/useButtonInteraction";
+import HeaderButtons from "../components/HeaderButtons";
+import { ThemeContext } from "../context/ThemeContext";
 
 /**
  * InterestPoints component - Displays a list of POIs
- * 
+ *
  * This component implements the Observer pattern by subscribing to
  * the poiDataSubject and updating its state when the data changes.
  */
 const InterestPoints = () => {
+  // Get theme context
+  const { theme, isDarkMode } = useContext(ThemeContext);
+
+  // Create theme-aware styles
+  const themeStyles = createPOIListStyles({
+    isDarkMode,
+    theme: {
+      background: isDarkMode ? "#333333" : "#FFFFFF",
+      cardBackground: isDarkMode ? "#242424" : "#FFFFFF",
+      buttonBackground: "#922338",
+      text: isDarkMode ? "#FFFFFF" : "#333333",
+      subText: isDarkMode ? "#CCCCCC" : "#666666",
+    },
+  });
+
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
@@ -72,20 +88,22 @@ const InterestPoints = () => {
           activities: data.activities,
         });
       }
-      
+
       setIsLoading(isLoading);
-      
+
       // If data is not empty, mark as loaded
-      if (data.coffeeShops.length > 0 || 
-          data.restaurants.length > 0 || 
-          data.activities.length > 0) {
+      if (
+        data.coffeeShops.length > 0 ||
+        data.restaurants.length > 0 ||
+        data.activities.length > 0
+      ) {
         setDataLoaded(true);
       }
     };
-    
+
     // Subscribe this component as an observer
     const unsubscribe = poiDataSubject.subscribe(updatePOIData);
-    
+
     // Cleanup subscription when component unmounts
     return () => {
       unsubscribe();
@@ -111,7 +129,7 @@ const InterestPoints = () => {
       } catch (err) {
         console.error("Error loading cached POI data:", err);
       }
-      
+
       // Get location and update data regardless of cache
       if (isMounted) {
         getLocationAndUpdatePOIs();
@@ -120,7 +138,9 @@ const InterestPoints = () => {
 
     loadInitialData();
 
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Get user location and load POI data if needed
@@ -130,15 +150,15 @@ const InterestPoints = () => {
     try {
       console.log("Getting location permissions...");
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setError('Location permission denied. Cannot show nearby places.');
+      if (status !== "granted") {
+        setError("Location permission denied. Cannot show nearby places.");
         setIsLoading(false);
         return;
       }
 
       console.log("Getting current location...");
       const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced
+        accuracy: Location.Accuracy.Balanced,
       });
 
       const coords = {
@@ -156,23 +176,23 @@ const InterestPoints = () => {
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
       };
-      
+
       if (shouldUpdatePOIData(region)) {
         // Cancel any existing fetch
         if (abortController) {
           abortController.abort();
         }
-        
+
         // Create new abort controller for this fetch
         const controller = new AbortController();
         setAbortController(controller);
-        
+
         // Get only the POI types enabled by filters
         const typesToFetch = [];
-        if (showCafes) typesToFetch.push('cafe');
-        if (showRestaurants) typesToFetch.push('restaurant');
-        if (showActivities) typesToFetch.push('attraction');
-        
+        if (showCafes) typesToFetch.push("cafe");
+        if (showRestaurants) typesToFetch.push("restaurant");
+        if (showActivities) typesToFetch.push("attraction");
+
         await fetchPOIs(coords, controller.signal, typesToFetch);
       } else {
         // If using cache, still precompute distances with new user location
@@ -184,10 +204,11 @@ const InterestPoints = () => {
         });
         setIsLoading(false);
       }
-
     } catch (err) {
       console.error("Error in location and data loading:", err);
-      setError('Failed to get your location or nearby places. Please try again.');
+      setError(
+        "Failed to get your location or nearby places. Please try again."
+      );
       setIsLoading(false);
     } finally {
       setRefreshing(false);
@@ -205,13 +226,21 @@ const InterestPoints = () => {
         activities: precomputeDistances(currentData.activities, userLocation),
       });
     }
-  }, [distance, useDistance, showCafes, showRestaurants, showActivities, dataLoaded, userLocation]);
+  }, [
+    distance,
+    useDistance,
+    showCafes,
+    showRestaurants,
+    showActivities,
+    dataLoaded,
+    userLocation,
+  ]);
 
   // Function to fetch POIs
   const fetchPOIs = async (coords, signal, typesToFetch) => {
     if (!coords) {
       console.error("No coordinates provided to fetchPOIs");
-      setError('Location unavailable. Cannot fetch places.');
+      setError("Location unavailable. Cannot fetch places.");
       setIsLoading(false);
       return;
     }
@@ -229,15 +258,15 @@ const InterestPoints = () => {
       // This will update the POIDataSubject which will notify all observers
       await fetchPOIData(region, signal, typesToFetch);
       console.log("POI data fetched and observers notified");
-      
+
       // Error state is reset as data has loaded successfully
       setError(null);
     } catch (err) {
-      if (err.name === 'AbortError') {
+      if (err.name === "AbortError") {
         console.log("POI fetch was aborted");
       } else {
         console.error("Error fetching POI data:", err);
-        setError('Failed to load places of interest. Pull down to refresh.');
+        setError("Failed to load places of interest. Pull down to refresh.");
       }
     } finally {
       setRefreshing(false);
@@ -251,59 +280,74 @@ const InterestPoints = () => {
     let allPOIs = [];
 
     if (showCafes) {
-      allPOIs = [...allPOIs, ...poiData.coffeeShops.map(poi => ({ 
-        ...poi, 
-        category: 'cafe',
-        // Create a unique key by prefixing the place_id with the category
-        uniqueKey: `cafe-${poi.place_id || Math.random().toString()}` 
-      }))]
+      allPOIs = [
+        ...allPOIs,
+        ...poiData.coffeeShops.map((poi) => ({
+          ...poi,
+          category: "cafe",
+          // Create a unique key by prefixing the place_id with the category
+          uniqueKey: `cafe-${poi.place_id || Math.random().toString()}`,
+        })),
+      ];
     }
     if (showRestaurants) {
-      allPOIs = [...allPOIs, ...poiData.restaurants.map(poi => ({ 
-        ...poi, 
-        category: 'restaurant',
-        uniqueKey: `restaurant-${poi.place_id || Math.random().toString()}`
-      }))]
+      allPOIs = [
+        ...allPOIs,
+        ...poiData.restaurants.map((poi) => ({
+          ...poi,
+          category: "restaurant",
+          uniqueKey: `restaurant-${poi.place_id || Math.random().toString()}`,
+        })),
+      ];
     }
     if (showActivities) {
-      allPOIs = [...allPOIs, ...poiData.activities.map(poi => ({ 
-        ...poi, 
-        category: 'activity',
-        uniqueKey: `activity-${poi.place_id || Math.random().toString()}`
-      }))]
+      allPOIs = [
+        ...allPOIs,
+        ...poiData.activities.map((poi) => ({
+          ...poi,
+          category: "activity",
+          uniqueKey: `activity-${poi.place_id || Math.random().toString()}`,
+        })),
+      ];
     }
 
     // Use pre-computed distances from the precomputeDistances function
     // This is much faster than recalculating distances for every filter change
     if (useDistance) {
       return allPOIs
-        .filter(poi => poi._distance !== null && poi._distance <= distance)
+        .filter((poi) => poi._distance !== null && poi._distance <= distance)
         .sort((a, b) => (a._distance || Infinity) - (b._distance || Infinity));
     }
 
     // If useDistance is false, return all POIs still sorted by distance
-    return allPOIs.sort((a, b) => (a._distance || Infinity) - (b._distance || Infinity));
-  }, [poiData, userLocation, distance, useDistance, showCafes, showRestaurants, showActivities]);
+    return allPOIs.sort(
+      (a, b) => (a._distance || Infinity) - (b._distance || Infinity)
+    );
+  }, [
+    poiData,
+    userLocation,
+    distance,
+    useDistance,
+    showCafes,
+    showRestaurants,
+    showActivities,
+  ]);
 
   // Handle refresh action
   const handleRefresh = async () => {
     console.log("Refreshing data...");
+    handleButtonPress(null, "Refreshing nearby places");
     setRefreshing(true);
-    
+
     // Clear error state on refresh
     setError(null);
-    
+
     // Get a fresh location and update POIs
     getLocationAndUpdatePOIs();
   };
 
-  const handleFilterPress = () => {
-    handleButtonPress(null, 'Opening filters menu');
-    setFilterModalVisible(true);
-  };
-
   const handleFilterClose = () => {
-    handleButtonPress(null, 'Closing filters menu');
+    handleButtonPress(null, "Closing filters menu");
     setFilterModalVisible(false);
   };
 
@@ -313,9 +357,14 @@ const InterestPoints = () => {
   const renderPlaceholder = () => {
     if (isLoading && !dataLoaded) {
       return (
-        <View style={styles.placeholderContainer}>
-          <ActivityIndicator size="large" color="#0066cc" />
-          <Text style={styles.placeholderText}>Getting nearby places...</Text>
+        <View style={themeStyles.placeholderContainer}>
+          <ActivityIndicator
+            size="large"
+            color={isDarkMode ? "#FFFFFF" : "#0066cc"}
+          />
+          <Text style={themeStyles.placeholderText}>
+            Getting nearby places...
+          </Text>
         </View>
       );
     }
@@ -323,69 +372,96 @@ const InterestPoints = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      <HeaderButtons />
-      <View style={styles.headerContainer}>
-        <View style={{ flex: 1 }}></View>
-        <TouchableOpacity
-          style={styles.filterButton}
-          onPress={handleFilterPress}
-          accessibilityLabel="Open filters menu"
-        >
-          <Ionicons name="options-outline" size={18} color="white" />
-          <Text style={styles.filterButtonText}>Filter</Text>
-        </TouchableOpacity>
-      </View>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: isDarkMode ? "#333333" : "#FFFFFF",
+      }}
+    >
+      <StatusBar
+        barStyle={isDarkMode ? "light-content" : "dark-content"}
+        backgroundColor={isDarkMode ? "#333333" : "#FFFFFF"}
+      />
 
-      {renderPlaceholder()}
+      {/* Header with buttons */}
 
-      <POIList
-        data={filteredData}
-        userLocation={userLocation}
-        isLoading={isLoading && !dataLoaded} // Show loading only if no cached data
-        error={error}
-        refreshing={refreshing}
-        onRefresh={handleRefresh}
-        calculateDistance={(lat1, lon1, lat2, lon2) => {
-          // Use precomputed distance if available
-          const poi = filteredData.find(
-            p => p.geometry?.location?.lat === lat2 && p.geometry?.location?.lng === lon2
-          );
-          if (poi && poi._distance !== undefined) {
-            return poi._distance;
-          }
-          
-          // Fallback calculation (should rarely be needed)
-          if (!lat1 || !lon1 || !lat2 || !lon2) return null;
-
-          const R = 6371; // Radius of the earth in km
-          const dLat = (lat2 - lat1) * (Math.PI / 180);
-          const dLon = (lon2 - lon1) * (Math.PI / 180);
-          const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-          return R * c; // Distance in km
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: isDarkMode ? "#333333" : "#FFFFFF",
         }}
-      />
+      >
+        <View
+          style={[
+            themeStyles.headerContainer,
+            { backgroundColor: isDarkMode ? "#333333" : "#FFFFFF" },
+          ]}
+        >
+          <View style={{ flex: 1 }}></View>
+          <TouchableOpacity
+            style={themeStyles.filterButton}
+            onPress={() => setFilterModalVisible(true)}
+          >
+            <Ionicons name="options-outline" size={18} color="white" />
+            <Text style={themeStyles.filterButtonText}>Filter</Text>
+          </TouchableOpacity>
+        </View>
 
-      <FilterModal
-        isVisible={filterModalVisible}
-        onClose={handleFilterClose}
-        distance={distance}
-        setDistance={setDistance}
-        showCafes={showCafes}
-        setShowCafes={setShowCafes}
-        showRestaurants={showRestaurants}
-        setShowRestaurants={setShowRestaurants}
-        showActivities={showActivities}
-        setShowActivities={setShowActivities}
-        useDistance={useDistance}
-        setUseDistance={setUseDistance}
-      />
-    </SafeAreaView>
+        {renderPlaceholder()}
+
+        <POIList
+          data={filteredData}
+          userLocation={userLocation}
+          isLoading={isLoading && !dataLoaded} // Show loading only if no cached data
+          error={error}
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          calculateDistance={(lat1, lon1, lat2, lon2) => {
+            // Use precomputed distance if available
+            const poi = filteredData.find(
+              (p) =>
+                p.geometry?.location?.lat === lat2 &&
+                p.geometry?.location?.lng === lon2
+            );
+            if (poi && poi._distance !== undefined) {
+              return poi._distance;
+            }
+
+            // Fallback calculation (should rarely be needed)
+            if (!lat1 || !lon1 || !lat2 || !lon2) return null;
+
+            const R = 6371; // Radius of the earth in km
+            const dLat = (lat2 - lat1) * (Math.PI / 180);
+            const dLon = (lon2 - lon1) * (Math.PI / 180);
+            const a =
+              Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * (Math.PI / 180)) *
+                Math.cos(lat2 * (Math.PI / 180)) *
+                Math.sin(dLon / 2) *
+                Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c; // Distance in km
+          }}
+        />
+
+        <FilterModal
+          isVisible={filterModalVisible}
+          onClose={handleFilterClose}
+          distance={distance}
+          setDistance={setDistance}
+          showCafes={showCafes}
+          setShowCafes={setShowCafes}
+          showRestaurants={showRestaurants}
+          setShowRestaurants={setShowRestaurants}
+          showActivities={showActivities}
+          setShowActivities={setShowActivities}
+          useDistance={useDistance}
+          setUseDistance={setUseDistance}
+          isDarkMode={isDarkMode}
+          theme={theme}
+        />
+      </SafeAreaView>
+    </View>
   );
 };
 
