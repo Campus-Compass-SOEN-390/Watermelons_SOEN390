@@ -5,6 +5,7 @@ import styles from "../styles/LayoutStyles";
 import { LocationProvider } from "../context/LocationContext";
 import { IndoorMapProvider } from "../context/IndoorMapContext";
 import React from "react";
+import HeaderButtons from "../components/HeaderButtons";
 
 interface TabBarIconProps {
   route: any;

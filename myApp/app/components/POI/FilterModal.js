@@ -1,10 +1,71 @@
 // src/components/FilterModal.js
-import React from "react";
-import { Modal, View, Text, TouchableOpacity, Switch, SafeAreaView } from "react-native";
+import React, { useContext } from "react";
+import {
+  Modal,
+  View,
+  Text,
+  TouchableOpacity,
+  Switch,
+  SafeAreaView,
+} from "react-native";
 import Slider from "@react-native-community/slider";
-import PropTypes from 'prop-types';
-import { styles } from "../../styles/poiStyles";
-import { useButtonInteraction } from '../../hooks/useButtonInteraction';
+import PropTypes from "prop-types";
+import { styles as defaultStyles } from "../../styles/poiStyles";
+import { ThemeContext } from "../../context/ThemeContext";
+import { useButtonInteraction } from "../../hooks/useButtonInteraction";
+
+// Create theme-aware styles for the FilterModal
+const getThemedStyles = (isDarkMode, theme, styles) => {
+  // If we have theme and isDarkMode props, create dynamic styles
+  if (theme && isDarkMode !== undefined) {
+    const backgroundColor = isDarkMode
+      ? theme.cardBackground || "#1e1e1e"
+      : "#fff";
+    const textColor = isDarkMode ? theme.text || "#fff" : "#333";
+    const buttonColor = theme.buttonBackground || "#922338";
+
+    return {
+      ...styles,
+      filterModalContainer: {
+        ...styles.filterModalContainer,
+        backgroundColor: "rgba(0,0,0,0.6)", // Slightly darker overlay in dark mode
+      },
+      filterModalContent: {
+        ...styles.filterModalContent,
+        backgroundColor: backgroundColor,
+        shadowColor: "#000",
+        shadowOpacity: isDarkMode ? 0.4 : 0.2,
+      },
+      filterModalTitle: {
+        ...styles.filterModalTitle,
+        color: textColor,
+      },
+      filterSectionTitle: {
+        ...styles.filterSectionTitle,
+        color: textColor,
+      },
+      filterOptionText: {
+        ...styles.filterOptionText,
+        color: textColor,
+      },
+      distanceRangeLabel: {
+        ...styles.distanceRangeLabel,
+        color: textColor,
+      },
+      closeModalIcon: {
+        ...styles.closeModalIcon,
+        color: textColor,
+      },
+      applyButton: {
+        ...styles.applyButton,
+        backgroundColor: buttonColor,
+      },
+    };
+  }
+
+  // If no theme info provided, return default styles
+  return styles;
+};
 
 const FilterModal = ({
   isVisible,
@@ -19,16 +80,45 @@ const FilterModal = ({
   setShowActivities,
   useDistance,
   setUseDistance,
+  isDarkMode,
+  theme,
 }) => {
+  // Use ButtonInteraction hook from second version
   const { handleButtonPress } = useButtonInteraction();
 
+  // If theme/isDarkMode weren't passed as props, get from context
+  const themeContext = useContext(ThemeContext);
+  const effectiveIsDarkMode =
+    isDarkMode !== undefined ? isDarkMode : themeContext?.isDarkMode;
+  const effectiveTheme = theme || themeContext?.theme;
+
+  // Get appropriate styles based on theme
+  const themedStyles = getThemedStyles(
+    effectiveIsDarkMode,
+    effectiveTheme,
+    defaultStyles
+  );
+
+  // Theme-aware switch colors
+  const trackColor = {
+    false: effectiveIsDarkMode ? "#555" : "#e0e0e0",
+    true: effectiveIsDarkMode ? "#7a3741" : "#d6909a",
+  };
+  const thumbColor = (value) => {
+    if (effectiveIsDarkMode) {
+      return value ? "#922338" : "#999";
+    }
+    return value ? "#922338" : "#f4f3f4";
+  };
+
+  // Handler functions from second version
   const handleClose = () => {
-    handleButtonPress(null, 'Closing filter modal');
+    handleButtonPress(null, "Closing filter modal");
     onClose();
   };
 
   const handleApplyFilters = () => {
-    handleButtonPress(null, 'Applying POI filters');
+    handleButtonPress(null, "Applying POI filters");
     onClose();
   };
 
@@ -38,7 +128,7 @@ const FilterModal = ({
   };
 
   const handleCategoryToggle = (category, value, setter) => {
-    handleButtonPress(null, `${value ? 'Showing' : 'Hiding'} ${category}`);
+    handleButtonPress(null, `${value ? "Showing" : "Hiding"} ${category}`);
     setter(value);
   };
 
@@ -49,49 +139,65 @@ const FilterModal = ({
       animationType="slide"
       onRequestClose={handleClose}
     >
-      <View style={styles.filterModalContainer}>
+      <View style={themedStyles.filterModalContainer}>
         <SafeAreaView>
-          <View style={styles.filterModalContent}>
+          <View style={themedStyles.filterModalContent}>
             {/* Header with title and close button */}
-            <View style={styles.filterModalHeader}>
-              <Text style={styles.filterModalTitle}>Filter Points of Interest</Text>
-              <TouchableOpacity 
-                style={styles.closeModalButton} 
+            <View style={themedStyles.filterModalHeader}>
+              <Text style={themedStyles.filterModalTitle}>
+                Filter Points of Interest
+              </Text>
+              <TouchableOpacity
+                style={themedStyles.closeModalButton}
                 onPress={handleClose}
                 accessibilityLabel="Close filter modal"
               >
-                <Text style={styles.closeModalIcon}>×</Text>
+                <Text style={themedStyles.closeModalIcon}>×</Text>
               </TouchableOpacity>
             </View>
 
             {/* Distance Section */}
-            <View style={styles.filterSection}>
-              <Text style={styles.filterSectionTitle}>Distance Filter</Text>
-              
-              <View style={styles.filterOption}>
-                <Text style={styles.filterOptionText}>Enable distance filtering</Text>
-                <Switch 
+            <View style={themedStyles.filterSection}>
+              <Text style={themedStyles.filterSectionTitle}>
+                Distance Filter
+              </Text>
+
+              <View style={themedStyles.filterOption}>
+                <Text style={themedStyles.filterOptionText}>
+                  Enable distance filtering
+                </Text>
+                <Switch
                   testID="distanceSwitch"
-                  value={useDistance} 
-                  onValueChange={(value) => handleCategoryToggle('distance filter', value, setUseDistance)}
-                  trackColor={{ false: "#e0e0e0", true: "#d6909a" }}
-                  thumbColor={useDistance ? "#922338" : "#f4f3f4"}
-                  ios_backgroundColor="#e0e0e0"
+                  value={useDistance}
+                  onValueChange={(value) =>
+                    handleCategoryToggle(
+                      "distance filter",
+                      value,
+                      setUseDistance
+                    )
+                  }
+                  trackColor={trackColor}
+                  thumbColor={thumbColor(useDistance)}
+                  ios_backgroundColor={effectiveIsDarkMode ? "#555" : "#e0e0e0"}
                 />
               </View>
-              
+
               {useDistance && (
-                <View style={styles.distanceSliderContainer}>
-                  <Text style={styles.distanceRangeLabel}>Maximum distance: {distance} kilometers</Text>
+                <View style={themedStyles.distanceSliderContainer}>
+                  <Text style={themedStyles.distanceRangeLabel}>
+                    Maximum distance: {distance} kilometers
+                  </Text>
                   <Slider
-                    style={styles.customSlider}
+                    style={themedStyles.customSlider}
                     minimumValue={0.5}
                     maximumValue={10}
                     step={0.5}
                     value={distance}
                     onValueChange={handleDistanceChange}
                     minimumTrackTintColor="#922338"
-                    maximumTrackTintColor="#e0e0e0"
+                    maximumTrackTintColor={
+                      effectiveIsDarkMode ? "#555" : "#e0e0e0"
+                    }
                     thumbTintColor="#922338"
                   />
                 </View>
@@ -99,51 +205,63 @@ const FilterModal = ({
             </View>
 
             {/* Categories Section */}
-            <View style={styles.filterSection}>
-              <Text style={styles.filterSectionTitle}>Categories</Text>
-              
-              <View style={styles.filterOption}>
-                <Text style={styles.filterOptionText}>Cafes</Text>
-                <Switch 
+            <View style={themedStyles.filterSection}>
+              <Text style={themedStyles.filterSectionTitle}>Categories</Text>
+
+              <View style={themedStyles.filterOption}>
+                <Text style={themedStyles.filterOptionText}>Cafes</Text>
+                <Switch
                   testID="cafeSwitch"
-                  value={showCafes} 
-                  onValueChange={(value) => handleCategoryToggle('cafes', value, setShowCafes)}
-                  trackColor={{ false: "#e0e0e0", true: "#d6909a" }}
-                  thumbColor={showCafes ? "#922338" : "#f4f3f4"}
-                  ios_backgroundColor="#e0e0e0"
+                  value={showCafes}
+                  onValueChange={(value) =>
+                    handleCategoryToggle("cafes", value, setShowCafes)
+                  }
+                  trackColor={trackColor}
+                  thumbColor={thumbColor(showCafes)}
+                  ios_backgroundColor={effectiveIsDarkMode ? "#555" : "#e0e0e0"}
                 />
               </View>
-              
-              <View style={styles.filterOption}>
-                <Text style={styles.filterOptionText}>Restaurants</Text>
-                <Switch testID="restaurantSwitch"
-                  value={showRestaurants} 
-                  onValueChange={(value) => handleCategoryToggle('restaurants', value, setShowRestaurants)}
-                  trackColor={{ false: "#e0e0e0", true: "#d6909a" }}
-                  thumbColor={showRestaurants ? "#922338" : "#f4f3f4"}
-                  ios_backgroundColor="#e0e0e0"
+
+              <View style={themedStyles.filterOption}>
+                <Text style={themedStyles.filterOptionText}>Restaurants</Text>
+                <Switch
+                  testID="restaurantSwitch"
+                  value={showRestaurants}
+                  onValueChange={(value) =>
+                    handleCategoryToggle(
+                      "restaurants",
+                      value,
+                      setShowRestaurants
+                    )
+                  }
+                  trackColor={trackColor}
+                  thumbColor={thumbColor(showRestaurants)}
+                  ios_backgroundColor={effectiveIsDarkMode ? "#555" : "#e0e0e0"}
                 />
               </View>
-              
-              <View style={styles.filterOption}>
-                <Text style={styles.filterOptionText}>Activities</Text>
-                <Switch testID="activitySwitch"
-                  value={showActivities} 
-                  onValueChange={(value) => handleCategoryToggle('activities', value, setShowActivities)}
-                  trackColor={{ false: "#e0e0e0", true: "#d6909a" }}
-                  thumbColor={showActivities ? "#922338" : "#f4f3f4"}
-                  ios_backgroundColor="#e0e0e0"
+
+              <View style={themedStyles.filterOption}>
+                <Text style={themedStyles.filterOptionText}>Activities</Text>
+                <Switch
+                  testID="activitySwitch"
+                  value={showActivities}
+                  onValueChange={(value) =>
+                    handleCategoryToggle("activities", value, setShowActivities)
+                  }
+                  trackColor={trackColor}
+                  thumbColor={thumbColor(showActivities)}
+                  ios_backgroundColor={effectiveIsDarkMode ? "#555" : "#e0e0e0"}
                 />
               </View>
             </View>
 
             {/* Apply Button */}
-            <TouchableOpacity 
-              style={styles.applyButton} 
+            <TouchableOpacity
+              style={themedStyles.applyButton}
               onPress={handleApplyFilters}
               accessibilityLabel="Apply filters"
             >
-              <Text style={styles.applyButtonText}>Apply Filters</Text>
+              <Text style={themedStyles.applyButtonText}>Apply Filters</Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>
@@ -165,6 +283,9 @@ FilterModal.propTypes = {
   setShowActivities: PropTypes.func.isRequired,
   useDistance: PropTypes.bool.isRequired,
   setUseDistance: PropTypes.func.isRequired,
+  // Add new theme props
+  isDarkMode: PropTypes.bool,
+  theme: PropTypes.object,
 };
 
 export default FilterModal;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import {
   View,
   Text,
@@ -21,14 +21,21 @@ import POIList from '../components/POI/POIList';
 import { styles } from '../styles/POIListStyle';
 import { useButtonInteraction } from '../hooks/useButtonInteraction';
 import HeaderButtons from '../components/HeaderButtons';
+import { ThemeContext } from "../context/ThemeContext";
 
 /**
  * InterestPoints component - Displays a list of POIs
- * 
+ *
  * This component implements the Observer pattern by subscribing to
  * the poiDataSubject and updating its state when the data changes.
  */
 const InterestPoints = () => {
+  // Get theme context
+  const { theme, isDarkMode } = useContext(ThemeContext);
+
+  // Use the imported styles
+  const themeStyles = styles;
+
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
@@ -82,10 +89,10 @@ const InterestPoints = () => {
         setDataLoaded(true);
       }
     };
-    
+
     // Subscribe this component as an observer
     const unsubscribe = poiDataSubject.subscribe(updatePOIData);
-    
+
     // Cleanup subscription when component unmounts
     return () => {
       unsubscribe();
@@ -120,7 +127,9 @@ const InterestPoints = () => {
 
     loadInitialData();
 
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Get user location and load POI data if needed
@@ -138,7 +147,7 @@ const InterestPoints = () => {
 
       console.log("Getting current location...");
       const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced
+        accuracy: Location.Accuracy.Balanced,
       });
 
       const coords = {
@@ -288,6 +297,7 @@ const InterestPoints = () => {
   // Handle refresh action
   const handleRefresh = async () => {
     console.log("Refreshing data...");
+    handleButtonPress(null, "Refreshing nearby places");
     setRefreshing(true);
     
     // Clear error state on refresh
@@ -297,13 +307,8 @@ const InterestPoints = () => {
     getLocationAndUpdatePOIs();
   };
 
-  const handleFilterPress = () => {
-    handleButtonPress(null, 'Opening filters menu');
-    setFilterModalVisible(true);
-  };
-
   const handleFilterClose = () => {
-    handleButtonPress(null, 'Closing filters menu');
+    handleButtonPress(null, "Closing filters menu");
     setFilterModalVisible(false);
   };
 
@@ -313,9 +318,9 @@ const InterestPoints = () => {
   const renderPlaceholder = () => {
     if (isLoading && !dataLoaded) {
       return (
-        <View style={styles.placeholderContainer}>
+        <View style={themeStyles.placeholderContainer}>
           <ActivityIndicator size="large" color="#0066cc" />
-          <Text style={styles.placeholderText}>Getting nearby places...</Text>
+          <Text style={themeStyles.placeholderText}>Getting nearby places...</Text>
         </View>
       );
     }
@@ -323,18 +328,26 @@ const InterestPoints = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      <HeaderButtons />
-      <View style={styles.headerContainer}>
+    <SafeAreaView style={themeStyles.container}>
+      <View
+        style={{
+          marginBottom: 20,
+          marginTop: 40,
+        }}
+      >
+      </View>
+      <StatusBar
+        barStyle={isDarkMode ? "light-content" : "dark-content"}
+        backgroundColor={isDarkMode ? theme.background : "#fff"}
+      />
+      <View style={themeStyles.headerContainer}>
         <View style={{ flex: 1 }}></View>
         <TouchableOpacity
-          style={styles.filterButton}
-          onPress={handleFilterPress}
-          accessibilityLabel="Open filters menu"
+          style={themeStyles.filterButton}
+          onPress={() => setFilterModalVisible(true)}
         >
           <Ionicons name="options-outline" size={18} color="white" />
-          <Text style={styles.filterButtonText}>Filter</Text>
+          <Text style={themeStyles.filterButtonText}>Filter</Text>
         </TouchableOpacity>
       </View>
 
@@ -369,6 +382,9 @@ const InterestPoints = () => {
           const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
           return R * c; // Distance in km
         }}
+        themeStyles={themeStyles}
+        isDarkMode={isDarkMode}
+        theme={theme}
       />
 
       <FilterModal
@@ -384,6 +400,8 @@ const InterestPoints = () => {
         setShowActivities={setShowActivities}
         useDistance={useDistance}
         setUseDistance={setUseDistance}
+        isDarkMode={isDarkMode}
+        theme={theme}
       />
     </SafeAreaView>
   );

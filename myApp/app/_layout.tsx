@@ -1,24 +1,27 @@
-import React from 'react';
-import { Stack } from 'expo-router';
-import { FeedbackProvider } from './context/FeedbackContext';
-import Toast from 'react-native-toast-message';
+import React from "react";
+import { Stack } from "expo-router";
+import { ThemeProvider } from "./context/ThemeContext";
+import { FeedbackProvider } from "./context/FeedbackContext";
+import Toast from "react-native-toast-message";
+import HeaderButtons from "./components/HeaderButtons";
 
 export default function RootLayout() {
   return (
-    <FeedbackProvider>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen 
-          name="index" 
-        />
-        <Stack.Screen 
-          name="(tabs)" 
-        />
-      </Stack>
-      <Toast />
-    </FeedbackProvider>
+    <ThemeProvider>
+      <FeedbackProvider>
+        <HeaderButtons/>
+        <Stack
+          screenOptions={{
+            // Hide the header for ALL screens in this stack
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="index" />
+          {/* If your TabLayout is at (tabs), add it here too */}
+          <Stack.Screen name="(tabs)" />
+        </Stack>
+        <Toast />
+      </FeedbackProvider>
+    </ThemeProvider>
   );
 }
