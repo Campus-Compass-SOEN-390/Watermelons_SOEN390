@@ -203,4 +203,42 @@ export const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: FONT_SIZE_2,
   },
+  // Footer component styles
+  footerContainer: {
+    padding: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  footerText: {
+    fontSize: FONT_SIZE_2,
+    color: "#666",
+  },
+  // Scroll to top button styles
+  scrollTopButton: {
+    position: 'absolute',
+    bottom: 90, // Position above tab bar
+    right: 20,
+    backgroundColor: '#922338', // Match app's primary color
+    borderRadius: 30,
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    zIndex: 100,
+  },
+  scrollTopButtonTouchable: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
