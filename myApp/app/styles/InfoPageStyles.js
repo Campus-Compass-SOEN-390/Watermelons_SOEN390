@@ -93,13 +93,7 @@ export const infoPageStyles = StyleSheet.create({
     color: '#333',
     textAlign: 'center',
   },
-  
-  // image: {
-  //   width: '100%',
-  //   height: 300,
-  //   borderRadius: 12,
-  //   marginBottom: 20,
-  // },
+
   imageWrapper: {
     width: '100%',
     alignItems: 'center',
@@ -245,7 +239,4 @@ buttonText: {
   fontWeight: '600',
   color: '#333',
 },
-
-  
-  
 });
