@@ -8,21 +8,8 @@ import {
   COLORS,
 } from "./constants";
 
-// Create theme-aware styles
-const createGoogleScheduleStyles = ({ isDarkMode, theme }) => {
-  // Theme properties with defaults
-  const primaryColor = theme?.buttonBackground || COLORS.CONCORDIA_RED;
-  const backgroundColor = isDarkMode
-    ? theme?.background || COLORS.BLACK_OR_SHADOW
-    : COLORS.OFF_WHITE;
-  const cardBackground = isDarkMode
-    ? theme?.cardBackground || COLORS.DARK_MODE_DEEP_GREY
-    : COLORS.LIGHT_GREY_INPUT_BOXES;
-  const textColor = isDarkMode ? theme?.text || COLORS.WHITE : COLORS.BLACK_OR_SHADOW;
-  const subTextColor = isDarkMode ? theme?.subText || COLORS.LIGHT_GREY : COLORS.DARK_MODE_LIGHT_GREY;
-  const highlightColor = isDarkMode ? COLORS.RED_CLOSE_BUTTON : COLORS.CONCORDIA_RED;
-  const grayTextColor = isDarkMode ? COLORS.LIGHT_GREY : "gray";
-
+// Create a function that generates styles based on theme and mode
+export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
   return StyleSheet.create({
     container: {
       backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.WHITE,
@@ -209,13 +196,6 @@ const createGoogleScheduleStyles = ({ isDarkMode, theme }) => {
     headerButtonText: {
       color: COLORS.WHITE,
       fontWeight: "bold",
-    },
-    noClassText: {
-      fontSize: FONT_SIZE_3,
-      color: COLORS.LIGHT_GREY_INPUT_BOXES, // Light gray for dark container
-      textAlign: "center",
-      padding: 20,
-      fontStyle: "italic",
     },
   });
 };
