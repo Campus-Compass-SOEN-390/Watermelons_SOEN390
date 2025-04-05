@@ -2,9 +2,15 @@ export function dijkstra(graph, startNode, endNode, isDisabled) {
 
   // check to see if user requires disabled friendly directions (no stairs, no escalators, only elevators)
   const shouldSkipNode = (disabled, neighbouringNode) => {
-    return disabled && 
+    if(disabled && 
       (neighbouringNode.includes("stair") || neighbouringNode.includes("escalator")) && 
-      !(neighbouringNode.includes("path") || neighbouringNode.includes("elevator"));
+      !(neighbouringNode.includes("path") || neighbouringNode.includes("elevator")))
+      {
+        return true;
+      }
+    else{
+      return false;
+    }
   }
 
   // check to see if start or end node is inacessible for someone who is disabled

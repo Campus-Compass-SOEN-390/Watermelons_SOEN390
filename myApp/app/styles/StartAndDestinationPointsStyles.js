@@ -352,25 +352,5 @@ export default StyleSheet.create({
     fontSize: 14,
     color: '#555',
     textAlign: 'center',
-  },
-  indoorNavigationMessage: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#f5f5f5",
-    borderRadius: 8,
-    padding: 12,
-    marginVertical: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 3,
-    width: "100%",
-  },
-  indoorNavigationText: {
-    flex: 1,
-    marginLeft: 10,
-    fontSize: 14,
-    color: "#333",
-  },
+  }
 });

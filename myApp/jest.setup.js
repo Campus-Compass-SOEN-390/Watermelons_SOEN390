@@ -12,7 +12,6 @@ process.env.GOOGLE_MAPS_API_KEY = "TEST_API_KEY";
 global.FormData = require('form-data');
 
 jest.mock('@expo/vector-icons', () => ({
-    Ionicons: ({ name }) => <div>{`MockIcon: ${name}`}</div>,
     MaterialIcons: () => null,
 }));
 

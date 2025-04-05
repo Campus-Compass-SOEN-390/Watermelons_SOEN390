@@ -1,5 +1,5 @@
-import { Tabs } from "expo-router";
-import { View } from "react-native";
+import { Tabs, useRouter } from "expo-router";
+import { View, TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import styles from "../styles/LayoutStyles";
 import { LocationProvider } from "../context/LocationContext";
@@ -20,8 +20,8 @@ const TabBarIcon: React.FC<TabBarIconProps> = ({ route, focused }) => {
     case "interest-points":
       iconName = focused ? "pin" : "pin-outline";
       break;
-    case "upcoming-class":
-      iconName = focused ? "calendar" : "calendar-outline";
+    case "favorites":
+      iconName = focused ? "star" : "star-outline";
       break;
     case "index":
       iconName = focused ? "home" : "home-outline";
@@ -42,13 +42,14 @@ const TabBarIcon: React.FC<TabBarIconProps> = ({ route, focused }) => {
 };
 
 export default function TabLayout() {
+  const router = useRouter();
 
   const renderTabBarIcon = (route: any, focused: boolean) => (
     <TabBarIcon route={route} focused={focused} />
   );
 
   return (
-    // LocationProvider and IndoorMapProvider ensure states can be managed globally
+    //Location Provider ensures states can be managed "globally"
     <IndoorMapProvider>
       <LocationProvider>
         <View style={{ flex: 1 }}>
@@ -64,7 +65,7 @@ export default function TabLayout() {
           >
             <Tabs.Screen name="map" />
             <Tabs.Screen name="outdoor-map" />
-            <Tabs.Screen name="upcoming-class" />
+            <Tabs.Screen name="favorites" />
             <Tabs.Screen name="index" />
           </Tabs>
         </View>

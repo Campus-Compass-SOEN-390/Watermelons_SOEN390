@@ -19,7 +19,6 @@ class POIDataSubject {
     };
     this.observers = [];
     this.isLoading = false;
-    this.dataVersion = 0; // Track data version for efficient updates
   }
 
   /**
@@ -49,15 +48,8 @@ class POIDataSubject {
    * @param {Object} newData - New POI data
    */
   updateData(newData) {
-    const oldDataStr = JSON.stringify(this.data);
     this.data = { ...this.data, ...newData };
-    const newDataStr = JSON.stringify(this.data);
-    
-    // Only notify if data actually changed
-    if (oldDataStr !== newDataStr) {
-      this.dataVersion++; // Increment version for change tracking
-      this.notifyObservers();
-    }
+    this.notifyObservers();
   }
 
   /**
@@ -65,37 +57,17 @@ class POIDataSubject {
    * @param {boolean} isLoading - Whether data is being loaded
    */
   setLoading(isLoading) {
-    if (this.isLoading !== isLoading) {
-      this.isLoading = isLoading;
-      this.notifyObservers();
-    }
+    this.isLoading = isLoading;
+    this.notifyObservers();
   }
 
   /**
    * Notify all observers of data changes
-   * Uses batch updates to prevent too many UI updates
    */
   notifyObservers() {
-    // Use requestAnimationFrame to batch notify in the next frame
-    // This prevents multiple renders in rapid succession
-    if (this.batchUpdateTimeout) {
-      clearTimeout(this.batchUpdateTimeout);
-    }
-    
-    this.batchUpdateTimeout = setTimeout(() => {
-      const currentData = this.data;
-      const loadingState = this.isLoading;
-      
-      this.observers.forEach(observer => {
-        try {
-          observer(currentData, loadingState);
-        } catch (error) {
-          console.error('Error in observer:', error);
-        }
-      });
-      
-      this.batchUpdateTimeout = null;
-    }, 16); // Approximately one frame at 60fps
+    this.observers.forEach(observer => {
+      observer(this.data, this.isLoading);
+    });
   }
 
   /**
@@ -107,22 +79,6 @@ class POIDataSubject {
   }
 
   /**
-   * Get current loading state
-   * @returns {boolean} Whether data is currently loading
-   */
-  getIsLoading() {
-    return this.isLoading;
-  }
-
-  /**
-   * Get current data version
-   * @returns {number} Current data version
-   */
-  getDataVersion() {
-    return this.dataVersion;
-  }
-
-  /**
    * Check if region has changed significantly
    * @param {Object} newRegion - New map region
    * @returns {boolean} Whether region has changed enough to warrant a new fetch
@@ -130,89 +86,11 @@ class POIDataSubject {
   hasRegionChanged(newRegion) {
     if (!this.data.lastRegion || !newRegion) return true;
     
-    const REGION_CHANGE_THRESHOLD = 0.01; // Increased from 0.005 to reduce API calls
+    const REGION_CHANGE_THRESHOLD = 0.005;
     const latDiff = Math.abs(newRegion.latitude - this.data.lastRegion.latitude);
     const lngDiff = Math.abs(newRegion.longitude - this.data.lastRegion.longitude);
     
     return latDiff > REGION_CHANGE_THRESHOLD || lngDiff > REGION_CHANGE_THRESHOLD;
-  }
-
-  /**
-   * Merge new POI data into existing data
-   * @param {Object} newData - New POI data to merge
-   */
-  mergeData(newData) {
-    // Create a map of existing place IDs for faster lookup
-    const existingPlaceIds = new Map();
-    
-    // Add all existing POIs to the map
-    this.data.coffeeShops.forEach(poi => 
-      existingPlaceIds.set(poi.place_id, { type: 'coffee', data: poi }));
-    this.data.restaurants.forEach(poi => 
-      existingPlaceIds.set(poi.place_id, { type: 'restaurant', data: poi }));
-    this.data.activities.forEach(poi => 
-      existingPlaceIds.set(poi.place_id, { type: 'activity', data: poi }));
-    
-    // Create new arrays with merged data
-    const mergedCoffee = [...this.data.coffeeShops];
-    const mergedRestaurants = [...this.data.restaurants];
-    const mergedActivities = [...this.data.activities];
-    
-    // Helper to get the appropriate array for a category
-    const getArrayForCategory = (category) => {
-      if (category === 'coffee') return mergedCoffee;
-      if (category === 'restaurant') return mergedRestaurants;
-      return mergedActivities;
-    };
-    
-    // Helper to add a new POI
-    const addNewPOI = (poi, category) => {
-      const targetArray = getArrayForCategory(category);
-      targetArray.push(poi);
-      existingPlaceIds.set(poi.place_id, { type: category, data: poi });
-    };
-    
-    // Helper to update an existing POI
-    const updateExistingPOI = (poi, category) => {
-      const targetArray = getArrayForCategory(category);
-      const index = targetArray.findIndex(p => p.place_id === poi.place_id);
-      
-      if (index !== -1) {
-        targetArray[index] = { ...targetArray[index], ...poi };
-      }
-    };
-    
-    // Helper to merge new POIs into appropriate category
-    const mergePOIs = (pois, category) => {
-      if (!pois || !Array.isArray(pois)) return;
-      
-      pois.forEach(poi => {
-        if (!poi.place_id) return;
-        
-        const existing = existingPlaceIds.get(poi.place_id);
-        
-        if (!existing) {
-          addNewPOI(poi, category);
-        } 
-        else if (existing.type === category) {
-          updateExistingPOI(poi, category);
-        }
-      });
-    };
-    
-    // Merge each category
-    if (newData.coffeeShops) mergePOIs(newData.coffeeShops, 'coffee');
-    if (newData.restaurants) mergePOIs(newData.restaurants, 'restaurant');
-    if (newData.activities) mergePOIs(newData.activities, 'activity');
-    
-    // Update data with merged results
-    this.updateData({
-      coffeeShops: mergedCoffee,
-      restaurants: mergedRestaurants,
-      activities: mergedActivities,
-      lastRegion: newData.lastRegion || this.data.lastRegion,
-      lastFetchTime: newData.lastFetchTime || Date.now(),
-    });
   }
 }
 

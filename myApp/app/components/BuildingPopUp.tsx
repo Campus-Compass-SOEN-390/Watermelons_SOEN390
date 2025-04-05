@@ -12,7 +12,7 @@ import popupStyles from "../styles/PopUpStyles";
 export interface BuildingPopupProps {
   visible: boolean;
   onClose: () => void;
-  building: any;
+  building: any | null;
   onGetDirections(building: any): void;
   setAsStartingPoint(building: any): void;
 }

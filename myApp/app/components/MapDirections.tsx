@@ -143,23 +143,20 @@ const MapDirections: React.FC<Props> = ({
       <Mapbox.Camera ref={cameraRef} />
       
       {/*Render all route options, alternatives are displayed more transparently*/}
-      {routes.map((routeData, index) => {
-        const routeKey = `route-${routeData.features[0]?.properties?.summary || index}`;
-        return (
-          <Mapbox.ShapeSource key={routeKey} id={`routeSource-${routeKey}`} shape={routeData}>
-            <Mapbox.LineLayer
-              id={`routeLine-${routeKey}`}
-              style={{
-                lineColor: index === selectedRouteIndex ? "black" : "gray",
-                lineWidth: index === selectedRouteIndex ? 5 : 3,
-                lineOpacity: index === selectedRouteIndex ? 1 : 0.5,
-                lineCap: "round",
-                lineJoin: "round",
-              }}
-            />
-          </Mapbox.ShapeSource>
-        );
-      })}
+      {routes.map((routeData, index) => (
+        <Mapbox.ShapeSource key={`route-${index}`} id={`routeSource-${index}`} shape={routeData}>
+          <Mapbox.LineLayer
+            id={`routeLine-${index}`}
+            style={{
+              lineColor: index === selectedRouteIndex ? "black" : "gray",
+              lineWidth: index === selectedRouteIndex ? 5 : 3,
+              lineOpacity: index === selectedRouteIndex ? 1 : 0.5,
+              lineCap: "round",
+              lineJoin: "round",
+            }}
+          />
+        </Mapbox.ShapeSource>
+      ))}
     </View>
   );
 };

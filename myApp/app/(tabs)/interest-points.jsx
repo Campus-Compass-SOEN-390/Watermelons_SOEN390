@@ -1,21 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
-import { 
-  fetchPOIData, 
-  poiDataSubject, 
-  shouldUpdatePOIData, 
-  loadPOICache,
-  precomputeDistances 
-} from '../api/poiApi';
+import { fetchPOIData, poiDataSubject } from '../api/poiApi';
 import FilterModal from '../components/POI/FilterModal';
 import POIList from '../components/POI/POIList';
 import { styles } from '../styles/POIListStyle';
@@ -39,8 +32,6 @@ const InterestPoints = () => {
   });
   const [userLocation, setUserLocation] = useState(null);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
-  const [abortController, setAbortController] = useState(null);
-  const [dataLoaded, setDataLoaded] = useState(false);
 
   // Filter states
   const [distance, setDistance] = useState(40); // Changed from 2 to 40 km
@@ -58,157 +49,74 @@ const InterestPoints = () => {
   useEffect(() => {
     // Observer callback function that will be called when data changes
     const updatePOIData = (data, isLoading) => {
-      // Only update with precomputed distances if we have user location
-      if (userLocation) {
-        setPoiData({
-          coffeeShops: precomputeDistances(data.coffeeShops, userLocation),
-          restaurants: precomputeDistances(data.restaurants, userLocation),
-          activities: precomputeDistances(data.activities, userLocation),
-        });
-      } else {
-        setPoiData({
-          coffeeShops: data.coffeeShops,
-          restaurants: data.restaurants,
-          activities: data.activities,
-        });
-      }
-      
+      setPoiData({
+        coffeeShops: data.coffeeShops,
+        restaurants: data.restaurants,
+        activities: data.activities,
+      });
       setIsLoading(isLoading);
-      
-      // If data is not empty, mark as loaded
-      if (data.coffeeShops.length > 0 || 
-          data.restaurants.length > 0 || 
-          data.activities.length > 0) {
-        setDataLoaded(true);
-      }
     };
     
     // Subscribe this component as an observer
     const unsubscribe = poiDataSubject.subscribe(updatePOIData);
     
     // Cleanup subscription when component unmounts
-    return () => {
-      unsubscribe();
-      // Also abort any in-progress fetch
-      if (abortController) {
-        abortController.abort();
-      }
-    };
-  }, [userLocation]);
+    return () => unsubscribe();
+  }, []);
 
-  // Load cached data first, then get fresh location and update if needed
+  // Get user location and load POI data
   useEffect(() => {
     let isMounted = true;
 
-    const loadInitialData = async () => {
+    const loadLocationAndData = async () => {
+      setIsLoading(true);
+      setError(null);
+
       try {
-        // Try to load cached data immediately
-        const cachedData = await loadPOICache();
-        if (cachedData && isMounted) {
-          console.log("Using cached POI data for initial render");
-          setDataLoaded(true);
+        console.log("Getting location permissions...");
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          if (isMounted) {
+            setError('Location permission denied. Cannot show nearby places.');
+            setIsLoading(false);
+          }
+          return;
         }
+
+        console.log("Getting current location...");
+        const location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced
+        });
+
+        if (!isMounted) return;
+
+        const coords = {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        };
+
+        console.log("Location obtained:", coords);
+        setUserLocation(coords);
+
+        // Always fetch fresh data from current location
+        await fetchPOIs(coords);
+
       } catch (err) {
-        console.error("Error loading cached POI data:", err);
-      }
-      
-      // Get location and update data regardless of cache
-      if (isMounted) {
-        getLocationAndUpdatePOIs();
+        console.error("Error in location and data loading:", err);
+        if (isMounted) {
+          setError('Failed to get your location or nearby places. Please try again.');
+          setIsLoading(false);
+        }
       }
     };
 
-    loadInitialData();
+    loadLocationAndData();
 
     return () => { isMounted = false; };
   }, []);
 
-  // Get user location and load POI data if needed
-  const getLocationAndUpdatePOIs = async () => {
-    setError(null);
-
-    try {
-      console.log("Getting location permissions...");
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setError('Location permission denied. Cannot show nearby places.');
-        setIsLoading(false);
-        return;
-      }
-
-      console.log("Getting current location...");
-      const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced
-      });
-
-      const coords = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      };
-
-      console.log("Location obtained:", coords);
-      setUserLocation(coords);
-
-      // Only fetch if needed (either no data, region changed, or cache expired)
-      const region = {
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      };
-      
-      if (shouldUpdatePOIData(region)) {
-        // Cancel any existing fetch
-        if (abortController) {
-          abortController.abort();
-        }
-        
-        // Create new abort controller for this fetch
-        const controller = new AbortController();
-        setAbortController(controller);
-        
-        // Get only the POI types enabled by filters
-        const typesToFetch = [];
-        if (showCafes) typesToFetch.push('cafe');
-        if (showRestaurants) typesToFetch.push('restaurant');
-        if (showActivities) typesToFetch.push('attraction');
-        
-        await fetchPOIs(coords, controller.signal, typesToFetch);
-      } else {
-        // If using cache, still precompute distances with new user location
-        const currentData = poiDataSubject.getData();
-        setPoiData({
-          coffeeShops: precomputeDistances(currentData.coffeeShops, coords),
-          restaurants: precomputeDistances(currentData.restaurants, coords),
-          activities: precomputeDistances(currentData.activities, coords),
-        });
-        setIsLoading(false);
-      }
-
-    } catch (err) {
-      console.error("Error in location and data loading:", err);
-      setError('Failed to get your location or nearby places. Please try again.');
-      setIsLoading(false);
-    } finally {
-      setRefreshing(false);
-    }
-  };
-
-  // Debounce filters to prevent constant recalculation
-  useEffect(() => {
-    // If filters change and we already have data, update with precomputed distances
-    if (dataLoaded && userLocation) {
-      const currentData = poiDataSubject.getData();
-      setPoiData({
-        coffeeShops: precomputeDistances(currentData.coffeeShops, userLocation),
-        restaurants: precomputeDistances(currentData.restaurants, userLocation),
-        activities: precomputeDistances(currentData.activities, userLocation),
-      });
-    }
-  }, [distance, useDistance, showCafes, showRestaurants, showActivities, dataLoaded, userLocation]);
-
   // Function to fetch POIs
-  const fetchPOIs = async (coords, signal, typesToFetch) => {
+  const fetchPOIs = async (coords) => {
     if (!coords) {
       console.error("No coordinates provided to fetchPOIs");
       setError('Location unavailable. Cannot fetch places.');
@@ -218,6 +126,7 @@ const InterestPoints = () => {
 
     try {
       console.log("Fetching POI data for", coords);
+      const abortController = new AbortController();
 
       const region = {
         latitude: coords.latitude,
@@ -227,74 +136,121 @@ const InterestPoints = () => {
       };
 
       // This will update the POIDataSubject which will notify all observers
-      await fetchPOIData(region, signal, typesToFetch);
+      await fetchPOIData(region, abortController.signal);
       console.log("POI data fetched and observers notified");
       
       // Error state is reset as data has loaded successfully
       setError(null);
     } catch (err) {
-      if (err.name === 'AbortError') {
-        console.log("POI fetch was aborted");
-      } else {
-        console.error("Error fetching POI data:", err);
-        setError('Failed to load places of interest. Pull down to refresh.');
-      }
+      console.error("Error fetching POI data:", err);
+      setError('Failed to load places of interest. Pull down to refresh.');
     } finally {
       setRefreshing(false);
     }
   };
 
-  // Memoized function to get filtered POIs (improves performance)
-  const getFilteredData = useCallback(() => {
+  // Handle refresh action
+  const handleRefresh = async () => {
+    console.log("Refreshing data...");
+    handleButtonPress(null, 'Refreshing nearby places');
+    setRefreshing(true);
+
+    try {
+      const location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced
+      });
+
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+
+      setUserLocation(coords);
+      await fetchPOIs(coords);
+    } catch (err) {
+      console.error("Error refreshing location:", err);
+      setError('Failed to refresh your location.');
+      setRefreshing(false);
+    }
+  };
+
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    if (!lat1 || !lon1 || !lat2 || !lon2) return null;
+
+    const R = 6371; // Radius of the earth in km
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c; // Distance in km
+    return d;
+  };
+
+  const deg2rad = (deg) => {
+    return deg * (Math.PI / 180);
+  };
+
+  const getFilteredData = () => {
     if (!userLocation) return [];
 
     let allPOIs = [];
 
     if (showCafes) {
-      allPOIs = [...allPOIs, ...poiData.coffeeShops.map(poi => ({ 
-        ...poi, 
-        category: 'cafe',
-        // Create a unique key by prefixing the place_id with the category
-        uniqueKey: `cafe-${poi.place_id || Math.random().toString()}` 
-      }))]
+      allPOIs = [...allPOIs, ...poiData.coffeeShops.map(poi => ({ ...poi, category: 'cafe' }))]
     }
     if (showRestaurants) {
-      allPOIs = [...allPOIs, ...poiData.restaurants.map(poi => ({ 
-        ...poi, 
-        category: 'restaurant',
-        uniqueKey: `restaurant-${poi.place_id || Math.random().toString()}`
-      }))]
+      allPOIs = [...allPOIs, ...poiData.restaurants.map(poi => ({ ...poi, category: 'restaurant' }))]
     }
     if (showActivities) {
-      allPOIs = [...allPOIs, ...poiData.activities.map(poi => ({ 
-        ...poi, 
-        category: 'activity',
-        uniqueKey: `activity-${poi.place_id || Math.random().toString()}`
-      }))]
+      allPOIs = [...allPOIs, ...poiData.activities.map(poi => ({ ...poi, category: 'activity' }))]
     }
 
-    // Use pre-computed distances from the precomputeDistances function
-    // This is much faster than recalculating distances for every filter change
+    // Only filter by distance if useDistance is true
     if (useDistance) {
-      return allPOIs
-        .filter(poi => poi._distance !== null && poi._distance <= distance)
-        .sort((a, b) => (a._distance || Infinity) - (b._distance || Infinity));
+      return allPOIs.filter(poi => {
+        const poiDistance = calculateDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          poi.geometry?.location?.lat,
+          poi.geometry?.location?.lng
+        );
+        return poiDistance !== null && poiDistance <= distance;
+      }).sort((a, b) => {
+        const distA = calculateDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          a.geometry?.location?.lat,
+          a.geometry?.location?.lng
+        );
+        const distB = calculateDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          b.geometry?.location?.lat,
+          b.geometry?.location?.lng
+        );
+        return distA - distB;
+      });
     }
 
-    // If useDistance is false, return all POIs still sorted by distance
-    return allPOIs.sort((a, b) => (a._distance || Infinity) - (b._distance || Infinity));
-  }, [poiData, userLocation, distance, useDistance, showCafes, showRestaurants, showActivities]);
-
-  // Handle refresh action
-  const handleRefresh = async () => {
-    console.log("Refreshing data...");
-    setRefreshing(true);
-    
-    // Clear error state on refresh
-    setError(null);
-    
-    // Get a fresh location and update POIs
-    getLocationAndUpdatePOIs();
+    // If useDistance is false, return all POIs, still sorted by distance
+    return allPOIs.sort((a, b) => {
+      const distA = calculateDistance(
+        userLocation.latitude,
+        userLocation.longitude,
+        a.geometry?.location?.lat,
+        a.geometry?.location?.lng
+      );
+      const distB = calculateDistance(
+        userLocation.latitude,
+        userLocation.longitude,
+        b.geometry?.location?.lat,
+        b.geometry?.location?.lng
+      );
+      return distA - distB;
+    });
   };
 
   const handleFilterPress = () => {
@@ -308,19 +264,6 @@ const InterestPoints = () => {
   };
 
   const filteredData = getFilteredData();
-
-  // Show placeholder message while waiting for location
-  const renderPlaceholder = () => {
-    if (isLoading && !dataLoaded) {
-      return (
-        <View style={styles.placeholderContainer}>
-          <ActivityIndicator size="large" color="#0066cc" />
-          <Text style={styles.placeholderText}>Getting nearby places...</Text>
-        </View>
-      );
-    }
-    return null;
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -338,37 +281,14 @@ const InterestPoints = () => {
         </TouchableOpacity>
       </View>
 
-      {renderPlaceholder()}
-
       <POIList
         data={filteredData}
         userLocation={userLocation}
-        isLoading={isLoading && !dataLoaded} // Show loading only if no cached data
+        isLoading={isLoading}
         error={error}
         refreshing={refreshing}
         onRefresh={handleRefresh}
-        calculateDistance={(lat1, lon1, lat2, lon2) => {
-          // Use precomputed distance if available
-          const poi = filteredData.find(
-            p => p.geometry?.location?.lat === lat2 && p.geometry?.location?.lng === lon2
-          );
-          if (poi && poi._distance !== undefined) {
-            return poi._distance;
-          }
-          
-          // Fallback calculation (should rarely be needed)
-          if (!lat1 || !lon1 || !lat2 || !lon2) return null;
-
-          const R = 6371; // Radius of the earth in km
-          const dLat = (lat2 - lat1) * (Math.PI / 180);
-          const dLon = (lon2 - lon1) * (Math.PI / 180);
-          const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-          return R * c; // Distance in km
-        }}
+        calculateDistance={calculateDistance}
       />
 
       <FilterModal

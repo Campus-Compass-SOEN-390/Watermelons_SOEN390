@@ -2,39 +2,33 @@ import React, { useEffect } from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { homepageStyles as styles } from "../styles/HomePageStyles.js";
-import HeaderButtons from "../components/HeaderButtons";
-import { Ionicons } from "@expo/vector-icons";
+// import RNUxcam from "react-native-ux-cam";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
-import RNUxcam from "react-native-ux-cam";
+import HeaderButtons from "../components/HeaderButtons.js";
 
 export default function HomePage() {
   const router = useRouter();
   const { handleButtonPress } = useButtonInteraction();
 
-  useEffect(() => {
-    RNUxcam.tagScreenName("HomePage");
-  }, []);
+  // useEffect(() => {
+  //   RNUxcam.tagScreenName("HomePage");
+  // }, []);
 
   const handleNavigationPress = (route, label) => {
-    RNUxcam.logEvent(`${label} Button Pressed`);
+    // RNUxcam.logEvent(`${label} Button Pressed`);
     handleButtonPress(route, label);
     router.push(route);
   };
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Top navigation with Settings button */}
       <HeaderButtons />
-
-      {/* Logo */}
       <Image
         style={styles.logo}
         source={require("../../assets/images/logo.png")}
         resizeMode="contain"
         testID="logo"
       />
-
-      {/* Getting around campus section */}
       <View style={styles.buttonsContainer}>
         <Text style={styles.title}>Getting around campus</Text>
         <View style={styles.buttonContainer}>
@@ -70,7 +64,6 @@ export default function HomePage() {
           >
             <Text style={styles.buttonText}>Shuttle Bus Schedule</Text>
           </TouchableOpacity>
-
           <TouchableOpacity
             style={styles.button}
             onPress={() =>
@@ -82,8 +75,6 @@ export default function HomePage() {
           </TouchableOpacity>
         </View>
       </View>
-
-      {/* Calendar section */}
       <View style={styles.buttonsContainer}>
         <Text style={styles.title}>View My Calendar</Text>
         <View style={styles.buttonContainer}>
@@ -106,15 +97,6 @@ export default function HomePage() {
           </TouchableOpacity>
         </View>
       </View>
-
-      {/* Info button in bottom right corner */}
-      <TouchableOpacity
-        style={styles.infoButton}
-        onPress={() => handleNavigationPress("/screens/InfoPage", "Info Page")}
-        testID="infoButton"
-      >
-        <Ionicons name="information-circle-outline" size={30} color="white" />
-      </TouchableOpacity>
     </View>
   );
 }

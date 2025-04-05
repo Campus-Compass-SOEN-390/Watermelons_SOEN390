@@ -19,7 +19,7 @@ jest.mock('../(tabs)/_layout', () => {
       <View testID="outdoorMapIcon" />
       <View testID="homeButton" onPress={() => mockPush("/")}/>
       <View testID="interestPointsButton" onPress={() => mockPush("./(tabs)/interest-points")}/>
-      <View testID="upcomingButton" onPress={() => mockPush("./(tabs)/upcoming-class")}/>
+      <View testID="favoritesButton" onPress={() => mockPush("./(tabs)/favorites")}/>
       <View testID="indoorMapButton" onPress={() => mockPush("./(tabs)/indoor-map")}/>
       <View testID="outdoorMapButton" onPress={() => mockPush("./(tabs)/outdoor-map")}/>
     </>
@@ -42,6 +42,7 @@ describe('TabLayout', () => {
         const outdoorMapIcon = page.getByTestId('outdoorMapIcon')
         const homeButton = page.getByTestId('homeButton');
         const interestPointsButton = page.getByTestId('interestPointsButton');
+        const favoritesButton = page.getByTestId('favoritesButton');
         const indoorMapButton = page.getByTestId('indoorMapButton');
         const outdoorMapButton = page.getByTestId('outdoorMapButton');
         expect(homeIcon).toBeTruthy();
@@ -51,6 +52,7 @@ describe('TabLayout', () => {
         expect(outdoorMapIcon).toBeTruthy();
         expect(homeButton).toBeTruthy();
         expect(interestPointsButton).toBeTruthy();
+        expect(favoritesButton).toBeTruthy();
         expect(indoorMapButton).toBeTruthy();
         expect(outdoorMapButton).toBeTruthy();
         
@@ -88,11 +90,12 @@ describe('TabLayout', () => {
         expect(mockPush).toHaveBeenCalledWith("./(tabs)/outdoor-map");
     })
 
-    it('should go to upcoming class page when calendar button is pressed', () => {
+    it('should go to favorites page when favorites button is pressed', () => {
         const page = render(<TabLayout />);
-        const upcomingButton = page.getByTestId("upcomingButton");
-        fireEvent.press(upcomingButton);
-        expect(mockPush).toHaveBeenCalledWith("./(tabs)/upcoming-class");
+        const favoritesButton = page.getByTestId("favoritesButton");
+        fireEvent.press(favoritesButton);
+        expect(mockPush).toHaveBeenCalledWith("./(tabs)/favorites");
     })
+
 
 });
