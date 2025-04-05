@@ -9,7 +9,6 @@ import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
  * @returns {Promise<number|null|{error:string}>}
  */
 export const estimateShuttleTravelTime = async (userLocation, destinationCampus) => {
-  // const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
   const today = new Date().toLocaleString("en-US", { weekday: "long" });
   console.log("Today is:", today); // Should say "Monday", "Tuesday", etc.
   const now = new Date();
