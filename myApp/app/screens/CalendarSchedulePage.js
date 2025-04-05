@@ -269,7 +269,6 @@ export default function CalendarSchedulePage() {
       >
         {/* Header buttons */}
         <View style={{ marginTop: 50, marginBottom: 10 }}>
-          <HeaderButtons />
         </View>{" "}
       </View>
 

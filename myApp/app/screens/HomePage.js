@@ -6,6 +6,7 @@ import RNUxcam from "react-native-ux-cam";
 import { ThemeContext } from "../context/ThemeContext";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
 import HeaderButtons from "../components/HeaderButtons.js";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomePage() {
   const router = useRouter();
@@ -26,7 +27,8 @@ export default function HomePage() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+    <View style={styles.container}>
       {/* Use HeaderButtons component which includes theme toggle */}
       {/* Header buttons */}
       <View
@@ -35,7 +37,6 @@ export default function HomePage() {
           marginTop: 40,
         }}
       >
-        <HeaderButtons />
       </View>
 
       <Image
@@ -126,6 +127,7 @@ export default function HomePage() {
         </View>
       </View>
     </View>
+    </SafeAreaView>
   );
 }
 

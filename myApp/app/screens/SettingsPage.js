@@ -57,7 +57,6 @@ export default function Settings() {
             marginBottom: 10,
           }}
         >
-          <HeaderButtons />
         </View>{" "}
       </View>
 

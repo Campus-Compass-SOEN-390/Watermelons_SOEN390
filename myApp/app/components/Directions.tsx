@@ -3,6 +3,7 @@ import { View } from "react-native";
 import Mapbox from "@rnmapbox/maps";
 import ShortestPathMap from "./IndoorMap/ShortestPathMap";
 import MapDirections from "./MapDirections";
+import MapboxMarker from "./MarkerComponent";
 
 
 interface Props {

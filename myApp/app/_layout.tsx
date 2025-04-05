@@ -3,11 +3,13 @@ import { Stack } from "expo-router";
 import { ThemeProvider } from "./context/ThemeContext";
 import { FeedbackProvider } from "./context/FeedbackContext";
 import Toast from "react-native-toast-message";
+import HeaderButtons from "./components/HeaderButtons";
 
 export default function RootLayout() {
   return (
     <ThemeProvider>
       <FeedbackProvider>
+        <HeaderButtons/>
         <Stack
           screenOptions={{
             // Hide the header for ALL screens in this stack

@@ -54,7 +54,6 @@ export default function TabLayout() {
     <IndoorMapProvider>
       <LocationProvider>
         <View style={{ flex: 1 }}>
-          <HeaderButtons/>
           <Tabs
             screenOptions={({ route }) => ({
               headerShown: false, // Remove the top header bar

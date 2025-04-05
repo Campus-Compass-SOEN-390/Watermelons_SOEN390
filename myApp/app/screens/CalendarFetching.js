@@ -192,7 +192,6 @@ export default function CalendarFetching() {
       }}
     >
       <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-      <HeaderButtons />
 
       {/* Main Content */}
       <KeyboardAvoidingView

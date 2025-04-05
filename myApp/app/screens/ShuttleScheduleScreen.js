@@ -132,7 +132,6 @@ export default function ShuttleScheduleScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-        //<HeaderButtons />
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
@@ -146,7 +145,6 @@ export default function ShuttleScheduleScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-      <HeaderButtons/>
       <View style={styles.header}>
         {/* <TouchableOpacity onPress={handleBack} style={styles.backButton}>
           <Text style={styles.backText}>✖</Text>
