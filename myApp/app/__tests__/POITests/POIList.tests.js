@@ -390,6 +390,7 @@ describe('POIList Component', () => {
     try {
       expect(getByText('4.0')).toBeTruthy();
     } catch (e) {
+      console.error('Rating 4.0 not found, trying without decimal');
       expect(getByText('4')).toBeTruthy(); // Try without decimal
     }
   });
