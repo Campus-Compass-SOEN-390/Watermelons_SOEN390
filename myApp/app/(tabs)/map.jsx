@@ -681,19 +681,21 @@ export default function MapView() {
     console.log("Shuttle button click");
 
     // Update origin & destination only if there are no shuttle details or no error
-    if (!shuttleDetails || !shuttleDetails.error) {
-      updateOrigin(coordinatesMap["My Position"], "My Location");
-      if (activeCampus === "sgw") {
-        updateDestination(
-          coordinatesMap["Loyola Campus, Shuttle Stop"],
-          "Loyola Campus, Shuttle Stop"
-        );
-      } else {
-        updateDestination(
-          coordinatesMap["SGW Campus, Shuttle Stop"],
-          "SGW Campus, Shuttle Stop"
-        );
-      }
+
+    if (!shuttleDetails?.error) {
+        updateOrigin(coordinatesMap["My Position"], "My Location");
+        if (activeCampus === "sgw") {
+            updateDestination(
+                coordinatesMap["Loyola Campus, Shuttle Stop"],
+                "Loyola Campus, Shuttle Stop"
+            );
+        } else {
+            updateDestination(
+                coordinatesMap["SGW Campus, Shuttle Stop"],
+                "SGW Campus, Shuttle Stop"
+            );
+        }
+
     }
 
     try {

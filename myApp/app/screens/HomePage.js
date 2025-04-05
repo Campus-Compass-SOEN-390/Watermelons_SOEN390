@@ -15,17 +15,8 @@ export default function HomePage() {
 
   // Create styles based on current theme
   const styles = createHomePageStyles(theme);
-
-  useEffect(() => {
-    RNUxcam.tagScreenName("HomePage");
-  }, []);
-
-  const handleNavigationPress = (route, label) => {
-    RNUxcam.logEvent(`${label} Button Pressed`);
-    handleButtonPress(route, label);
-    router.push(route);
   };
-
+   
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
     <View style={styles.container}>

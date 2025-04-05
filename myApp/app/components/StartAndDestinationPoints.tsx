@@ -79,6 +79,7 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
     travelMode,
     travelTime,
     travelDistance,
+    navType,
   } = useLocationContext();
   const { updateSelectedFloor, updateSelectedIndoorBuilding } =
     useIndoorMapContext();
@@ -420,11 +421,24 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
 
                 handleNavType(originText, destinationText);
                 updateShowTransportation(true);
+
+                if (navType === "indoor") {
+                  updateRenderMap(true);
+                  updateTravelMode("walking");
+                  setShowFooter(true);
+                }
               }
             }}
           >
             <Text style={styles.buttonText}>Get Directions</Text>
           </TouchableOpacity>
+        ) : navType === "indoor" ? (
+          <View style={styles.indoorNavigationMessage}>
+            <MaterialIcons name="directions-walk" size={24} color="#922338" />
+            <Text style={styles.indoorNavigationText}>
+              Walking directions available - follow indoor map path
+            </Text>
+          </View>
         ) : (
           <View style={styles.buttonContainer}>
             {loading ? (
@@ -461,7 +475,7 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
                   style={[
                     styles.transportButton,
                     travelMode === mode && styles.selectedButton,
-                    { flexDirection: "row", alignItems: "center" }, // Added row layout
+                    { flexDirection: "row", alignItems: "center" },
                   ]}
                 >
                   <MaterialIcons

@@ -7,7 +7,7 @@ import { ThemeContext } from "../context/ThemeContext";
 export interface BuildingPopupProps {
   visible: boolean;
   onClose: () => void;
-  building: any | null;
+  building: any;
   onGetDirections(building: any): void;
   setAsStartingPoint(building: any): void;
 }
