@@ -4,12 +4,10 @@ import { useRouter } from 'expo-router';
 import { homepageStyles as styles } from '../styles/HomePageStyles.js';
 import HeaderButtons from "../components/HeaderButtons";
 import { Ionicons } from '@expo/vector-icons';
-import { useButtonInteraction } from '../hooks/useButtonInteraction'; 
 import RNUxcam from 'react-native-ux-cam'; 
 
 export default function HomePage() {
     const router = useRouter();
-    const { handleButtonPress } = useButtonInteraction();
 
     useEffect(() => {
         RNUxcam.tagScreenName("HomePage");
@@ -73,7 +71,7 @@ export default function HomePage() {
                     <TouchableOpacity 
                         style={styles.googleButton}
                         testID="calendarfetchbutton"
-                        onPress={() => router.push('screens/CalendarFetching')}
+                        onPress={() => router.push('/screens/CalendarFetching')}
                     >
                         <Image
                             source={require('../../assets/images/google_logo.png')}

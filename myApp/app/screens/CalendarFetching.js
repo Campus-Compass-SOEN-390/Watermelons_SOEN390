@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import {
   View,
   Image,
@@ -19,9 +19,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import LayoutWrapper from "../components/LayoutWrapper.js";
 import HeaderButtons from "../components/HeaderButtons.js";
-import MonthPicker from "../components/MonthPicker";
-import RNUxcam from "react-native-ux-cam";
-import { useButtonInteraction } from "../hooks/useButtonInteraction";
+const MonthPicker = lazy(() => import("../components/MonthPicker"));
+const useButtonInteraction = lazy(() => import("../hooks/useButtonInteraction"));
 
 export default function CalendarFetching() {
   const navigation = useNavigation();
@@ -159,122 +158,126 @@ export default function CalendarFetching() {
       behavior="padding"
       keyboardVerticalOffset={20}
     >
-      <LayoutWrapper>
-        <HeaderButtons />
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          keyboardShouldPersistTaps="handled"
-          enableOnAndroid={true}
-          extraScrollHeight={20}
-        >
-          <View style={styles.container}>
-            <View style={styles.redContainer}>
-              <View style={styles.whiteContainer}>
-                <Text style={styles.title}>Enter your Google Calendar ID</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Paste Calendar ID here"
-                  value={calendarId}
-                  onChangeText={setCalendarId}
-                  placeholderTextColor="#666"
-                />
+      <Suspense fallback={<ActivityIndicator size="large" color="#922338" />}>
+        <LayoutWrapper>
+          <HeaderButtons />
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyboardShouldPersistTaps="handled"
+            enableOnAndroid={true}
+            extraScrollHeight={20}
+          >
+            <View style={styles.container}>
+              <View style={styles.redContainer}>
+                <View style={styles.whiteContainer}>
+                  <Text style={styles.title}>Enter your Google Calendar ID</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Paste Calendar ID here"
+                    value={calendarId}
+                    onChangeText={setCalendarId}
+                    placeholderTextColor="#666"
+                  />
 
-                <View style={{ marginTop: 10 }}>
-                  <Text style={styles.subtitle}>Calendars History:</Text>
-                  <View
-                    style={{
-                      height: 100,
-                      borderWidth: 1,
-                      borderColor: "#ccc",
-                      borderRadius: 8,
-                      padding: 5,
-                    }}
-                  >
-                    {storedCalendarIds.length === 0 ? (
-                      <Text style={{ color: "#888", fontStyle: "italic" }}>
-                        No history yet.
-                      </Text>
-                    ) : (
-                      <ScrollView>
-                        {storedCalendarIds.map((item, index) => (
-                          <TouchableOpacity
-                            key={index}
-                            style={styles.historyItem}
-                            onPress={() => {
-                              RNUxcam.logEvent(
-                                "Stored Calendar Ids Button Pressed"
-                              );
-                              handleButtonPress(null, item.name);
-                              setCalendarId(item.id);
-                            }}
-                          >
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                alignItems: "center",
+                  <View style={{ marginTop: 10 }}>
+                    <Text style={styles.subtitle}>Calendars History:</Text>
+                    <View
+                      style={{
+                        height: 100,
+                        borderWidth: 1,
+                        borderColor: "#ccc",
+                        borderRadius: 8,
+                        padding: 5,
+                      }}
+                    >
+                      {storedCalendarIds.length === 0 ? (
+                        <Text style={{ color: "#888", fontStyle: "italic" }}>
+                          No history yet.
+                        </Text>
+                      ) : (
+                        <ScrollView>
+                          {storedCalendarIds.map((item, index) => (
+                            <TouchableOpacity
+                              key={index}
+                              style={styles.historyItem}
+                              onPress={() => {
+                                RNUxcam.logEvent(
+                                  "Stored Calendar Ids Button Pressed"
+                                );
+                                handleButtonPress(null, item.name);
+                                setCalendarId(item.id);
                               }}
                             >
-                              <Ionicons
-                                name="timer-outline"
-                                size={20}
-                                color="#888"
-                                style={{ marginRight: 6 }}
-                              />
-                              <Text style={styles.historyText}>
-                                {item.name}
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                        ))}
-                      </ScrollView>
-                    )}
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <Ionicons
+                                  name="timer-outline"
+                                  size={20}
+                                  color="#888"
+                                  style={{ marginRight: 6 }}
+                                />
+                                <Text style={styles.historyText}>
+                                  {item.name}
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+                          ))}
+                        </ScrollView>
+                      )}
+                    </View>
                   </View>
+
+                  <View style={{ marginTop: 10 }}>
+                    <Suspense fallback={<ActivityIndicator size="small" color="#922338" />}>
+                      <MonthPicker
+                        monthsAhead={monthsAhead}
+                        setMonthsAhead={setMonthsAhead}
+                        styles={styles}
+                      />
+                    </Suspense>
+                  </View>
+
+                  <TouchableOpacity
+                    style={styles.connectButton}
+                    onPress={fetchCalendarEvents}
+                    disabled={loading}
+                  >
+                    <Text style={styles.buttonText}>
+                      {loading ? "Connecting..." : "Connect"}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.clearHistoryButton}
+                    onPress={async () => {
+                      RNUxcam.logEvent("Clear History Button Pressed");
+                      handleButtonPress(null, "Clear History");
+                      try {
+                        await AsyncStorage.removeItem("calendarIds");
+                        setStoredCalendarIds([]);
+                      } catch (err) {
+                        console.error("Failed to clear calendar history", err);
+                      }
+                    }}
+                  >
+                    <Ionicons
+                      name="trash-outline"
+                      size={10}
+                      color="#888"
+                      style={{ marginRight: 6 }}
+                    />
+                    <Text style={styles.clearHistoryText}>Clear History</Text>
+                  </TouchableOpacity>
                 </View>
-
-                <View style={{ marginTop: 10 }}>
-                  <MonthPicker
-                    monthsAhead={monthsAhead}
-                    setMonthsAhead={setMonthsAhead}
-                    styles={styles}
-                  />
-                </View>
-
-                <TouchableOpacity
-                  style={styles.connectButton}
-                  onPress={fetchCalendarEvents}
-                  disabled={loading}
-                >
-                  <Text style={styles.buttonText}>
-                    {loading ? "Connecting..." : "Connect"}
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.clearHistoryButton}
-                  onPress={async () => {
-                    RNUxcam.logEvent("Clear History Button Pressed");
-                    handleButtonPress(null, "Clear History");
-                    try {
-                      await AsyncStorage.removeItem("calendarIds");
-                      setStoredCalendarIds([]);
-                    } catch (err) {
-                      console.error("Failed to clear calendar history", err);
-                    }
-                  }}
-                >
-                  <Ionicons
-                    name="trash-outline"
-                    size={10}
-                    color="#888"
-                    style={{ marginRight: 6 }}
-                  />
-                  <Text style={styles.clearHistoryText}>Clear History</Text>
-                </TouchableOpacity>
               </View>
             </View>
-          </View>
-        </ScrollView>
-      </LayoutWrapper>
+          </ScrollView>
+        </LayoutWrapper>
+      </Suspense>
     </KeyboardAvoidingView>
   );
 }

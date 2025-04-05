@@ -1,12 +1,13 @@
-import { Text, View, TouchableOpacity, ScrollView , Alert} from "react-native";
-import React, { useState, useEffect } from "react";
+import { Text, View, TouchableOpacity, ScrollView , Alert, ActivityIndicator } from "react-native";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import styles from '../styles/GoogleScheduleStyles';
 import { useRouter } from 'expo-router';
-import LayoutWrapper from "../components/LayoutWrapper";
 import * as FileSystem from 'expo-file-system';
-import HeaderButtons from "../components/HeaderButtons";
 import { useButtonInteraction } from '../hooks/useButtonInteraction';
+
+const LayoutWrapper = lazy(() => import("../components/LayoutWrapper"));
+const HeaderButtons = lazy(() => import("../components/HeaderButtons"));
 
 export default function CalendarSchedulePage() {
   const router = useRouter();
@@ -220,131 +221,133 @@ export default function CalendarSchedulePage() {
   };
 
   return (
-    <LayoutWrapper>
-      {/* Top Navigation */}
-      <HeaderButtons/>
-      {/* Days Navigation */}
-      <View style={styles.daysRow}>
-        {days.map((day, index) => (
-          <Text
-            key={index}
-            style={[
-              styles.dayText,
-              index === selectedDayIndex && styles.highlightedDay,
-            ]}
-          >
-            {day}
-          </Text>
-        ))}
-      </View>
-      <View style={styles.nextClassContainer}>
-        {nextClass ? (
-          <>
-            <Text style={styles.nextClassInfoText}>
-              {`Your next class is: ${nextClass.course}, ${
-                new Date(nextClass.date).toDateString() === new Date().toDateString()
-                  ? 'today'
-                  : new Date(nextClass.date).toLocaleDateString('en-US', {
-                      weekday: 'long',
-                      month: 'long',
-                      day: 'numeric'
-                    })
-              } ${nextClass.time} at ${nextClass.location}`}
-            </Text>
-            <TouchableOpacity
-              style={styles.nextClassDirections}
-              onPress={() => {
-                handleButtonPress(null, 'Getting directions to next class');
-                findNextClass();
-              }}
-              testID="get-directions-button"
+    <Suspense fallback={<ActivityIndicator size="large" color="#922338" />}>
+      <LayoutWrapper>
+        {/* Top Navigation */}
+        <HeaderButtons/>
+        {/* Days Navigation */}
+        <View style={styles.daysRow}>
+          {days.map((day, index) => (
+            <Text
+              key={index}
+              style={[
+                styles.dayText,
+                index === selectedDayIndex && styles.highlightedDay,
+              ]}
             >
-              <MaterialIcons name="directions" size={24} color="white" style={{ marginRight: 8 }} />
-              <Text style={styles.nextClassButtonText}>
-                Get directions to next class
+              {day}
+            </Text>
+          ))}
+        </View>
+        <View style={styles.nextClassContainer}>
+          {nextClass ? (
+            <>
+              <Text style={styles.nextClassInfoText}>
+                {`Your next class is: ${nextClass.course}, ${
+                  new Date(nextClass.date).toDateString() === new Date().toDateString()
+                    ? 'today'
+                    : new Date(nextClass.date).toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        month: 'long',
+                        day: 'numeric'
+                      })
+                } ${nextClass.time} at ${nextClass.location}`}
               </Text>
+              <TouchableOpacity
+                style={styles.nextClassDirections}
+                onPress={() => {
+                  handleButtonPress(null, 'Getting directions to next class');
+                  findNextClass();
+                }}
+                testID="get-directions-button"
+              >
+                <MaterialIcons name="directions" size={24} color="white" style={{ marginRight: 8 }} />
+                <Text style={styles.nextClassButtonText}>
+                  Get directions to next class
+                </Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <Text style={styles.noClassText}>
+              No upcoming classes scheduled
+            </Text>
+          )}
+        </View>
+
+        {/* Schedule Header */}
+        <Text style={styles.scheduleTitle}>Schedule</Text>
+
+        {/* Schedule Cards */}
+        <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
+        {filteredSchedule.map((item, idx) => (
+          <View key={idx} style={styles.card}>
+            <View style={styles.cardTextContainer}>
+              <Text style={styles.courseText}>{item.course}</Text>
+              <Text>{item.location}</Text>
+              <Text>{item.time}</Text>
+            </View>
+            <TouchableOpacity 
+              style={styles.iconContainer}
+              onPress={() => {
+                handleButtonPress(null, `Getting directions to ${item.course}`);
+                handleGetDirections(item.location);
+              }}
+            >
+              <MaterialIcons name="directions" size={28} color="white" />
             </TouchableOpacity>
-          </>
-        ) : (
-          <Text style={styles.noClassText}>
-            No upcoming classes scheduled
-          </Text>
-        )}
-      </View>
-
-      {/* Schedule Header */}
-      <Text style={styles.scheduleTitle}>Schedule</Text>
-
-      {/* Schedule Cards */}
-      <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-      {filteredSchedule.map((item, idx) => (
-        <View key={idx} style={styles.card}>
-          <View style={styles.cardTextContainer}>
-            <Text style={styles.courseText}>{item.course}</Text>
-            <Text>{item.location}</Text>
-            <Text>{item.time}</Text>
           </View>
-          <TouchableOpacity 
-            style={styles.iconContainer}
+        ))}
+        </ScrollView>
+
+          
+        {/* Bottom Navigation Buttons */}
+        <View style={styles.todayButtonContainer}>
+          <TouchableOpacity
+            testID="prev-day-button"
+            style={styles.todayNavButton}
             onPress={() => {
-              handleButtonPress(null, `Getting directions to ${item.course}`);
-              handleGetDirections(item.location);
+              handleButtonPress(null, 'Previous day');
+              setSelectedDate(
+                new Date(selectedDate.setDate(selectedDate.getDate() - 1))
+              );
             }}
           >
-            <MaterialIcons name="directions" size={28} color="white" />
+            <Ionicons name="chevron-back" size={20} color="white" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            testID="today-button"
+            style={styles.todayLabelWrapper}
+            onPress={() => {
+              handleButtonPress(null, 'Go to today');
+              setSelectedDate(new Date());
+            }}
+          >
+            <Text style={styles.todayText}>
+              {selectedDate.toDateString() !== new Date().toDateString()
+                ? selectedDate.toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })
+                : "Today"}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            testID="next-day-button"
+            style={styles.todayNavButton}
+            onPress={() => {
+              handleButtonPress(null, 'Next day');
+              setSelectedDate(
+                new Date(selectedDate.setDate(selectedDate.getDate() + 1))
+              );
+            }}
+          >
+            <Ionicons name="chevron-forward" size={20} color="white" />
           </TouchableOpacity>
         </View>
-      ))}
-      </ScrollView>
-
-        
-      {/* Bottom Navigation Buttons */}
-      <View style={styles.todayButtonContainer}>
-        <TouchableOpacity
-          testID="prev-day-button"
-          style={styles.todayNavButton}
-          onPress={() => {
-            handleButtonPress(null, 'Previous day');
-            setSelectedDate(
-              new Date(selectedDate.setDate(selectedDate.getDate() - 1))
-            );
-          }}
-        >
-          <Ionicons name="chevron-back" size={20} color="white" />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          testID="today-button"
-          style={styles.todayLabelWrapper}
-          onPress={() => {
-            handleButtonPress(null, 'Go to today');
-            setSelectedDate(new Date());
-          }}
-        >
-          <Text style={styles.todayText}>
-            {selectedDate.toDateString() !== new Date().toDateString()
-              ? selectedDate.toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              })
-              : "Today"}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          testID="next-day-button"
-          style={styles.todayNavButton}
-          onPress={() => {
-            handleButtonPress(null, 'Next day');
-            setSelectedDate(
-              new Date(selectedDate.setDate(selectedDate.getDate() + 1))
-            );
-          }}
-        >
-          <Ionicons name="chevron-forward" size={20} color="white" />
-        </TouchableOpacity>
-      </View>
-    </LayoutWrapper>
+      </LayoutWrapper>
+    </Suspense>
   );
 }
