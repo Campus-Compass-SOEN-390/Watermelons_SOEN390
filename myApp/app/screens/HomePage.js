@@ -15,6 +15,11 @@ export default function HomePage() {
 
   // Create styles based on current theme
   const styles = createHomePageStyles(theme);
+
+  const handleNavigationPress = (route, label) => {
+    RNUxcam.logEvent(`${label} Button Pressed`);
+    handleButtonPress(route, label);
+    router.push(route);
   };
    
   return (
@@ -121,4 +126,3 @@ export default function HomePage() {
     </SafeAreaView>
   );
 }
-
