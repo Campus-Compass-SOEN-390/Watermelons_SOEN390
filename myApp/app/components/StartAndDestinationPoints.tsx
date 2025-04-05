@@ -26,7 +26,6 @@ import TravelFacade from "../utils/TravelFacade";
 import { useIndoorMapContext } from "../context/IndoorMapContext";
 import { parseClassroomLocation } from "../utils/IndoorMapUtils";
 import { buildings } from "../api/buildingData";
-import HeaderButtons from "../components/HeaderButtons";
 
 // Define Types
 type Route = {
@@ -288,7 +287,6 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
 
   return (
     <View style={styles.container}>
-
       <View style={styles.card}>
         {/* From Input with Google Places Autocomplete */}
         <View style={styles.inputRow}>

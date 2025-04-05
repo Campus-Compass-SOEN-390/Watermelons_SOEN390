@@ -16,7 +16,6 @@ export default function HomePage() {
   // Log screen view
   RNUxcam.tagScreenName("HomePage");
 
-  // Create styles based on current theme
   const styles = createHomePageStyles(theme);
 
   const handleNavigationPress = (route, label) => {

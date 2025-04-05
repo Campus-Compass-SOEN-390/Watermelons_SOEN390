@@ -1,24 +1,22 @@
 import React, { useState, useContext } from "react";
-import { Switch, Text, View, Image, Platform, StatusBar } from "react-native";
+import {
+  Switch,
+  Text,
+  View,
+  Image,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+} from "react-native";
 import { useFeedback } from "../context/FeedbackContext";
 import { ThemeContext } from "../context/ThemeContext";
 import HeaderButtons from "../components/HeaderButtons";
 import { Ionicons } from "@expo/vector-icons";
 import { createSettingsPageStyles } from "../styles/SettingsPageStyles";
+import { useButtonInteraction } from "../hooks/useButtonInteraction";
 
 export default function Settings() {
-  // Get theme context
-  const { isDarkMode } = useContext(ThemeContext);
-
-  // Create theme-aware styles
-  const themedStyles = createSettingsPageStyles({
-    theme: {
-      darkBg: "#333333",
-      darkText: "#FFFFFF",
-    },
-    isDarkMode,
-  });
-
+  // Get feedback context
   const {
     vibrationEnabled,
     soundEnabled,
@@ -28,10 +26,20 @@ export default function Settings() {
     toggleSpeech,
   } = useFeedback();
 
-  const [blackMode, setBlackMode] = useState(false);
+  // Get theme context
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
 
-  // Get icon color based on theme
-  const iconColor = isDarkMode ? "#FFFFFF" : "#000000";
+  // Get button interaction handler
+  const { handleButtonPress } = useButtonInteraction();
+
+  // Use theme-aware styles
+  const themedStyles = createSettingsPageStyles({
+    theme: {
+      darkBg: "#333333",
+      darkText: "#FFFFFF",
+    },
+    isDarkMode,
+  });
 
   return (
     <View
@@ -40,76 +48,117 @@ export default function Settings() {
         backgroundColor: isDarkMode ? "#333333" : "#FFFFFF",
       }}
     >
-      {/* Status bar */}
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
 
-      <View style={themedStyles.container}>
-        <Text style={themedStyles.title}>Settings</Text>
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={themedStyles.container}>
+          <Text style={themedStyles.title}>Settings</Text>
 
-        <View style={themedStyles.settingRow}>
-          <Ionicons name="invert-mode-outline" size={24} color={iconColor} />
-          <Text style={themedStyles.settingLabel}>Black & White Mode</Text>
-          <Switch
-            value={blackMode}
-            onValueChange={() => setBlackMode((prevState) => !prevState)}
-            trackColor={{ false: "#b0b0b0", true: "#922338" }}
-            thumbColor={isDarkMode ? "#f4f3f4" : "grey"}
-            style={themedStyles.switch}
-            testID="black-mode-toggle"
-          />
+          {/* Dark Mode Toggle - Primary place to toggle theme */}
+          <View style={themedStyles.settingRow}>
+            <Ionicons
+              name={isDarkMode ? "sunny" : "moon-outline"}
+              size={24}
+              color={isDarkMode ? "#FFFFFF" : "black"}
+            />
+            <Text style={themedStyles.settingLabel}>Dark Mode</Text>
+            <Switch
+              value={isDarkMode}
+              onValueChange={() => {
+                handleButtonPress(
+                  null,
+                  isDarkMode
+                    ? "Switching to light mode"
+                    : "Switching to dark mode"
+                );
+                toggleTheme();
+              }}
+              trackColor={{ false: "#b0b0b0", true: "#922338" }}
+              thumbColor={isDarkMode ? "#f4f3f4" : "grey"}
+              style={themedStyles.switch}
+              testID="dark-mode-toggle"
+            />
+          </View>
+
+          <View style={themedStyles.settingRow}>
+            <Image
+              style={[
+                themedStyles.vibration_image,
+                isDarkMode && { tintColor: "#FFFFFF" },
+              ]}
+              source={require("../../assets/images/vibration_icon.png")}
+              resizeMode="contain"
+            />
+            <Text style={themedStyles.settingLabel}>Vibration Feedback</Text>
+            <Switch
+              value={vibrationEnabled}
+              onValueChange={() => {
+                handleButtonPress(
+                  null,
+                  vibrationEnabled
+                    ? "Disabling vibration"
+                    : "Enabling vibration"
+                );
+                toggleVibration();
+              }}
+              trackColor={{ false: "#b0b0b0", true: "#922338" }}
+              thumbColor={isDarkMode ? "#f4f3f4" : "grey"}
+              style={themedStyles.switch}
+              testID="vibration-toggle"
+            />
+          </View>
+
+          <View style={themedStyles.settingRow}>
+            <Ionicons
+              name={
+                soundEnabled ? "volume-high-outline" : "volume-mute-outline"
+              }
+              size={24}
+              color={isDarkMode ? "#FFFFFF" : "black"}
+            />
+            <Text style={themedStyles.settingLabel}>Sound Feedback</Text>
+            <Switch
+              value={soundEnabled}
+              onValueChange={() => {
+                handleButtonPress(
+                  null,
+                  soundEnabled ? "Disabling sound" : "Enabling sound"
+                );
+                toggleSound();
+              }}
+              trackColor={{ false: "#b0b0b0", true: "#922338" }}
+              thumbColor={isDarkMode ? "#f4f3f4" : "grey"}
+              style={themedStyles.switch}
+              testID="sound-toggle"
+            />
+          </View>
+
+          <View style={themedStyles.settingRow}>
+            <Ionicons
+              name={speechEnabled ? "mic-outline" : "mic-off-outline"}
+              size={24}
+              color={isDarkMode ? "#FFFFFF" : "black"}
+            />
+            <Text style={themedStyles.settingLabel}>Speech Feedback</Text>
+            <Switch
+              value={speechEnabled}
+              onValueChange={() => {
+                handleButtonPress(
+                  null,
+                  speechEnabled ? "Disabling speech" : "Enabling speech"
+                );
+                toggleSpeech();
+              }}
+              trackColor={{ false: "#b0b0b0", true: "#922338" }}
+              thumbColor={isDarkMode ? "#f4f3f4" : "grey"}
+              style={themedStyles.switch}
+              testID="speech-toggle"
+            />
+          </View>
+
+          {/* App information section could be added here */}
         </View>
-
-        <View style={themedStyles.settingRow}>
-          <Image
-            style={themedStyles.vibration_image}
-            source={require("../../assets/images/vibration_icon.png")}
-            resizeMode="contain"
-          />
-          <Text style={themedStyles.settingLabel}>Vibration Feedback</Text>
-          <Switch
-            value={vibrationEnabled}
-            onValueChange={toggleVibration}
-            trackColor={{ false: "#b0b0b0", true: "#922338" }}
-            thumbColor={isDarkMode ? "#f4f3f4" : "grey"}
-            style={themedStyles.switch}
-            testID="vibration-toggle"
-          />
-        </View>
-
-        <View style={themedStyles.settingRow}>
-          <Ionicons
-            name={soundEnabled ? "volume-high-outline" : "volume-mute-outline"}
-            size={24}
-            color={iconColor}
-          />
-          <Text style={themedStyles.settingLabel}>Sound Feedback</Text>
-          <Switch
-            value={soundEnabled}
-            onValueChange={toggleSound}
-            trackColor={{ false: "#b0b0b0", true: "#922338" }}
-            thumbColor={isDarkMode ? "#f4f3f4" : "grey"}
-            style={themedStyles.switch}
-            testID="sound-toggle"
-          />
-        </View>
-
-        <View style={themedStyles.settingRow}>
-          <Ionicons
-            name={speechEnabled ? "mic-outline" : "mic-off-outline"}
-            size={24}
-            color={iconColor}
-          />
-          <Text style={themedStyles.settingLabel}>Speech Feedback</Text>
-          <Switch
-            value={speechEnabled}
-            onValueChange={toggleSpeech}
-            trackColor={{ false: "#b0b0b0", true: "#922338" }}
-            thumbColor={isDarkMode ? "#f4f3f4" : "grey"}
-            style={themedStyles.switch}
-            testID="speech-toggle"
-          />
-        </View>
-      </View>
+      </SafeAreaView>
     </View>
   );
 }

@@ -11,7 +11,7 @@ export default function HeaderButtons() {
   const { handleButtonPress } = useButtonInteraction();
 
   // Get theme context properly
-  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const { theme, isDarkMode } = useContext(ThemeContext);
 
   const isHome = pathname === "/";
   const isSettings = pathname === "/screens/SettingsPage";
@@ -73,26 +73,8 @@ export default function HeaderButtons() {
 
       <View style={{ flex: 1 }} />
 
-      {/* Right Slot (Theme Toggle and Settings) */}
+      {/* Right Slot (Settings only) - removed theme toggle */}
       <View style={styles.rightButtons}>
-        {/* Theme toggle button */}
-        <TouchableOpacity
-          style={[dynamicStyles.headerButtons, { marginRight: 8 }]}
-          onPress={() => {
-            handleButtonPress(
-              null,
-              isDarkMode ? "Switching to light mode" : "Switching to dark mode"
-            );
-            toggleTheme();
-          }}
-        >
-          <Ionicons
-            name={isDarkMode ? "sunny" : "moon"}
-            size={22}
-            color={theme.iconColor || "#FFFFFF"}
-          />
-        </TouchableOpacity>
-
         {/* Settings button (only shown when not on Settings page) */}
         {!isSettings && (
           <TouchableOpacity
@@ -122,7 +104,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     marginBottom: 12,
-    paddingTop: 45
+    paddingTop: 45,
   },
   rightButtons: {
     flexDirection: "row",

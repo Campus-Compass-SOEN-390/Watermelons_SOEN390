@@ -40,19 +40,6 @@ jest.mock("../hooks/useButtonInteraction", () => ({
   }),
 }));
 
-// Mock LayoutWrapper
-jest.mock("../components/LayoutWrapper.js", () => {
-  const { View } = require("react-native");
-  const React = require("react");
-  const PropTypes = require("prop-types");
-  const LayoutWrapperMock = ({ children }) =>
-    React.createElement(View, null, children);
-  LayoutWrapperMock.propTypes = {
-    children: PropTypes.node,
-  };
-  return LayoutWrapperMock;
-});
-
 // Mock HeaderButtons
 jest.mock("../components/HeaderButtons.js", () => {
   const React = require("react");
@@ -70,13 +57,16 @@ const renderWithTheme = (ui, { isDarkMode = false } = {}) => {
   const mockToggleTheme = jest.fn(); // Mock the toggleTheme function
   const theme = isDarkMode ? darkTheme : lightTheme;
 
-  return render(
-    <ThemeContext.Provider
-      value={{ theme, isDarkMode, toggleTheme: mockToggleTheme }}
-    >
-      {ui}
-    </ThemeContext.Provider>
-  );
+  return {
+    ...render(
+      <ThemeContext.Provider
+        value={{ theme, isDarkMode, toggleTheme: mockToggleTheme }}
+      >
+        {ui}
+      </ThemeContext.Provider>
+    ),
+    mockToggleTheme, // Return the mock function so tests can check it
+  };
 };
 
 describe("Settings Component", () => {
@@ -87,21 +77,18 @@ describe("Settings Component", () => {
   it("renders correctly", () => {
     const { getByTestId, getByText } = renderWithTheme(<Settings />);
     expect(getByText("Settings")).toBeTruthy();
-    expect(getByTestId("black-mode-toggle")).toBeTruthy();
+    expect(getByTestId("dark-mode-toggle")).toBeTruthy(); // Changed from black-mode-toggle
     expect(getByTestId("vibration-toggle")).toBeTruthy();
     expect(getByTestId("sound-toggle")).toBeTruthy();
     expect(getByTestId("speech-toggle")).toBeTruthy();
   });
 
-  it("toggles black mode setting", () => {
-    const { getByTestId } = renderWithTheme(<Settings />);
-    const blackMode = getByTestId("black-mode-toggle");
+  it("calls toggleTheme when dark mode switch is toggled", () => {
+    const { getByTestId, mockToggleTheme } = renderWithTheme(<Settings />);
+    const darkModeToggle = getByTestId("dark-mode-toggle");
 
-    fireEvent(blackMode, "onValueChange", true);
-    expect(blackMode.props.value).toBe(true);
-
-    fireEvent(blackMode, "onValueChange", false);
-    expect(blackMode.props.value).toBe(false);
+    fireEvent(darkModeToggle, "onValueChange", true);
+    expect(mockToggleTheme).toHaveBeenCalledTimes(1);
   });
 
   it("calls toggleVibration when vibration switch is toggled", () => {
@@ -129,17 +116,17 @@ describe("Settings Component", () => {
   });
 
   it("renders in dark mode correctly", () => {
-    const { getByTestId } = renderWithTheme(<Settings />, { isDarkMode: true });
-    const blackMode = getByTestId("black-mode-toggle");
+    const { getByTestId, mockToggleTheme } = renderWithTheme(<Settings />, {
+      isDarkMode: true,
+    });
 
-    // Instead of expecting the toggle to reflect the ThemeContext,
-    // test that toggling works when starting from dark mode
-    expect(blackMode).toBeTruthy();
+    const darkModeToggle = getByTestId("dark-mode-toggle");
 
-    // Toggle it and check that it can be toggled off
-    fireEvent(blackMode, "onValueChange", false);
+    // Verify that dark mode switch is turned on
+    expect(darkModeToggle.props.value).toBe(true);
 
-    // Toggle it back and check that it can be toggled on
-    fireEvent(blackMode, "onValueChange", true);
+    // Toggle the switch and check that toggleTheme was called
+    fireEvent(darkModeToggle, "onValueChange", false);
+    expect(mockToggleTheme).toHaveBeenCalledTimes(1);
   });
 });
