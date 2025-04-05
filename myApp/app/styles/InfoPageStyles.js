@@ -1,6 +1,4 @@
 import { StyleSheet } from 'react-native';
-// import { Dimensions } from 'react-native';
-// const { width, height } = Dimensions.get('window');
 
 export const infoPageStyles = StyleSheet.create({
   container: {
@@ -95,18 +93,17 @@ export const infoPageStyles = StyleSheet.create({
     color: '#333',
     textAlign: 'center',
   },
-  
-  // image: {
-  //   width: '100%',
-  //   height: 300,
-  //   borderRadius: 12,
-  //   marginBottom: 20,
-  // },
+
   imageWrapper: {
     width: '100%',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 8,
     marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4, // Android shadow
   },
   
   image: {
@@ -131,17 +128,6 @@ export const infoPageStyles = StyleSheet.create({
     paddingHorizontal: 16,
     marginTop: 12,
     marginBottom: 10,
-  },
-  imageWrapper: {
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 8,
-    marginTop: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 4, // Android shadow
   },
 
   //InfoPage 3 / video styles
@@ -186,26 +172,7 @@ export const infoPageStyles = StyleSheet.create({
     marginBottom: 8,
   },
   
-    // NEW style for second video with different dimensions
-  videoWrapper2: {
-    width: '90%',
-    // For example, if you want a 16:9 aspect ratio:
-    aspectRatio: 16 / 9,
-    backgroundColor: 'transparent',
-    borderRadius: 10,
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 12,
-    marginTop: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-
-    // NEW style for second video with different dimensions
+  // NEW style for second video with different dimensions
   videoWrapper2: {
     width: '90%',
     aspectRatio: 284 / 598, 
@@ -221,8 +188,7 @@ export const infoPageStyles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 4,
-},
-
+  },
 
 horizontalImageRow: {
   flexDirection: 'row',
@@ -273,7 +239,4 @@ buttonText: {
   fontWeight: '600',
   color: '#333',
 },
-
-  
-  
 });

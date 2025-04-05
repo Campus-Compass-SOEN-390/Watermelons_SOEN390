@@ -613,7 +613,7 @@ useEffect(() => {
     console.log("Shuttle button click");
 
     // Update origin & destination only if there are no shuttle details or no error
-    if (!shuttleDetails || !shuttleDetails.error) {
+    if (!shuttleDetails?.error) {
         updateOrigin(coordinatesMap["My Position"], "My Location");
         if (activeCampus === "sgw") {
             updateDestination(
