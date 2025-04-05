@@ -1,9 +1,9 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from "expo-file-system";
-import { Alert } from "react-native";
+import { Alert, ActivityIndicator } from "react-native";
 import fetchMock from "jest-fetch-mock";
 
 // Mock all dependencies
@@ -78,7 +78,12 @@ fetchMock.enableMocks();
 import CalendarFetching from '../screens/CalendarFetching';
 
 // Helper function
-const renderWithNav = (ui) => render(<NavigationContainer>{ui}</NavigationContainer>);
+const renderWithNav = (ui) =>
+  render(
+    <NavigationContainer>
+      <Suspense fallback={<ActivityIndicator />}>{ui}</Suspense>
+    </NavigationContainer>
+  );
 
 describe('CalendarFetching Component', () => {
   beforeEach(() => {
@@ -95,13 +100,13 @@ describe('CalendarFetching Component', () => {
   });
 
   test("renders correctly", () => {
-    const { getByPlaceholderText, getByText } = render(<CalendarFetching />);
+    const { getByPlaceholderText, getByText } = renderWithNav(<CalendarFetching />);
     expect(getByPlaceholderText(/Paste Calendar ID here/i)).toBeDefined();
     expect(getByText(/Connect/i)).toBeDefined();
   });
 
   test("shows error alert when Calendar ID is blank", async () => {
-    const { getByText } = render(<CalendarFetching />);
+    const { getByText } = renderWithNav(<CalendarFetching />);
     fireEvent.press(getByText(/Connect/i));
     await waitFor(() => {
       expect(Alert.alert).toHaveBeenCalledWith("Invalid", "Please enter a valid Calendar ID");
@@ -109,7 +114,7 @@ describe('CalendarFetching Component', () => {
   });
 
   test("fetches calendar events successfully", async () => {
-    const { getByPlaceholderText, getByText } = render(<CalendarFetching />);
+    const { getByPlaceholderText, getByText } = renderWithNav(<CalendarFetching />);
 
     fetchMock.mockResponseOnce(
       JSON.stringify({
@@ -126,7 +131,7 @@ describe('CalendarFetching Component', () => {
   });
 
   test("handles API errors correctly", async () => {
-    const { getByPlaceholderText, getByText } = render(<CalendarFetching />);
+    const { getByPlaceholderText, getByText } = renderWithNav(<CalendarFetching />);
 
     fetchMock.mockResponseOnce(JSON.stringify({ error: { message: "API Error" } }));
 
@@ -139,7 +144,7 @@ describe('CalendarFetching Component', () => {
   });
 
   test("shows no events alert when no events are found", async () => {
-    const { getByPlaceholderText, getByText } = render(<CalendarFetching />);
+    const { getByPlaceholderText, getByText } = renderWithNav(<CalendarFetching />);
 
     fetchMock.mockResponseOnce(JSON.stringify({ items: [] }));
 
@@ -152,7 +157,7 @@ describe('CalendarFetching Component', () => {
   });
 
   test("stores calendar ID in AsyncStorage", async () => {
-    const { getByPlaceholderText, getByText } = render(<CalendarFetching />);
+    const { getByPlaceholderText, getByText } = renderWithNav(<CalendarFetching />);
     fetchMock.mockResponseOnce(
       JSON.stringify({
         items: [{ summary: "Event 1", start: {}, end: {}, location: "", htmlLink: "" }],
@@ -169,7 +174,7 @@ describe('CalendarFetching Component', () => {
   });
 
   test("does not store duplicate calendar IDs", async () => {
-    const { getByPlaceholderText, getByText } = render(<CalendarFetching />);
+    const { getByPlaceholderText, getByText } = renderWithNav(<CalendarFetching />);
     fetchMock.mockResponseOnce(
       JSON.stringify({
         items: [{ summary: "Event 1", start: {}, end: {}, location: "", htmlLink: "" }],
@@ -199,7 +204,7 @@ describe('CalendarFetching Component', () => {
   });
 
   test("writes CSV file after fetching events", async () => {
-    const { getByPlaceholderText, getByText } = render(<CalendarFetching />);
+    const { getByPlaceholderText, getByText } = renderWithNav(<CalendarFetching />);
     fetchMock.mockResponseOnce(
       JSON.stringify({
         items: [{ summary: "Event 1", start: {}, end: {}, location: "", htmlLink: "" }],
@@ -219,7 +224,7 @@ describe('CalendarFetching Component', () => {
   });
 
   test("clears calendar history", async () => {
-    const { getByText } = render(<CalendarFetching />);
+    const { getByText } = renderWithNav(<CalendarFetching />);
     fireEvent.press(getByText(/Clear History/i));
     await waitFor(() => {
       expect(AsyncStorage.removeItem).toHaveBeenCalledWith("calendarIds");

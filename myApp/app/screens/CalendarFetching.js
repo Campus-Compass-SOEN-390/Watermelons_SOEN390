@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, lazy, Suspense } from "react";
+import React, { useState, useEffect, useCallback, Suspense } from "react";
 import {
   View,
   Image,
@@ -19,10 +19,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
 
-// Lazy load components
-const LayoutWrapper = lazy(() => import("../components/LayoutWrapper.js"));
-const HeaderButtons = lazy(() => import("../components/HeaderButtons.js"));
-const MonthPicker = lazy(() => import("../components/MonthPicker"));
+import LayoutWrapper from "../components/LayoutWrapper.js";
+import HeaderButtons from "../components/HeaderButtons.js";
+import MonthPicker from "../components/MonthPicker";
 
 export default function CalendarFetching() {
   const navigation = useNavigation();
