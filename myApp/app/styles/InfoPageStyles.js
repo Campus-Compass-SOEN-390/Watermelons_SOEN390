@@ -1,256 +1,243 @@
-import { StyleSheet, Dimensions } from "react-native";
-import { COLORS, FONT_SIZE_3, FONT_SIZE_4 } from "./constants";
+import { StyleSheet } from 'react-native';
+import { COLORS } from './constants';
 
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
+export const infoPageStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.OFF_WHITE,
+    paddingTop: 30,
+  },
+  topNav: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    marginBottom: 8,
+  },
+  iconButton: {
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scroll: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    alignItems: 'center',
+  },
+  content: {
+    width: '100%',
+    alignSelf: 'stretch',
+  },
+  logo: {
+    width: 100,
+    height: 100,
+    marginBottom: 16,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+  }, 
+  welcome: {
+    fontSize: 17,
+    fontWeight: '500',
+    textAlign: 'center',
+    marginBottom: 16,
+    paddingHorizontal: 10,
+  },
+  featureTitle: {
+    fontSize: 19,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  bullets: {
+    paddingLeft: 6,
+  },
+  bullet: {
+    fontSize: 16,
+    marginBottom: 12,
+    lineHeight: 22,
+    color: COLORS.DARK_GREY_TITLE,
+  },
+  subBullet: {
+    fontSize: 15,
+    marginLeft: 16,
+    marginBottom: 8, 
+    lineHeight: 20,
+    color: COLORS.DARK_MODE_GREY,
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    backgroundColor: COLORS.CONCORDIA_RED,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+  },
+  pageName: {
+    color: COLORS.WHITE,
+    fontWeight: '600',
+    fontSize: 17,
+  },
+  //InforPage2 styles
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: 16,
+    color: COLORS.DARK_GREY_TITLE,
+    textAlign: 'center',
+  },
 
-export const createIndoorMapStyles = (theme) => {
-  return StyleSheet.create({
-    container: {
-      flex: 1,
-      width: screenWidth,
-      height: screenHeight,
-      position: "relative",
-      backgroundColor: theme.background,
-    },
-    floorButtonContainer: {
-      backgroundColor: theme.cardBackground,
-      position: "absolute",
-      right: 20,
-      bottom: 340,
-      alignItems: "center",
-      borderRadius: 20,
-      shadowColor: theme.shadowColor,
-      elevation: 8,
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 5,
-    },
-    buildingsContainer: {
-      backgroundColor: theme.cardBackground,
-      position: "absolute",
-      left: 20,
-      bottom: 340,
-      borderRadius: 20,
-      shadowColor: theme.shadowColor,
-      elevation: 8,
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 5,
-      zIndex: 11,
-      minWidth: 50,
-      minHeight: 50,
-    },
-    expandedBuildingsContainer: {
-      width: 170,
-      paddingTop: 5,
-      paddingRight: 5,
-      paddingBottom: 5,
-      paddingLeft: 5,
-    },
-    button: {
-      width: 50,
-      height: 50,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    expandedButtonsContainer: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      justifyContent: "center",
-      marginTop: 5,
-    },
-    expandedButton: {
-      width: 70,
-      height: 50,
-      backgroundColor: theme.isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.OFF_WHITE,
-      borderRadius: 10,
-      margin: 5,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    switchCampusButton: {
-      position: "absolute",
-      backgroundColor: theme.cardBackground,
-      borderRadius: 20,
-      bottom: 115,
-      left: 20,
-      padding: 10,
-      shadowColor: theme.shadowColor,
-      elevation: 8,
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 5,
-    },
-    disabledButton: {
-      opacity: 0.5,
-    },
-    text: {
-      fontSize: 13,
-      fontWeight: "bold",
-      color: theme.text,
-    },
-    map: {
-      flex: 1,
-      width: "100%",
-      height: "100%",
-    },
-    loadingContainer: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: theme.isDarkMode
-        ? "rgba(0,0,0,0.7)"
-        : "rgba(255,255,255,0.7)",
-      zIndex: 20,
-    },
-    // Position button styles
-    positionButtonsContainer: {
-      position: "absolute",
-      left: 20,
-      bottom: 390, // Position above floor button container
-      flexDirection: "column",
-      alignItems: "center",
-    },
-    positionButton: {
-      backgroundColor: theme.cardBackground,
-      width: 50,
-      height: 50,
-      borderRadius: 20,
-      alignItems: "center",
-      justifyContent: "center",
-      marginBottom: 10,
-      shadowColor: theme.shadowColor,
-      elevation: 8,
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 5,
-    },
-    campusButtonText: {
-      fontSize: 10,
-      fontWeight: "bold",
-      textAlign: "center",
-      color: theme.text,
-    },
-    labelPOIText: {
-      textField: ["coalesce", ["get", "name"], "Unnamed"],
-      textSize: 14,
-      textColor: theme.isDarkMode ? COLORS.WHITE : COLORS.BLACK_OR_SHADOW,
-      textHaloColor: theme.isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.WHITE,
-      textHaloWidth: 1,
-    },
-    lineWall: {
-      lineColor: theme.buttonBackground,
-      lineWidth: 2,
-      lineOpacity: 1.0,
-    },
-    linePath: {
-      lineColor: theme.isDarkMode ? COLORS.LIGHT_GREY_INPUT_BOXES : COLORS.BLACK_OR_SHADOW,
-      lineWidth: 2,
-      lineOpacity: 0.5,
-    },
-    roomLayer: {
-      lineColor: theme.buttonBackground,
-      lineWidth: 2,
-      lineOpacity: 1.0,
-    },
-    fillLayer: {
-      fillColor: theme.buttonBackground,
-      fillOpacity: 0.2,
-    },
-    // Modal styles
-    modalContainer: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "rgba(0,0,0,0.5)",
-    },
-    modalContent: {
-      backgroundColor: theme.cardBackground,
-      padding: 20,
-      borderRadius: 10,
-      width: "80%",
-      alignItems: "center",
-      shadowColor: theme.shadowColor,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
-      shadowRadius: 3,
-    },
-    modalTitle: {
-      fontSize: FONT_SIZE_4,
-      fontWeight: "bold",
-      marginBottom: 10,
-      color: theme.text,
-    },
-    modalText: {
-      fontSize: FONT_SIZE_4,
-      textAlign: "center",
-      marginBottom: 15,
-      color: theme.text,
-    },
-    closeButton: {
-      backgroundColor: COLORS.RED_CLOSE_BUTTON,
-      padding: 8,
-      borderRadius: 20,
-      width: 30,
-      height: 30,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    closeButtonText: {
-      color: COLORS.WHITE,
-      fontWeight: "bold",
-      fontSize: FONT_SIZE_3,
-    },
-    annotationContainer: {
-      alignItems: "center",
-    },
-    annotationText: {
-      color: theme.text,
-      fontWeight: "bold",
-      backgroundColor: theme.isDarkMode
-        ? "rgba(40, 40, 40, 0.7)"
-        : "rgba(255, 255, 255, 0.7)",
-      paddingHorizontal: 5,
-      paddingVertical: 2,
-      borderRadius: 4,
-      shadowColor: theme.shadowColor,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.2,
-      shadowRadius: 2,
-      elevation: 2,
-    },
-    // Theme toggle button
-    themeToggleButton: {
-      position: "absolute",
-      top: 140,
-      right: 10,
-      width: 44,
-      height: 44,
-      borderRadius: 22,
-      backgroundColor: theme.buttonBackground,
-      justifyContent: "center",
-      alignItems: "center",
-      shadowColor: theme.shadowColor,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
-      shadowRadius: 3,
-      elevation: 5,
-      zIndex: 100,
-    },
-  });
-};
+  imageWrapper: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 8,
+    marginTop: 10,
+    shadowColor: COLORS.BLACK_OR_SHADOW,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4, // Android shadow
+  },
+  
+  image: {
+    width: '90%',
+    maxWidth: 350,
+    height: undefined,        // <-- Let aspect ratio determine height
+    aspectRatio: 9 / 16,      // <-- Portrait screenshot
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: COLORS.LIGHT_GREY_INPUT_BOXES,
+    backgroundColor: COLORS.WHITE,
+    overflow: 'hidden',
+    resizeMode: 'contain',
+  },
+  
+  description: {
+    fontSize: 18,                 // back to original size for clarity
+    fontWeight: '600',           // make it bold
+    textAlign: 'center',
+    color: COLORS.DARK_MODE_DEEP_GREY,               // stronger contrast than #444
+    lineHeight: 22,
+    paddingHorizontal: 16,
+    marginTop: 12,
+    marginBottom: 10,
+  },
 
-// Default export for backward compatibility
-export default createIndoorMapStyles({
-  background: COLORS.OFF_WHITE,
-  cardBackground: COLORS.WHITE,
-  buttonBackground: COLORS.CONCORDIA_RED,
-  text: COLORS.BLACK_OR_SHADOW,
+  //InfoPage 3 / video styles
+  videoWrapper: {
+    width: '90%',
+    aspectRatio: 372 / 658,
+    backgroundColor: 'transparent',
+    borderRadius: 10,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+    marginTop: 8,
+    shadowColor: COLORS.BLACK_OR_SHADOW,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  
+  video: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: COLORS.BLACK_OR_SHADOW,
+  },
+  //InfoPage 4 styles
+  extraInfo: {
+    marginTop: 20,
+    marginBottom: 40,  // to give some spacing before the footer
+    backgroundColor: COLORS.OFF_WHITE,
+    borderRadius: 8,
+    padding: 16,
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  instructions: {
+    fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 8,
+  },
+  
+  // NEW style for second video with different dimensions
+  videoWrapper2: {
+    width: '90%',
+    aspectRatio: 284 / 598, 
+    backgroundColor: 'transparent',
+    borderRadius: 10,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+    marginTop: 8,
+    shadowColor: COLORS.BLACK_OR_SHADOW,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+
+horizontalImageRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  width: '100%',
+  marginBottom: 16,
+  gap: 8,
+},
+
+squareImageWrapper: {
+  width: '48%',
+  aspectRatio: 3 / 4,
+  backgroundColor: COLORS.WHITE,
+  borderRadius: 10,
+  overflow: 'hidden',
+  elevation: 3,
   shadowColor: COLORS.BLACK_OR_SHADOW,
-  isDarkMode: false,
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 4,
+},
+
+squareImage: {
+  width: '100%',
+  height: '100%',
+  resizeMode: 'cover',
+},
+
+horizontalButtonRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  width: '100%',
+  marginTop: 10,
+  gap: 10,
+},
+
+squareButton: {
+  backgroundColor: '#eee',
+  width: '48%',
+  aspectRatio: 1,
+  borderRadius: 10,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+
+buttonText: {
+  fontSize: 16,
+  fontWeight: '600',
+  color: COLORS.DARK_GREY_TITLE,
+},
 });
