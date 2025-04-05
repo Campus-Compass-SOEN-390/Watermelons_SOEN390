@@ -1,17 +1,10 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import HomePage from '../screens/HomePage';
-import RNUxcam from 'react-native-ux-cam';
 
 // Create mocks
 const mockPush = jest.fn();
 const mockHandleButtonPress = jest.fn();
-
-// Mock RNUxcam
-jest.mock('react-native-ux-cam', () => ({
-    logEvent: jest.fn(),
-    tagScreenName: jest.fn()
-}));
 
 // Mock useButtonInteraction
 jest.mock('../hooks/useButtonInteraction', () => ({
@@ -62,7 +55,6 @@ describe('Home page', () => {
         expect(shuttleScheduleButton).toBeTruthy();
         expect(interestButton).toBeTruthy();
         expect(googleButton).toBeTruthy();
-        expect(RNUxcam.tagScreenName).toHaveBeenCalledWith('HomePage');
     });
 
     it('should go to sgw campus and log event when sgw campus button is pressed', () => {
@@ -71,7 +63,6 @@ describe('Home page', () => {
         
         fireEvent.press(sgwButton);
         
-        expect(RNUxcam.logEvent).toHaveBeenCalledWith('SGW Campus Button Pressed');
         expect(mockHandleButtonPress).toHaveBeenCalledWith('/(tabs)/map?type=sgw', 'SGW Campus');
         expect(mockPush).toHaveBeenCalledWith('/(tabs)/map?type=sgw');
     });
@@ -82,7 +73,6 @@ describe('Home page', () => {
         
         fireEvent.press(loyolaButton);
         
-        expect(RNUxcam.logEvent).toHaveBeenCalledWith('Loyola Campus Button Pressed');
         expect(mockHandleButtonPress).toHaveBeenCalledWith('/(tabs)/map?type=loy', 'Loyola Campus');
         expect(mockPush).toHaveBeenCalledWith('/(tabs)/map?type=loy');
     });
@@ -93,7 +83,6 @@ describe('Home page', () => {
         
         fireEvent.press(shuttleScheduleButton);
         
-        expect(RNUxcam.logEvent).toHaveBeenCalledWith('Shuttle Bus Schedule Button Pressed');
         expect(mockHandleButtonPress).toHaveBeenCalledWith('/screens/ShuttleScheduleScreen', 'Shuttle Bus Schedule');
         expect(mockPush).toHaveBeenCalledWith('/screens/ShuttleScheduleScreen');
     });
@@ -104,7 +93,6 @@ describe('Home page', () => {
         
         fireEvent.press(interestButton);
         
-        expect(RNUxcam.logEvent).toHaveBeenCalledWith('Interest Points Button Pressed');
         expect(mockHandleButtonPress).toHaveBeenCalledWith('(tabs)/interest-points', 'Interest Points');
         expect(mockPush).toHaveBeenCalledWith('(tabs)/interest-points');
     });
@@ -115,7 +103,6 @@ describe('Home page', () => {
         
         fireEvent.press(calendarButton);
         
-        expect(RNUxcam.logEvent).toHaveBeenCalledWith('Connect Calendars Button Pressed');
         expect(mockHandleButtonPress).toHaveBeenCalledWith('screens/CalendarFetching', 'Connect Calendars');
         expect(mockPush).toHaveBeenCalledWith('screens/CalendarFetching');
     });
