@@ -14,13 +14,7 @@ export default function HomePage() {
     useEffect(() => {
         RNUxcam.tagScreenName("HomePage");
     }, []);
-
-    const handleNavigationPress = (route, label) => {
-        RNUxcam.logEvent(`${label} Button Pressed`);
-        handleButtonPress(route, label);
-        router.push(route);
-    };
-
+    
     return (
         <View style={{ flex: 1 }}>
             {/* Top navigation with Settings button */}
