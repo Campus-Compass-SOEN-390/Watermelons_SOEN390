@@ -91,21 +91,25 @@ export default function ShuttleScheduleScreen() {
 
     if (error) {
         return (
-            <View style={styles.container}>
+            <View style={styles.noServiceContainer}>
                 <View style={styles.header}>
                     <TouchableOpacity onPress={handleBack} style={styles.backButton}>
                         <Text style={styles.backText}>✖</Text>
                     </TouchableOpacity>
                     <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
                 </View>
-                <Text style={styles.error}>
-                    {error.includes("weekends") 
-                        ? "🚍 No shuttle service on weekends. See you Monday!" 
-                        : error}
-                </Text>
+    
+                <View style={styles.noServiceContent}>
+                    <Text style={styles.noServiceIcon}>🚌💨</Text>
+                    <Text style={styles.noServiceTitle}>No Shuttle Today</Text>
+                    <Text style={styles.noServiceText}>
+                        We’re off on weekends! Come back Monday to check the schedule. 🚦
+                    </Text>
+                </View>
             </View>
         );
     }
+    
 
     if (!schedule) {
         return (
@@ -273,4 +277,37 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         borderStyle: 'dashed',
     },
+    noServiceContainer: {
+        flex: 1,
+        backgroundColor: '#fff',
+        paddingHorizontal: 16,
+    },
+    
+    noServiceContent: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 20,
+        marginTop: -40,
+    },
+    
+    noServiceIcon: {
+        fontSize: 64,
+        marginBottom: 20,
+    },
+    
+    noServiceTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#800020',
+        marginBottom: 10,
+    },
+    
+    noServiceText: {
+        fontSize: 16,
+        color: '#444',
+        textAlign: 'center',
+        lineHeight: 24,
+    },
+    
 });
