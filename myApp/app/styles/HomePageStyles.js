@@ -1,93 +1,95 @@
-import { StyleSheet, Platform } from 'react-native';
-import { FONT_SIZE_4 } from './constants';
+import { StyleSheet, Platform } from "react-native";
+import { FONT_SIZE_4, COLORS } from "./constants";
 
-export const homepageStyles = StyleSheet.create({
+// Create a function that returns theme-dependent styles
+export const createHomePageStyles = (theme) => {
+  return StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#f5fcff'
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: theme.background,
     },
-    logo:{
-        width: 150, 
-        height: 150 , 
-        alignSelf: 'center',
-        marginBottom: 20,
-        marginTop: Platform.OS === 'android' ? 0 : 70,
+    logo: {
+      width: 150,
+      height: 150,
+      alignSelf: "center",
+      marginBottom: 20,
+      marginTop: Platform.OS === "android" ? 0 : 70,
     },
     button: {
-        backgroundColor: '#FFFFFF',
-        flexDirection: 'row', // aligns item in a row
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 80,
-        flex: 1,
-        padding: 10,
-        borderRadius: 20,
-        margin: 10,
-        //Shadow for iOS
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5, // Blur radius of the shadow
-        // Shadow for android
-        elevation: 5,
+      backgroundColor: theme.cardBackground,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      height: 80,
+      flex: 1,
+      padding: 10,
+      borderRadius: 20,
+      margin: 10,
+      //Shadow for iOS
+      shadowColor: theme.shadowColor || COLORS.BLACK_OR_SHADOW,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 5,
+      // Shadow for android
+      elevation: 5,
     },
     buttonOrange: {
-        backgroundColor: '#EE9479',
-        flexDirection: 'row', // aligns item in a row
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 80,
-        flex: 1,
-        padding: 10,
-        borderRadius: 20,
-        margin: 10,
-        //Shadow for iOS
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5, // Blur radius of the shadow
-        // Shadow for android
-        elevation: 5,
+      backgroundColor: theme.buttonBackground,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      height: 80,
+      flex: 1,
+      padding: 10,
+      borderRadius: 20,
+      margin: 10,
+      //Shadow for iOS
+      shadowColor: theme.shadowColor || COLORS.BLACK_OR_SHADOW,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 5,
+      // Shadow for android
+      elevation: 5,
     },
     googleButton: {
-        backgroundColor: '#FFFFFF',
-        flexDirection: 'row', // Align google logo and text in a row
-        alignItems: 'center', // Align items vertically
-        padding: 10,
-        borderRadius: 20,
-        margin: 10,
-        height: 60,
-        flex: 1,
-        //Shadow for iOS
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
-        // Shadow for android
-        elevation: 5, // Android shadow
+      backgroundColor: theme.cardBackground,
+      flexDirection: "row",
+      alignItems: "center",
+      padding: 10,
+      borderRadius: 20,
+      margin: 10,
+      height: 60,
+      flex: 1,
+      //Shadow for iOS
+      shadowColor: theme.shadowColor || COLORS.BLACK_OR_SHADOW,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 5,
+      // Shadow for android
+      elevation: 5,
     },
     buttonContainer: {
-        flexDirection: 'row', // Align in a row
-        justifyContent: 'space-evenly',
-        width: '100%', 
-        paddingHorizontal: 20,
-        alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+      width: "100%",
+      paddingHorizontal: 20,
+      alignItems: "center",
     },
     buttonsContainer: {
-        backgroundColor: '#922338', 
-        paddingVertical: 20,
-        borderRadius: 20,    
-        padding: 15,    
-        marginVertical: 10,  
-        width: '90%',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5, // Blur radius of the shadow
-        // Shadow for android
-        elevation: 5, // Android shadow
+      backgroundColor: theme.buttonBackground,
+      paddingVertical: 20,
+      borderRadius: 20,
+      padding: 15,
+      marginVertical: 10,
+      width: "90%",
+      shadowColor: theme.shadowColor || COLORS.BLACK_OR_SHADOW,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 5,
+      // Shadow for android
+      elevation: 5,
     },
     infoButton: {
         position: 'absolute',
@@ -103,29 +105,58 @@ export const homepageStyles = StyleSheet.create({
       },
         
     buttonText: {
-        color: '#000000',
-        textAlign: 'center',
-        fontSize: FONT_SIZE_4,
-        flex: 1
+      color: theme.text,
+      textAlign: "center",
+      fontSize: FONT_SIZE_4,
+      flex: 1,
     },
     googleButtonText: {
-        color: '#000000',
-        textAlign: 'center',
-        fontSize: FONT_SIZE_4,
-        marginLeft: 8, // Adds space between google icon and text
-        flex: 1
+      color: theme.text,
+      textAlign: "center",
+      fontSize: FONT_SIZE_4,
+      marginLeft: 8,
+      flex: 1,
     },
     title: {
-        fontSize: 28,
-        fontWeight: "bold",
-        marginBottom: 10,
-        textAlign: 'center',
-        color: '#FFFFFF'
+      fontSize: 28,
+      fontWeight: "bold",
+      marginBottom: 10,
+      textAlign: "center",
+      color: theme.buttonText,
     },
     icon: {
-        width: 30,
-        height: 30, 
-    }
+      width: 30,
+      height: 30,
+    },
+    themeToggle: {
+      position: "absolute",
+      top: Platform.OS === "ios" ? 50 : 20,
+      right: 20,
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: theme.buttonBackground,
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 100,
+      // Shadow
+      shadowColor: theme.shadowColor || COLORS.BLACK_OR_SHADOW,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 3,
+      elevation: 5,
+    },
+  });
+};
+
+// Export a default version for backward compatibility
+export const homepageStyles = createHomePageStyles({
+  background: COLORS.OFF_WHITE,
+  cardBackground: COLORS.WHITE,
+  buttonBackground: COLORS.CONCORDIA_RED,
+  buttonText: COLORS.WHITE,
+  text: COLORS.BLACK_OR_SHADOW,
+  shadowColor: COLORS.BLACK_OR_SHADOW,
 });
 
 export default homepageStyles;

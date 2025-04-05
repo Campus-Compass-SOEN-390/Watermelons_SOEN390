@@ -1,126 +1,349 @@
 import { StyleSheet } from "react-native";
-import { FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_5, FONT_SIZE_1 } from "./constants";
+import {
+  FONT_SIZE_1,
+  FONT_SIZE_2,
+  FONT_SIZE_3,
+  FONT_SIZE_4,
+  FONT_SIZE_5,
+  COLORS,
+} from "./constants";
 
-const styles = StyleSheet.create({
+// Create a function that generates styles based on theme and mode
+export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
+  return StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: "#f5f5f5",
-        paddingTop: 40,
-        paddingHorizontal: 16,
+      backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.WHITE,
+      justifyContent: "center",
+      flex: 1,
+      paddingTop: 5,
     },
-    daysRow: {
-        flexDirection: "row",
-        justifyContent: "space-around",
-        marginBottom: 16,
+    redContainer: {
+      backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.CONCORDIA_RED,
+      margin: 10,
+      padding: 10,
+      borderRadius: 10,
+      justifyContent: "center",
+      alignItems: "center",
+      alignSelf: "stretch",
+      minHeight: 100,
     },
-    dayText: {
-        fontSize: FONT_SIZE_2,
-        fontWeight: "bold",
-        color: "gray",
+    whiteContainer: {
+      backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.WHITE,
+      width: "90%",
+      height: "90%",
+      padding: 20,
+      borderRadius: 8,
+      elevation: 4,
+      shadowColor: isDarkMode ? COLORS.DARK_MODE_GREY : COLORS.BLACK_OR_SHADOW,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
     },
-    highlightedDay: {
-        color: "#800020",
-        textDecorationLine: "underline",
-        fontWeight: "bold",
+    title: {
+      fontSize: 24,
+      fontWeight: "bold",
+      marginBottom: 20,
+      textAlign: "center",
+      color: isDarkMode ? COLORS.WHITE : COLORS.DARK_GREY_TITLE,
     },
-    scheduleTitle: {
-        fontSize: FONT_SIZE_5,
-        fontWeight: "bold",
-        marginBottom: 8,
+    input: {
+      height: 50,
+      borderColor: isDarkMode ? COLORS.DARK_MODE_LIGHT_GREY : COLORS.LIGHT_GREY_INPUT_BOXES,
+      borderWidth: 1,
+      borderRadius: 8,
+      paddingHorizontal: 15,
+      marginBottom: 10,
+      fontSize: FONT_SIZE_3,
+      backgroundColor: isDarkMode ? "rgba(51, 51, 51, 0.8)" : COLORS.OFF_WHITE,
+      color: isDarkMode ? COLORS.WHITE : COLORS.DARK_GREY_TITLE,
     },
-    card: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        backgroundColor: "#E5E5E5",
-        borderRadius: 16,
-        padding: 16,
-        marginVertical: 6,
-        alignItems: "center",
+    connectButton: {
+      backgroundColor: COLORS.CONCORDIA_RED,
+      padding: 15,
+      borderRadius: 25,
+      alignSelf: "center",
+      minWidth: 100,
+      paddingHorizontal: 20,
+      position: "absolute",
+      bottom: 55,
     },
-    cardTextContainer: {
-        flex: 1,
+    buttonText: {
+      color: "white",
+      fontSize: FONT_SIZE_4,
+      fontWeight: "bold",
     },
-    courseText: {
-        fontWeight: "bold",
-        fontSize: FONT_SIZE_3,
-        marginBottom: 4,
+
+    // --- Success Screen Styles ---
+    successContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 20,
+      backgroundColor: isDarkMode ? COLORS.DARK_MODE_DEEP_GREY : COLORS.OFF_WHITE,
     },
-    iconContainer: {
-        backgroundColor: "#800020",
-        padding: 10,
-        borderRadius: 12,
-        marginLeft: 8,
+    successTitle: {
+      fontSize: FONT_SIZE_5,
+      fontWeight: "bold",
+      textAlign: "center",
+      color: isDarkMode ? COLORS.WHITE : COLORS.DARK_GREY_TITLE,
+      marginHorizontal: 20,
     },
-    todayButtonContainer: {
-        position: "absolute",
-        bottom: 20,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        alignSelf: "center",
+    successSubtitle: {
+      marginTop: 10,
+      fontSize: FONT_SIZE_3,
+      textAlign: "center",
+      color: isDarkMode ? "rgba(255, 255, 255, 0.7)" : COLORS.DARK_GREY_TITLE,
     },
-    todayNavButton: {
-        backgroundColor: "#800020",
-        padding: 10,
-        borderRadius: 20
+
+    // --- Event Item Styles ---
+    eventItem: {
+      marginBottom: 10,
+      padding: 10,
+      backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.OFF_WHITE,
+      borderRadius: 6,
     },
-    todayLabelWrapper: {
-        backgroundColor: "#800020",
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-        borderRadius: 25,
-        marginHorizontal: 8,
-        width: 150,
+    eventTitle: {
+      fontSize: FONT_SIZE_3,
+      fontWeight: "bold",
+      marginBottom: 4,
+      color: isDarkMode ? COLORS.WHITE : COLORS.DARK_GREY_TITLE,
     },
-    todayText: {
-        color: "white",
-        fontWeight: "bold",
-        fontSize: FONT_SIZE_3,
-        textAlign: "center",
+    eventDate: {
+      fontSize: FONT_SIZE_2,
+      color: isDarkMode ? "rgba(255, 255, 255, 0.7)" : COLORS.DARK_GREY_TITLE,
     },
-    nextClassContainer: {
-        marginVertical: 12,
-        padding: 16,
-        backgroundColor: '#f5f5f5',
-        borderRadius: 12,
-        alignItems: 'center',
+    logo: {
+      width: 150,
+      height: 150,
+      marginVertical: 20,
     },
-    nextClassInfoText: {
-        fontSize: FONT_SIZE_2,
-        color: '#333',
-        textAlign: 'center',
-        marginBottom: 12,
-        fontWeight: '500',
+
+    // --- Calendar History Track ---
+    subtitle: {
+      fontSize: FONT_SIZE_2,
+      fontWeight: "bold",
+      marginBottom: 10,
+      color: isDarkMode ? COLORS.WHITE : COLORS.DARK_GREY_TITLE,
     },
-    nextClassDirections: {
-        backgroundColor: '#800020',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        borderRadius: 25,
-        marginTop: 8,
+    historyItem: {
+      backgroundColor: isDarkMode
+        ? "rgba(70, 70, 70, 0.5)"
+        : "rgba(0, 0, 0, 0.19)",
+      borderRadius: 10,
+      padding: 10,
+      marginBottom: 10,
+      paddingVertical: 5,
     },
-    nextClassDetailsText: {
-        color: 'white',
-        fontSize: FONT_SIZE_1,
-        marginTop: 6,
-        textAlign: 'center',
-        paddingHorizontal: 10,
+    historyText: {
+      fontSize: 10,
+      color: isDarkMode ? COLORS.WHITE : COLORS.BLACK_OR_SHADOW,
     },
-    nextClassButtonText: {
-        color: 'white',
-        fontSize: FONT_SIZE_3,
-        fontWeight: 'bold',
+
+    // --- Clear History Button ---
+    clearHistoryButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: 10,
+      padding: 10,
+      borderRadius: 25,
+      backgroundColor: isDarkMode ? "rgba(70, 70, 70, 0.5)" : COLORS.OFF_WHITE,
+      borderWidth: 1,
+      borderColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.LIGHT_GREY_INPUT_BOXES,
+      alignSelf: "center",
+      position: "absolute",
+      bottom: 10,
     },
-    noClassText: {
-        fontSize: FONT_SIZE_3,
-        color: '#666',
-        textAlign: 'center',
-        padding: 20,
-        fontStyle: 'italic'
-    }
+    clearHistoryText: {
+      fontSize: FONT_SIZE_1,
+      color: isDarkMode ? COLORS.WHITE : COLORS.DARK_GREY_TITLE,
+      fontWeight: "500",
+    },
+    placeholderTextColor: {
+      color: isDarkMode ? "rgba(255, 255, 255, 0.5)" : COLORS.DARK_GREY_TITLE,
+    },
+    calendarHistoryContainer: {
+      height: 100,
+      borderWidth: 1,
+      borderColor: isDarkMode ? COLORS.DARK_MODE_LIGHT_GREY : COLORS.LIGHT_GREY_INPUT_BOXES,
+      borderRadius: 8,
+      padding: 5,
+      backgroundColor: isDarkMode ? "rgba(51, 51, 51, 0.5)" : "transparent",
+    },
+    noHistoryText: {
+      color: isDarkMode ? "rgba(255, 255, 255, 0.5)" : COLORS.DARK_GREY_TITLE,
+      fontStyle: "italic",
+    },
+    iconColor: isDarkMode ? "rgba(255, 255, 255, 0.7)" : COLORS.DARK_GREY_TITLE,
+
+    // Header buttons styles
+    headerContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      paddingHorizontal: 15,
+      paddingVertical: 10,
+      backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.CONCORDIA_RED,
+      width: "100%",
+      borderBottomWidth: 1,
+      borderBottomColor: isDarkMode ? COLORS.DARK_MODE_LIGHT_GREY : "rgba(0, 0, 0, 0.1)",
+    },
+    headerButton: {
+      padding: 8,
+      borderRadius: 20,
+      backgroundColor: isDarkMode
+        ? "rgba(80, 80, 80, 0.5)"
+        : "rgba(255, 255, 255, 0.2)",
+    },
+    headerButtonText: {
+      color: COLORS.WHITE,
+      fontWeight: "bold",
+    },
+  });
+};
+
+// Keep the original styles for backward compatibility
+export const calendarFetchingStyles = StyleSheet.create({
+  container: {
+    backgroundColor: COLORS.OFF_WHITE,
+    justifyContent: "center",
+    flex: 1,
+  },
+  redContainer: {
+    backgroundColor: COLORS.CONCORDIA_RED,
+    margin: 10,
+    padding: 10,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "stretch",
+    minHeight: 100,
+  },
+  whiteContainer: {
+    backgroundColor: COLORS.WHITE,
+    width: "90%",
+    height: "90%",
+    padding: 20,
+    borderRadius: 8,
+    elevation: 4,
+    shadowColor: COLORS.BLACK_OR_SHADOW,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+    color: COLORS.DARK_GREY_TITLE,
+  },
+  input: {
+    height: 50,
+    borderColor: COLORS.LIGHT_GREY_INPUT_BOXES,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    marginBottom: 10,
+    fontSize: FONT_SIZE_3,
+    backgroundColor: COLORS.OFF_WHITE,
+  },
+  connectButton: {
+    backgroundColor: COLORS.CONCORDIA_RED,
+    padding: 15,
+    borderRadius: 25,
+    alignSelf: "center",
+    minWidth: 100,
+    paddingHorizontal: 20,
+    position: "absolute",
+    bottom: 55,
+  },
+  buttonText: {
+    color: COLORS.WHITE,
+    fontSize: FONT_SIZE_4,
+    fontWeight: "bold",
+  },
+
+  // --- Success Screen Styles ---
+  successContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: COLORS.OFF_WHITE,
+  },
+  successTitle: {
+    fontSize: FONT_SIZE_5,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: COLORS.DARK_GREY_TITLE,
+    marginHorizontal: 20,
+  },
+  successSubtitle: {
+    marginTop: 10,
+    fontSize: FONT_SIZE_3,
+    textAlign: "center",
+    color: COLORS.DARK_MODE_LIGHT_GREY,
+  },
+
+  // --- Event Item Styles ---
+  eventItem: {
+    marginBottom: 10,
+    padding: 10,
+    backgroundColor: COLORS.OFF_WHITE,
+    borderRadius: 6,
+  },
+  eventTitle: {
+    fontSize: FONT_SIZE_3,
+    fontWeight: "bold",
+    marginBottom: 4,
+    color: COLORS.DARK_GREY_TITLE,
+  },
+  eventDate: {
+    fontSize: FONT_SIZE_2,
+    color: COLORS.DARK_MODE_LIGHT_GREY,
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    marginVertical: 20,
+  },
+
+  // --- Calendar History Track ---
+  subtitle: {
+    fontSize: FONT_SIZE_2,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  historyItem: {
+    backgroundColor: "rgba(0, 0, 0, 0.19)",
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+    paddingVertical: 5,
+  },
+  historyText: {
+    fontSize: 10,
+    color: COLORS.BLACK_OR_SHADOW,
+  },
+
+  // --- Clear History Button ---
+  clearHistoryButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 25,
+    backgroundColor: COLORS.OFF_WHITE,
+    borderWidth: 1,
+    borderColor: COLORS.LIGHT_GREY_INPUT_BOXES,
+    alignSelf: "center",
+    position: "absolute",
+    bottom: 10,
+  },
+  clearHistoryText: {
+    fontSize: FONT_SIZE_1,
+    color: COLORS.DARK_MODE_GREY,
+    fontWeight: "500",
+  },
 });
 
-export default styles;
+export default calendarFetchingStyles;
