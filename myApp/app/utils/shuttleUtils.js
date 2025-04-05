@@ -1,6 +1,6 @@
 import TravelFacade from "./TravelFacade";
 import { fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
-import { sgwRegion, loyolaRegion, SGWtoLoyola } from "../constants/outdoorMap";
+import { SGWtoLoyola } from "../constants/outdoorMap";
 
 /**
  * Estimate total shuttle travel time for the user
