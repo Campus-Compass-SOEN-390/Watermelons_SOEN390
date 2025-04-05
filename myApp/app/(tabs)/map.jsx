@@ -54,7 +54,6 @@ import { estimateShuttleFromButton } from "../utils/shuttleUtils";
 import { useButtonInteraction } from '../hooks/useButtonInteraction';
 import HeaderButtons from "../components/HeaderButtons";
 
-const MAPBOX_API = Constants.expoConfig?.extra?.mapbox; 
 Mapbox.setAccessToken("MAPBOX_API");
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
@@ -614,7 +613,7 @@ useEffect(() => {
     console.log("Shuttle button click");
 
     // Update origin & destination only if there are no shuttle details or no error
-    if (!shuttleDetails || !shuttleDetails.error) {
+    if (!shuttleDetails?.error) {
         updateOrigin(coordinatesMap["My Position"], "My Location");
         if (activeCampus === "sgw") {
             updateDestination(
@@ -831,7 +830,6 @@ useEffect(() => {
   const handleCloseSteps = () => {
     setShowSteps(false);
   };
-  
   
   
  const handleCancelButton = () =>{

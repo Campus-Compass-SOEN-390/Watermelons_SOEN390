@@ -5,6 +5,7 @@ import ShortestPathMap from "./IndoorMap/ShortestPathMap";
 import MapDirections from "./MapDirections";
 import MapboxMarker from "./MarkerComponent";
 
+
 interface Props {
   graph: any;
   nodeCoordinates: any;
@@ -38,7 +39,7 @@ export const Directions : React.FC<Props> = ({
       }, [travelMode]);
       
     const getBuildingCode = (room: string) => {
-        const match = room.match(/^[A-Za-z]+/);
+        const match = /^[A-Za-z]+/.exec(room);
         return match ? match[0] : null;
       };
     
@@ -143,7 +144,7 @@ export const Directions : React.FC<Props> = ({
                     isDisabled={isDisabled}
                     pathId={"indoor"}
                 />
-                <MapboxMarker id="end" coordinate={[destination.longitude, destination.latitude]} icon={startIcon} />
+                <MapboxMarker id="start" coordinate={[origin.longitude, origin.latitude]} icon={startIcon} />
             </View>
         )
     }
