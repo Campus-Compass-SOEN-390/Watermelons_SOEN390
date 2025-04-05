@@ -57,7 +57,7 @@ export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
       color: isDarkMode ? "#FFFFFF" : "#333333",
     },
     connectButton: {
-      backgroundColor: isDarkMode ? "#922338" : "#922338",
+      backgroundColor: "#922338",
       padding: 15,
       borderRadius: 25,
       alignSelf: "center",

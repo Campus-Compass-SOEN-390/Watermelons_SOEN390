@@ -1,16 +1,14 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import {
   Switch,
   Text,
   View,
   Image,
-  Platform,
   SafeAreaView,
   StatusBar,
 } from "react-native";
 import { useFeedback } from "../context/FeedbackContext";
 import { ThemeContext } from "../context/ThemeContext";
-import HeaderButtons from "../components/HeaderButtons";
 import { Ionicons } from "@expo/vector-icons";
 import { createSettingsPageStyles } from "../styles/SettingsPageStyles";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
@@ -27,7 +25,7 @@ export default function Settings() {
   } = useFeedback();
 
   // Get theme context
-  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
 
   // Get button interaction handler
   const { handleButtonPress } = useButtonInteraction();

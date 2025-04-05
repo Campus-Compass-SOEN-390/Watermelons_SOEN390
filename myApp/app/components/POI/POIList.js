@@ -40,7 +40,7 @@ const POIListItem = memo(
     const { handleButtonPress } = useButtonInteraction();
 
     // Get theme from context
-    const { isDarkMode, theme } = useContext(ThemeContext);
+    const { isDarkMode } = useContext(ThemeContext);
 
     // Generate theme-aware styles
     const styles = createPOIListStyles({
@@ -263,7 +263,7 @@ const POIList = ({
   calculateDistance,
 }) => {
   // Get theme from context
-  const { isDarkMode, theme } = useContext(ThemeContext);
+  const { isDarkMode } = useContext(ThemeContext);
 
   // Use theme-aware styles
   const styles = createPOIListStyles({

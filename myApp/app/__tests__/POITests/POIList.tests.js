@@ -1,6 +1,5 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import { ActivityIndicator, FlatList, Image, Text } from "react-native";
 
 // Import these before mocking to ensure they're available
 import { ThemeContext } from "../../context/ThemeContext";
@@ -165,14 +164,6 @@ jest.mock("@react-native-async-storage/async-storage", () => ({
   multiMerge: jest.fn(() => Promise.resolve()),
   flushGetRequests: jest.fn(),
 }));
-
-// Updated render helper with proper theme context
-const renderWithNavAndTheme = (ui, { isDarkMode = false } = {}) => {
-  const theme = lightTheme;
-  const toggleTheme = jest.fn();
-
-  return render(ui);
-};
 
 describe("POIList Component", () => {
   beforeEach(() => {

@@ -20,9 +20,7 @@ import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
-import HeaderButtons from "../components/HeaderButtons.js";
 import MonthPicker from "../components/MonthPicker";
-// import RNUxcam from "react-native-ux-cam";
 import { ThemeContext } from "../context/ThemeContext";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
 
@@ -229,9 +227,6 @@ export default function CalendarFetching() {
                             key={index}
                             style={styles.historyItem}
                             onPress={() => {
-                              // RNUxcam.logEvent(
-                              //   "Stored Calendar Ids Button Pressed"
-                              // );
                               handleButtonPress(null, item.name);
                               setCalendarId(item.id);
                             }}
@@ -286,7 +281,6 @@ export default function CalendarFetching() {
                 <TouchableOpacity
                   style={styles.clearHistoryButton}
                   onPress={async () => {
-                    // RNUxcam.logEvent("Clear History Button Pressed");
                     handleButtonPress(null, "Clear History");
                     try {
                       await AsyncStorage.removeItem("calendarIds");

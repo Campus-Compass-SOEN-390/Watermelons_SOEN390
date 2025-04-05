@@ -1,11 +1,10 @@
-import React, { useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { createHomePageStyles } from "../styles/HomePageStyles.js";
 import RNUxcam from "react-native-ux-cam";
 import { ThemeContext } from "../context/ThemeContext";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
-import HeaderButtons from "../components/HeaderButtons.js";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomePage() {
