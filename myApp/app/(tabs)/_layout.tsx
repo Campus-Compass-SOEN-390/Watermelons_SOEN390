@@ -1,4 +1,4 @@
-import { Tabs, useRouter } from "expo-router";
+import { Tabs } from "expo-router";
 import { View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import styles from "../styles/LayoutStyles";
@@ -43,7 +43,6 @@ const TabBarIcon: React.FC<TabBarIconProps> = ({ route, focused }) => {
 };
 
 export default function TabLayout() {
-  const router = useRouter();
 
   const renderTabBarIcon = (route: any, focused: boolean) => (
     <TabBarIcon route={route} focused={focused} />

@@ -14,17 +14,8 @@ export default function HomePage() {
 
   // Create styles based on current theme
   const styles = createHomePageStyles(theme);
-
-  useEffect(() => {
-    RNUxcam.tagScreenName("HomePage");
-  }, []);
-
-  const handleNavigationPress = (route, label) => {
-    RNUxcam.logEvent(`${label} Button Pressed`);
-    handleButtonPress(route, label);
-    router.push(route);
   };
-
+   
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* Use HeaderButtons component which includes theme toggle */}

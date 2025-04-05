@@ -391,6 +391,26 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
       color: "#FFFFFF",
       fontWeight: "bold",
     },
+    indoorNavigationMessage: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: theme.isDarkMode ? "#2c2c2c" : "#f5f5f5",
+      borderRadius: 8,
+      padding: 12,
+      marginVertical: 10,
+      shadowColor: theme.shadowColor,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.2,
+      shadowRadius: 2,
+      elevation: 3,
+      width: "100%",
+    },
+    indoorNavigationText: {
+      flex: 1,
+      marginLeft: 10,
+      fontSize: 14,
+      color: theme.text,
+    },
   });
 };
 
@@ -398,9 +418,10 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
 export default createStartAndDestinationStyles({
   cardBackground: "white",
   text: "#000000",
-  buttonBackground: "#eee",
-  buttonText: "#000000",
+  buttonBackground: "#922338", // Using the maroon color from main branch
+  buttonText: "#FFFFFF",
   inputBackground: "#eee",
   borderColor: "#ddd",
   shadowColor: "#000",
+  isDarkMode: false,
 });
