@@ -1,6 +1,4 @@
 import { StyleSheet } from 'react-native';
-// import { Dimensions } from 'react-native';
-// const { width, height } = Dimensions.get('window');
 
 export const infoPageStyles = StyleSheet.create({
   container: {
