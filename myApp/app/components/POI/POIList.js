@@ -33,35 +33,39 @@ const ITEM_HEIGHT = 350; // Base height including image, content, padding
 const IMAGE_HEIGHT = 180; // Match the style definition
 const SCROLL_THRESHOLD = 300; // Show button after scrolling this much
 
-// Helper function to get category style with theme awareness
-const getCategoryStyle = (category) => {
-  if (category === "cafe") return createPOIListStyles.cafeBadge;
-  if (category === "restaurant") return createPOIListStyles.restaurantBadge;
-  return createPOIListStyles.activityBadge;
-};
-
-const getCategoryText = (category) => {
-  if (category === "cafe") return "Cafe";
-  if (category === "restaurant") return "Restaurant";
-  return "Activity";
-};
-
 // Memo-ize the POIListItem component to prevent unnecessary re-renders
 const POIListItem = memo(
-  ({
-    item,
-    userLocation,
-    calculateDistance,
-    themeStyles,
-    isDarkMode,
-    theme,
-  }) => {
+  ({ item, userLocation, calculateDistance }) => {
     const [imageError, setImageError] = useState(false);
     const { handleButtonPress } = useButtonInteraction();
 
-    // Use provided styles or fall back to defaults
+    // Get theme from context
+    const { isDarkMode, theme } = useContext(ThemeContext);
+
     // Generate theme-aware styles
-    const styles = createPOIListStyles({ ...theme, isDarkMode });
+    const styles = createPOIListStyles({
+      isDarkMode,
+      theme: {
+        background: isDarkMode ? "#333333" : "#FFFFFF",
+        cardBackground: isDarkMode ? "#242424" : "#FFFFFF",
+        buttonBackground: "#922338",
+        text: isDarkMode ? "#FFFFFF" : "#333333",
+        subText: isDarkMode ? "#CCCCCC" : "#666666",
+      },
+    });
+
+    // Helper function to get category style
+    const getCategoryStyle = (category) => {
+      if (category === "cafe") return styles.cafeBadge;
+      if (category === "restaurant") return styles.restaurantBadge;
+      return styles.activityBadge;
+    };
+
+    const getCategoryText = (category) => {
+      if (category === "cafe") return "Cafe";
+      if (category === "restaurant") return "Restaurant";
+      return "Activity";
+    };
 
     const poiDistance =
       item._distance !== undefined
@@ -208,9 +212,6 @@ const POIListItem = memo(
       if (latDiff > 0.001 || lngDiff > 0.001) return false;
     }
 
-    // If theme changes, re-render
-    if (prevProps.isDarkMode !== nextProps.isDarkMode) return false;
-
     // If item's relevant properties changed, re-render
     return !(
       prevItem.name === nextItem.name &&
@@ -246,9 +247,6 @@ POIListItem.propTypes = {
     longitude: PropTypes.number,
   }),
   calculateDistance: PropTypes.func.isRequired,
-  themeStyles: PropTypes.object,
-  isDarkMode: PropTypes.bool,
-  theme: PropTypes.object,
 };
 
 // Function to extract a stable key for FlatList
@@ -263,23 +261,24 @@ const POIList = ({
   refreshing,
   onRefresh,
   calculateDistance,
-  themeStyles,
-  isDarkMode: propIsDarkMode,
-  theme: propTheme,
 }) => {
-  // Get theme from context if not provided as props
-  const themeContext = useContext(ThemeContext);
-  const isDarkMode =
-    propIsDarkMode !== undefined ? propIsDarkMode : themeContext?.isDarkMode;
-  const theme = propTheme || themeContext?.theme;
+  // Get theme from context
+  const { isDarkMode, theme } = useContext(ThemeContext);
 
-  // Use provided styles or create theme-aware styles
-  const styles = createPOIListStyles({ ...theme, isDarkMode });
+  // Use theme-aware styles
+  const styles = createPOIListStyles({
+    isDarkMode,
+    theme: {
+      background: isDarkMode ? "#333333" : "#FFFFFF",
+      cardBackground: isDarkMode ? "#242424" : "#FFFFFF",
+      buttonBackground: "#922338",
+      text: isDarkMode ? "#FFFFFF" : "#333333",
+      subText: isDarkMode ? "#CCCCCC" : "#666666",
+    },
+  });
 
   // Theme-aware colors
-  const loadingColor = isDarkMode
-    ? theme?.buttonBackground || "#aa3355"
-    : "#922338";
+  const loadingColor = isDarkMode ? "#aa3355" : "#922338";
 
   // Add refs and state for scroll-to-top functionality
   const flatListRef = useRef(null);
@@ -298,12 +297,9 @@ const POIList = ({
         item={item}
         userLocation={userLocation}
         calculateDistance={calculateDistance}
-        themeStyles={styles}
-        isDarkMode={isDarkMode}
-        theme={theme}
       />
     ),
-    [userLocation, calculateDistance, styles, isDarkMode, theme]
+    [userLocation, calculateDistance]
   );
 
   // Ensure consistent item height for getItemLayout
@@ -396,7 +392,9 @@ const POIList = ({
   console.log(`POIList rendering ${data.length} items`);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View
+      style={{ flex: 1, backgroundColor: isDarkMode ? "#333333" : "#FFFFFF" }}
+    >
       <FlatList
         testID="poi-flatlist"
         ref={flatListRef}
@@ -471,9 +469,6 @@ POIList.propTypes = {
   refreshing: PropTypes.bool,
   onRefresh: PropTypes.func.isRequired,
   calculateDistance: PropTypes.func.isRequired,
-  themeStyles: PropTypes.object,
-  isDarkMode: PropTypes.bool,
-  theme: PropTypes.object,
 };
 
 export default memo(POIList);

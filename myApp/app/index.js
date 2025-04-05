@@ -8,7 +8,6 @@ LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
 
 export default function Index() {
   return (
-    // Wrap your app with ThemeProvider
     <ThemeProvider>
       <View
         style={{

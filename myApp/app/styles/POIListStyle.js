@@ -246,15 +246,15 @@ const createPOIListStyles = ({ isDarkMode, theme }) => {
     },
     // Scroll to top button styles (from newer version)
     scrollTopButton: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 90, // Position above tab bar
       right: 20,
       backgroundColor: primaryColor,
       borderRadius: 30,
       width: 50,
       height: 50,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       shadowColor: shadowColor,
       shadowOffset: {
         width: 0,
@@ -266,11 +266,11 @@ const createPOIListStyles = ({ isDarkMode, theme }) => {
       zIndex: 100,
     },
     scrollTopButtonTouchable: {
-      width: '100%',
-      height: '100%',
+      width: "100%",
+      height: "100%",
       borderRadius: 30,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     // Placeholder for loading state
     placeholderContainer: {
