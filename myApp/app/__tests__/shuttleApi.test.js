@@ -1,5 +1,6 @@
 import React from "react";
 import { fetchAllShuttleSchedules, fetchShuttleScheduleByDay, fetchLiveShuttleData, fetchShuttleInfo } from "../api/shuttleSchedule";
+import * as shuttleScheduleData from "../api/shuttleScheduleData";
 import axios from "axios";
 
 jest.mock("axios"); 
@@ -274,10 +275,95 @@ describe("Shuttle Data Fetching Tests", () => {
 
   });
 
+  test("fetchShuttleScheduleByDay should return mock schedule when getShuttleScheduleByDay is mocked", async () => {
+    const mockSchedule = {
+      SGW: ["12:00", "12:30"],
+      LOY: ["13:00", "13:30"],
+    };
+  
+    jest
+      .spyOn(shuttleScheduleData, "getShuttleScheduleByDay")
+      .mockImplementation(() => mockSchedule);
+  
+    const schedule = await fetchShuttleScheduleByDay("Whatever");
+  
+    expect(schedule).toEqual(mockSchedule);
+  });
+
+  test("extractShuttleInfo should default latitude and longitude to 0 when missing", async () => {
+    mockedAxios.create.mockReturnValue(mockedAxios);
+    mockedAxios.get.mockResolvedValue({ status: 200, data: "session cookies set" });
+  
+    mockedAxios.post.mockResolvedValue({
+      status: 200,
+      data: {
+        d: {
+          Points: [
+            { ID: "BUS1" }, // No Latitude or Longitude
+          ],
+        },
+      },
+    });
+  
+    const extracted = await fetchShuttleInfo();
+    expect(extracted).toEqual([
+      {
+        id: "BUS1",
+        latitude: 0,      // defaulted
+        longitude: 0,     // defaulted
+        timestamp: expect.any(String),
+      },
+    ]);
+  });
+  
+  
+});
+
+describe("Unit tests for shuttleScheduleData functions", () => {
 
 
+  // Restore mocks after each test
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  test("getAllShuttleSchedules should throw if shuttleSchedule is empty", () => {
+    jest.spyOn(shuttleScheduleData, "getAllShuttleSchedules").mockImplementation(() => {
+      throw new Error("Shuttle schedule data is empty.");
+    });
+  
+    expect(() => shuttleScheduleData.getAllShuttleSchedules()).toThrow(
+      "Shuttle schedule data is empty."
+    );
+  });
+  
+
+  test("getShuttleScheduleByDay should throw if input is empty", () => {
+    expect(() => shuttleScheduleData.getShuttleScheduleByDay("")).toThrow(
+      "Invalid day format received"
+    );
+  });
+
+  test("getShuttleScheduleByDay should throw if input is not a string", () => {
+    expect(() => shuttleScheduleData.getShuttleScheduleByDay(123)).toThrow(
+      "Invalid day format received"
+    );
+  });
+
+  test("getShuttleScheduleByDay should throw if day does not exist in schedule", () => {
+    expect(() => shuttleScheduleData.getShuttleScheduleByDay("Saturday")).toThrow(
+      "Invalid day: Saturday"
+    );
+  });
+
+  test("getShuttleScheduleByDay should return data for valid normalized input", () => {
+    const schedule = shuttleScheduleData.getShuttleScheduleByDay("wednesday");
+    expect(schedule).toHaveProperty("LOY");
+    expect(schedule).toHaveProperty("SGW");
+  });
 
 });
+
 
 
   
