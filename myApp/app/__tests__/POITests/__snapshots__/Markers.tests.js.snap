@@ -5,8 +5,18 @@ exports[`Marker Components Snapshots ActivityMarker matches snapshot 1`] = `
   style={
     {
       "backgroundColor": "white",
+      "borderColor": "#ccc",
       "borderRadius": 5,
+      "borderWidth": 1,
+      "elevation": 3,
       "padding": 5,
+      "shadowColor": "#000",
+      "shadowOffset": {
+        "height": 2,
+        "width": 0,
+      },
+      "shadowOpacity": 0.3,
+      "shadowRadius": 2,
     }
   }
 >
@@ -23,8 +33,18 @@ exports[`Marker Components Snapshots CoffeeMarker matches snapshot 1`] = `
   style={
     {
       "backgroundColor": "white",
+      "borderColor": "#ccc",
       "borderRadius": 5,
+      "borderWidth": 1,
+      "elevation": 3,
       "padding": 5,
+      "shadowColor": "#000",
+      "shadowOffset": {
+        "height": 2,
+        "width": 0,
+      },
+      "shadowOpacity": 0.3,
+      "shadowRadius": 2,
     }
   }
 >
@@ -41,8 +61,18 @@ exports[`Marker Components Snapshots RestaurantMarker matches snapshot 1`] = `
   style={
     {
       "backgroundColor": "white",
+      "borderColor": "#ccc",
       "borderRadius": 5,
+      "borderWidth": 1,
+      "elevation": 3,
       "padding": 5,
+      "shadowColor": "#000",
+      "shadowOffset": {
+        "height": 2,
+        "width": 0,
+      },
+      "shadowOpacity": 0.3,
+      "shadowRadius": 2,
     }
   }
 >

@@ -1,98 +1,131 @@
-import React, { useEffect } from "react";
+import React, { useContext } from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
-import { useRouter } from 'expo-router';
-import { homepageStyles as styles } from '../styles/HomePageStyles.js';
-import HeaderButtons from "../components/HeaderButtons";
-import { Ionicons } from '@expo/vector-icons';
-import { useButtonInteraction } from '../hooks/useButtonInteraction'; 
-import RNUxcam from 'react-native-ux-cam'; 
+import { useRouter } from "expo-router";
+import { createHomePageStyles } from "../styles/HomePageStyles.js";
+import RNUxcam from "react-native-ux-cam";
+import { ThemeContext } from "../context/ThemeContext";
+import { useButtonInteraction } from "../hooks/useButtonInteraction";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomePage() {
-    const router = useRouter();
-    const { handleButtonPress } = useButtonInteraction();
+  const router = useRouter();
+  const { theme } = useContext(ThemeContext);
+  const { handleButtonPress } = useButtonInteraction();
 
-    useEffect(() => {
-        RNUxcam.tagScreenName("HomePage");
-    }, []);
-    
-    return (
-        <View style={{ flex: 1 }}>
-            {/* Top navigation with Settings button */}
-            <HeaderButtons />
+  // Log screen view
+  RNUxcam.tagScreenName("HomePage");
 
-            {/* Logo */}
-            <Image
-                style={styles.logo}
-                source={require('../../assets/images/logo.png')}
-                resizeMode="contain"
-                testID="logo"
-            />
+  const styles = createHomePageStyles(theme);
 
-            {/* Getting around campus section */}
-            <View style={styles.buttonsContainer}>
-                <Text style={styles.title}>Getting around campus</Text>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity 
-                        style={styles.button}
-                        testID="sgwButton"
-                        onPress={() => router.push('/(tabs)/map?type=sgw')}
-                    >
-                        <Text style={styles.buttonText}>SGW Campus</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style={styles.button}
-                        testID="loyolaButton"
-                        onPress={() => router.push('/(tabs)/map?type=loy')}
-                    >
-                        <Text style={styles.buttonText}>Loyola Campus</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity 
-                        style={styles.button}
-                        testID="shuttleScheduleButton"
-                        onPress={() => router.push('/screens/ShuttleScheduleScreen')}
-                    >
-                        <Text style={styles.buttonText}>Shuttle Bus Schedule</Text>
-                    </TouchableOpacity>
+  const handleNavigationPress = (route, label) => {
+    RNUxcam.logEvent(`${label} Button Pressed`);
+    handleButtonPress(route, label);
+    router.push(route);
+  };
 
-                    <TouchableOpacity 
-                        style={styles.button}
-                        onPress={() => router.push('(tabs)/interest-points')}
-                        testID="interestButton"
-                    >
-                        <Text style={styles.buttonText}>Interest Points</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+      <View style={styles.container}>
+        {/* Use HeaderButtons component which includes theme toggle */}
+        {/* Header buttons */}
+        <View
+          style={{
+            marginBottom: 20,
+            marginTop: 40,
+          }}
+        ></View>
 
-            {/* Calendar section */}
-            <View style={styles.buttonsContainer}>
-                <Text style={styles.title}>View My Calendar</Text>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity 
-                        style={styles.googleButton}
-                        testID="calendarfetchbutton"
-                        onPress={() => router.push('screens/CalendarFetching')}
-                    >
-                        <Image
-                            source={require('../../assets/images/google_logo.png')}
-                            style={styles.icon}
-                            testID="googleIcon"
-                        />
-                        <Text style={styles.buttonText}>Connect Calendars</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+        <Image
+          style={styles.logo}
+          source={require("../../assets/images/logo.png")}
+          resizeMode="contain"
+          testID="logo"
+        />
 
-            {/* Info button in bottom right corner */}
+        <View style={styles.buttonsContainer}>
+          <Text style={styles.title}>Getting around campus</Text>
+          <View style={styles.buttonContainer}>
             <TouchableOpacity
-                style={styles.infoButton}
-                onPress={() => router.push('/screens/InfoPage')}
-                testID="infoButton"
+              style={styles.button}
+              testID="sgwButton"
+              onPress={() =>
+                handleNavigationPress("/(tabs)/map?type=sgw", "SGW Campus")
+              }
             >
-                <Ionicons name="information-circle-outline" size={30} color="white" />
+              <Text style={[styles.buttonText, { color: theme.text }]}>
+                SGW Campus
+              </Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              testID="loyolaButton"
+              onPress={() =>
+                handleNavigationPress("/(tabs)/map?type=loy", "Loyola Campus")
+              }
+            >
+              <Text style={[styles.buttonText, { color: theme.text }]}>
+                Loyola Campus
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              testID="shuttleScheduleButton"
+              onPress={() =>
+                handleNavigationPress(
+                  "/screens/ShuttleScheduleScreen",
+                  "Shuttle Bus Schedule"
+                )
+              }
+            >
+              <Text style={[styles.buttonText, { color: theme.text }]}>
+                Shuttle Bus Schedule
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() =>
+                handleNavigationPress(
+                  "(tabs)/interest-points",
+                  "Interest Points"
+                )
+              }
+              testID="interestButton"
+            >
+              <Text style={[styles.buttonText, { color: theme.text }]}>
+                Interest Points
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-    );
+
+        <View style={styles.buttonsContainer}>
+          <Text style={styles.title}>View My Calendar</Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.googleButton}
+              testID="calendarfetchbutton"
+              onPress={() =>
+                handleNavigationPress(
+                  "screens/CalendarFetching",
+                  "Connect Calendars"
+                )
+              }
+            >
+              <Image
+                source={require("../../assets/images/google_logo.png")}
+                style={styles.icon}
+                testID="googleIcon"
+              />
+              <Text style={[styles.buttonText, { color: theme.text }]}>
+                Connect Calendars
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
 }
