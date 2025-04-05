@@ -75,8 +75,8 @@ const geoJsonPath = {
       <Mapbox.LineLayer
         id={`pathLayer-${pathId}`}
         style={{
-          lineColor: "blue",
-          lineWidth: 4,
+          lineColor: "black",
+          lineWidth: 5,
           lineJoin: "round",
           lineCap: "round",
         }}
@@ -92,6 +92,8 @@ ShortestPathMap.propTypes = {
   startNode: PropTypes.string,
   endNode: PropTypes.string,
   currentFloor: PropTypes.number,
+  isDisabled: PropTypes.bool,
+  pathId: PropTypes.string,
 };
 
 export default ShortestPathMap;

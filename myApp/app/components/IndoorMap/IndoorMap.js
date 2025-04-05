@@ -3,6 +3,8 @@ import Mapbox from "@rnmapbox/maps";
 import Constants from "expo-constants";
 import PropTypes from "prop-types";
 import finalMapData from "../../../assets/floorplans/finalMap.json";
+import styles from "../../styles/IndoorMapStyles";
+import POILayer from "./POILayerComponent";
 
 const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
   const [geoJsonData, setGeoJsonData] = useState({
@@ -44,10 +46,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         id="room-fill-layer"
         testID="room-fill-layer"
         sourceID="indoor-map"
-        style={{
-          fillColor: "#922338",
-          fillOpacity: 0.2,
-        }}
+        style={styles.fillLayer}
         filter={[
           "any",
           ["==", ["geometry-type"], "Polygon"],
@@ -61,11 +60,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         id="room-line-layer"
         testID="room-line-layer"
         sourceID="indoor-map"
-        style={{
-          lineColor: "#922338",
-          lineWidth: 2,
-          lineOpacity: 1.0,
-        }}
+        style={styles.roomLayer}
         filter={[
           "any",
           ["==", ["geometry-type"], "Polygon"],
@@ -73,34 +68,26 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         ]}
         minZoomLevel={18}
       />
-
+  
       {/* Pathways */}
       <Mapbox.LineLayer
         id="path-line-layer"
         testID="path-line-layer"
         sourceID="indoor-map"
-        style={{
-          lineColor: "black",
-          lineWidth: 2,
-          lineOpacity: 1.0,
-        }}
+        style={styles.linePath}
         filter={[
           "any",
           ["==", ["get", "type"], "Paths"],
         ]}
         minZoomLevel={18}
       />
-
+  
       {/* Walls */}
       <Mapbox.LineLayer
         id="wall-line-layer"
         testID="wall-line-layer"
         sourceID="indoor-map"
-        style={{
-          lineColor: "#922338",
-          lineWidth: 2,
-          lineOpacity: 1.0,
-        }}
+        style={styles.lineWall}
         filter={[
           "any",
           ["==", ["get", "type"], "Walls"],
@@ -113,13 +100,7 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         id="door-text-layer"
         testID="door-text-layer"
         sourceID="indoor-map"
-        style={{
-          textField: ["coalesce", ["get", "id"], "Unnamed"],
-          textSize: 14,
-          textColor: "black",
-          textHaloColor: "white",
-          textHaloWidth: 1,
-        }}
+        style={styles.labelPOIText}
         filter={[
           "any",
           ["==", ["get", "type"], "Door"],
@@ -129,24 +110,10 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
       />
 
       {/* Labels for POIs */}
-      <Mapbox.SymbolLayer
-        id="poi-text-layer"
-        testID="poi-text-layer"
-        sourceID="indoor-map"
-        style={{
-          textField: ["coalesce", ["get", "name"], "Unnamed"],
-          textSize: 14,
-          textColor: "black",
-          textHaloColor: "white",
-          textHaloWidth: 1,
-        }}
-        filter={[
-          "any",
-          ["==", ["get", "type"], "Point of Interest"],
-          ["==", ["get", "type"], "Points of Interest"],
-        ]}
-        minZoomLevel={18}
-      />
+      <POILayer id="poi-elevator-layer" image={require("../../../assets/images/elevator.png")} name="Elevator" testID="poi-elevator-layer"/>
+      <POILayer id="poi-stairs-layer" image={require("../../../assets/images/stairs.png")} name="Stairs" testID="poi-stairs-layer"/>
+      <POILayer id="poi-escalator-layer" image={require("../../../assets/images/escalator.png")} name="Escalators" testID="poi-escalator-layer"/>
+      <POILayer id="poi-bathroom-layer" image={require("../../../assets/images/bathrooms.png")} name="Bathroom" testID="poi-bathroom-layer"/>
     </Mapbox.ShapeSource>
   );
 };

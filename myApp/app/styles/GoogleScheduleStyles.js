@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { FONT_SIZE_SMALL, FONT_SIZE_MEDIUM, FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_5 } from "./constants";
+import { FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_5, FONT_SIZE_1 } from "./constants";
 
 const styles = StyleSheet.create({
     container: {
@@ -78,17 +78,48 @@ const styles = StyleSheet.create({
         fontSize: FONT_SIZE_3,
         textAlign: "center",
     },
-    nextClassDirections: {
-        backgroundColor: "#800020",
-        padding: 10,
-        borderRadius: 20,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
+    nextClassContainer: {
         marginVertical: 12,
+        padding: 16,
+        backgroundColor: '#f5f5f5',
+        borderRadius: 12,
+        alignItems: 'center',
+    },
+    nextClassInfoText: {
+        fontSize: FONT_SIZE_2,
+        color: '#333',
+        textAlign: 'center',
+        marginBottom: 12,
+        fontWeight: '500',
+    },
+    nextClassDirections: {
+        backgroundColor: '#800020',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 25,
+        marginTop: 8,
+    },
+    nextClassDetailsText: {
+        color: 'white',
+        fontSize: FONT_SIZE_1,
+        marginTop: 6,
+        textAlign: 'center',
+        paddingHorizontal: 10,
     },
     nextClassButtonText: {
-        color: "white",
+        color: 'white',
+        fontSize: FONT_SIZE_3,
+        fontWeight: 'bold',
+    },
+    noClassText: {
+        fontSize: FONT_SIZE_3,
+        color: '#666',
+        textAlign: 'center',
+        padding: 20,
+        fontStyle: 'italic'
     }
 });
 

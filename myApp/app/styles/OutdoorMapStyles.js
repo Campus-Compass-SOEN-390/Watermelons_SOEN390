@@ -35,7 +35,7 @@ export default StyleSheet.create({
   buttonContainer: {
     position: "absolute",
     right: 20,
-    bottom: 100, // Position above tab bar
+    bottom: 95, // Position above tab bar
     alignItems: "center",
     zIndex: 10,
   },
@@ -197,4 +197,67 @@ export default StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.7)",
     zIndex: 20,
   },
+
+  footerContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "white",
+    paddingVertical: 35,
+    elevation: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    flexDirection: "row", // Arrange children horizontally
+    justifyContent: "space-between", // Space out children
+    alignItems: "center", // Center children vertically
+  },
+  
+  footerText: {
+    marginLeft: 30,
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  stepsButton: {
+    backgroundColor: "#393a41",
+    padding: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginHorizontal: 10,
+  },
+  footerButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+
+  
+  stepsList: {
+    maxHeight: 300,
+    padding: 10,
+  },
+  stepItem: {
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  stepText: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  stepDistance: {
+    fontSize: 14,
+    color: "gray",
+  },
+  cancelButtonContainer:{
+    position: "absolute",
+    bottom: safeAreaBottom + 85,
+    left:'80%',
+    zIndex: 2,
+  }
+
+  
 });

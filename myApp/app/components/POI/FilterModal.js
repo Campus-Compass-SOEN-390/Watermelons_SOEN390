@@ -4,6 +4,7 @@ import { Modal, View, Text, TouchableOpacity, Switch, SafeAreaView } from "react
 import Slider from "@react-native-community/slider";
 import PropTypes from 'prop-types';
 import { styles } from "../../styles/poiStyles";
+import { useButtonInteraction } from '../../hooks/useButtonInteraction';
 
 const FilterModal = ({
   isVisible,
@@ -19,12 +20,34 @@ const FilterModal = ({
   useDistance,
   setUseDistance,
 }) => {
+  const { handleButtonPress } = useButtonInteraction();
+
+  const handleClose = () => {
+    handleButtonPress(null, 'Closing filter modal');
+    onClose();
+  };
+
+  const handleApplyFilters = () => {
+    handleButtonPress(null, 'Applying POI filters');
+    onClose();
+  };
+
+  const handleDistanceChange = (value) => {
+    handleButtonPress(null, `Setting distance to ${value} kilometers`);
+    setDistance(value);
+  };
+
+  const handleCategoryToggle = (category, value, setter) => {
+    handleButtonPress(null, `${value ? 'Showing' : 'Hiding'} ${category}`);
+    setter(value);
+  };
+
   return (
     <Modal
       visible={isVisible}
       transparent
       animationType="slide"
-      onRequestClose={onClose}
+      onRequestClose={handleClose}
     >
       <View style={styles.filterModalContainer}>
         <SafeAreaView>
@@ -32,7 +55,11 @@ const FilterModal = ({
             {/* Header with title and close button */}
             <View style={styles.filterModalHeader}>
               <Text style={styles.filterModalTitle}>Filter Points of Interest</Text>
-              <TouchableOpacity style={styles.closeModalButton} onPress={onClose}>
+              <TouchableOpacity 
+                style={styles.closeModalButton} 
+                onPress={handleClose}
+                accessibilityLabel="Close filter modal"
+              >
                 <Text style={styles.closeModalIcon}>×</Text>
               </TouchableOpacity>
             </View>
@@ -43,9 +70,10 @@ const FilterModal = ({
               
               <View style={styles.filterOption}>
                 <Text style={styles.filterOptionText}>Enable distance filtering</Text>
-                <Switch testID="distanceSwitch"
+                <Switch 
+                  testID="distanceSwitch"
                   value={useDistance} 
-                  onValueChange={setUseDistance} 
+                  onValueChange={(value) => handleCategoryToggle('distance filter', value, setUseDistance)}
                   trackColor={{ false: "#e0e0e0", true: "#d6909a" }}
                   thumbColor={useDistance ? "#922338" : "#f4f3f4"}
                   ios_backgroundColor="#e0e0e0"
@@ -61,7 +89,7 @@ const FilterModal = ({
                     maximumValue={10}
                     step={0.5}
                     value={distance}
-                    onValueChange={setDistance}
+                    onValueChange={handleDistanceChange}
                     minimumTrackTintColor="#922338"
                     maximumTrackTintColor="#e0e0e0"
                     thumbTintColor="#922338"
@@ -76,9 +104,10 @@ const FilterModal = ({
               
               <View style={styles.filterOption}>
                 <Text style={styles.filterOptionText}>Cafes</Text>
-                <Switch testID="cafeSwitch"
+                <Switch 
+                  testID="cafeSwitch"
                   value={showCafes} 
-                  onValueChange={setShowCafes} 
+                  onValueChange={(value) => handleCategoryToggle('cafes', value, setShowCafes)}
                   trackColor={{ false: "#e0e0e0", true: "#d6909a" }}
                   thumbColor={showCafes ? "#922338" : "#f4f3f4"}
                   ios_backgroundColor="#e0e0e0"
@@ -89,7 +118,7 @@ const FilterModal = ({
                 <Text style={styles.filterOptionText}>Restaurants</Text>
                 <Switch testID="restaurantSwitch"
                   value={showRestaurants} 
-                  onValueChange={setShowRestaurants}
+                  onValueChange={(value) => handleCategoryToggle('restaurants', value, setShowRestaurants)}
                   trackColor={{ false: "#e0e0e0", true: "#d6909a" }}
                   thumbColor={showRestaurants ? "#922338" : "#f4f3f4"}
                   ios_backgroundColor="#e0e0e0"
@@ -100,7 +129,7 @@ const FilterModal = ({
                 <Text style={styles.filterOptionText}>Activities</Text>
                 <Switch testID="activitySwitch"
                   value={showActivities} 
-                  onValueChange={setShowActivities}
+                  onValueChange={(value) => handleCategoryToggle('activities', value, setShowActivities)}
                   trackColor={{ false: "#e0e0e0", true: "#d6909a" }}
                   thumbColor={showActivities ? "#922338" : "#f4f3f4"}
                   ios_backgroundColor="#e0e0e0"
@@ -109,7 +138,11 @@ const FilterModal = ({
             </View>
 
             {/* Apply Button */}
-            <TouchableOpacity style={styles.applyButton} onPress={onClose}>
+            <TouchableOpacity 
+              style={styles.applyButton} 
+              onPress={handleApplyFilters}
+              accessibilityLabel="Apply filters"
+            >
               <Text style={styles.applyButtonText}>Apply Filters</Text>
             </TouchableOpacity>
           </View>

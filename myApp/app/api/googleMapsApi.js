@@ -85,3 +85,62 @@ export const getTravelTimes = async (
     return [];
   }
 };
+
+/**
+ * Fetch alternative routes from Google Maps API.
+ * @param {Object} origin - { latitude, longitude }
+ * @param {Object} destination - { latitude, longitude }
+ * @param {Array<string>} modes - Transport modes ["driving", "walking", "transit", "bicycling"]
+ * @returns {Promise<Object>} Object containing transport modes with up to 3 route options each.
+ */
+export const getAlternativeRoutes = async (
+    origin,
+    destination,
+    modes = ["walking", "driving", "transit", "bicycling"],
+    maxRoutes = 3 //default is 3
+) => {
+    const routePromises = modes.map(async (mode) => {
+        let url = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&mode=${mode}&alternatives=true&key=${GOOGLE_API_KEY}`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (!data.routes?.length) {
+                return { mode, routes: [] };
+            }
+
+            return {
+                mode,
+                routes: data.routes.slice(0, maxRoutes).map((route) => ({
+                    duration: Math.round(route.legs?.[0]?.duration?.value / 60) || 0,
+                    distance: route.legs?.[0]?.distance?.text || "Unknown",
+                    summary: route.summary || "No summary",
+                    coordinates: decodePolyline(route.overview_polyline?.points || ""),
+                    steps: route.legs?.[0]?.steps?.map((step) => ({
+                        instruction: step.html_instructions?.replace(/<[^>]{1,256}>/g, "") || "No instruction", //bounded quanitifier - sonarqube
+                        distance: step.distance?.text || "Unknown",
+                        duration: Math.round(step.duration?.value / 60) || 0,
+                    })) || [],
+                })),
+            };
+        } catch (error) {
+            console.error(`Error fetching routes for mode ${mode}:`, error);
+            return { mode, routes: [] };
+        }
+    });
+
+    const results = await Promise.all(routePromises);
+    return results;
+};
+
+/**
+ * Decode polyline to coordinates.
+ * @param {string} encodedPolyline - Encoded polyline from Google API
+ * @returns {Array} Array of coordinates [longitude, latitude] for rendering
+ */
+const decodePolyline = (encodedPolyline) => {
+    const polyline = require("@mapbox/polyline");
+    return polyline.decode(encodedPolyline).map(([lat, lng]) => [lng, lat]);
+};
+

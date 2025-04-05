@@ -1,5 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import React from "react";
+import PropTypes from "prop-types";
 
 export default function LayoutWrapper({ children }) {
   return (
@@ -17,3 +18,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
 });
+
+LayoutWrapper.propTypes = {
+  children: PropTypes.node,
+};

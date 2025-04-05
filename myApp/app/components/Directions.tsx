@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { View } from "react-native";
 import Mapbox from "@rnmapbox/maps";
 import ShortestPathMap from "./IndoorMap/ShortestPathMap";
 import MapDirections from "./MapDirections";
-import useLocation from "../hooks/useLocation";
+import MapboxMarker from "./MarkerComponent";
 
 interface Props {
   graph: any;
@@ -12,8 +12,8 @@ interface Props {
   endNode: any;
   currentFloor: number ;
   isDisabled: boolean;
-  origin: { latitude: number; longitude: number } | null;
-  destination: { latitude: number; longitude: number } | null;
+  origin: { latitude: number; longitude: number };
+  destination: { latitude: number; longitude: number };
   mapRef: React.RefObject<Mapbox.MapView>;
   travelMode?: "driving" | "cycling" | "walking" | "transit";
   navType?: "indoor" | "outdoor" | "indoor-outdoor" | "outdoor-indoor" | "indoor-outdoor-indoor";
@@ -50,6 +50,9 @@ export const Directions : React.FC<Props> = ({
         "CC": {latitude: 45.458422, longitude: -73.640747}
     };
 
+    const startIcon = require("../../assets/images/start-icon.png");
+    const endIcon = require("../../assets/images/end-icon.png");
+
     const findBuildingInfo = (nodeText: string): { setNode: string | null; entranceOrExit: { latitude: number; longitude: number } | null } => {
         const buildingCode = getBuildingCode(nodeText);
     
@@ -83,12 +86,17 @@ export const Directions : React.FC<Props> = ({
     }
     if (navType == "outdoor"){
         return (
-            <MapDirections
-                origin={origin}
-                destination={destination}
-                mapRef={mapRef}
-                travelMode={travelMode}
-            />
+            <View>
+                <MapDirections
+                    origin={origin}
+                    destination={destination}
+                    mapRef={mapRef}
+                    travelMode={travelMode}
+                />
+                {/* Start and End Markers */}
+                <MapboxMarker id="start" coordinate={[origin.longitude, origin.latitude]} icon={startIcon} />
+                <MapboxMarker id="end" coordinate={[destination.longitude, destination.latitude]} icon={endIcon} />
+            </View>
         );
     }
     if (navType == "indoor-outdoor"){
@@ -111,6 +119,7 @@ export const Directions : React.FC<Props> = ({
                     mapRef={mapRef}
                     travelMode={travelMode}
                 />
+                <MapboxMarker id="end" coordinate={[destination.longitude, destination.latitude]} icon={endIcon} />
             </View>
         )
     }
@@ -134,6 +143,7 @@ export const Directions : React.FC<Props> = ({
                     isDisabled={isDisabled}
                     pathId={"indoor"}
                 />
+                <MapboxMarker id="end" coordinate={[destination.longitude, destination.latitude]} icon={startIcon} />
             </View>
         )
     }

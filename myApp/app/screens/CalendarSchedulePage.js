@@ -1,21 +1,36 @@
-import { Text, View, TouchableOpacity, ScrollView , Alert, ActivityIndicator } from "react-native";
+import { 
+  Text, 
+  View, 
+  TouchableOpacity, 
+  ScrollView, 
+  Alert, 
+  ActivityIndicator 
+} from "react-native";
 import * as Location from 'expo-location';
-import React, { useState, useEffect , lazy, Suspense } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import styles from '../styles/GoogleScheduleStyles';
 import { useRouter } from 'expo-router';
 import * as FileSystem from 'expo-file-system';
-import Head from "next/head";
+import { useButtonInteraction } from '../hooks/useButtonInteraction';
+import RNUxcam from 'react-native-ux-cam';
 
+// Lazy load components
 const LayoutWrapper = lazy(() => import("../components/LayoutWrapper"));
 const HeaderButtons = lazy(() => import("../components/HeaderButtons"));
 
 export default function CalendarSchedulePage() {
   const router = useRouter();
+  const { handleButtonPress } = useButtonInteraction();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const selectedDayIndex = selectedDate.getDay(); // Sunday = 0
 
   const [schedule, setSchedule] = useState([]);
+  const [nextClass, setNextClass] = useState(null);
+
+  useEffect(() => {
+    RNUxcam.tagScreenName("CalendarSchedulePage");
+  }, []);
 
   // Will allow to display event on proper date
   const filteredSchedule = schedule.filter(
@@ -39,6 +54,9 @@ export default function CalendarSchedulePage() {
     readCSV();
   }, []);
 
+  useEffect(() => {
+    findNextClassInfo();
+  }, [schedule]);
 
   // Parse CSV data for display
   const parseCSV = (csvText) => {
@@ -70,7 +88,10 @@ export default function CalendarSchedulePage() {
       };
     });
   };
+
   const handleGetDirections = (location) => {
+    RNUxcam.logEvent("Get Directions Button Pressed");
+    handleButtonPress(null, 'Getting directions');
     console.log("Getting directions to:", location);    
       
     // Navigate to map with destination parameter
@@ -81,6 +102,7 @@ export default function CalendarSchedulePage() {
       }
     });
   };
+
   const findNextClass = () => {
     const now = new Date();
     const currentTime = now.getTime();
@@ -148,6 +170,73 @@ export default function CalendarSchedulePage() {
     }
   };
 
+  const getUpcomingClasses = () => {
+    const now = new Date();
+    const currentTime = now.getTime();
+    
+    return schedule.filter(item => {
+      const classDate = new Date(item.date);
+      const [startTime] = item.time.split(' - ');
+      const [hours, minutes] = startTime.split(':');
+      const classTime = new Date(classDate);
+      classTime.setHours(parseInt(hours), parseInt(minutes), 0);
+      
+      if (classDate < now && classDate.getDate() !== now.getDate()) {
+        return false;
+      }
+      
+      return classTime.getTime() >= currentTime;
+    });
+  };
+  
+  const sortClassesByStartTime = (classes) => {
+    return [...classes].sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      const [startTimeA] = a.time.split(' - ');
+      const [startTimeB] = b.time.split(' - ');
+      const [hoursA, minutesA] = startTimeA.split(':');
+      const [hoursB, minutesB] = startTimeB.split(':');
+      
+      dateA.setHours(parseInt(hoursA), parseInt(minutesA), 0, 0);
+      dateB.setHours(parseInt(hoursB), parseInt(minutesB), 0, 0);
+      
+      return dateA.getTime() - dateB.getTime();
+    });
+  };
+  
+  const findNextClassInfo = () => {
+    try {
+      if (!schedule || schedule.length === 0) {
+        console.log("Schedule is empty");
+        setNextClass(null);
+        return;
+      }
+  
+      const upcomingClasses = getUpcomingClasses();
+      if (upcomingClasses.length === 0) {
+        console.log("No upcoming classes found");
+        setNextClass(null);
+        return;
+      }
+  
+      const sortedClasses = sortClassesByStartTime(upcomingClasses);
+      const nextClass = sortedClasses[0];
+      
+      console.log("Next class found:", {
+        course: nextClass.course,
+        date: nextClass.date,
+        time: nextClass.time,
+        location: nextClass.location
+      });
+      
+      setNextClass(nextClass);
+    } catch (error) {
+      console.error("Error finding next class:", error);
+      setNextClass(null);
+    }
+  };
+
   return (
     <Suspense fallback={<ActivityIndicator size="large" color="#922338" />}>  
     <LayoutWrapper>
@@ -167,14 +256,40 @@ export default function CalendarSchedulePage() {
           </Text>
         ))}
       </View>
-      <TouchableOpacity
-       style={styles.nextClassDirections}
-        onPress={findNextClass}
-        testID="get-directions-button"
-      >
-        <MaterialIcons name="schedule" size={24} color="white" style={{ marginRight: 8 }} />
-        <Text style={styles.nextClassButtonText}>Get directions to my next class</Text>
-      </TouchableOpacity>
+      <View style={styles.nextClassContainer}>
+        {nextClass ? (
+          <>
+            <Text style={styles.nextClassInfoText}>
+              {`Your next class is: ${nextClass.course}, ${
+                new Date(nextClass.date).toDateString() === new Date().toDateString()
+                  ? 'today'
+                  : new Date(nextClass.date).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      month: 'long',
+                      day: 'numeric'
+                    })
+              } ${nextClass.time} at ${nextClass.location}`}
+            </Text>
+            <TouchableOpacity
+              style={styles.nextClassDirections}
+              onPress={() => {
+                handleButtonPress(null, 'Getting directions to next class');
+                findNextClass();
+              }}
+              testID="get-directions-button"
+            >
+              <MaterialIcons name="directions" size={24} color="white" style={{ marginRight: 8 }} />
+              <Text style={styles.nextClassButtonText}>
+                Get directions to next class
+              </Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <Text style={styles.noClassText}>
+            No upcoming classes scheduled
+          </Text>
+        )}
+      </View>
 
       {/* Schedule Header */}
       <Text style={styles.scheduleTitle}>Schedule</Text>
@@ -190,7 +305,10 @@ export default function CalendarSchedulePage() {
           </View>
           <TouchableOpacity 
             style={styles.iconContainer}
-            onPress={() => handleGetDirections(item.location)}
+            onPress={() => {
+              handleButtonPress(null, `Getting directions to ${item.course}`);
+              handleGetDirections(item.location);
+            }}
           >
             <MaterialIcons name="directions" size={28} color="white" />
           </TouchableOpacity>
@@ -204,11 +322,13 @@ export default function CalendarSchedulePage() {
         <TouchableOpacity
           testID="prev-day-button"
           style={styles.todayNavButton}
-          onPress={() =>
+          onPress={() => {
+            RNUxcam.logEvent("Previous Day Button Pressed");
+            handleButtonPress(null, 'Previous day');
             setSelectedDate(
               new Date(selectedDate.setDate(selectedDate.getDate() - 1))
-            )
-          }
+            );
+          }}
         >
           <Ionicons name="chevron-back" size={20} color="white" />
         </TouchableOpacity>
@@ -216,7 +336,10 @@ export default function CalendarSchedulePage() {
         <TouchableOpacity
           testID="today-button"
           style={styles.todayLabelWrapper}
-          onPress={() => setSelectedDate(new Date())}
+          onPress={() => {
+            handleButtonPress(null, 'Go to today');
+            setSelectedDate(new Date());
+          }}
         >
           <Text style={styles.todayText}>
             {selectedDate.toDateString() !== new Date().toDateString()
@@ -232,11 +355,13 @@ export default function CalendarSchedulePage() {
         <TouchableOpacity
           testID="next-day-button"
           style={styles.todayNavButton}
-          onPress={() =>
+          onPress={() => {
+            RNUxcam.logEvent("Next Day Button Pressed");
+            handleButtonPress(null, 'Next day');
             setSelectedDate(
               new Date(selectedDate.setDate(selectedDate.getDate() + 1))
-            )
-          }
+            );
+          }}
         >
           <Ionicons name="chevron-forward" size={20} color="white" />
         </TouchableOpacity>

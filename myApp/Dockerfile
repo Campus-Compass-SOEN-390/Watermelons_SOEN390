@@ -1,26 +1,23 @@
-# Use an official Node LTS image. Adjust the tag if you need a different version.
+# Use an official Node.js LTS image
 FROM node:18-alpine
 
-# Create and set the working directory inside the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package manifests first so Docker can cache installs if they don't change
+# Copy package.json and package-lock.json first (for dependency caching)
 COPY package*.json ./
 
-# Install dependencies (using npm ci to ensure a clean, reproducible install)
+# Install dependencies
 RUN npm ci
 
-# Globally install Expo CLI
+# Install Expo CLI globally
 RUN npm install -g expo-cli
 
-# Copy the rest of your project files into the container
+# Copy the entire project into the container
 COPY . .
 
-# Expose Expo’s default ports:
-#   19000 for the Expo dev server,
-#   19001 for the Metro bundler,
-#   19002 for Expo Dev Tools.
+# Expose necessary Expo ports
 EXPOSE 19000 19001 19002
 
-# By default, run Expo in tunnel mode (makes it easier to access on different networks)
-CMD ["npm", "start", "--tunnel"]
+# Start Expo
+CMD ["npm", "run", "start"]
