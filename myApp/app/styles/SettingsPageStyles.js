@@ -5,6 +5,7 @@ export const createSettingsPageStyles = ({ theme, isDarkMode }) => {
   return StyleSheet.create({
     container: {
       flex: 1,
+      paddingTop: 70,
       padding: 20,
       gap: 20,
       backgroundColor: isDarkMode ? "#333333" : "#FFFFFF",

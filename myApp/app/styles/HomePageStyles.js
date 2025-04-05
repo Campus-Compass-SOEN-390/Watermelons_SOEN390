@@ -8,7 +8,7 @@ export const createHomePageStyles = (theme) => {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: theme.background,
+      backgroundColor: theme.cardBackground,
     },
     logo: {
       width: 150,
@@ -151,7 +151,7 @@ export const createHomePageStyles = (theme) => {
 
 // Export a default version for backward compatibility
 export const homepageStyles = createHomePageStyles({
-  background: "#f5fcff",
+  background: "#922338",
   cardBackground: "#FFFFFF",
   buttonBackground: "#922338",
   buttonText: "#FFFFFF",
