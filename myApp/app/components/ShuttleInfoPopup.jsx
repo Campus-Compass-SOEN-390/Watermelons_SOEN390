@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, Modal, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import PropTypes from "prop-types";
 import { formatTime } from "../utils/shuttleUtils.js";
-import styles from "../styles/PopUpStyles.js";
-
+import createPopupStyles from "../styles/PopUpStyles.js";
+import { ThemeContext } from "../context/ThemeContext";
 
 export default function ShuttleInfoPopup({ visible, onClose, shuttleDetails }) {
+  // Use the theme context
+  const { theme, isDarkMode } = useContext(ThemeContext);
+
+  // Create theme-aware styles
+  const styles = createPopupStyles({ theme, isDarkMode });
+
+  // Get appropriate icon color based on theme
+  const iconColor = isDarkMode ? theme.text : "#000";
 
   return (
     <Modal
@@ -19,7 +27,11 @@ export default function ShuttleInfoPopup({ visible, onClose, shuttleDetails }) {
         <View style={styles.popup}>
           {/* Close Icon */}
           <TouchableOpacity onPress={onClose} style={styles.closeIcon}>
-            <MaterialIcons name="close" size={22} color="#555" />
+            <MaterialIcons
+              name="close"
+              size={22}
+              color={isDarkMode ? theme.text : "#555"}
+            />
           </TouchableOpacity>
 
           {/* Title */}
@@ -27,7 +39,7 @@ export default function ShuttleInfoPopup({ visible, onClose, shuttleDetails }) {
 
           {/* Bus Icon */}
           <View style={{ alignItems: "center", marginBottom: 16 }}>
-            <MaterialIcons name="directions-bus" size={36} color="#000" />
+            <MaterialIcons name="directions-bus" size={36} color={iconColor} />
           </View>
 
           {/* Shuttle Details */}
