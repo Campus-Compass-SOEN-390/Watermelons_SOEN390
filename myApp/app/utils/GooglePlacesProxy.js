@@ -15,9 +15,8 @@ const GooglePlacesProxy = {
     const now = Date.now();
     const timeSinceLastRequest = now - lastRequestTime;
     if (timeSinceLastRequest < RATE_LIMIT_DELAY) {
-      await new Promise((resolve) =>
-        setTimeout(resolve, RATE_LIMIT_DELAY - timeSinceLastRequest)
-      );
+        const delay = RATE_LIMIT_DELAY - timeSinceLastRequest;
+        await new Promise((resolve) => setTimeout(resolve, delay));
     }
 
     // Build the URL
