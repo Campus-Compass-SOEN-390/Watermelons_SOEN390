@@ -2,6 +2,7 @@ import TravelFacade from "./TravelFacade";
 import { fetchShuttleScheduleByDay } from "../api/shuttleSchedule";
 import { SGWtoLoyola } from "../constants/outdoorMap";
 
+
 /**
  * Estimate total shuttle travel time for the user
  * @param {Object} userLocation - { latitude, longitude }
