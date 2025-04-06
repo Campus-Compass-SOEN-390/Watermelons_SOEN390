@@ -12,7 +12,6 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createGoogleScheduleStyles } from "../styles/GoogleScheduleStyles";
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
-import HeaderButtons from "../components/HeaderButtons";
 import { ThemeContext } from "../context/ThemeContext";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
 
