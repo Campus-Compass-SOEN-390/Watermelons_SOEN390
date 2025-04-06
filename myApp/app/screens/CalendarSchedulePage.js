@@ -273,12 +273,12 @@ export default function CalendarSchedulePage() {
 
       {/* Days Navigation */}
       <View style={styles.daysRow}>
-        {days.map((day, index) => (
+        {days.map((day) => (
           <Text
-            key={index}
+            key={day} // Use day name as the unique key
             style={[
               styles.dayText,
-              index === selectedDayIndex && styles.highlightedDay,
+              days[selectedDayIndex] === day && styles.highlightedDay,
             ]}
           >
             {day}
@@ -331,8 +331,8 @@ export default function CalendarSchedulePage() {
 
       {/* Schedule Cards */}
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-        {filteredSchedule.map((item, idx) => (
-          <View key={idx} style={styles.card}>
+        {filteredSchedule.map((item) => (
+          <View key={`${item.course}-${item.time}`} style={styles.card}>
             <View style={styles.cardTextContainer}>
               <Text style={styles.courseText}>{item.course}</Text>
               <Text style={styles.courseLocation}>{item.location}</Text>
