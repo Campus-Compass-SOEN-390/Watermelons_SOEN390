@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
+import { COLORS } from './constants';
 
 export const infoPageStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f7f7f7',
-    paddingTop: 30,
+    backgroundColor: COLORS.OFF_WHITE,
+    paddingTop: 60,
   },
   topNav: {
     flexDirection: 'row',
@@ -38,6 +39,7 @@ export const infoPageStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 10,
+    paddingTop: 40
   }, 
   welcome: {
     fontSize: 17,
@@ -58,14 +60,14 @@ export const infoPageStyles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 12,
     lineHeight: 22,
-    color: '#333',
+    color: COLORS.DARK_GREY_TITLE,
   },
   subBullet: {
     fontSize: 15,
     marginLeft: 16,
     marginBottom: 8, 
     lineHeight: 20,
-    color: '#444',
+    color: COLORS.DARK_MODE_GREY,
   },
   bold: {
     fontWeight: 'bold',
@@ -76,12 +78,12 @@ export const infoPageStyles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 24,
     paddingVertical: 12,
-    backgroundColor: '#800020',
+    backgroundColor: COLORS.CONCORDIA_RED,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
   },
   pageName: {
-    color: 'white',
+    color: COLORS.WHITE,
     fontWeight: '600',
     fontSize: 17,
   },
@@ -90,7 +92,7 @@ export const infoPageStyles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     marginBottom: 16,
-    color: '#333',
+    color: COLORS.DARK_GREY_TITLE,
     textAlign: 'center',
   },
 
@@ -99,7 +101,7 @@ export const infoPageStyles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
     marginTop: 10,
-    shadowColor: '#000',
+    shadowColor: COLORS.BLACK_OR_SHADOW,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -113,8 +115,8 @@ export const infoPageStyles = StyleSheet.create({
     aspectRatio: 9 / 16,      // <-- Portrait screenshot
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#ccc',
-    backgroundColor: '#fff',
+    borderColor: COLORS.LIGHT_GREY_INPUT_BOXES,
+    backgroundColor: COLORS.WHITE,
     overflow: 'hidden',
     resizeMode: 'contain',
   },
@@ -123,7 +125,7 @@ export const infoPageStyles = StyleSheet.create({
     fontSize: 18,                 // back to original size for clarity
     fontWeight: '600',           // make it bold
     textAlign: 'center',
-    color: '#222',               // stronger contrast than #444
+    color: COLORS.DARK_MODE_DEEP_GREY,               // stronger contrast than #444
     lineHeight: 22,
     paddingHorizontal: 16,
     marginTop: 12,
@@ -141,7 +143,7 @@ export const infoPageStyles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 12,
     marginTop: 8,
-    shadowColor: '#000',
+    shadowColor: COLORS.BLACK_OR_SHADOW,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -151,13 +153,13 @@ export const infoPageStyles = StyleSheet.create({
   video: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#000',
+    backgroundColor: COLORS.BLACK_OR_SHADOW,
   },
   //InfoPage 4 styles
   extraInfo: {
     marginTop: 20,
     marginBottom: 40,  // to give some spacing before the footer
-    backgroundColor: '#f2f2f2',
+    backgroundColor: COLORS.OFF_WHITE,
     borderRadius: 8,
     padding: 16,
   },
@@ -183,7 +185,7 @@ export const infoPageStyles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 12,
     marginTop: 8,
-    shadowColor: '#000',
+    shadowColor: COLORS.BLACK_OR_SHADOW,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -201,11 +203,11 @@ horizontalImageRow: {
 squareImageWrapper: {
   width: '48%',
   aspectRatio: 3 / 4,
-  backgroundColor: '#fff',
+  backgroundColor: COLORS.WHITE,
   borderRadius: 10,
   overflow: 'hidden',
   elevation: 3,
-  shadowColor: '#000',
+  shadowColor: COLORS.BLACK_OR_SHADOW,
   shadowOffset: { width: 0, height: 2 },
   shadowOpacity: 0.1,
   shadowRadius: 4,
@@ -237,6 +239,6 @@ squareButton: {
 buttonText: {
   fontSize: 16,
   fontWeight: '600',
-  color: '#333',
+  color: COLORS.DARK_GREY_TITLE,
 },
 });

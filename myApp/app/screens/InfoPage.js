@@ -9,25 +9,6 @@ export default function InfoPage() {
 
   return (
     <View style={styles.container}>
-      {/* Header Icons */}
-      <View style={styles.topNav}>
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={() => router.push('/')}
-          accessibilityRole="button"
-          testID="homeButton"
-        >
-          <Ionicons name="home" size={24} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={() => router.push('/screens/SettingsPage')}
-          accessibilityRole="button"
-          testID="settingsButton"
-        >
-          <Ionicons name="settings" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
 
       <ScrollView contentContainerStyle={styles.scroll}>
         {/* Centered Logo */}

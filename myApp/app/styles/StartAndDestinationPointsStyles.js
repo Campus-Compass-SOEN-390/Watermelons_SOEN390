@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
-import { FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4 } from "./constants";
+import { FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4, COLORS } from "./constants";
 const { width, height } = Dimensions.get("window");
 
 export const createStartAndDestinationStyles = (theme, isDarkMode) => {
@@ -173,14 +173,14 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
       marginHorizontal: 10,
     },
     stepsButton: {
-      backgroundColor: theme.isDarkMode ? "#5D5E66" : "#393a41",
+      backgroundColor: theme.isDarkMode ? COLORS.DARK_MODE_LIGHT_GREY : COLORS.DARK_GREY_TITLE,
       padding: 10,
       paddingHorizontal: 20,
       width: "100%",
       borderRadius: 10,
     },
     favoriteButton: {
-      backgroundColor: theme.isDarkMode ? "#5D5E66" : "#393a41",
+      backgroundColor: theme.isDarkMode ? COLORS.DARK_MODE_LIGHT_GREY : COLORS.DARK_GREY_TITLE,
       padding: 10,
       paddingHorizontal: 20,
       borderRadius: 10,
@@ -237,7 +237,7 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
       marginBottom: 15,
     },
     closeButton: {
-      backgroundColor: "#ff5252",
+      backgroundColor: COLORS.RED_CLOSE_BUTTON,
       padding: 8,
       borderRadius: 20,
       width: 30,
@@ -246,7 +246,7 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
       justifyContent: "center",
     },
     closeButtonText: {
-      color: "white",
+      color: COLORS.WHITE,
       fontWeight: "bold",
       fontSize: FONT_SIZE_3,
     },
@@ -277,10 +277,10 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
     },
     stepDistance: {
       fontSize: FONT_SIZE_2,
-      color: theme.isDarkMode ? "#bbbbbb" : "gray",
+      color: theme.isDarkMode ? COLORS.LIGHT_GREY : "gray",
     },
     modeText: {
-      fontSize: 18,
+      fontSize: FONT_SIZE_4,
       fontWeight: "bold",
       marginBottom: 10,
       color: theme.text,
@@ -292,7 +292,7 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
       width: "100%",
     },
     routeCard: {
-      backgroundColor: theme.isDarkMode ? "#2c2c2c" : "#f9f9f9",
+      backgroundColor: theme.isDarkMode ? COLORS.DARK_MODE_DEEP_GREY : COLORS.OFF_WHITE,
       padding: 12,
       marginVertical: 5,
       borderRadius: 8,
@@ -307,14 +307,14 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
       alignItems: "center",
     },
     routeTitle: {
-      fontSize: 16,
+      fontSize: FONT_SIZE_3,
       fontWeight: "bold",
       color: theme.text,
       marginBottom: 5,
     },
     routeDetails: {
-      fontSize: 14,
-      color: theme.isDarkMode ? "#bbbbbb" : "#555",
+      fontSize: FONT_SIZE_2,
+      color: theme.isDarkMode ? COLORS.LIGHT_GREY : COLORS.DARK_MODE_LIGHT_GREY,
       marginBottom: 3,
     },
     myLocationButton: {
@@ -329,14 +329,14 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
       elevation: 40,
       shadowColor: theme.shadowColor,
       zIndex: 11,
-      width: 390,
+      width: width*0.868,
       height: 44,
       borderBottomColor: theme.borderColor,
       borderBottomWidth: 1,
       flexDirection: "row",
     },
     myLocationText: {
-      fontSize: 16,
+      fontSize: FONT_SIZE_3,
       color: theme.text,
       fontWeight: "bold",
     },
@@ -348,8 +348,8 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
     },
     loadingText: {
       marginTop: 10,
-      fontSize: 14,
-      color: theme.isDarkMode ? "#bbbbbb" : "#555",
+      fontSize: FONT_SIZE_2,
+      color: theme.isDarkMode ? COLORS.LIGHT_GREY : COLORS.DARK_MODE_LIGHT_GREY,
       textAlign: "center",
     },
     themeToggleButton: {
@@ -375,10 +375,10 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
       justifyContent: "space-between",
       paddingHorizontal: 15,
       paddingVertical: 10,
-      backgroundColor: isDarkMode ? "#333333" : "#922338",
+      backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.CONCORDIA_RED,
       width: "100%",
       borderBottomWidth: 1,
-      borderBottomColor: isDarkMode ? "#555555" : "rgba(0, 0, 0, 0.1)",
+      borderBottomColor: isDarkMode ? COLORS.DARK_MODE_LIGHT_GREY : "rgba(0, 0, 0, 0.1)",
     },
     headerButton: {
       padding: 8,
@@ -388,17 +388,17 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
         : "rgba(255, 255, 255, 0.2)",
     },
     headerButtonText: {
-      color: "#FFFFFF",
+      color: COLORS.WHITE,
       fontWeight: "bold",
     },
     indoorNavigationMessage: {
       flexDirection: "row",
       alignItems: "center",
-      backgroundColor: theme.isDarkMode ? "#2c2c2c" : "#f5f5f5",
+      backgroundColor: COLORS.OFF_WHITE,
       borderRadius: 8,
       padding: 12,
       marginVertical: 10,
-      shadowColor: theme.shadowColor,
+      shadowColor: COLORS.BLACK_OR_SHADOW,
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.2,
       shadowRadius: 2,
@@ -409,19 +409,18 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
       flex: 1,
       marginLeft: 10,
       fontSize: 14,
-      color: theme.text,
+      color: COLORS.DARK_GREY_TITLE,
     },
   });
 };
 
 // Export default styles for backward compatibility
 export default createStartAndDestinationStyles({
-  cardBackground: "white",
-  text: "#000000",
-  buttonBackground: "#922338", // Using the maroon color from main branch
-  buttonText: "#FFFFFF",
-  inputBackground: "#eee",
-  borderColor: "#ddd",
-  shadowColor: "#000",
-  isDarkMode: false,
+  cardBackground: COLORS.WHITE,
+  text: COLORS.BLACK_OR_SHADOW,
+  buttonBackground: COLORS.CONCORDIA_RED,
+  buttonText: COLORS.BLACK_OR_SHADOW,
+  inputBackground: COLORS.OFF_WHITE,
+  borderColor: COLORS.LIGHT_GREY_INPUT_BOXES,
+  shadowColor: COLORS.BLACK_OR_SHADOW,
 });

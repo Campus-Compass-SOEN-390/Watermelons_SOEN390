@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { COLORS } from "./constants";
 
 // Create a function that returns theme-dependent styles
 export const createSettingsPageStyles = ({ theme, isDarkMode }) => {
@@ -8,17 +9,17 @@ export const createSettingsPageStyles = ({ theme, isDarkMode }) => {
       paddingTop: 70,
       padding: 20,
       gap: 20,
-      backgroundColor: isDarkMode ? "#333333" : "#FFFFFF",
+      backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.WHITE,
     },
     title: {
       fontSize: 26,
       fontWeight: "bold",
       marginBottom: 20,
-      color: isDarkMode ? "#FFFFFF" : "#333",
+      color: isDarkMode ? COLORS.WHITE : COLORS.DARK_GREY_TITLE,
       textAlign: "center",
     },
     subtitle: {
-      color: isDarkMode ? "#BBBBBB" : "#666",
+      color: isDarkMode ? COLORS.LIGHT_GREY : COLORS.DARK_MODE_LIGHT_GREY,
       fontSize: 20,
       marginBottom: 10,
     },
@@ -26,7 +27,7 @@ export const createSettingsPageStyles = ({ theme, isDarkMode }) => {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      backgroundColor: isDarkMode ? "#444444" : "#f8f8f8",
+      backgroundColor: isDarkMode ? COLORS.DARK_MODE_GREY : COLORS.OFF_WHITE,
       padding: 12,
       borderRadius: 12,
       marginVertical: 8,
@@ -35,7 +36,7 @@ export const createSettingsPageStyles = ({ theme, isDarkMode }) => {
     settingLabel: {
       fontSize: 18,
       fontWeight: "500",
-      color: isDarkMode ? "#FFFFFF" : "#333",
+      color: isDarkMode ? COLORS.WHITE : COLORS.DARK_GREY_TITLE,
       marginLeft: 15,
       flex: 1,
     },
@@ -47,8 +48,8 @@ export const createSettingsPageStyles = ({ theme, isDarkMode }) => {
       width: 30,
       height: 30,
       marginRight: 12,
-      tintColor: isDarkMode ? "#FFFFFF" : undefined,
-    },
+      tintColor: isDarkMode ? COLORS.WHITE : undefined,
+    }
   });
 };
 
@@ -56,7 +57,8 @@ export const createSettingsPageStyles = ({ theme, isDarkMode }) => {
 export const styles = StyleSheet.create({
   container: {
     padding: 20,
-    gap: 20,
+    paddingTop: 100,
+    gap: 20
   },
   title: {
     fontSize: 26,
@@ -65,7 +67,7 @@ export const styles = StyleSheet.create({
     color: "#333",
   },
   subtitle: {
-    color: "#666",
+    color: COLORS.DARK_MODE_LIGHT_GREY,
     fontSize: 20,
     marginBottom: 10,
   },
@@ -73,7 +75,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#f8f8f8",
+    backgroundColor: COLORS.OFF_WHITE,
     padding: 12,
     borderRadius: 12,
     marginVertical: 8,
@@ -82,7 +84,7 @@ export const styles = StyleSheet.create({
   settingLabel: {
     fontSize: 18,
     fontWeight: "500",
-    color: "#333",
+    color: COLORS.DARK_GREY_TITLE,
   },
   switch: {
     transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],

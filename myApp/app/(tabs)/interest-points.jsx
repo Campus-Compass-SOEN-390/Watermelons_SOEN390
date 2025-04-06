@@ -20,7 +20,6 @@ import FilterModal from "../components/POI/FilterModal";
 import POIList from "../components/POI/POIList";
 import { createPOIListStyles } from "../styles/POIListStyle";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
-import HeaderButtons from "../components/HeaderButtons";
 import { ThemeContext } from "../context/ThemeContext";
 
 /**

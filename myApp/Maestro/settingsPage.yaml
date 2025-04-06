@@ -2,51 +2,72 @@ appId: com.anonymous.myApp
 ---
 - launchApp
 
-# Tap on calendar button to show feedback
+# Navigate to calendar page
 - tapOn:
     id: "calendarfetchbutton"
 
-# Tap on recent calendar to show feedback
-- tapOn: " CampusCompasTestCalendar2"
-
-# Tap on recent 1 month to show feedback
-- tapOn: "1 Month"
-
-# Tap on settings icon to go to settings page
+# Navigate to settings page
 - tapOn:
     id: "settings"
 
-# Turn off vibration
-- tapOn:
-    id: "vibration-toggle"
-
-# Turn off sound
-- tapOn:
-    id: "sound-toggle"
-
-# Turn off speech
-- tapOn:
-    id: "speech-toggle"
-
-# Turn dark mode on
+# Turn on dark-mode
 - tapOn:
     id: "dark-mode-toggle"
 
-# exit settings
+# Turn off sound toggle
 - tapOn:
-    point: "9%,8%"
+    id: "sound-toggle"
 
-# exit settings
+# Turn off speech feedback
 - tapOn:
-    point: "9%,8%"
+    id: "speech-toggle"
 
-# Show no feedback
-- tapOn: "1 Month"
-
-# Show home dark mode
+# Return to calendar page
 - tapOn:
-    point: "9%,8%"
+    id: "arrowBack"
 
-# Show map dark mode
+# SHow feedback
+- tapOn: " Clear History"
+
+# Navigate back to settings page
 - tapOn:
-    id: "loyolaButton"
+    id: "settings"
+
+# Turn off vibration feedback
+- tapOn:
+    id: "vibration-toggle"
+
+# Turn on sound feedback
+- tapOn:
+    id: "sound-toggle"
+
+# Return to calendar page
+- tapOn:
+    id: "arrowBack"
+
+# SHow sound feedback
+- tapOn: " Clear History"
+
+# Navigate back to settings page
+- tapOn:
+    id: "settings"
+
+# Turn off sound feedback
+- tapOn:
+    id: "sound-toggle"
+
+# Turn on speech feedback
+- tapOn:
+    id: "speech-toggle"
+
+# Return to calendar page
+- tapOn:
+    id: "arrowBack"
+
+# Show calendar feedback
+- tapOn: " Clear History"
+
+# Navigate Back home and show dark home page
+- tapOn:
+    id: "homeButton"
+

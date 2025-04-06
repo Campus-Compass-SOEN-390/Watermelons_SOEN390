@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Video } from 'expo-av';
@@ -10,25 +10,6 @@ export default function SmartNavigationInfoPage() {
 
   return (
     <View style={styles.container}>
-      {/* Header Icons */}
-      <View style={styles.topNav}>
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={() => router.push('/')}
-          accessibilityRole="button"
-          testID="homeButton"
-        >
-          <Ionicons name="home" size={24} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={() => router.push('/screens/SettingsPage')}
-          accessibilityRole="button"
-          testID="settingsButton"
-        >
-          <Ionicons name="settings" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
 
       {/* Content */}
       <ScrollView contentContainerStyle={styles.scroll}>

@@ -6,6 +6,7 @@ import {
   FONT_SIZE_3,
   FONT_SIZE_4,
   FONT_SIZE_5,
+  COLORS,
 } from "./constants";
 
 // Set these variables as needed (or import them from a config)
@@ -95,7 +96,7 @@ export const createOutdoorMapStyles = (theme) => {
       color: theme.text,
     },
     closeButton: {
-      backgroundColor: "#ff5252",
+      backgroundColor: COLORS.RED_CLOSE_BUTTON,
       padding: 8,
       borderRadius: 20,
       width: 30,
@@ -104,7 +105,7 @@ export const createOutdoorMapStyles = (theme) => {
       justifyContent: "center",
     },
     closeButtonText: {
-      color: "white",
+      color: COLORS.WHITE,
       fontWeight: "bold",
       fontSize: FONT_SIZE_3,
     },
@@ -124,7 +125,7 @@ export const createOutdoorMapStyles = (theme) => {
       marginBottom: 10,
     },
     switchButtonText: {
-      fontSize: 14,
+      fontSize: FONT_SIZE_2,
       color: theme.text,
       fontWeight: "bold",
       // Add text shadow for better visibility
@@ -177,11 +178,11 @@ export const createOutdoorMapStyles = (theme) => {
     annotationText: {
       fontWeight: "bold",
       textAlign: "center",
-      color: theme.isDarkMode ? "#FFFFFF" : "#000000",
+      color: theme.isDarkMode ? COLORS.WHITE : COLORS.BLACK_OR_SHADOW,
       backgroundColor: theme.isDarkMode
         ? "rgba(40, 40, 40, 0.8)"
         : "rgba(255, 255, 255, 0.8)",
-      fontSize: 14,
+      fontSize: FONT_SIZE_2,
       paddingHorizontal: 6,
       paddingVertical: 3,
       borderRadius: 4,
@@ -254,20 +255,20 @@ export const createOutdoorMapStyles = (theme) => {
 
     footerText: {
       marginLeft: 30,
-      fontSize: 16,
+      fontSize: FONT_SIZE_3,
       fontWeight: "bold",
       color: theme.text,
     },
     stepsButton: {
-      backgroundColor: theme.isDarkMode ? "#5D5E66" : "#393a41",
+      backgroundColor: theme.isDarkMode ? COLORS.DARK_MODE_LIGHT_GREY : COLORS.DARK_GREY_TITLE,
       padding: 10,
       paddingHorizontal: 20,
       borderRadius: 10,
       marginHorizontal: 10,
     },
     footerButtonText: {
-      color: "#FFFFFF",
-      fontSize: 14,
+      color: COLORS.WHITE,
+      fontSize: FONT_SIZE_2,
       fontWeight: "bold",
     },
 
@@ -281,13 +282,13 @@ export const createOutdoorMapStyles = (theme) => {
       borderBottomColor: theme.borderColor,
     },
     stepText: {
-      fontSize: 16,
+      fontSize: FONT_SIZE_3,
       fontWeight: "bold",
       color: theme.text,
     },
     stepDistance: {
-      fontSize: 14,
-      color: theme.isDarkMode ? "#bbbbbb" : "gray",
+      fontSize: FONT_SIZE_2,
+      color: theme.isDarkMode ? COLORS.LIGHT_GREY : "gray",
     },
     cancelButtonContainer: {
       position: "absolute",
@@ -300,12 +301,12 @@ export const createOutdoorMapStyles = (theme) => {
 
 // Default export for backward compatibility
 export default createOutdoorMapStyles({
-  background: "#f5fcff",
-  cardBackground: "#FFFFFF",
-  buttonBackground: "#922338",
-  buttonText: "#FFFFFF",
-  text: "#333333",
-  borderColor: "#dddddd",
-  shadowColor: "#000000",
+  background: COLORS.OFF_WHITE,
+  cardBackground: COLORS.WHITE,
+  buttonBackground: COLORS.CONCORDIA_RED,
+  buttonText: COLORS.WHITE,
+  text: COLORS.DARK_GREY_TITLE,
+  borderColor: COLORS.LIGHT_GREY_INPUT_BOXES,
+  shadowColor: COLORS.BLACK_OR_SHADOW,
   isDarkMode: false,
 });

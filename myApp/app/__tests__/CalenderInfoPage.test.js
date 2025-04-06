@@ -42,17 +42,5 @@ describe('CalenderInfoPage', () => {
     fireEvent.press(getByTestId('next-button'));
     expect(mockPush).toHaveBeenCalledWith('/screens/SmartNavigationInfoPage');
   });
-
-  it('has working header navigation buttons', () => {
-    const { getAllByRole } = render(<CalenderInfoPage />);
-    const buttons = getAllByRole('button');
-
-    // Home button (first in header)
-    fireEvent.press(buttons[0]);
-    expect(mockPush).toHaveBeenCalledWith('/');
-
-    // Settings button (second in header)
-    fireEvent.press(buttons[1]);
-    expect(mockPush).toHaveBeenCalledWith('/screens/SettingsPage');
-  });
+  
 });

@@ -4,18 +4,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter, usePathname } from "expo-router";
 import { ThemeContext } from "../context/ThemeContext";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
-
 export default function HeaderButtons() {
   const router = useRouter();
   const pathname = usePathname();
   const { handleButtonPress } = useButtonInteraction();
-
   // Get theme context properly
   const { theme, isDarkMode } = useContext(ThemeContext);
-
   const isHome = pathname === "/";
   const isSettings = pathname === "/screens/SettingsPage";
-
   // Create dynamic styles based on theme
   const dynamicStyles = StyleSheet.create({
     headerButtons: {
@@ -30,7 +26,6 @@ export default function HeaderButtons() {
       zIndex: 100,
     },
   });
-
   return (
     <View style={styles.topNav}>
       {/* Left Slot (Home or Back or Placeholder) */}
@@ -48,6 +43,7 @@ export default function HeaderButtons() {
                   name="arrow-back"
                   size={24}
                   color={theme.iconColor || "#FFFFFF"}
+                  testID="arrowBack"
                 />
               </TouchableOpacity>
             );
@@ -63,6 +59,7 @@ export default function HeaderButtons() {
                   name="home"
                   size={24}
                   color={theme.iconColor || "#FFFFFF"}
+                  testID="homeButton"
                 />
               </TouchableOpacity>
             );
@@ -70,9 +67,7 @@ export default function HeaderButtons() {
           return null;
         })()}
       </View>
-
       <View style={{ flex: 1 }} />
-
       {/* Right Slot (Settings only) - removed theme toggle */}
       <View style={styles.rightButtons}>
         {/* Settings button (only shown when not on Settings page) */}
@@ -81,7 +76,6 @@ export default function HeaderButtons() {
             style={dynamicStyles.headerButtons}
             onPress={() => {
               handleButtonPress("/screens/SettingsPage", "Opening settings");
-              router.push("/screens/SettingsPage");
             }}
           >
             <Ionicons
@@ -96,7 +90,6 @@ export default function HeaderButtons() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   topNav: {
     position: "absolute",
@@ -105,7 +98,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     marginBottom: 12,
+    padding: 35,
     paddingTop: 45,
+  },
+  headerButtons: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 100,
   },
   rightButtons: {
     flexDirection: "row",

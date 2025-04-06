@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { COLORS } from "./constants";
 
 // Tab bar transparency - adjust this value between 0 and 1
 const tabBarTransparency = 1;
@@ -9,7 +10,7 @@ export default StyleSheet.create({
     backgroundColor: `rgba(255, 255, 255, ${tabBarTransparency})`,
     borderRadius: 30,
     borderTopWidth: 0,
-    shadowColor: "#000",
+    shadowColor: COLORS.BLACK_OR_SHADOW,
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.5,
     shadowRadius: 5,

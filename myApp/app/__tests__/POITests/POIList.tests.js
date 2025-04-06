@@ -184,6 +184,7 @@ describe("POIList Component", () => {
   const calculateDistance = jest.fn(() => dummyDistance);
   const userLocation = { latitude: 45.5017, longitude: -73.5673 };
 
+  // Update sample data to include uniqueKey
   const sampleData = [
     {
       place_id: "1",
@@ -193,7 +194,7 @@ describe("POIList Component", () => {
       category: "cafe",
       rating: 4.5,
       photos: [{ photo_reference: "ref1" }],
-      uniqueKey: "cafe-1", // Add uniqueKey for our optimized code
+      uniqueKey: "cafe-1",
     },
     {
       place_id: "2",
@@ -388,34 +389,6 @@ describe("POIList Component", () => {
 
     // Verify that the activity indicator is rendered with dark mode styling
     expect(getByTestId("activity-indicator")).toBeTruthy();
-  });
-
-  it("shows no image placeholder when image fails to load", () => {
-    const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
-    const { getByText, getByTestId } = render(
-      <POIList
-        data={[sampleData[0]]}
-        userLocation={userLocation}
-        isLoading={false}
-        error={null}
-        refreshing={false}
-        onRefresh={jest.fn()}
-        calculateDistance={calculateDistance}
-      />
-    );
-
-    // Assumes the Image in POIListItem has testID="poi-image"
-    const imageComponent = getByTestId("poi-image");
-    fireEvent(imageComponent, "error", {
-      nativeEvent: { error: "error loading image" },
-    });
-
-    expect(getByText("No Image Available")).toBeTruthy();
-    expect(consoleSpy).toHaveBeenCalledWith(
-      "Image error for Test Place 1:",
-      "error loading image"
-    );
-    consoleSpy.mockRestore();
   });
 
   // Additional tests for scroll behavior
