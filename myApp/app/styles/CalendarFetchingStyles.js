@@ -55,7 +55,7 @@ export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
       marginBottom: 10,
       fontSize: FONT_SIZE_3,
       backgroundColor: isDarkMode ? "rgba(51, 51, 51, 0.8)" : COLORS.CONCORDIA_RED,
-      color: isDarkMode ? COLORS.WHITE : collectRoutesUsingEdgeRuntime.DARK_GREY_TITLE,
+      color: isDarkMode ? COLORS.WHITE : COLORS.DARK_GREY_TITLE,
     },
     connectButton: {
       backgroundColor: COLORS.CONCORDIA_RED,
