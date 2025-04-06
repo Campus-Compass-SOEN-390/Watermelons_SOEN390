@@ -139,7 +139,7 @@ const MapDirections: React.FC<Props> = ({
   if (!origin || !destination || routes.length === 0) return null;
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1 }} testID="map-container">
       <Mapbox.Camera ref={cameraRef} />
       
       {/*Render all route options, alternatives are displayed more transparently*/}

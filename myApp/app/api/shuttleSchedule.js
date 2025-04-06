@@ -26,10 +26,6 @@ export const fetchAllShuttleSchedules = async () => getAllShuttleSchedules();
  * In test mode, returns a mock schedule that always has shuttles available.
  */
 export const fetchShuttleScheduleByDay = async (day) => {
-  if (TEST_MODE) {
-    console.log("[TEST_MODE] Returning mock shuttle schedule.");
-    return getMockSchedule();
-  }
 
   try {
     return getShuttleScheduleByDay(day);

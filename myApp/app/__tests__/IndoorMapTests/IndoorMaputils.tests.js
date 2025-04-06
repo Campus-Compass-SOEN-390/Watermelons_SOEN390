@@ -2,10 +2,17 @@ import {
     handleIndoorBuildingSelect, 
     handleClearIndoorMap, 
     convertCoordinates, 
-    calculateCentroid 
+    calculateCentroid,
+    extractBuildingPrefix,
+    selectBuildingFromClassroom,
+    parseClassroomLocation 
   } from "../../utils/IndoorMapUtils"; 
+
+  
   
   describe("Indoor Map Utility Functions", () => {
+
+    
     
     describe("convertCoordinates", () => {
       it("converts latitude/longitude objects to [lng, lat] format", () => {
@@ -80,7 +87,7 @@ import {
       });*/
     });
   
-    describe("handleClearIndoorMap", () => {
+  describe("handleClearIndoorMap", () => {
       let updateSelectedIndoorBuilding, updateIsExpanded, setSelectedFloor, mapRef;
   
       beforeEach(() => {
@@ -117,4 +124,79 @@ import {
           animationDuration: 1000
         });
       });
+
+      it("extracts the building prefix from a classroom name", () => {
+        expect(extractBuildingPrefix("H101")).toEqual("H");
+        expect(extractBuildingPrefix("B203")).toEqual("B");
+        expect(extractBuildingPrefix("G123A")).toEqual("G");
+      });
+
+      describe("selectBuildingFromClassroom", () => {
+        const mockBuildings = [
+          { name: "H Building" },
+          { name: "B Building" },
+          { name: "G Building" }
+        ];
+        const mockUpdateSelectedIndoorBuilding = jest.fn();
+        const mockSetSelectedFloor = jest.fn();
+      
+        beforeEach(() => {
+          jest.clearAllMocks();
+        });
+      
+        it("does nothing when classroom is undefined", () => {
+          selectBuildingFromClassroom(undefined, mockBuildings, mockUpdateSelectedIndoorBuilding, mockSetSelectedFloor);
+          expect(mockUpdateSelectedIndoorBuilding).not.toHaveBeenCalled();
+          expect(mockSetSelectedFloor).not.toHaveBeenCalled();
+        });
+      
+        it("does nothing when classroom is null", () => {
+          selectBuildingFromClassroom(null, mockBuildings, mockUpdateSelectedIndoorBuilding, mockSetSelectedFloor);
+          expect(mockUpdateSelectedIndoorBuilding).not.toHaveBeenCalled();
+          expect(mockSetSelectedFloor).not.toHaveBeenCalled();
+        });
+      
+        it("does nothing when no matching building is found", () => {
+          selectBuildingFromClassroom("X101", mockBuildings, mockUpdateSelectedIndoorBuilding, mockSetSelectedFloor);
+          expect(mockUpdateSelectedIndoorBuilding).not.toHaveBeenCalled();
+          expect(mockSetSelectedFloor).not.toHaveBeenCalled();
+        });
+      
+        it("selects the correct building and sets default floor when match is found", () => {
+          selectBuildingFromClassroom("H101", mockBuildings, mockUpdateSelectedIndoorBuilding, mockSetSelectedFloor);
+          expect(mockUpdateSelectedIndoorBuilding).toHaveBeenCalledWith({ name: "H Building" });
+          expect(mockSetSelectedFloor).toHaveBeenCalledWith("1");
+        });
+  
+      });
+
+      describe("parseClassroomLocation", () => {
+        it("should parse standard classroom format", () => {
+          expect(parseClassroomLocation("H101")).toEqual({ buildingName: "H", floor: 1 });
+          expect(parseClassroomLocation("B203")).toEqual({ buildingName: "B", floor: 2 });
+          expect(parseClassroomLocation("G123A")).toEqual({ buildingName: "G", floor: 1 });
+        });
+      
+        it("should handle multi-letter building names", () => {
+          expect(parseClassroomLocation("ABC101")).toEqual({ buildingName: "ABC", floor: 1 });
+          expect(parseClassroomLocation("XYZ305")).toEqual({ buildingName: "XYZ", floor: 3 });
+        });
+      
+        it("should handle the MB building special case", () => {
+          expect(parseClassroomLocation("MBS2")).toEqual({ buildingName: "MB", floor: -2 });
+          expect(parseClassroomLocation("MB101")).toEqual({ buildingName: "MB", floor: 1 });
+          expect(parseClassroomLocation("MB201")).toEqual({ buildingName: "MB", floor: 2 });
+        });
+      
+        it("should extract correct floor from room number", () => {
+          expect(parseClassroomLocation("H101")).toEqual({ buildingName: "H", floor: 1 });
+          expect(parseClassroomLocation("H203")).toEqual({ buildingName: "H", floor: 2 });
+          expect(parseClassroomLocation("H305")).toEqual({ buildingName: "H", floor: 3 });
+          expect(parseClassroomLocation("H400")).toEqual({ buildingName: "H", floor: 4 });
+        });
+      });
+      
     });  
+
+
+  
