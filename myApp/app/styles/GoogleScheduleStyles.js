@@ -138,7 +138,7 @@ const createGoogleScheduleStyles = ({ isDarkMode, theme }) => {
     },
     nextClassInfoText: {
       fontSize: FONT_SIZE_2,
-      color: COLORS.WHITE, // Always white text in dark container
+      color: isDarkMode ? COLORS.WHITE : COLORS.DARK_GREY_TITLE, // Always white text in dark container
       textAlign: "center",
       marginBottom: 12,
       fontWeight: "500",
