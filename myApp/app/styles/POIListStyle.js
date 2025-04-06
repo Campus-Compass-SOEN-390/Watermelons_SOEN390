@@ -7,16 +7,28 @@ import {
   COLORS,
 } from "./constants";
 
+// Helper function to get theme-aware colors
+const getThemeColor = (isDarkMode, theme, lightColor, darkColor) => {
+  return isDarkMode ? theme?.[darkColor] || darkColor : theme?.[lightColor] || lightColor;
+};
+
+// Helper function for shadow styles
+const getShadowStyle = (isDarkMode, shadowColor) => ({
+  shadowColor: shadowColor,
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: isDarkMode ? 0.4 : 0.2,
+  shadowRadius: 3,
+  elevation: 3,
+});
+
 // Create theme-aware styles
 const createPOIListStyles = ({ isDarkMode, theme }) => {
   // Theme properties with defaults
   const primaryColor = theme?.buttonBackground || COLORS.CONCORDIA_RED; // App's primary color
-  const backgroundColor = isDarkMode ? theme?.background || COLORS.LESS_THAN_BLACK : COLORS.WHITE;
-  const cardBackground = isDarkMode
-    ? theme?.cardBackground || COLORS.DARK_MODE_DEEP_GREY
-    : COLORS.WHITE;
-  const textColor = isDarkMode ? theme?.text || COLORS.WHITE : COLORS.DARK_GREY_TITLE;
-  const subTextColor = isDarkMode ? theme?.subText || COLORS.LIGHT_GREY : COLORS.DARK_MODE_LIGHT_GREY;
+  const backgroundColor = getThemeColor(isDarkMode, theme, COLORS.WHITE, COLORS.LESS_THAN_BLACK);
+  const cardBackground = getThemeColor(isDarkMode, theme, COLORS.WHITE, COLORS.DARK_MODE_DEEP_GREY);
+  const textColor = getThemeColor(isDarkMode, theme, COLORS.DARK_GREY_TITLE, COLORS.WHITE);
+  const subTextColor = getThemeColor(isDarkMode, theme, COLORS.DARK_MODE_LIGHT_GREY, COLORS.LIGHT_GREY);
   const placeholderColor = isDarkMode ? COLORS.DARK_MODE_GREY : COLORS.LIGHT_GREY_INPUT_BOXES;
   const placeholderTextColor = isDarkMode ? COLORS.LIGHT_GREY : "#888";
   const shadowColor = COLORS.BLACK_OR_SHADOW;
@@ -46,11 +58,7 @@ const createPOIListStyles = ({ isDarkMode, theme }) => {
       paddingHorizontal: 12,
       paddingVertical: 8,
       borderRadius: 20,
-      shadowColor: shadowColor,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: isDarkMode ? 0.4 : 0.2,
-      shadowRadius: 3,
-      elevation: 3,
+      ...getShadowStyle(isDarkMode, shadowColor),
     },
     retryButton: {
       flexDirection: "row",
@@ -59,11 +67,7 @@ const createPOIListStyles = ({ isDarkMode, theme }) => {
       paddingHorizontal: 20,
       paddingVertical: 12,
       borderRadius: 20,
-      shadowColor: shadowColor,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: isDarkMode ? 0.4 : 0.2,
-      shadowRadius: 3,
-      elevation: 3,
+      ...getShadowStyle(isDarkMode, shadowColor),
     },
     filterButtonText: {
       color: COLORS.WHITE,
@@ -85,11 +89,7 @@ const createPOIListStyles = ({ isDarkMode, theme }) => {
       backgroundColor: cardBackground,
       borderRadius: 28,
       marginVertical: 8,
-      shadowColor: shadowColor,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: isDarkMode ? 0.4 : 0.2,
-      shadowRadius: 5,
-      elevation: 5,
+      ...getShadowStyle(isDarkMode, shadowColor),
       overflow: "hidden",
     },
     poiContent: {
