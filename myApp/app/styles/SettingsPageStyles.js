@@ -56,7 +56,8 @@ export const createSettingsPageStyles = ({ theme, isDarkMode }) => {
 export const styles = StyleSheet.create({
   container: {
     padding: 20,
-    gap: 20,
+    paddingTop: 100,
+    gap: 20
   },
   title: {
     fontSize: 26,
