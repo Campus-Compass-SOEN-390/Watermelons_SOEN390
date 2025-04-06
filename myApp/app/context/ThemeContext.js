@@ -1,8 +1,9 @@
 // app/myApp/context/ThemeContext.js
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useMemo } from "react";
 import { useColorScheme } from "react-native";
 import { lightTheme, darkTheme } from "../constants/themes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import PropTypes from "prop-types";
 
 export const ThemeContext = createContext();
 
@@ -50,9 +51,15 @@ export const ThemeProvider = ({ children }) => {
     }
   };
 
+  const contextValue = useMemo(() => ({ theme, isDarkMode, toggleTheme }), [theme, isDarkMode, toggleTheme]);
+
   return (
-    <ThemeContext.Provider value={{ theme, isDarkMode, toggleTheme }}>
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );
+};
+
+ThemeProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
