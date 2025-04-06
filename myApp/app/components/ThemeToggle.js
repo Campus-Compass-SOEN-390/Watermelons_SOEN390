@@ -44,7 +44,7 @@ const ThemeToggle = ({ style }) => {
 };
 
 ThemeToggle.propTypes = {
-  style: PropTypes.object,
+  style: PropTypes.object, // Ensure 'style' is validated as a prop
 };
 
 export default ThemeToggle;
