@@ -234,44 +234,57 @@ const createPOIListStyles = ({ isDarkMode, theme }) => {
       marginLeft: 8,
       fontSize: FONT_SIZE_2,
     },
-      // Footer component styles
-  footerContainer: {
-    padding: 16,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  footerText: {
-    fontSize: FONT_SIZE_2,
-    color: COLORS.DARK_MODE_LIGHT_GREY,
-  },
-  // Scroll to top button styles
-  scrollTopButton: {
-    position: 'absolute',
-    bottom: 90, // Position above tab bar
-    right: 20,
-    backgroundColor: COLORS.CONCORDIA_RED, // Match app's primary color
-    borderRadius: 30,
-    width: 50,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: COLORS.BLACK_OR_SHADOW,
-    shadowOffset: {
-      width: 0,
-      height: 2,
+    // Footer component styles
+    footerContainer: {
+      padding: 16,
+      alignItems: "center",
+      justifyContent: "center",
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    zIndex: 100,
-  },
-  scrollTopButtonTouchable: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+    footerText: {
+      fontSize: FONT_SIZE_2,
+      color: COLORS.DARK_MODE_LIGHT_GREY,
+    },
+    // Scroll to top button styles
+    scrollTopButton: {
+      position: 'absolute',
+      bottom: 90, // Position above tab bar
+      right: 20,
+      backgroundColor: COLORS.CONCORDIA_RED, // Match app's primary color
+      borderRadius: 30,
+      width: 50,
+      height: 50,
+      justifyContent: 'center',
+      alignItems: 'center',
+      shadowColor: COLORS.BLACK_OR_SHADOW,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+      zIndex: 100,
+    },
+    scrollTopButtonTouchable: {
+      width: '100%',
+      height: '100%',
+      borderRadius: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+
+    // Placeholder for loading state
+    placeholderContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: backgroundColor,
+    },
+    placeholderText: {
+      fontSize: FONT_SIZE_3,
+      color: subTextColor,
+      marginTop: 12,
+    },
   });
 };
 

@@ -418,7 +418,7 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
 export default createStartAndDestinationStyles({
   cardBackground: COLORS.WHITE,
   text: COLORS.BLACK_OR_SHADOW,
-  buttonBackground: COLORS.OFF_WHITE,
+  buttonBackground: COLORS.CONCORDIA_RED,
   buttonText: COLORS.BLACK_OR_SHADOW,
   inputBackground: COLORS.OFF_WHITE,
   borderColor: COLORS.LIGHT_GREY_INPUT_BOXES,

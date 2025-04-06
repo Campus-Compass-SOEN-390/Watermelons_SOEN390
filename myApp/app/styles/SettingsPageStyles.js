@@ -1,11 +1,12 @@
 import { StyleSheet } from "react-native";
-import { COLORS, FONT_SIZE_4, FONT_SIZE_5 } from "./constants";
+import { COLORS } from "./constants";
 
 // Create a function that returns theme-dependent styles
 export const createSettingsPageStyles = ({ theme, isDarkMode }) => {
   return StyleSheet.create({
     container: {
       flex: 1,
+      paddingTop: 70,
       padding: 20,
       gap: 20,
       backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.WHITE,
@@ -19,7 +20,7 @@ export const createSettingsPageStyles = ({ theme, isDarkMode }) => {
     },
     subtitle: {
       color: isDarkMode ? COLORS.LIGHT_GREY : COLORS.DARK_MODE_LIGHT_GREY,
-      fontSize: FONT_SIZE_5,
+      fontSize: 20,
       marginBottom: 10,
     },
     settingRow: {
@@ -33,7 +34,7 @@ export const createSettingsPageStyles = ({ theme, isDarkMode }) => {
       elevation: 3, // Add shadow effect for elevation
     },
     settingLabel: {
-      fontSize: FONT_SIZE_4,
+      fontSize: 18,
       fontWeight: "500",
       color: isDarkMode ? COLORS.WHITE : COLORS.DARK_GREY_TITLE,
       marginLeft: 15,
@@ -48,7 +49,7 @@ export const createSettingsPageStyles = ({ theme, isDarkMode }) => {
       height: 30,
       marginRight: 12,
       tintColor: isDarkMode ? COLORS.WHITE : undefined,
-    },
+    }
   });
 };
 
@@ -62,11 +63,11 @@ export const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: "bold",
     marginBottom: 20,
-    color: COLORS.DARK_GREY_TITLE,
+    color: "#333",
   },
   subtitle: {
     color: COLORS.DARK_MODE_LIGHT_GREY,
-    fontSize: FONT_SIZE_5,
+    fontSize: 20,
     marginBottom: 10,
   },
   settingRow: {
@@ -80,7 +81,7 @@ export const styles = StyleSheet.create({
     elevation: 3, // Add shadow effect for elevation
   },
   settingLabel: {
-    fontSize: FONT_SIZE_4,
+    fontSize: 18,
     fontWeight: "500",
     color: COLORS.DARK_GREY_TITLE,
   },

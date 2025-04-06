@@ -92,18 +92,18 @@ export const createHomePageStyles = (theme) => {
       elevation: 5,
     },
     infoButton: {
-        position: 'absolute',
-        bottom: 20,
-        right: 20,
-        backgroundColor: 'rgba(0, 0, 0, 0.6)',
-        borderRadius: 24,
-        width: 48,
-        height: 48,
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 10,
-      },
-        
+      position: "absolute",
+      bottom: 20,
+      right: 20,
+      backgroundColor: "rgba(0, 0, 0, 0.6)",
+      borderRadius: 24,
+      width: 48,
+      height: 48,
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 10,
+    },
+
     buttonText: {
       color: theme.text,
       textAlign: "center",
@@ -151,7 +151,7 @@ export const createHomePageStyles = (theme) => {
 
 // Export a default version for backward compatibility
 export const homepageStyles = createHomePageStyles({
-  background: COLORS.OFF_WHITE,
+  background: COLORS.CONCORDIA_RED,
   cardBackground: COLORS.WHITE,
   buttonBackground: COLORS.CONCORDIA_RED,
   buttonText: COLORS.WHITE,

@@ -5,14 +5,14 @@ import {
   FONT_SIZE_3,
   FONT_SIZE_4,
   FONT_SIZE_5,
-  COLORS,
+  COLORS
 } from "./constants";
 
 // Create a function that generates styles based on theme and mode
 export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
   return StyleSheet.create({
     container: {
-      backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.WHITE,
+      backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.OFF_WHITE,
       justifyContent: "center",
       flex: 1,
       paddingTop: 5,
@@ -54,8 +54,8 @@ export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
       paddingHorizontal: 15,
       marginBottom: 10,
       fontSize: FONT_SIZE_3,
-      backgroundColor: isDarkMode ? "rgba(51, 51, 51, 0.8)" : COLORS.OFF_WHITE,
-      color: isDarkMode ? COLORS.WHITE : COLORS.DARK_GREY_TITLE,
+      backgroundColor: isDarkMode ? "rgba(51, 51, 51, 0.8)" : COLORS.CONCORDIA_RED,
+      color: isDarkMode ? COLORS.WHITE : collectRoutesUsingEdgeRuntime.DARK_GREY_TITLE,
     },
     connectButton: {
       backgroundColor: COLORS.CONCORDIA_RED,
@@ -68,7 +68,7 @@ export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
       bottom: 55,
     },
     buttonText: {
-      color: "white",
+      color: COLORS.WHITE,
       fontSize: FONT_SIZE_4,
       fontWeight: "bold",
     },
@@ -92,7 +92,7 @@ export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
       marginTop: 10,
       fontSize: FONT_SIZE_3,
       textAlign: "center",
-      color: isDarkMode ? "rgba(255, 255, 255, 0.7)" : COLORS.DARK_GREY_TITLE,
+      color: isDarkMode ? "rgba(255, 255, 255, 0.7)" : COLORS.DARK_MODE_LIGHT_GREY,
     },
 
     // --- Event Item Styles ---
@@ -110,7 +110,7 @@ export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
     },
     eventDate: {
       fontSize: FONT_SIZE_2,
-      color: isDarkMode ? "rgba(255, 255, 255, 0.7)" : COLORS.DARK_GREY_TITLE,
+      color: isDarkMode ? "rgba(255, 255, 255, 0.7)" : COLORS.DARK_MODE_LIGHT_GREY,
     },
     logo: {
       width: 150,
@@ -146,20 +146,20 @@ export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
       marginTop: 10,
       padding: 10,
       borderRadius: 25,
-      backgroundColor: isDarkMode ? "rgba(70, 70, 70, 0.5)" : COLORS.OFF_WHITE,
+      backgroundColor: isDarkMode ? "rgba(70, 70, 70, 0.5)" : "#f4f4f4",
       borderWidth: 1,
-      borderColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.LIGHT_GREY_INPUT_BOXES,
+      borderColor: isDarkMode ? COLORS.DARK_MODE_LIGHT_GREY : COLORS.LIGHT_GREY_INPUT_BOXES,
       alignSelf: "center",
       position: "absolute",
       bottom: 10,
     },
     clearHistoryText: {
       fontSize: FONT_SIZE_1,
-      color: isDarkMode ? COLORS.WHITE : COLORS.DARK_GREY_TITLE,
+      color: isDarkMode ? COLORS.WHITE : COLORS.DARK_MODE_GREY,
       fontWeight: "500",
     },
     placeholderTextColor: {
-      color: isDarkMode ? "rgba(255, 255, 255, 0.5)" : COLORS.DARK_GREY_TITLE,
+      color: isDarkMode ? "rgba(255, 255, 255, 0.5)" : COLORS.DARK_MODE_LIGHT_GREY,
     },
     calendarHistoryContainer: {
       height: 100,
@@ -170,10 +170,10 @@ export const createCalendarFetchingStyles = ({ theme, isDarkMode }) => {
       backgroundColor: isDarkMode ? "rgba(51, 51, 51, 0.5)" : "transparent",
     },
     noHistoryText: {
-      color: isDarkMode ? "rgba(255, 255, 255, 0.5)" : COLORS.DARK_GREY_TITLE,
+      color: isDarkMode ? "rgba(255, 255, 255, 0.5)" : COLORS.LIGHT_GREY,
       fontStyle: "italic",
     },
-    iconColor: isDarkMode ? "rgba(255, 255, 255, 0.7)" : COLORS.DARK_GREY_TITLE,
+    iconColor: isDarkMode ? "rgba(255, 255, 255, 0.7)" : COLORS.LIGHT_GREY,
 
     // Header buttons styles
     headerContainer: {
@@ -218,7 +218,7 @@ export const calendarFetchingStyles = StyleSheet.create({
     minHeight: 100,
   },
   whiteContainer: {
-    backgroundColor: COLORS.WHITE,
+    backgroundColor: COLORS.CONCORDIA_RED,
     width: "90%",
     height: "90%",
     padding: 20,
