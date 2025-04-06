@@ -6,6 +6,7 @@ PODS:
   - AppAuth/ExternalUserAgent (1.7.6):
     - AppAuth/Core
   - boost (1.84.0)
+  - Clarity (3.0.6)
   - DoubleConversion (1.1.6)
   - EXApplication (6.0.2):
     - ExpoModulesCore
@@ -346,6 +347,7 @@ PODS:
     - React-RCTText (= 0.76.6)
     - React-RCTVibration (= 0.76.6)
   - React-callinvoker (0.76.6)
+  - React-Codegen (0.1.0)
   - React-Core (0.76.6):
     - glog
     - hermes-engine
@@ -1545,6 +1547,14 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-clarity (4.1.8):
+    - Clarity (= 3.0.6)
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
   - react-native-config (1.5.5):
     - react-native-config/App (= 1.5.5)
   - react-native-config/App (1.5.5):
@@ -2286,6 +2296,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
+  - "react-native-clarity (from `../node_modules/@microsoft/react-native-clarity`)"
   - react-native-config (from `../node_modules/react-native-config`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
@@ -2335,6 +2346,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AppAuth
+    - Clarity
     - GoogleSignIn
     - GTMAppAuth
     - GTMSessionFetcher
@@ -2342,6 +2354,7 @@ SPEC REPOS:
     - MapboxCoreMaps
     - MapboxMaps
     - MapboxMobileEvents
+    - React-Codegen
     - SocketRocket
     - Turf
     - UXCam
@@ -2476,6 +2489,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   React-microtasksnativemodule:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
+  react-native-clarity:
+    :path: "../node_modules/@microsoft/react-native-clarity"
   react-native-config:
     :path: "../node_modules/react-native-config"
   react-native-geolocation:
@@ -2570,6 +2585,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   boost: 1dca942403ed9342f98334bf4c3621f011aa7946
+  Clarity: fc3e44b276bf127686b5040871e31e242904977d
   DoubleConversion: f16ae600a246532c4020132d54af21d0ddb2a385
   EXApplication: 4c72f6017a14a65e338c5e74fca418f35141e819
   EXAV: 4c41f0a6ae54a0b96597abc90e37962ab2ee0d85
@@ -2617,6 +2633,7 @@ SPEC CHECKSUMS:
   RCTTypeSafety: 0f96bf6c99efc33eb43352212703854933f22930
   React: 1d3d5bada479030961d513fb11e42659b30e97ff
   React-callinvoker: 682c610b9e9d3b93bd8d0075eacb2e6aa304d3e0
+  React-Codegen: 4b8b4817cea7a54b83851d4c1f91f79aa73de30a
   React-Core: 9f33c0fc7776a5796d4dae09c363bd58e6a27efe
   React-CoreModules: 91afb654834f0a1f48fb26dd1f4d1a1460c44def
   React-cxxreact: c7491114266a70f8215306f1d0c4b54a811e77cf
@@ -2640,6 +2657,7 @@ SPEC CHECKSUMS:
   React-logger: d42a53754a7252cc7a851315f0da2e46b450ea92
   React-Mapbuffer: 89885d1518433a462fe64b68bf5e097997380090
   React-microtasksnativemodule: 36341e09dcd1df535503e6ed2ddf88f10da56d52
+  react-native-clarity: cd7fde0899aca77f29120e0031ea22754006033c
   react-native-config: 644074ab88db883fcfaa584f03520ec29589d7df
   react-native-geolocation: 79343c06877301c296102ceef9d64e7e077a2af0
   react-native-geolocation-service: 32b2c2a3b91e70ce2a8d0c684801aaeb0a07e0ec

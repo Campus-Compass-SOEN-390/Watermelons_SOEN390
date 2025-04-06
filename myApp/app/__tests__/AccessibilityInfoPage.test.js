@@ -35,14 +35,6 @@ describe('AccessibilityInfoPage', () => {
   it('renders and interacts with all navigation buttons', () => {
     const { getByTestId } = render(<AccessibilityInfoPage />);
 
-    // Press home button
-    fireEvent.press(getByTestId('backToHomeButton'));
-    expect(mockPush).toHaveBeenCalledWith('/');
-
-    // Press settings button
-    fireEvent.press(getByTestId('settingsButton'));
-    expect(mockPush).toHaveBeenCalledWith('/screens/SettingsPage');
-
     // Press back button
     fireEvent.press(getByTestId('backButton'));
     expect(mockBack).toHaveBeenCalled();

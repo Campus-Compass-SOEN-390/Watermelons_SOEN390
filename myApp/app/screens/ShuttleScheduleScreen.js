@@ -93,9 +93,6 @@ export default function ShuttleScheduleScreen() {
         return (
             <View style={styles.noServiceContainer}>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-                        <Text style={styles.backText}>✖</Text>
-                    </TouchableOpacity>
                     <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
                 </View>
     
@@ -122,9 +119,6 @@ export default function ShuttleScheduleScreen() {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-                    <Text style={styles.backText}>✖</Text>
-                </TouchableOpacity>
 
                 <Text style={styles.headerTitle}>Shuttle Bus Schedule</Text>
 

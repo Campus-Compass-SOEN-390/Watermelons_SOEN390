@@ -2,7 +2,7 @@ interface StartAndDestinationPointsProps {
   isDisabled: boolean;
   setIsDisabled: (value: boolean) => void;
 }
-import React, { useEffect, useRef, useState, useContext } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -17,11 +17,10 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import "react-native-get-random-values";
 import Constants from "expo-constants";
 import { MaterialIcons } from "@expo/vector-icons";
-import { createStartAndDestinationStyles } from "../styles/StartAndDestinationPointsStyles";
+import styles from "../styles/StartAndDestinationPointsStyles";
 import useLocation from "../hooks/useLocation";
 import Icon from "react-native-vector-icons/Foundation";
 import { useLocationContext } from "../context/LocationContext";
-import { ThemeContext } from "../context/ThemeContext";
 import TravelFacade from "../utils/TravelFacade";
 import { useIndoorMapContext } from "../context/IndoorMapContext";
 import { parseClassroomLocation } from "../utils/IndoorMapUtils";
@@ -50,15 +49,6 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
   isDisabled,
   setIsDisabled,
 }) => {
-  // Get theme context
-  const { theme, isDarkMode } = useContext(ThemeContext);
-
-  // Generate theme-aware styles
-  const styles = createStartAndDestinationStyles({
-    ...theme,
-    isDarkMode,
-  });
-
   const {
     updateOrigin,
     updateDestination,
@@ -78,9 +68,8 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
     travelMode,
     travelTime,
     travelDistance,
-    navType,
   } = useLocationContext();
-  const { updateSelectedFloor, updateSelectedIndoorBuilding } =
+  const {  updateSelectedFloor, updateSelectedIndoorBuilding } =
     useIndoorMapContext();
   const { location } = useLocation();
   const originRef = useRef<any>(null);
@@ -94,6 +83,8 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
   const [loading, setLoading] = useState(false);
   const [routes, setRoutes] = useState<RouteData[] | null>(null);
   const [showFooter, setShowFooter] = useState(false);
+  const [originEnteredAt, setOriginEnteredAt] = useState<number | null>(null);
+  const [destinationEnteredAt, setDestinationEnteredAt] = useState<number | null>(null);
 
   //Fetch alternative routes
 
@@ -364,6 +355,11 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
                 console.log("Hello went thru onPress");
                 originRef.current?.setAddressText(data.description);
                 updateShowTransportation(false);
+                setOriginEnteredAt(Date.now());
+                console.log("Origin_Selected", {
+                  origin: data.description,
+                  timestamp: Date.now(),
+                });
               }
             }}
             textInputProps={{
@@ -375,13 +371,10 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
               },
               onBlur: () => setIsInputFocused(false),
               style: styles.input,
-              placeholderTextColor: isDarkMode ? "#999" : "#666",
             }}
             styles={{
               listView: styles.dropdownFrom,
               row: styles.dropdownItem,
-              description: { color: theme.text },
-              predefinedPlacesDescription: { color: theme.text },
             }}
           />
           {/* My Location Button */}
@@ -406,7 +399,7 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
               }}
               style={styles.myLocationButton}
             >
-              <Icon name="target-two" size={20} color={theme.text} />
+              <Icon name="target-two" size={20} color="black" />
               <Text style={styles.myLocationText}>My Location</Text>
             </TouchableOpacity>
           )}
@@ -432,19 +425,22 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
                 };
                 updateDestination(location, data.description);
                 updateShowTransportation(false);
+                setDestinationEnteredAt(Date.now());
+                console.log("Destination_Selected", {
+                  destination: data.description,
+                  timestamp: Date.now(),
+                });
               }
             }}
             textInputProps={{
               value: destinationText,
+
               onChangeText: handleDestinationInput,
               style: styles.input,
-              placeholderTextColor: isDarkMode ? "#999" : "#666",
             }}
             styles={{
               listView: styles.dropdownTo,
               row: styles.dropdownItem,
-              description: { color: theme.text },
-              predefinedPlacesDescription: { color: theme.text },
             }}
           />
         </View>
@@ -472,14 +468,21 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
                       }
                     }
 
+                    const now = Date.now();
+                    if (originEnteredAt && destinationEnteredAt) {
+                      const timeToDestination = destinationEnteredAt - originEnteredAt;
+                      const timeToGetDirections = now - originEnteredAt;
+                
+                      console.log("Get_Directions_Pressed", {
+                        originToDestination_ms: timeToDestination,
+                        totalTime_ms: timeToGetDirections,
+                        origin: originText,
+                        destination: destinationText,
+                      });
+                    }
+                
                     handleNavType(originText, destinationText);
                     updateShowTransportation(true);
-
-                    if (navType === "indoor") {
-                      updateRenderMap(true);
-                      updateTravelMode("walking");
-                      setShowFooter(true);
-                    }
                   }
                 }}
               >
@@ -561,13 +564,13 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
             <Switch
               value={isDisabled}
               onValueChange={(val) => setIsDisabled(val)}
-              trackColor={{ false: "#ccc", true: theme.buttonBackground }}
+              trackColor={{ false: "#ccc", true: "#922338" }}
               thumbColor="#fff"
             />
             <MaterialIcons
               name="accessible"
               size={24}
-              color={isDisabled ? theme.buttonBackground : "#555"}
+              color={isDisabled ? "#922338" : "#555"}
               style={{ marginLeft: 5 }}
             />
           </View>

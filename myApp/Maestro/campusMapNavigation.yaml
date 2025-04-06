@@ -11,7 +11,8 @@ appId: com.anonymous.myApp
     id: "card:com.anonymous.myApp:sceneID:com.anonymous.myApp-default"
 
 # Close the building pop-up
-- tapOn: " Close"  # Adjust based on where the close button is
+- tapOn:
+    point: "91%,31%"
 
 # Switch to Loyola Campus
 - tapOn: "Switch Campus"
@@ -22,8 +23,7 @@ appId: com.anonymous.myApp
 
 # Close the Loyola building pop-up
 - tapOn:
-    point: 51%,72%
-
+    point: "90%,29%"
 # myLocation
 - tapOn:
     id: "locate-me-button"
@@ -37,4 +37,4 @@ appId: com.anonymous.myApp
 
 # close
 - tapOn:
-    point: "50%,54%"
+   point: 90%,43%

@@ -9,23 +9,6 @@ export default function AccessibilityInfoPage() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.topNav}>
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={() => router.push('/')}
-          testID="backToHomeButton" 
-        >
-          <Ionicons name="home" size={24} color="white" accessibilityRole="button" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={() => router.push('/screens/SettingsPage')}
-          testID="settingsButton"
-        >
-          <Ionicons name="settings" size={24} color="white" accessibilityRole="button" />
-        </TouchableOpacity>
-      </View>
 
       {/* Scrollable Content */}
       <ScrollView contentContainerStyle={styles.scroll}>

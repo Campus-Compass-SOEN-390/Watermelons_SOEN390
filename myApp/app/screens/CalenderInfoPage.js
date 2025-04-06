@@ -9,25 +9,6 @@ export default function CalenderInfoPage() {
 
   return (
     <View style={styles.container}>
-      {/* Header Icons */}
-      <View style={styles.topNav}>
-        <TouchableOpacity
-          accessibilityRole="button"
-          style={styles.iconButton}
-          onPress={() => router.push('/')}
-        >
-          <Ionicons name="home" size={24} color="white" />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          accessibilityRole="button"
-          style={styles.iconButton}
-          onPress={() => router.push('/screens/SettingsPage')}
-        >
-          <Ionicons name="settings" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-
       {/* Content */}
       <ScrollView contentContainerStyle={styles.scroll}>
         <Text style={styles.title}>Google Calendar</Text>
