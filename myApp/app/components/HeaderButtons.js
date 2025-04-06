@@ -88,6 +88,7 @@ export default function HeaderButtons() {
               name="settings"
               size={24}
               color={theme.iconColor || "#FFFFFF"}
+              testID="settings"
             />
           </TouchableOpacity>
         )}

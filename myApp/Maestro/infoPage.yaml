@@ -13,8 +13,6 @@ appId: com.anonymous.myApp
 # Navigate to Smart Navigation
 - tapOn:
     id: "next-button"
-# Wait for video to end
-- waitForAnimationToEnd
 
 # Navigate to Campus Map
 - tapOn:
