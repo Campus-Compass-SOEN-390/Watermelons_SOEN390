@@ -142,25 +142,25 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
     const navigationType = (origin: any, destination: any) => {
       const originBuilding = getBuildingCode(origin);
       const destinationBuilding = getBuildingCode(destination);
-
-      if (
+    
+      const isIndoorNavigation =
         originBuilding &&
         destinationBuilding &&
         buildingCoordinates[String(originBuilding)] &&
-        buildingCoordinates[String(destinationBuilding)]
-      ) {
+        buildingCoordinates[String(destinationBuilding)];
+    
+      if (isIndoorNavigation) {
         return originBuilding === destinationBuilding
           ? "indoor"
           : "indoor-outdoor-indoor";
       }
+    
       if (originBuilding && buildingCoordinates[String(originBuilding)])
         return "indoor-outdoor";
-      if (
-        destinationBuilding &&
-        buildingCoordinates[String(destinationBuilding)]
-      )
+    
+      if (destinationBuilding && buildingCoordinates[String(destinationBuilding)])
         return "outdoor-indoor";
-
+    
       return "outdoor";
     };
     updateNavType(navigationType(originText, destinationText));
