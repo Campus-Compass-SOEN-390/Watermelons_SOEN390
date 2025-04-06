@@ -222,9 +222,9 @@ export default function CalendarFetching() {
                       <Text style={styles.noHistoryText}>No history yet.</Text>
                     ) : (
                       <ScrollView>
-                        {storedCalendarIds.map((item, index) => (
+                        {storedCalendarIds.map((item) => (
                           <TouchableOpacity
-                            key={index}
+                            key={item.id} // Use unique identifier instead of index
                             style={styles.historyItem}
                             onPress={() => {
                               handleButtonPress(null, item.name);
@@ -325,4 +325,4 @@ const convertEventsToCSV = (events) => {
 
   return csvContent;
 };
-export { convertEventsToCSV }; 
+export { convertEventsToCSV };
