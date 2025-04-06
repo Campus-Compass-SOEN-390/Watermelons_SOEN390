@@ -16,6 +16,42 @@ export default function ShuttleInfoPopup({ visible, onClose, shuttleDetails }) {
   // Get appropriate icon color based on theme
   const iconColor = isDarkMode ? theme.text : "#000";
 
+  // Determine the content to display based on shuttleDetails
+  let content;
+  if (shuttleDetails?.error) {
+    content = <Text style={styles.alertText}>{shuttleDetails.error}</Text>;
+  } else if (shuttleDetails) {
+    content = (
+      <>
+        <View style={styles.row}>
+          <MaterialIcons name="schedule" size={18} style={styles.icon} />
+          <Text style={styles.text}>
+            <Text style={styles.boldLabel}>Wait Time: </Text>
+            {formatTime(shuttleDetails.waitTime)}
+          </Text>
+        </View>
+
+        <View style={styles.row}>
+          <MaterialIcons name="commute" size={18} style={styles.icon} />
+          <Text style={styles.text}>
+            <Text style={styles.boldLabel}>Travel Time: </Text>
+            {formatTime(shuttleDetails.shuttleRideTime)}
+          </Text>
+        </View>
+
+        <View style={styles.row}>
+          <MaterialIcons name="timer" size={18} style={styles.icon} />
+          <Text style={styles.text}>
+            <Text style={styles.boldLabel}>Total Time: </Text>
+            {formatTime(shuttleDetails.totalTime)}
+          </Text>
+        </View>
+      </>
+    );
+  } else {
+    content = <Text style={styles.alertText}>No bus available.</Text>;
+  }
+
   return (
     <Modal
       visible={visible}
@@ -43,37 +79,7 @@ export default function ShuttleInfoPopup({ visible, onClose, shuttleDetails }) {
           </View>
 
           {/* Shuttle Details */}
-          {shuttleDetails?.error ? (
-            <Text style={styles.alertText}>{shuttleDetails.error}</Text>
-          ) : shuttleDetails ? (
-            <>
-              <View style={styles.row}>
-                <MaterialIcons name="schedule" size={18} style={styles.icon} />
-                <Text style={styles.text}>
-                  <Text style={styles.boldLabel}>Wait Time: </Text>
-                  {formatTime(shuttleDetails.waitTime)}
-                </Text>
-              </View>
-
-              <View style={styles.row}>
-                <MaterialIcons name="commute" size={18} style={styles.icon} />
-                <Text style={styles.text}>
-                  <Text style={styles.boldLabel}>Travel Time: </Text>
-                  {formatTime(shuttleDetails.shuttleRideTime)}
-                </Text>
-              </View>
-
-              <View style={styles.row}>
-                <MaterialIcons name="timer" size={18} style={styles.icon} />
-                <Text style={styles.text}>
-                  <Text style={styles.boldLabel}>Total Time: </Text>
-                  {formatTime(shuttleDetails.totalTime)}
-                </Text>
-              </View>
-            </>
-          ) : (
-            <Text style={styles.alertText}>No bus available.</Text>
-          )}
+          {content}
         </View>
       </View>
     </Modal>
