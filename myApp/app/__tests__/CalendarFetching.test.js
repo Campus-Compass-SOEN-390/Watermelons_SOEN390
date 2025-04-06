@@ -1,16 +1,8 @@
-<<<<<<< HEAD
-import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { Alert, View, Text } from 'react-native';
-import RNUxcam from 'react-native-ux-cam';
-=======
 import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { Alert } from "react-native";
 import { ThemeContext } from "../context/ThemeContext";
->>>>>>> 12398e9784242475d80f95a34c8e2934be7e7316
 
 // Mock expo-av
 jest.mock("expo-av", () => ({
