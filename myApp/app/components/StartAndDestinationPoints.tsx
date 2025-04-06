@@ -277,57 +277,6 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
     return times[mode] ? `${times[mode]} min` : "N/A";
   };
 
-  const renderRoutesContent = () => {
-    if (loading) {
-      return (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={theme.buttonBackground} />
-          <Text style={styles.loadingText}>Loading routes...</Text>
-        </View>
-      );
-    }
-  
-    if (routes && routes.length > 0) {
-      return (
-        <View style={styles.routesContainer}>
-          {routes
-            .filter((routeData) => routeData.mode === travelMode)
-            .map((routeData) => (
-              <View key={routeData.mode}>
-                {routeData.routes.map((route) => (
-                  <TouchableOpacity
-                    key={`${routeData.mode}-${route.duration}-${route.distance}`}
-                    style={styles.routeCard}
-                    onPress={() => {
-                      handleRouteSelection(routeData.routes.indexOf(route));
-                    }}
-                  >
-                    <Text style={{ color: theme.text }}>
-                      {route.duration} min {"\n"} {route.distance}
-                    </Text>
-                    <TouchableOpacity
-                      style={styles.goButton}
-                      onPress={() => {
-                        handleGoClick();
-                        updateTravelTime(route.duration);
-                        updateTravelDistance(route.distance);
-                      }}
-                    >
-                      <Text style={{ color: isDarkMode ? "#fff" : "#000" }}>
-                        Go
-                      </Text>
-                    </TouchableOpacity>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            ))}
-        </View>
-      );
-    }
-  
-    return <Text style={{ color: theme.text }}>No alternative routes available.</Text>;
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.card}>
@@ -445,115 +394,98 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
           />
         </View>
         {/* Conditional Rendering for Directions Options */}
-        {(() => {
-          let content;
-          if (!showTransportation) {
-            content = (
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  if (origin && destination) {
-                    const parsedLocation = parseClassroomLocation(originText);
+        {!showTransportation ? (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              if (origin && destination) {
+                const parsedLocation = parseClassroomLocation(originText);
 
-                    if (parsedLocation) {
-                      const { buildingName, floor } = parsedLocation;
+                if (parsedLocation) {
+                  const { buildingName, floor } = parsedLocation;
 
-                      const matchedBuilding = buildings.find(
-                        (b) => b.name === buildingName
-                      );
+                  const matchedBuilding = buildings.find(
+                    (b) => b.name === buildingName
+                  );
 
-                      if (matchedBuilding) {
-                        updateSelectedIndoorBuilding(matchedBuilding);
-                        updateSelectedFloor(Number(floor));
-                      }
-                    }
-
-                    const now = Date.now();
-                    if (originEnteredAt && destinationEnteredAt) {
-                      const timeToDestination = destinationEnteredAt - originEnteredAt;
-                      const timeToGetDirections = now - originEnteredAt;
-                
-                      console.log("Get_Directions_Pressed", {
-                        originToDestination_ms: timeToDestination,
-                        totalTime_ms: timeToGetDirections,
-                        origin: originText,
-                        destination: destinationText,
-                      });
-                    }
-                
-                    handleNavType(originText, destinationText);
-                    updateShowTransportation(true);
+                  if (matchedBuilding) {
+                    updateSelectedIndoorBuilding(matchedBuilding);
+                    updateSelectedFloor(Number(floor));
                   }
-                }}
-              >
-                <Text style={styles.buttonText}>Get Directions</Text>
-              </TouchableOpacity>
-            );
-          } else if (navType === "indoor") {
-            content = (
-              <View style={styles.indoorNavigationMessage}>
-                <MaterialIcons name="directions-walk" size={24} color="#922338" />
-                <Text style={styles.indoorNavigationText}>
-                  Walking directions available - follow indoor map path
-                </Text>
+                }
+
+                const now = Date.now();
+                if (originEnteredAt && destinationEnteredAt) {
+                  const timeToDestination = destinationEnteredAt - originEnteredAt;
+                  const timeToGetDirections = now - originEnteredAt;
+            
+                  console.log("Get_Directions_Pressed", {
+                    originToDestination_ms: timeToDestination,
+                    totalTime_ms: timeToGetDirections,
+                    origin: originText,
+                    destination: destinationText,
+                  });
+                }
+
+                handleNavType(originText, destinationText);
+                updateShowTransportation(true);
+              }
+            }}
+          >
+            <Text style={styles.buttonText}>Get Directions</Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.buttonContainer}>
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#922338" />
+                <Text style={styles.loadingText}>Calculating travel times...</Text>
               </View>
-            );
-          } else {
-            content = (
-              <View style={styles.buttonContainer}>
-                {loading ? (
-                  <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color={theme.buttonBackground} />
-                    <Text style={styles.loadingText}>Calculating travel times...</Text>
-                  </View>
-                ) : (
-                  [
-                    { mode: "driving" as const, icon: "directions-car" as const },
-                    { mode: "transit" as const, icon: "directions-bus" as const },
-                    { mode: "walking" as const, icon: "directions-walk" as const },
-                    { mode: "bicycling" as const, icon: "directions-bike" as const },
-                  ].map(({ mode, icon }) => (
-                    <TouchableOpacity
-                      key={mode}
-                      onPress={() => {
-                        if (origin && destination) {
-                          console.log("Get Directions Pressed");
-                          updateRenderMap(true);
-                          updateTravelMode(mode);
-                          updateShowTransportation(true);
-                          setShowFooter(true);
-                        }
-                      }}
-                      style={[
-                        styles.transportButton,
-                        travelMode === mode && styles.selectedButton,
-                        { flexDirection: "row", alignItems: "center" },
-                      ]}
-                    >
-                      <MaterialIcons
-                        name={icon}
-                        size={20}
-                        color={travelMode === mode ? theme.buttonText : theme.text}
-                      />
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          marginTop: 5,
-                          textAlign: "center",
-                          flexWrap: "wrap",
-                          color: travelMode === mode ? theme.buttonText : theme.text,
-                        }}
-                      >
-                        {getTravelTimeText(travelTimes, mode)}
-                      </Text>
-                    </TouchableOpacity>
-                  ))
-                )}
-              </View>
-            );
-          }
-          return content;
-        })()}
+            ) : (
+              [
+                { mode: "driving" as const, icon: "directions-car" as const },
+                { mode: "transit" as const, icon: "directions-bus" as const },
+                { mode: "walking" as const, icon: "directions-walk" as const },
+                { mode: "bicycling" as const, icon: "directions-bike" as const },
+              ].map(({ mode, icon }) => (
+                <TouchableOpacity
+                  key={mode}
+                  onPress={() => {
+                    if (origin && destination) {
+                      console.log("Get Directions Pressed");
+                      updateRenderMap(true);
+                      updateTravelMode(mode);
+                      updateShowTransportation(true);
+                      setShowFooter(true);
+                    }
+                  }}
+                  style={[
+                    styles.transportButton,
+                    travelMode === mode && styles.selectedButton,
+                    { flexDirection: "row", alignItems: "center" }, // Added row layout
+                  ]}
+                >
+                  <MaterialIcons
+                    name={icon}
+                    size={20}
+                    color={travelMode === mode ? "white" : "black"}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      marginTop: 5,
+                      textAlign: "center",
+                      flexWrap: "wrap",
+                      color: travelMode === mode ? "#fff" : "black",
+                    }}
+                  >
+                    {getTravelTimeText(travelTimes, mode)}
+                  </Text>
+                </TouchableOpacity>
+              ))
+            )}
+          </View>
+        )}
       </View>
 
       {/* FOOTER */}
@@ -603,7 +535,46 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
           </TouchableOpacity>
 
           {/* Display Alternative Routes */}
-          {renderRoutesContent()}
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#922338" />
+              <Text style={styles.loadingText}>Loading routes...</Text>
+            </View>
+          ) : routes && routes.length > 0 ? (
+            <View style={styles.routesContainer}>
+              {routes
+                .filter((routeData) => routeData.mode === travelMode)
+                .map((routeData, index) => (
+                  <View key={index}>
+                    {routeData.routes.map((route, i) => (
+                      <TouchableOpacity
+                        key={i}
+                        style={styles.routeCard}
+                        onPress={() => {
+                          handleRouteSelection(i);
+                        }}
+                      >
+                        <Text>
+                          {route.duration} min {"\n"} {route.distance}
+                        </Text>
+                        <TouchableOpacity
+                          style={styles.goButton}
+                          onPress={() => {
+                            handleGoClick();
+                            updateTravelTime(route.duration);
+                            updateTravelDistance(route.distance);
+                          }}
+                        >
+                          <Text>Go</Text>
+                        </TouchableOpacity>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                ))}
+            </View>
+          ) : (
+            <Text>No alternative routes available.</Text>
+          )}
         </View>
       )}
 
