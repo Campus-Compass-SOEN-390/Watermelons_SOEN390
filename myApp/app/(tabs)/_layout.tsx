@@ -5,7 +5,7 @@ import styles from "../styles/LayoutStyles";
 import { LocationProvider } from "../context/LocationContext";
 import { IndoorMapProvider } from "../context/IndoorMapContext";
 import React from "react";
-import HeaderButtons from "../components/HeaderButtons";
+import { COLORS } from "../styles/constants";
 
 interface TabBarIconProps {
   route: any;
@@ -35,7 +35,7 @@ const TabBarIcon: React.FC<TabBarIconProps> = ({ route, focused }) => {
       <Ionicons
         name={iconName as keyof typeof Ionicons.glyphMap}
         size={focused ? 21 : 24}
-        color={focused ? "white" : "grey"}
+        color={focused ? COLORS.WHITE : "grey"}
         style={{ marginLeft: 0, marginTop: focused ? -14 : 0 }}
       />
     </View>
