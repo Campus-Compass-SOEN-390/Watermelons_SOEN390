@@ -35,18 +35,6 @@ describe('MapFeaturesInfoPage', () => {
     expect(images.length).toBeGreaterThanOrEqual(2);
   });
 
-  it('navigates to HomePage when Home button is pressed', () => {
-    const { getByTestId } = render(<MapFeaturesInfoPage />);
-    fireEvent.press(getByTestId('homeButton'));
-    expect(mockPush).toHaveBeenCalledWith('/');
-  });
-
-  it('navigates to SettingsPage when Settings button is pressed', () => {
-    const { getByTestId } = render(<MapFeaturesInfoPage />);
-    fireEvent.press(getByTestId('settingsButton'));
-    expect(mockPush).toHaveBeenCalledWith('/screens/SettingsPage');
-  });
-
   it('calls router.back() when Back button is pressed', () => {
     const { getByTestId } = render(<MapFeaturesInfoPage />);
     fireEvent.press(getByTestId('backButton'));

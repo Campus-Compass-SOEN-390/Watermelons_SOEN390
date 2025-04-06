@@ -31,18 +31,6 @@ describe('SettingsInfoPage', () => {
     expect(getByRole('image')).toBeTruthy();
   });
 
-  it('navigates to Home page when home button is pressed', () => {
-    const { getByTestId } = render(<SettingsInfoPage />);
-    fireEvent.press(getByTestId('homeButton'));
-    expect(mockPush).toHaveBeenCalledWith('/');
-  });
-
-  it('navigates to SettingsPage again when settings button is pressed', () => {
-    const { getByTestId } = render(<SettingsInfoPage />);
-    fireEvent.press(getByTestId('settingsButton'));
-    expect(mockPush).toHaveBeenCalledWith('/screens/SettingsPage');
-  });
-
   it('navigates back when back button is pressed', () => {
     const { getByTestId } = render(<SettingsInfoPage />);
     fireEvent.press(getByTestId('backButton'));

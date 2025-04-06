@@ -1,0 +1,73 @@
+appId: com.anonymous.myApp  
+---
+- launchApp
+
+# Navigate to calendar page
+- tapOn:
+    id: "calendarfetchbutton"
+
+# Navigate to settings page
+- tapOn:
+    id: "settings"
+
+# Turn on dark-mode
+- tapOn:
+    id: "dark-mode-toggle"
+
+# Turn off sound toggle
+- tapOn:
+    id: "sound-toggle"
+
+# Turn off speech feedback
+- tapOn:
+    id: "speech-toggle"
+
+# Return to calendar page
+- tapOn:
+    id: "arrowBack"
+
+# SHow feedback
+- tapOn: " Clear History"
+
+# Navigate back to settings page
+- tapOn:
+    id: "settings"
+
+# Turn off vibration feedback
+- tapOn:
+    id: "vibration-toggle"
+
+# Turn on sound feedback
+- tapOn:
+    id: "sound-toggle"
+
+# Return to calendar page
+- tapOn:
+    id: "arrowBack"
+
+# SHow sound feedback
+- tapOn: " Clear History"
+
+# Navigate back to settings page
+- tapOn:
+    id: "settings"
+
+# Turn off sound feedback
+- tapOn:
+    id: "sound-toggle"
+
+# Turn on speech feedback
+- tapOn:
+    id: "speech-toggle"
+
+# Return to calendar page
+- tapOn:
+    id: "arrowBack"
+
+# Show calendar feedback
+- tapOn: " Clear History"
+
+# Navigate Back home and show dark home page
+- tapOn:
+    id: "homeButton"
+

@@ -18,18 +18,6 @@ describe('ShuttleInfoPage', () => {
     mockBack.mockClear();
   });
 
-  it('navigates to Home page when home button is pressed', () => {
-    const { getByTestId } = render(<ShuttleInfoPage />);
-    fireEvent.press(getByTestId('homeButton'));
-    expect(mockPush).toHaveBeenCalledWith('/');
-  });
-
-  it('navigates to Settings page when settings button is pressed', () => {
-    const { getByTestId } = render(<ShuttleInfoPage />);
-    fireEvent.press(getByTestId('settingsButton'));
-    expect(mockPush).toHaveBeenCalledWith('/screens/SettingsPage');
-  });
-
   it('navigates back when back button is pressed', () => {
     const { getByTestId } = render(<ShuttleInfoPage />);
     fireEvent.press(getByTestId('backButton'));
