@@ -63,6 +63,7 @@ export default function HeaderButtons() {
                   name="home"
                   size={24}
                   color={theme.iconColor || "#FFFFFF"}
+                  testID="homeButton"
                 />
               </TouchableOpacity>
             );
@@ -81,7 +82,6 @@ export default function HeaderButtons() {
             style={dynamicStyles.headerButtons}
             onPress={() => {
               handleButtonPress("/screens/SettingsPage", "Opening settings");
-              router.push("/screens/SettingsPage");
             }}
           >
             <Ionicons
