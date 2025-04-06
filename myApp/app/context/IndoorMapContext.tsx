@@ -14,7 +14,7 @@ interface Building {
 interface IndoorMapContextType {
   isExpanded: boolean;
   selectedIndoorBuilding: Building | null;
-  selectedFloor: number | 1;
+  selectedFloor: number ;
   updateIsExpanded: (setting: boolean) => void;
   updateSelectedIndoorBuilding: (building: Building | null) => void;
   updateSelectedFloor: (floor: number) => void;
