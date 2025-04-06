@@ -167,8 +167,9 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
   };
 
   const getBuildingCode = (room: string) => {
-    const match = room.match(/^[A-Za-z]+/);
-    return match ? match[0] : null;
+    const regex = /^[A-Za-z]+/;
+    const result = regex.exec(room);
+    return result ? result[0] : '';
   };
 
   const buildingCoordinates: Record<

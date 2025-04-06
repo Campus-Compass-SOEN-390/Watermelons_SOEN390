@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { COLORS } from "./constants";
 
 // Create theme-aware styles function
 export const createShuttleScheduleStyles = ({ theme, isDarkMode }) => {
@@ -7,7 +8,7 @@ export const createShuttleScheduleStyles = ({ theme, isDarkMode }) => {
       flex: 1,
       paddingTop: 10, // Reduced to accommodate the HeaderButtons component
       paddingHorizontal: 16,
-      backgroundColor: isDarkMode ? "#333333" : "#fff",
+      backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.WHITE,
     },
     header: {
       flexDirection: "row",
@@ -19,13 +20,13 @@ export const createShuttleScheduleStyles = ({ theme, isDarkMode }) => {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: "#800020", // Burgundy - consistent in both modes
+      backgroundColor: COLORS.CONCORDIA_RED, // Burgundy - consistent in both modes
       justifyContent: "center",
       alignItems: "center",
     },
     backText: {
       fontSize: 20,
-      color: "white",
+      color: COLORS.WHITE,
       fontWeight: "bold",
     },
     headerTitle: {
@@ -33,7 +34,7 @@ export const createShuttleScheduleStyles = ({ theme, isDarkMode }) => {
       fontWeight: "bold",
       textAlign: "center",
       flex: 1,
-      color: isDarkMode ? "#FFFFFF" : "#000000",
+      color: isDarkMode ? COLORS.WHITE : COLORS.BLACK_OR_SHADOW,
       paddingLeft: 30,
       paddingTop: 40
     },
@@ -45,17 +46,17 @@ export const createShuttleScheduleStyles = ({ theme, isDarkMode }) => {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: "#800020",
+      backgroundColor: COLORS.CONCORDIA_RED,
       justifyContent: "center",
       alignItems: "center",
     },
     warningIcon: {
       fontSize: 20,
-      color: "white",
+      color: COLORS.WHITE,
     },
     switchButton: {
       alignSelf: "center",
-      backgroundColor: "#800020",
+      backgroundColor: COLORS.CONCORDIA_RED,
       paddingVertical: 10,
       paddingHorizontal: 20,
       borderRadius: 10,
@@ -63,7 +64,7 @@ export const createShuttleScheduleStyles = ({ theme, isDarkMode }) => {
     },
     switchText: {
       fontSize: 16,
-      color: "white",
+      color: COLORS.WHITE,
       fontWeight: "bold",
     },
     scheduleContainer: {
@@ -74,7 +75,7 @@ export const createShuttleScheduleStyles = ({ theme, isDarkMode }) => {
       fontWeight: "bold",
       textAlign: "center",
       marginBottom: 10,
-      color: isDarkMode ? "#FFFFFF" : "#000000",
+      color: isDarkMode ? COLORS.WHITE : COLORS.BLACK_OR_SHADOW,
     },
     table: {
       flexDirection: "row",
@@ -92,7 +93,7 @@ export const createShuttleScheduleStyles = ({ theme, isDarkMode }) => {
       fontWeight: "bold",
       flex: 1,
       textAlign: "center",
-      color: isDarkMode ? "#FFFFFF" : "#000000",
+      color: isDarkMode ? COLORS.WHITE : COLORS.BLACK_OR_SHADOW,
     },
     tableRow: {
       flexDirection: "row",
@@ -104,7 +105,7 @@ export const createShuttleScheduleStyles = ({ theme, isDarkMode }) => {
       fontSize: 16,
       textAlign: "center",
       flex: 1,
-      color: isDarkMode ? "#FFFFFF" : "#000000",
+      color: isDarkMode ? COLORS.WHITE : COLORS.BLACK_OR_SHADOW,
     },
     highlight: {
       fontWeight: "bold",
@@ -112,13 +113,13 @@ export const createShuttleScheduleStyles = ({ theme, isDarkMode }) => {
     },
     verticalDivider: {
       width: 1,
-      backgroundColor: isDarkMode ? "rgba(255, 255, 255, 0.5)" : "black",
+      backgroundColor: isDarkMode ? "rgba(255, 255, 255, 0.5)" : COLORS.BLACK_OR_SHADOW,
       height: "100%",
       marginHorizontal: 10,
     },
     verticalDividerDashed: {
       width: 1,
-      backgroundColor: isDarkMode ? "rgba(255, 255, 255, 0.5)" : "black",
+      backgroundColor: isDarkMode ? "rgba(255, 255, 255, 0.5)" : COLORS.BLACK_OR_SHADOW,
       height: "100%",
       marginHorizontal: 10,
       borderStyle: "dashed",
@@ -127,7 +128,7 @@ export const createShuttleScheduleStyles = ({ theme, isDarkMode }) => {
       fontSize: 16,
       textAlign: "center",
       marginTop: 20,
-      color: isDarkMode ? "#FF6B6B" : "red",
+      color: isDarkMode ? COLORS.RED_CLOSE_BUTTON : "red",
     },
   });
 };
@@ -138,7 +139,7 @@ export const shuttleScheduleStyles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 16,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.WHITE,
   },
   header: {
     flexDirection: "row",
@@ -150,13 +151,13 @@ export const shuttleScheduleStyles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#800020", // Burgundy
+    backgroundColor: COLORS.CONCORDIA_RED, // Burgundy
     justifyContent: "center",
     alignItems: "center",
   },
   backText: {
     fontSize: 20,
-    color: "white",
+    color: COLORS.WHITE,
     fontWeight: "bold",
   },
   headerTitle: {
@@ -169,17 +170,17 @@ export const shuttleScheduleStyles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#800020",
+    backgroundColor: COLORS.CONCORDIA_RED,
     justifyContent: "center",
     alignItems: "center",
   },
   warningIcon: {
     fontSize: 20,
-    color: "white",
+    color: COLORS.WHITE
   },
   switchButton: {
     alignSelf: "center",
-    backgroundColor: "#800020",
+    backgroundColor: COLORS.CONCORDIA_RED,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
@@ -187,7 +188,7 @@ export const shuttleScheduleStyles = StyleSheet.create({
   },
   switchText: {
     fontSize: 16,
-    color: "white",
+    color: COLORS.WHITE,
     fontWeight: "bold",
   },
   scheduleContainer: {
@@ -230,7 +231,7 @@ export const shuttleScheduleStyles = StyleSheet.create({
   },
   verticalDividerDashed: {
     width: 1,
-    backgroundColor: "black",
+    backgroundColor: COLORS.BLACK_OR_SHADOW,
     height: "100%",
     marginHorizontal: 10,
     borderStyle: "dashed",

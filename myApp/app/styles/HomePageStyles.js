@@ -1,5 +1,5 @@
 import { StyleSheet, Platform } from "react-native";
-import { FONT_SIZE_4 } from "./constants";
+import { FONT_SIZE_4, COLORS } from "./constants";
 
 // Create a function that returns theme-dependent styles
 export const createHomePageStyles = (theme) => {
@@ -8,7 +8,7 @@ export const createHomePageStyles = (theme) => {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: theme.cardBackground,
+      backgroundColor: theme.background,
     },
     logo: {
       width: 150,
@@ -28,7 +28,7 @@ export const createHomePageStyles = (theme) => {
       borderRadius: 20,
       margin: 10,
       //Shadow for iOS
-      shadowColor: theme.shadowColor || "#000",
+      shadowColor: theme.shadowColor || COLORS.BLACK_OR_SHADOW,
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.3,
       shadowRadius: 5,
@@ -46,7 +46,7 @@ export const createHomePageStyles = (theme) => {
       borderRadius: 20,
       margin: 10,
       //Shadow for iOS
-      shadowColor: theme.shadowColor || "#000",
+      shadowColor: theme.shadowColor || COLORS.BLACK_OR_SHADOW,
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.3,
       shadowRadius: 5,
@@ -63,7 +63,7 @@ export const createHomePageStyles = (theme) => {
       height: 60,
       flex: 1,
       //Shadow for iOS
-      shadowColor: theme.shadowColor || "#000",
+      shadowColor: theme.shadowColor || COLORS.BLACK_OR_SHADOW,
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.3,
       shadowRadius: 5,
@@ -84,7 +84,7 @@ export const createHomePageStyles = (theme) => {
       padding: 15,
       marginVertical: 10,
       width: "90%",
-      shadowColor: theme.shadowColor || "#000",
+      shadowColor: theme.shadowColor || COLORS.BLACK_OR_SHADOW,
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.3,
       shadowRadius: 5,
@@ -105,7 +105,7 @@ export const createHomePageStyles = (theme) => {
     },
 
     buttonText: {
-      color: theme.buttonText,
+      color: theme.text,
       textAlign: "center",
       fontSize: FONT_SIZE_4,
       flex: 1,
@@ -140,7 +140,7 @@ export const createHomePageStyles = (theme) => {
       alignItems: "center",
       zIndex: 100,
       // Shadow
-      shadowColor: theme.shadowColor || "#000",
+      shadowColor: theme.shadowColor || COLORS.BLACK_OR_SHADOW,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.3,
       shadowRadius: 3,
@@ -151,12 +151,12 @@ export const createHomePageStyles = (theme) => {
 
 // Export a default version for backward compatibility
 export const homepageStyles = createHomePageStyles({
-  background: "#922338",
-  cardBackground: "#FFFFFF",
-  buttonBackground: "#922338",
-  buttonText: "#FFFFFF",
-  text: "#000000",
-  shadowColor: "#000",
+  background: COLORS.CONCORDIA_RED,
+  cardBackground: COLORS.WHITE,
+  buttonBackground: COLORS.CONCORDIA_RED,
+  buttonText: COLORS.WHITE,
+  text: COLORS.BLACK_OR_SHADOW,
+  shadowColor: COLORS.BLACK_OR_SHADOW,
 });
 
 export default homepageStyles;

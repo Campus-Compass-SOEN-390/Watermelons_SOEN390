@@ -4,24 +4,25 @@ import {
   FONT_SIZE_2,
   FONT_SIZE_3,
   FONT_SIZE_4,
+  COLORS,
 } from "./constants";
 
 // Create theme-aware styles
 const createPOIListStyles = ({ isDarkMode, theme }) => {
   // Theme properties with defaults
-  const primaryColor = theme?.buttonBackground || "#922338"; // App's primary color
-  const backgroundColor = isDarkMode ? theme?.background || "#121212" : "#fff";
+  const primaryColor = theme?.buttonBackground || COLORS.CONCORDIA_RED; // App's primary color
+  const backgroundColor = isDarkMode ? theme?.background || COLORS.LESS_THAN_BLACK : COLORS.WHITE;
   const cardBackground = isDarkMode
-    ? theme?.cardBackground || "#242424"
-    : "#fff";
-  const textColor = isDarkMode ? theme?.text || "#fff" : "#333";
-  const subTextColor = isDarkMode ? theme?.subText || "#aaa" : "#666";
-  const placeholderColor = isDarkMode ? "#444" : "#e0e0e0";
-  const placeholderTextColor = isDarkMode ? "#aaa" : "#888";
-  const shadowColor = "#000";
+    ? theme?.cardBackground || COLORS.DARK_MODE_DEEP_GREY
+    : COLORS.WHITE;
+  const textColor = isDarkMode ? theme?.text || COLORS.WHITE : COLORS.DARK_GREY_TITLE;
+  const subTextColor = isDarkMode ? theme?.subText || COLORS.LIGHT_GREY : COLORS.DARK_MODE_LIGHT_GREY;
+  const placeholderColor = isDarkMode ? COLORS.DARK_MODE_GREY : COLORS.LIGHT_GREY_INPUT_BOXES;
+  const placeholderTextColor = isDarkMode ? COLORS.LIGHT_GREY : "#888";
+  const shadowColor = COLORS.BLACK_OR_SHADOW;
 
   // Category badge colors
-  const cafeBadgeColor = isDarkMode ? "#601a1a" : "#FFCDD2"; // Darker/Lighter red
+  const cafeBadgeColor = isDarkMode ? COLORS.CONCORDIA_RED : "#FFCDD2"; // Darker/Lighter red
   const restaurantBadgeColor = isDarkMode ? "#1a4d1a" : "#C8E6C9"; // Darker/Lighter green
   const activityBadgeColor = isDarkMode ? "#0d3a62" : "#BBDEFB"; // Darker/Lighter blue
   const ratingBadgeColor = isDarkMode ? "#4d3800" : "#FFF8E1"; // Darker/Lighter yellow
@@ -65,12 +66,12 @@ const createPOIListStyles = ({ isDarkMode, theme }) => {
       elevation: 3,
     },
     filterButtonText: {
-      color: "white",
+      color: COLORS.WHITE,
       marginLeft: 5,
       fontWeight: "600",
     },
     buttonText: {
-      color: "white",
+      color: COLORS.WHITE,
       marginLeft: 5,
       fontWeight: "600",
     },
@@ -99,7 +100,7 @@ const createPOIListStyles = ({ isDarkMode, theme }) => {
       width: "100%",
       borderTopLeftRadius: 28,
       borderTopRightRadius: 28,
-      backgroundColor: isDarkMode ? "#333" : "#f0f0f0",
+      backgroundColor: isDarkMode ? COLORS.DARK_GREY_TITLE : COLORS.OFF_WHITE,
     },
     noImagePlaceholder: {
       height: 120,
@@ -162,7 +163,7 @@ const createPOIListStyles = ({ isDarkMode, theme }) => {
     categoryText: {
       fontSize: FONT_SIZE_1,
       fontWeight: "600",
-      color: isDarkMode ? "#fff" : "#333",
+      color: isDarkMode ? COLORS.WHITE : COLORS.DARK_GREY_TITLE,
     },
     loadingContainer: {
       flex: 1,
@@ -191,7 +192,7 @@ const createPOIListStyles = ({ isDarkMode, theme }) => {
     },
     errorText: {
       fontSize: FONT_SIZE_3,
-      color: isDarkMode ? "#ff6b6b" : "#922338",
+      color: isDarkMode ? COLORS.RED_CLOSE_BUTTON : COLORS.CONCORDIA_RED,
       textAlign: "center",
       padding: 20,
       lineHeight: 22,
@@ -228,50 +229,50 @@ const createPOIListStyles = ({ isDarkMode, theme }) => {
       shadowRadius: 1.5,
     },
     directionsButtonText: {
-      color: "white",
+      color: COLORS.WHITE,
       fontWeight: "600",
       marginLeft: 8,
       fontSize: FONT_SIZE_2,
     },
-    // Footer component styles (from newer version)
+    // Footer component styles
     footerContainer: {
       padding: 16,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: backgroundColor,
     },
     footerText: {
       fontSize: FONT_SIZE_2,
-      color: subTextColor,
+      color: COLORS.DARK_MODE_LIGHT_GREY,
     },
-    // Scroll to top button styles (from newer version)
+    // Scroll to top button styles
     scrollTopButton: {
-      position: "absolute",
+      position: 'absolute',
       bottom: 90, // Position above tab bar
       right: 20,
-      backgroundColor: primaryColor,
+      backgroundColor: COLORS.CONCORDIA_RED, // Match app's primary color
       borderRadius: 30,
       width: 50,
       height: 50,
-      justifyContent: "center",
-      alignItems: "center",
-      shadowColor: shadowColor,
+      justifyContent: 'center',
+      alignItems: 'center',
+      shadowColor: COLORS.BLACK_OR_SHADOW,
       shadowOffset: {
         width: 0,
         height: 2,
       },
-      shadowOpacity: isDarkMode ? 0.4 : 0.25,
+      shadowOpacity: 0.25,
       shadowRadius: 3.84,
       elevation: 5,
       zIndex: 100,
     },
     scrollTopButtonTouchable: {
-      width: "100%",
-      height: "100%",
+      width: '100%',
+      height: '100%',
       borderRadius: 30,
-      justifyContent: "center",
-      alignItems: "center",
+      justifyContent: 'center',
+      alignItems: 'center',
     },
+
     // Placeholder for loading state
     placeholderContainer: {
       flex: 1,
@@ -287,7 +288,7 @@ const createPOIListStyles = ({ isDarkMode, theme }) => {
   });
 };
 
-// Export the default styles using the theme-aware creator function
+// Export the default light mode styles for backward compatibility
 export const styles = createPOIListStyles({ isDarkMode: false, theme: null });
 
 // Export the theme-aware styles creator function

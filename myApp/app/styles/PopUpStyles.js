@@ -1,23 +1,24 @@
 import { StyleSheet } from "react-native";
+import { COLORS, FONT_SIZE_2, FONT_SIZE_3, FONT_SIZE_4 } from "./constants";
 
 // Create a function that returns styles based on theme
 const createPopupStyles = ({ isDarkMode, theme }) => {
   // Theme properties with defaults
   const backgroundColor = isDarkMode
-    ? theme?.cardBackground || "#1e1e1e"
-    : "#fff";
-  const textColor = isDarkMode ? theme?.text || "#fff" : "#333";
-  const titleColor = isDarkMode ? theme?.text || "#fff" : "#000";
-  const subTextColor = isDarkMode ? theme?.subText || "#aaa" : "#444";
-  const iconColor = isDarkMode ? theme?.text || "#fff" : "#333";
-  const shadowColor = "#000";
+    ? theme?.cardBackground || COLORS.DARK_MODE_DEEP_GREY
+    : COLORS.WHITE;
+  const textColor = isDarkMode ? theme?.text || COLORS.WHITE : COLORS.DARK_GREY_TITLE;
+  const titleColor = isDarkMode ? theme?.text || COLORS.WHITE : COLORS.BLACK_OR_SHADOW;
+  const subTextColor = isDarkMode ? theme?.subText || COLORS.LIGHT_GREY : COLORS.DARK_MODE_GREY;
+  const iconColor = isDarkMode ? theme?.text || COLORS.WHITE : COLORS.DARK_GREY_TITLE;
+  const shadowColor = COLORS.BLACK_OR_SHADOW;
   const redButtonColor = isDarkMode
     ? theme?.buttonBackground || "#aa0000"
     : "#8b0000";
   const grayButtonColor = isDarkMode
-    ? theme?.buttonBackground2 || "#606060"
-    : "#4a4a4a";
-  const alertColor = isDarkMode ? "#ff6b6b" : "red";
+    ? theme?.buttonBackground2 || COLORS.DARK_MODE_LIGHT_GREY
+    : COLORS.DARK_MODE_GREY;
+  const alertColor = isDarkMode ? COLORS.RED_CLOSE_BUTTON : "red";
 
   return StyleSheet.create({
     overlay: {
@@ -48,7 +49,7 @@ const createPopupStyles = ({ isDarkMode, theme }) => {
       zIndex: 10,
     },
     title: {
-      fontSize: 18,
+      fontSize: FONT_SIZE_4,
       fontWeight: "bold",
       textAlign: "center",
       marginBottom: 16,
@@ -64,12 +65,12 @@ const createPopupStyles = ({ isDarkMode, theme }) => {
     },
     buildingName: {
       fontWeight: "bold",
-      fontSize: 16,
+      fontSize: FONT_SIZE_3,
       marginBottom: 4,
       color: titleColor,
     },
     subName: {
-      fontSize: 14,
+      fontSize: FONT_SIZE_2,
       color: subTextColor,
       marginBottom: 8,
     },
@@ -89,7 +90,7 @@ const createPopupStyles = ({ isDarkMode, theme }) => {
       flex: 1,
       flexShrink: 1,
       flexGrow: 1,
-      fontSize: 14,
+      fontSize: FONT_SIZE_2,
       color: textColor,
       textAlign: "left",
     },
@@ -121,7 +122,7 @@ const createPopupStyles = ({ isDarkMode, theme }) => {
       backgroundColor: grayButtonColor,
     },
     buttonText: {
-      color: "white",
+      color: COLORS.WHITE,
       marginLeft: 6,
       fontWeight: "600",
       fontSize: 15,
