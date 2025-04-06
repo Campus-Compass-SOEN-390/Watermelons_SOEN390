@@ -63,7 +63,7 @@ const createGoogleScheduleStyles = ({ isDarkMode, theme }) => {
       marginVertical: 6,
       alignItems: "center",
       // Enhanced shadows for dark mode
-      shadowColor: COLORS.BLACK_OR_SHADOW,
+      shadowColor: isDarkMode ? COLORS.BLACK_OR_SHADOW: 'transaprent',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: isDarkMode ? 0.5 : 0.2,
       shadowRadius: 3,
