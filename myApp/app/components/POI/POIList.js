@@ -5,6 +5,7 @@ import React, {
   memo,
   useMemo,
   useRef,
+  useEffect,
 } from "react";
 import PropTypes from "prop-types";
 import {
@@ -25,6 +26,7 @@ import { useRouter } from "expo-router";
 import { useLocationContext } from "@/app/context/LocationContext";
 import { ThemeContext } from "@/app/context/ThemeContext";
 import { useButtonInteraction } from "../../hooks/useButtonInteraction";
+import GooglePlacesProxy from "../../utils/GooglePlacesProxy";
 
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
@@ -37,6 +39,7 @@ const SCROLL_THRESHOLD = 300; // Show button after scrolling this much
 const POIListItem = memo(
   ({ item, userLocation, calculateDistance }) => {
     const [imageError, setImageError] = useState(false);
+    const [imageUrl, setImageUrl] = useState(null); // Lazy-loaded image URL
     const { handleButtonPress } = useButtonInteraction();
 
     // Get theme from context
@@ -80,10 +83,17 @@ const POIListItem = memo(
     // Extract photo reference using proper path
     const photoReference = !imageError && item.photos?.[0]?.photo_reference;
 
-    // Build photo URL following Google Places API requirements
-    const imageUrl = photoReference
-      ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoReference}&key=${GOOGLE_PLACES_API_KEY}`
-      : null;
+    // Lazy load the image URL using the proxy
+    useEffect(() => {
+      if (photoReference) {
+        GooglePlacesProxy.fetchImage(photoReference, GOOGLE_PLACES_API_KEY)
+          .then((url) => setImageUrl(url))
+          .catch((error) => {
+            console.error("Failed to load image:", error);
+            setImageError(true);
+          });
+      }
+    }, [photoReference]);
 
     const router = useRouter();
     const { updatePOILocationData } = useLocationContext();
@@ -142,7 +152,10 @@ const POIListItem = memo(
             progressiveRenderingEnabled={true}
           />
         ) : (
-          <View style={styles.noImagePlaceholder}>
+          <View
+            style={styles.noImagePlaceholder}
+            testID="no-image-placeholder" // Add testID for the placeholder
+          >
             <Ionicons
               name="image-outline"
               size={40}
