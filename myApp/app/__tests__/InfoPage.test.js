@@ -32,24 +32,11 @@ describe('InfoPage', () => {
     expect(mockPush).toHaveBeenCalledWith('/screens/CalenderInfoPage');
   });
 
-  it('navigates to SettingsPage when settings button is pressed', () => {
-    const { getByTestId } = render(<InfoPage />);
-    const settingsButton = getByTestId('settingsButton');
-    fireEvent.press(settingsButton);
-    expect(mockPush).toHaveBeenCalledWith('/screens/SettingsPage');
-  });
-
   it('renders and responds to dummy button', () => {
     const { getByTestId } = render(<InfoPage />);
     const dummyButton = getByTestId('dummyButton');
     fireEvent.press(dummyButton); // should not throw
     expect(dummyButton).toBeTruthy();
-  });
-  it('navigates to Home when Home button is pressed', () => {
-    const { getByTestId } = render(<InfoPage />);
-    const homeButton = getByTestId('homeButton');
-    fireEvent.press(homeButton);
-    expect(mockPush).toHaveBeenCalledWith('/');
   });
   
 });

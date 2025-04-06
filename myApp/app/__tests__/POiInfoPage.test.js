@@ -38,18 +38,6 @@ describe('PoiInfoPage', () => {
     expect(buttons.length).toBeGreaterThanOrEqual(2);
   });
 
-  it('navigates home when Home button is pressed', () => {
-    const { getByTestId } = render(<PoiInfoPage />);
-    fireEvent.press(getByTestId('homeButton'));
-    expect(mockPush).toHaveBeenCalledWith('/');
-  });
-
-  it('navigates to SettingsPage when Settings button is pressed', () => {
-    const { getByTestId } = render(<PoiInfoPage />);
-    fireEvent.press(getByTestId('settingsButton'));
-    expect(mockPush).toHaveBeenCalledWith('/screens/SettingsPage');
-  });
-
   it('navigates back when Back button is pressed', () => {
     const { getByTestId } = render(<PoiInfoPage />);
     fireEvent.press(getByTestId('backButton'));

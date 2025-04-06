@@ -48,6 +48,7 @@ export default function HeaderButtons() {
                   name="arrow-back"
                   size={24}
                   color={theme.iconColor || "#FFFFFF"}
+                  testID="arrowBack"
                 />
               </TouchableOpacity>
             );
