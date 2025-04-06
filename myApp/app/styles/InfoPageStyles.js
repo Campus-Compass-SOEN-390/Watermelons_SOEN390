@@ -4,7 +4,7 @@ export const infoPageStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f7f7f7',
-    paddingTop: 30,
+    paddingTop: 60,
   },
   topNav: {
     flexDirection: 'row',
@@ -38,6 +38,7 @@ export const infoPageStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 10,
+    paddingTop: 40
   }, 
   welcome: {
     fontSize: 17,
