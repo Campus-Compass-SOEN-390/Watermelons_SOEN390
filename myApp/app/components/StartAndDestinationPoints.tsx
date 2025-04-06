@@ -301,14 +301,14 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
         <View style={styles.routesContainer}>
           {routes
             .filter((routeData) => routeData.mode === travelMode)
-            .map((routeData, index) => (
-              <View key={index}>
-                {routeData.routes.map((route, i) => (
+            .map((routeData) => (
+              <View key={routeData.mode}>
+                {routeData.routes.map((route) => (
                   <TouchableOpacity
-                    key={i}
+                    key={`${routeData.mode}-${route.duration}-${route.distance}`}
                     style={styles.routeCard}
                     onPress={() => {
-                      handleRouteSelection(i);
+                      handleRouteSelection(routeData.routes.indexOf(route));
                     }}
                   >
                     <Text style={{ color: theme.text }}>
