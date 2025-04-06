@@ -1,5 +1,5 @@
 // app/myApp/context/ThemeContext.js
-import React, { createContext, useState, useEffect, useMemo } from "react";
+import React, { createContext, useState, useEffect, useMemo, useCallback } from "react";
 import { useColorScheme } from "react-native";
 import { lightTheme, darkTheme } from "../constants/themes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -36,7 +36,7 @@ export const ThemeProvider = ({ children }) => {
   };
 
   // Toggle theme function
-  const toggleTheme = async () => {
+  const toggleTheme = useCallback(async () => {
     const newMode = !isDarkMode;
     setIsDarkMode(newMode);
     setTheme(newMode ? darkTheme : lightTheme);
@@ -49,7 +49,7 @@ export const ThemeProvider = ({ children }) => {
     } catch (error) {
       console.log("Error saving theme preference:", error);
     }
-  };
+  }, [isDarkMode]);
 
   const contextValue = useMemo(() => ({ theme, isDarkMode, toggleTheme }), [theme, isDarkMode, toggleTheme]);
 
