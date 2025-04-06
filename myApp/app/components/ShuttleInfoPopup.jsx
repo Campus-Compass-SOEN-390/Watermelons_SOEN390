@@ -3,11 +3,43 @@ import { View, Text, Modal, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import PropTypes from "prop-types";
 import { formatTime } from "../utils/shuttleUtils.js";
-// import { buildingPopupStyles as styles } from "../styles/PopUpStyles.js";
 import styles from "../styles/PopUpStyles.js";
 
-
 export default function ShuttleInfoPopup({ visible, onClose, shuttleDetails }) {
+  // Extracted function to render shuttle details
+  const renderShuttleDetails = () => {
+    if (shuttleDetails?.error) {
+      return <Text style={styles.alertText}>{shuttleDetails.error}</Text>;
+    } else if (shuttleDetails) {
+      return (
+        <>
+          <View style={styles.row}>
+            <MaterialIcons name="schedule" size={18} style={styles.icon} />
+            <Text style={styles.text}>
+              <Text style={styles.boldLabel}>Wait Time: </Text>
+              {formatTime(shuttleDetails.waitTime)}
+            </Text>
+          </View>
+          <View style={styles.row}>
+            <MaterialIcons name="commute" size={18} style={styles.icon} />
+            <Text style={styles.text}>
+              <Text style={styles.boldLabel}>Travel Time: </Text>
+              {formatTime(shuttleDetails.shuttleRideTime)}
+            </Text>
+          </View>
+          <View style={styles.row}>
+            <MaterialIcons name="timer" size={18} style={styles.icon} />
+            <Text style={styles.text}>
+              <Text style={styles.boldLabel}>Total Time: </Text>
+              {formatTime(shuttleDetails.totalTime)}
+            </Text>
+          </View>
+        </>
+      );
+    } else {
+      return <Text style={styles.alertText}>No bus available.</Text>;
+    }
+  };
 
   return (
     <Modal
@@ -31,38 +63,8 @@ export default function ShuttleInfoPopup({ visible, onClose, shuttleDetails }) {
             <MaterialIcons name="directions-bus" size={36} color="#000" />
           </View>
 
-          {/* Shuttle Details */}
-          {shuttleDetails?.error ? (
-            <Text style={styles.alertText}>{shuttleDetails.error}</Text>
-          ) : shuttleDetails ? (
-            <>
-              <View style={styles.row}>
-                <MaterialIcons name="schedule" size={18} style={styles.icon} />
-                <Text style={styles.text}>
-                  <Text style={styles.boldLabel}>Wait Time: </Text>
-                  {formatTime(shuttleDetails.waitTime)}
-                </Text>
-              </View>
-
-              <View style={styles.row}>
-                <MaterialIcons name="commute" size={18} style={styles.icon} />
-                <Text style={styles.text}>
-                  <Text style={styles.boldLabel}>Travel Time: </Text>
-                  {formatTime(shuttleDetails.shuttleRideTime)}
-                </Text>
-              </View>
-
-              <View style={styles.row}>
-                <MaterialIcons name="timer" size={18} style={styles.icon} />
-                <Text style={styles.text}>
-                  <Text style={styles.boldLabel}>Total Time: </Text>
-                  {formatTime(shuttleDetails.totalTime)}
-                </Text>
-              </View>
-            </>
-          ) : (
-            <Text style={styles.alertText}>No bus available.</Text>
-          )}
+          {/* Render Shuttle Details */}
+          {renderShuttleDetails()}
         </View>
       </View>
     </Modal>

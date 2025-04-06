@@ -1,3 +1,10 @@
 node_modules
 .env
 android/gradle.properties
+myApp/android/app/src/main/AndroidManifest.xml
+myApp/ios/myApp/Info.plist
+myApp/ios/Podfile.lock
+myApp/package-lock.json
+myApp/package.json
+myApp/ios/myApp/Info.plist
+myApp/android/app/src/main/AndroidManifest.xml
