@@ -96,7 +96,7 @@ export const createStartAndDestinationStyles = (theme, isDarkMode) => {
       borderBottomColor: theme.borderColor,
     },
     button: {
-      backgroundColor: theme.buttonBackground,
+      backgroundColor: COLORS.LIGHT_GREY_INPUT_BOXES,
       paddingVertical: 5,
       paddingHorizontal: 10,
       borderRadius: 7,
