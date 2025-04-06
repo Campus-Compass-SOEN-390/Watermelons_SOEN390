@@ -1,14 +1,12 @@
 import { LogBox, View } from "react-native";
 import React from "react";
 import HomePage from "./screens/HomePage";
-import 'react-native-get-random-values';
+import "react-native-get-random-values";
+import { ThemeProvider } from "./context/ThemeContext";
 import { initialize } from '@microsoft/react-native-clarity';
 import { useEffect } from "react";
 
-LogBox.ignoreLogs([
-  'VirtualizedLists should never be nested',
-]);
-
+LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
 
 export default function Index() {
 
@@ -17,14 +15,14 @@ export default function Index() {
   }, []);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <HomePage/>
-    </View>
+    <ThemeProvider>
+      <View
+        style={{
+          flex: 1,
+        }}
+      >
+        <HomePage />
+      </View>
+    </ThemeProvider>
   );
 }

@@ -1,0 +1,39 @@
+appId: com.anonymous.myApp  
+---
+- launchApp
+
+# Open the info page from the homepage
+- tapOn:
+    id: "infoButton"
+
+# Navigate to Google Calendar Page
+- tapOn:
+    id: "nextButton"
+
+# Navigate to Smart Navigation
+- tapOn:
+    id: "next-button"
+
+# Navigate to Campus Map
+- tapOn:
+    id: "nextButton"
+
+# Navigate to Points of Interest
+- tapOn:
+    id: "nextButton"
+
+# Navigate to Accessibility 
+- tapOn:
+    id: "nextButton"
+
+# Navigate to Shuttle Bus
+- tapOn:
+    id: "nextPageButton"
+
+# Navigate to Settings
+- tapOn:
+    id: "forwardButton"
+
+# Navigate to Home Page
+- tapOn:
+    id: "homeButton"

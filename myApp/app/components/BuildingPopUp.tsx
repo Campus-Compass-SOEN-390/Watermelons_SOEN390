@@ -1,13 +1,8 @@
-import React from "react";
-import {
-  View,
-  Text,
-  Modal,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import React, { useContext } from "react";
+import { View, Text, Modal, TouchableOpacity, ScrollView } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import popupStyles from "../styles/PopUpStyles";
+import createPopupStyles from "../styles/PopUpStyles";
+import { ThemeContext } from "../context/ThemeContext";
 
 export interface BuildingPopupProps {
   visible: boolean;
@@ -24,6 +19,12 @@ export const BuildingPopup: React.FC<BuildingPopupProps> = ({
   onGetDirections,
   setAsStartingPoint,
 }) => {
+  // Use the theme context
+  const { theme, isDarkMode } = useContext(ThemeContext);
+
+  // Create theme-aware styles
+  const popupStyles = createPopupStyles({ theme, isDarkMode });
+
   if (!building) return null;
 
   return (
@@ -41,7 +42,11 @@ export const BuildingPopup: React.FC<BuildingPopupProps> = ({
             onPress={onClose}
             style={popupStyles.closeIcon}
           >
-            <MaterialIcons name="close" size={20} color="#555" />
+            <MaterialIcons
+              name="close"
+              size={20}
+              color={isDarkMode ? theme.text : "#555"}
+            />
           </TouchableOpacity>
 
           {/* Title */}
@@ -58,7 +63,6 @@ export const BuildingPopup: React.FC<BuildingPopupProps> = ({
                 <MaterialIcons
                   name="schedule"
                   size={16}
-                  color="#333"
                   style={popupStyles.icon}
                 />
                 <Text style={popupStyles.text}>
@@ -71,7 +75,6 @@ export const BuildingPopup: React.FC<BuildingPopupProps> = ({
                 <MaterialIcons
                   name="accessible"
                   size={16}
-                  color="#333"
                   style={popupStyles.icon}
                 />
                 <Text style={popupStyles.text}>
@@ -85,7 +88,6 @@ export const BuildingPopup: React.FC<BuildingPopupProps> = ({
                 <MaterialIcons
                   name="apartment"
                   size={16}
-                  color="#333"
                   style={popupStyles.icon}
                 />
                 <View style={{ flex: 1 }}>

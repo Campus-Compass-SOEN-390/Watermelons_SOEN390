@@ -1,0 +1,52 @@
+appId: com.anonymous.myApp  
+---
+- launchApp
+
+# Tap on calendar button to show feedback
+- tapOn:
+    id: "calendarfetchbutton"
+
+# Tap on recent calendar to show feedback
+- tapOn: " CampusCompasTestCalendar2"
+
+# Tap on recent 1 month to show feedback
+- tapOn: "1 Month"
+
+# Tap on settings icon to go to settings page
+- tapOn:
+    id: "settings"
+
+# Turn off vibration
+- tapOn:
+    id: "vibration-toggle"
+
+# Turn off sound
+- tapOn:
+    id: "sound-toggle"
+
+# Turn off speech
+- tapOn:
+    id: "speech-toggle"
+
+# Turn dark mode on
+- tapOn:
+    id: "dark-mode-toggle"
+
+# exit settings
+- tapOn:
+    point: "9%,8%"
+
+# exit settings
+- tapOn:
+    point: "9%,8%"
+
+# Show no feedback
+- tapOn: "1 Month"
+
+# Show home dark mode
+- tapOn:
+    point: "9%,8%"
+
+# Show map dark mode
+- tapOn:
+    id: "loyolaButton"

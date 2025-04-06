@@ -6,7 +6,7 @@ import finalMapData from "../../../assets/floorplans/finalMap.json";
 import styles from "../../styles/IndoorMapStyles";
 import POILayer from "./POILayerComponent";
 
-const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
+const IndoorMap = ({ selectedBuilding, selectedFloor, mapKey }) => {
   const [geoJsonData, setGeoJsonData] = useState({
     type: "FeatureCollection",
     features: [],
@@ -18,8 +18,8 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
   }, []);
 
   if (!geoJsonData.features.length) {
-    return <Mapbox.ShapeSource id="indoor-map" testID="indoor-map" shape={{ type: "FeatureCollection", features: [] }} />;
-  }  
+    return null; // Return null instead of an empty source
+  }
 
   // Filter features: selected floor for the selected building + first floors of other buildings
   const filteredGeoJson = {
@@ -40,7 +40,11 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
   };
 
   return (
-    <Mapbox.ShapeSource id="indoor-map" testID="indoor-map" shape={filteredGeoJson}>
+    <Mapbox.ShapeSource
+      id="indoor-map"
+      testID="indoor-map"
+      shape={filteredGeoJson}
+    >
       {/* Room Fill Layer */}
       <Mapbox.FillLayer
         id="room-fill-layer"
@@ -68,30 +72,24 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         ]}
         minZoomLevel={18}
       />
-  
+
       {/* Pathways */}
       <Mapbox.LineLayer
         id="path-line-layer"
         testID="path-line-layer"
         sourceID="indoor-map"
         style={styles.linePath}
-        filter={[
-          "any",
-          ["==", ["get", "type"], "Paths"],
-        ]}
+        filter={["any", ["==", ["get", "type"], "Paths"]]}
         minZoomLevel={18}
       />
-  
+
       {/* Walls */}
       <Mapbox.LineLayer
         id="wall-line-layer"
         testID="wall-line-layer"
         sourceID="indoor-map"
         style={styles.lineWall}
-        filter={[
-          "any",
-          ["==", ["get", "type"], "Walls"],
-        ]}
+        filter={["any", ["==", ["get", "type"], "Walls"]]}
         minZoomLevel={18}
       />
 
@@ -109,11 +107,35 @@ const IndoorMap = ({ selectedBuilding, selectedFloor }) => {
         minZoomLevel={18}
       />
 
-      {/* Labels for POIs */}
-      <POILayer id="poi-elevator-layer" image={require("../../../assets/images/elevator.png")} name="Elevator" testID="poi-elevator-layer"/>
-      <POILayer id="poi-stairs-layer" image={require("../../../assets/images/stairs.png")} name="Stairs" testID="poi-stairs-layer"/>
-      <POILayer id="poi-escalator-layer" image={require("../../../assets/images/escalator.png")} name="Escalators" testID="poi-escalator-layer"/>
-      <POILayer id="poi-bathroom-layer" image={require("../../../assets/images/bathrooms.png")} name="Bathroom" testID="poi-bathroom-layer"/>
+      {/* Labels for POIs - pass unique keys using mapKey */}
+      <POILayer
+        key={`elevator-${mapKey}`}
+        id="poi-elevator-layer"
+        image={require("../../../assets/images/elevator.png")}
+        name="Elevator"
+        testID="poi-elevator-layer"
+      />
+      <POILayer
+        key={`stairs-${mapKey}`}
+        id="poi-stairs-layer"
+        image={require("../../../assets/images/stairs.png")}
+        name="Stairs"
+        testID="poi-stairs-layer"
+      />
+      <POILayer
+        key={`escalator-${mapKey}`}
+        id="poi-escalator-layer"
+        image={require("../../../assets/images/escalator.png")}
+        name="Escalators"
+        testID="poi-escalator-layer"
+      />
+      <POILayer
+        key={`bathroom-${mapKey}`}
+        id="poi-bathroom-layer"
+        image={require("../../../assets/images/bathrooms.png")}
+        name="Bathroom"
+        testID="poi-bathroom-layer"
+      />
     </Mapbox.ShapeSource>
   );
 };
@@ -123,6 +145,7 @@ IndoorMap.propTypes = {
     name: PropTypes.string.isRequired,
   }),
   selectedFloor: PropTypes.number,
+  mapKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default IndoorMap;
