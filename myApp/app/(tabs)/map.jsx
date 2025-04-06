@@ -74,13 +74,66 @@ import { styles as poiStyles } from "../styles/poiStyles";
 import ShuttleInfoPopup from "../components/ShuttleInfoPopup";
 import { estimateShuttleFromButton } from "../utils/shuttleUtils";
 import { useButtonInteraction } from "../hooks/useButtonInteraction";
-
+import PropTypes from "prop-types"; // Import PropTypes for validation
 
 Mapbox.setAccessToken("MAPBOX_API");
 const GOOGLE_PLACES_API_KEY = Constants.expoConfig?.extra?.apiKey;
 
 // Constants for POI functionality
 const REGION_CHANGE_THRESHOLD = 0.005;
+
+// Move ThemeToggleButton outside the parent component
+const ThemeToggleButton = ({ navigationToMap, isDarkMode, toggleTheme, theme }) => {
+  if (!navigationToMap) return null;
+
+  const handleThemeToggle = () => {
+    // Simply toggle the theme - the useEffect will handle remounting
+    toggleTheme();
+  };
+
+  return (
+    <TouchableOpacity
+      style={{
+        position: "absolute",
+        top: 140,
+        right: 10,
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        backgroundColor: theme.buttonBackground,
+        justifyContent: "center",
+        alignItems: "center",
+        shadowColor: theme.shadowColor,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        elevation: 5,
+        zIndex: 100,
+      }}
+      onPress={handleThemeToggle}
+      accessibilityLabel={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+      testID="mapThemeToggleButton"
+    >
+      <Ionicons
+        name={isDarkMode ? "sunny" : "moon"}
+        size={20}
+        color={theme.buttonText}
+      />
+    </TouchableOpacity>
+  );
+};
+
+// Add prop type validation
+ThemeToggleButton.propTypes = {
+  navigationToMap: PropTypes.bool.isRequired,
+  isDarkMode: PropTypes.bool.isRequired,
+  toggleTheme: PropTypes.func.isRequired,
+  theme: PropTypes.shape({
+    buttonBackground: PropTypes.string.isRequired,
+    shadowColor: PropTypes.string.isRequired,
+    buttonText: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default function MapView() {
   // Get theme context
@@ -920,49 +973,6 @@ export default function MapView() {
     } else centerMapOnCampus();
   }, [navigationToMap]);
 
-  // NEW: Updated ThemeToggleButton component
-  const ThemeToggleButton = () => {
-    if (!navigationToMap) return null;
-
-    const handleThemeToggle = () => {
-      // Simply toggle the theme - the useEffect will handle remounting
-      toggleTheme();
-    };
-
-    return (
-      <TouchableOpacity
-        style={{
-          position: "absolute",
-          top: 140,
-          right: 10,
-          width: 44,
-          height: 44,
-          borderRadius: 22,
-          backgroundColor: theme.buttonBackground,
-          justifyContent: "center",
-          alignItems: "center",
-          shadowColor: theme.shadowColor,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.3,
-          shadowRadius: 3,
-          elevation: 5,
-          zIndex: 100,
-        }}
-        onPress={handleThemeToggle}
-        accessibilityLabel={
-          isDarkMode ? "Switch to light mode" : "Switch to dark mode"
-        }
-        testID="mapThemeToggleButton"
-      >
-        <Ionicons
-          name={isDarkMode ? "sunny" : "moon"}
-          size={20}
-          color={theme.buttonText}
-        />
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       <View style={styles.container}>
@@ -973,8 +983,13 @@ export default function MapView() {
           />
         )}
 
-        {/* Theme Toggle Button */}
-        <ThemeToggleButton />
+        {/* Pass props to ThemeToggleButton */}
+        <ThemeToggleButton
+          navigationToMap={navigationToMap}
+          isDarkMode={isDarkMode}
+          toggleTheme={toggleTheme}
+          theme={theme}
+        />
 
         {/* NEW: Updated MapView with key prop */}
         <Mapbox.MapView
