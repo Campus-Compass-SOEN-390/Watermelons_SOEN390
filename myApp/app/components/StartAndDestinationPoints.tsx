@@ -56,7 +56,6 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
     updateRenderMap,
     updateTravelMode,
     updateNavigationToMap,
-    updateSelectedRouteIndex,
     updateTravelTime,
     updateTravelDistance,
     updateNavType,
@@ -66,8 +65,6 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
     destinationText,
     showTransportation,
     travelMode,
-    travelTime,
-    travelDistance,
   } = useLocationContext();
   const {  updateSelectedFloor, updateSelectedIndoorBuilding } =
     useIndoorMapContext();
@@ -149,19 +146,19 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
         buildingCoordinates[String(originBuilding)] &&
         buildingCoordinates[String(destinationBuilding)];
     
+      let type = "outdoor";
+    
       if (isIndoorNavigation) {
-        return originBuilding === destinationBuilding
+        type = originBuilding === destinationBuilding
           ? "indoor"
           : "indoor-outdoor-indoor";
+      } else if (originBuilding && buildingCoordinates[String(originBuilding)]) {
+        type = "indoor-outdoor";
+      } else if (destinationBuilding && buildingCoordinates[String(destinationBuilding)]) {
+        type = "outdoor-indoor";
       }
     
-      if (originBuilding && buildingCoordinates[String(originBuilding)])
-        return "indoor-outdoor";
-    
-      if (destinationBuilding && buildingCoordinates[String(destinationBuilding)])
-        return "outdoor-indoor";
-    
-      return "outdoor";
+      return type;
     };
     updateNavType(navigationType(originText, destinationText));
   };
@@ -194,12 +191,10 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
     }
   };
 
-  // Handle Route Selection button click
-  const handleRouteSelection = (index: number) => {
-    updateSelectedRouteIndex(index);
-
-    console.log("SELECTED TRAVEL TIME:", travelTime);
-    console.log("SELECTED TRAVEL DISTANCE:", travelDistance);
+  // Update the parameter type of handleRouteSelection
+  const handleRouteSelection = (route: Route) => {
+    console.log("SELECTED TRAVEL TIME:", route.duration);
+    console.log("SELECTED TRAVEL DISTANCE:", route.distance);
   };
 
   // Handle "GO" button click
@@ -491,7 +486,6 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
       {/* FOOTER */}
       {showFooter && (
         <View style={styles.footerContainer}>
-          {/* Accessibility Toggle pushed to the right */}
           <View style={styles.accessibilityToggle}>
             <Switch
               value={isDisabled}
@@ -507,26 +501,24 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
             />
           </View>
 
-          {/* Cancel Button at Top Right */}
           <View style={styles.cancelButtonTopRight}>
             <TouchableOpacity
               onPress={() => {
-                updateShowTransportation(false);
-                updateRenderMap(false);
-                updateSelectedFloor(1);
-                updateSelectedIndoorBuilding(null);
-                updateOrigin(null, "");
-                updateDestination(null, "");
-                setShowFooter(false);
+          updateShowTransportation(false);
+          updateRenderMap(false);
+          updateSelectedFloor(1);
+          updateSelectedIndoorBuilding(null);
+          updateOrigin(null, "");
+          updateDestination(null, "");
+          setShowFooter(false);
               }}
             >
               <Text style={[styles.footerButtonText, { color: "red" }]}>
-                Cancel
+          Cancel
               </Text>
             </TouchableOpacity>
           </View>
 
-          {/* Steps Button */}
           <TouchableOpacity
             style={styles.stepsButton}
             onPress={handleStepsClick}
@@ -534,47 +526,53 @@ const StartAndDestinationPoints: React.FC<StartAndDestinationPointsProps> = ({
             <Text style={styles.footerButtonText}>Steps</Text>
           </TouchableOpacity>
 
-          {/* Display Alternative Routes */}
-          {loading ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#922338" />
-              <Text style={styles.loadingText}>Loading routes...</Text>
-            </View>
-          ) : routes && routes.length > 0 ? (
-            <View style={styles.routesContainer}>
-              {routes
-                .filter((routeData) => routeData.mode === travelMode)
-                .map((routeData, index) => (
-                  <View key={index}>
-                    {routeData.routes.map((route, i) => (
-                      <TouchableOpacity
-                        key={i}
-                        style={styles.routeCard}
-                        onPress={() => {
-                          handleRouteSelection(i);
-                        }}
-                      >
-                        <Text>
-                          {route.duration} min {"\n"} {route.distance}
-                        </Text>
-                        <TouchableOpacity
-                          style={styles.goButton}
-                          onPress={() => {
-                            handleGoClick();
-                            updateTravelTime(route.duration);
-                            updateTravelDistance(route.distance);
-                          }}
-                        >
-                          <Text>Go</Text>
-                        </TouchableOpacity>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
+          {/* Extract route rendering logic */}
+          {(() => {
+            if (loading) {
+              return (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#922338" />
+            <Text style={styles.loadingText}>Loading routes...</Text>
+          </View>
+              );
+            }
+
+            if (!routes || routes.length === 0) {
+              return <Text>No alternative routes available.</Text>;
+            }
+
+            return (
+              <View style={styles.routesContainer}>
+          {routes
+            .filter((routeData) => routeData.mode === travelMode)
+            .map((routeData) => (
+              <View key={routeData.mode}>
+                {routeData.routes.map((route) => (
+            <TouchableOpacity
+              key={`${route.duration}-${route.distance}`}
+              style={styles.routeCard}
+              onPress={() => handleRouteSelection(route)}
+            >
+              <Text>
+                {route.duration} min {"\n"} {route.distance}
+              </Text>
+              <TouchableOpacity
+                style={styles.goButton}
+                onPress={() => {
+                  handleGoClick();
+                  updateTravelTime(route.duration);
+                  updateTravelDistance(route.distance);
+                }}
+              >
+                <Text>Go</Text>
+              </TouchableOpacity>
+            </TouchableOpacity>
                 ))}
-            </View>
-          ) : (
-            <Text>No alternative routes available.</Text>
-          )}
+              </View>
+            ))}
+              </View>
+            );
+          })()}
         </View>
       )}
 
