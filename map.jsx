@@ -535,27 +535,6 @@ export default function IndoorMap() {
     updateDestination(building.entranceCoordinates, buildingFullName);
     updateShowTransportation(true);
   };
-
-  // const handleShuttleButton = () => {
-  //   console.log("Shuttle button click");
-  //   const route =
-  //     activeCampus === "sgw"
-  //       ? campusRoutes.sgwToLoyola
-  //       : campusRoutes.loyolaToSgw;
-  //   updateOrigin(coordinatesMap["My Position"], "My Location");
-  //   if (activeCampus === "sgw") {
-  //     updateDestination(
-  //       coordinatesMap["Loyola Campus, Shuttle Stop"],
-  //       "Loyola Campus, Shuttle Stop",
-  //     );
-  //   } else {
-  //     updateDestination(
-  //       coordinatesMap["SGW Campus, Shuttle Stop"],
-  //       "SGW Campus, Shuttle Stop",
-  //     );
-  //   }
-  //   setShuttleRoute(route);
-  // };
   
   const [shuttleTime, setShuttleTime] = useState(null);
   const [shuttleDetails, setShuttleDetails] = useState(null);
