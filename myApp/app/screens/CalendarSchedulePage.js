@@ -314,8 +314,7 @@ export default function CalendarSchedulePage() {
               <MaterialIcons
                 name="directions"
                 size={24}
-                color="white"
-                style={{ marginRight: 8 }}
+                style={styles.cardText}
               />
               <Text style={styles.nextClassButtonText}>
                 Get directions to next class

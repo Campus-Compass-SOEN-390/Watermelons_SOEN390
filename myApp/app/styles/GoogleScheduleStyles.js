@@ -69,6 +69,10 @@ const createGoogleScheduleStyles = ({ isDarkMode, theme }) => {
       shadowRadius: 3,
       elevation: 4,
     },
+    cardText: {
+      marginRight: 8,
+      color: isDarkMode ? COLORS.WHITE: COLORS.DARK_GREY_TITLE,
+    },
     cardTextContainer: {
       flex: 1,
     },
