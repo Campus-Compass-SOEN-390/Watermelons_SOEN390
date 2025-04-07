@@ -64,12 +64,6 @@ export default function ShuttleScheduleScreen() {
         setNextBus(nextAvailableBus);
     }, [schedule, campus]);
 
-    const handleBack = () => {
-        handleButtonPress(null, 'Going back');
-        RNUxcam.logEvent("Shuttle Back Button Pressed");
-        navigation.goBack();
-    };
-
     const handleWarningPress = () => {
         const todayDate = moment().format('YYYY-MM-DD');
         handleButtonPress(null, 'Checking bus status');
