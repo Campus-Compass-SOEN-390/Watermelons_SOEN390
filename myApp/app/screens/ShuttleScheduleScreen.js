@@ -7,7 +7,6 @@ import { useButtonInteraction } from '../hooks/useButtonInteraction';
 import RNUxcam from "react-native-ux-cam";
 
 export default function ShuttleScheduleScreen() {
-    const navigation = useNavigation();
     const { handleButtonPress } = useButtonInteraction();
     const [schedule, setSchedule] = useState(null);
     const [error, setError] = useState(null);
