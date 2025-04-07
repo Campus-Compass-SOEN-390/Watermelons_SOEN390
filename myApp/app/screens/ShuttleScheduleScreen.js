@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { fetchShuttleScheduleByDay } from '../api/shuttleSchedule';
 import moment from 'moment';
 import { useButtonInteraction } from '../hooks/useButtonInteraction';
