@@ -28,6 +28,7 @@ npm install
 ```
 ```sh
 npx expo start
+npm run android (For Windows)
 ```
 
 ## Features
