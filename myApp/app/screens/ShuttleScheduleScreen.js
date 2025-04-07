@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { fetchShuttleScheduleByDay } from '../api/shuttleSchedule';
 import moment from 'moment';
 import { useButtonInteraction } from '../hooks/useButtonInteraction';
 import RNUxcam from "react-native-ux-cam";
 
 export default function ShuttleScheduleScreen() {
-    const navigation = useNavigation();
     const { handleButtonPress } = useButtonInteraction();
     const [schedule, setSchedule] = useState(null);
     const [error, setError] = useState(null);
@@ -63,12 +61,6 @@ export default function ShuttleScheduleScreen() {
 
         setNextBus(nextAvailableBus);
     }, [schedule, campus]);
-
-    const handleBack = () => {
-        handleButtonPress(null, 'Going back');
-        RNUxcam.logEvent("Shuttle Back Button Pressed");
-        navigation.goBack();
-    };
 
     const handleWarningPress = () => {
         const todayDate = moment().format('YYYY-MM-DD');

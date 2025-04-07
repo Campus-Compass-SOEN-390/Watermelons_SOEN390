@@ -39,7 +39,8 @@ export const Directions : React.FC<Props> = ({
       }, [travelMode]);
       
     const getBuildingCode = (room: string) => {
-        const match = /^[A-Za-z]+/.exec(room);
+        const regex = /^[A-Za-z]+/;
+        const match = regex.exec(room);
         return match ? match[0] : null;
       };
     

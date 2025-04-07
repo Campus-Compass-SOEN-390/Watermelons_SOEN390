@@ -31,20 +31,31 @@ jest.mock("expo-router", () => ({
 // Correctly mock LayoutWrapper
 jest.mock("../components/LayoutWrapper.js", () => {
   const React = require("react");
+  const PropTypes = require("prop-types");
   const { View } = require("react-native");
-  return ({ children }) => React.createElement(View, null, children);
+  const LayoutWrapper = ({ children }) => React.createElement(View, null, children);
+  LayoutWrapper.propTypes = {
+    children: PropTypes.node,
+  };
+  return LayoutWrapper;
 });
 
 // Correctly mock HeaderButtons
 jest.mock("../components/HeaderButtons.js", () => {
   const React = require("react");
+  const PropTypes = require("prop-types");
   const { View, Text } = require("react-native");
-  return () =>
+  const HeaderButtons = ({ children }) =>
     React.createElement(
       View,
       null,
-      React.createElement(Text, null, "HeaderButtons Mock")
+      React.createElement(Text, null, "HeaderButtons Mock"),
+      children
     );
+  HeaderButtons.propTypes = {
+    children: PropTypes.node,
+  };
+  return HeaderButtons;
 });
 
 // Helper function to render with ThemeContext

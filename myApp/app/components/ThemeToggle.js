@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemeContext } from "../context/ThemeContext";
+import PropTypes from "prop-types";
 
 const ThemeToggle = ({ style }) => {
   const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
@@ -40,6 +41,10 @@ const ThemeToggle = ({ style }) => {
       />
     </TouchableOpacity>
   );
+};
+
+ThemeToggle.propTypes = {
+  style: PropTypes.object, // Ensure 'style' is validated as a prop
 };
 
 export default ThemeToggle;
